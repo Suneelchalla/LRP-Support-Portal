@@ -78,9 +78,11 @@
   .btn-primary:hover::before { transform: translateX(100%); }
   .btn-primary:hover { background: linear-gradient(135deg,#0d6fa8,#14a0d0); box-shadow: 0 0 20px rgba(0,180,255,.3); color: #fff; }
   .btn-primary:active { transform: scale(.98); }
+  .btn-primary:disabled { opacity: .6; cursor: not-allowed; }
   .msg { margin-top: 8px; padding: 8px 12px; border-radius: 3px; font-size: 12px; font-weight: 600; letter-spacing: 1px; display: none; }
   .msg.error { background: rgba(180,40,40,.25); border-left: 2px solid #ff4444; color: #ff9999; }
   .msg.success { background: rgba(20,160,80,.2); border-left: 2px solid #00ff88; color: #88ffcc; }
+  .msg.loading { background: rgba(0,100,180,.2); border-left: 2px solid #00c8ff; color: #a8e8ff; }
   .modal-overlay { display: none; position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,.6); backdrop-filter: blur(4px); align-items: center; justify-content: center; }
   .modal-overlay.show { display: flex; }
   .modal { background: linear-gradient(135deg,#041c35,#062a4a); border: 1px solid rgba(0,200,255,.4); border-radius: 6px; padding: 36px 40px; text-align: center; max-width: 340px; box-shadow: 0 0 60px rgba(0,180,255,.2); animation: popIn .4s cubic-bezier(.175,.885,.32,1.275); }
@@ -178,7 +180,7 @@
         <div class="input-wrap"><span class="input-icon">🔒</span><input type="password" id="login-pass" placeholder="••••••••••"/></div>
       </div>
       <div id="login-msg" class="msg"></div>
-      <button class="btn-primary" onclick="handleLogin()">Sign In</button>
+      <button class="btn-primary" id="login-btn" onclick="handleLogin()">Sign In</button>
     </div>
     <div class="form-view" id="view-register">
       <div class="form-group">
@@ -202,7 +204,7 @@
         <div class="input-wrap"><span class="input-icon">✅</span><input type="password" id="reg-confirm" placeholder="Re-enter code"/></div>
       </div>
       <div id="reg-msg" class="msg"></div>
-      <button class="btn-primary" onclick="handleRegister()">Register</button>
+      <button class="btn-primary" id="reg-btn" onclick="handleRegister()">Register</button>
     </div>
   </div>
 </div>
@@ -218,9 +220,8 @@
 </div>
 
 <script>
-  const DB_KEY = 'shiptrack_users';
-  const getUsers = () => JSON.parse(localStorage.getItem(DB_KEY) || '{}');
-  const saveUsers = u => localStorage.setItem(DB_KEY, JSON.stringify(u));
+  const API_URL = 'https://script.google.com/macros/s/AKfycbxNMzughMHKtWROJZWowMLHOUBGR0FO9qCyRKjCOL3IxBdnH1d3JP_M9pVbNJtY9Warbw/exec';
+  // Version 2.0 - Google Sheets backend
 
   function showTab(t) {
     document.getElementById('view-login').classList.toggle('active', t === 'login');
@@ -235,7 +236,8 @@
   function showMsg(id, text, type) {
     const el = document.getElementById(id); el.textContent = text; el.className = 'msg ' + type; el.style.display = 'block';
   }
-  function handleRegister() {
+
+  async function handleRegister() {
     const u = document.getElementById('reg-user').value.trim();
     const e = document.getElementById('reg-email').value.trim();
     const t = document.getElementById('reg-team').value.trim();
@@ -244,29 +246,71 @@
     if (!u||!e||!t||!p||!c) { showMsg('reg-msg','⚠ ALL FIELDS ARE MANDATORY, OFFICER.','error'); return; }
     if (p.length < 6) { showMsg('reg-msg','⚠ ACCESS CODE MUST BE ≥ 6 CHARACTERS.','error'); return; }
     if (p !== c) { showMsg('reg-msg','⚠ ACCESS CODE MISMATCH — RE-ENTER.','error'); return; }
-    const users = getUsers();
-    if (users[u.toLowerCase()]) { showMsg('reg-msg','⚠ CALLSIGN ALREADY REGISTERED — CHOOSE ANOTHER.','error'); return; }
+
+    const btn = document.getElementById('reg-btn');
+    btn.disabled = true;
+    showMsg('reg-msg', '⏳ REGISTERING...', 'loading');
+
     const vesselId = 'VID-' + Math.random().toString(36).toUpperCase().slice(2,8);
-    users[u.toLowerCase()] = { username: u, email: e, team: t, password: p, vesselId };
-    saveUsers(users);
-    document.getElementById('modal-name').textContent = u;
-    document.getElementById('modal-id').textContent = 'ID: ' + vesselId + ' · TEAM: ' + t;
-    document.getElementById('modal').classList.add('show');
-    ['reg-user','reg-email','reg-team','reg-pass','reg-confirm'].forEach(id => document.getElementById(id).value = '');
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action:'register', username:u, email:e, team:t, password:p, vesselId })
+      });
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('modal-name').textContent = u;
+        document.getElementById('modal-id').textContent = 'ID: ' + vesselId + ' · TEAM: ' + t;
+        document.getElementById('modal').classList.add('show');
+        ['reg-user','reg-email','reg-team','reg-pass','reg-confirm'].forEach(id => document.getElementById(id).value = '');
+      } else if (data.error === 'USERNAME_EXISTS') {
+        showMsg('reg-msg','⚠ CALLSIGN ALREADY REGISTERED — CHOOSE ANOTHER.','error');
+      } else {
+        showMsg('reg-msg','⚠ REGISTRATION FAILED. TRY AGAIN.','error');
+      }
+    } catch(err) {
+      showMsg('reg-msg','⚠ CONNECTION ERROR. CHECK NETWORK.','error');
+    }
+    btn.disabled = false;
   }
+
   function closeModal() { document.getElementById('modal').classList.remove('show'); showTab('login'); }
-  function handleLogin() {
+
+  async function handleLogin() {
     const u = document.getElementById('login-user').value.trim();
     const p = document.getElementById('login-pass').value;
     if (!u||!p) { showMsg('login-msg','⚠ ENTER CALLSIGN AND ACCESS CODE.','error'); return; }
-    const users = getUsers();
-    const rec = users[u.toLowerCase()];
-    if (!rec || rec.password !== p) { showMsg('login-msg','⚠ INVALID CREDENTIALS — ACCESS DENIED.','error'); return; }
-    showMsg('login-msg','✅ IDENTITY VERIFIED','success');
-    setTimeout(() => {
-      sessionStorage.setItem('lrp_user', JSON.stringify({ username: rec.username, team: rec.team }));
-      showDashboard(rec.username, rec.team);
-    }, 1200);
+
+    // Admin shortcut
+    if (u.toLowerCase() === 'admin' && p === 'admin@lrp') {
+      showMsg('login-msg','✅ ADMIN ACCESS GRANTED','success');
+      setTimeout(() => { window.location.href = 'admin.html'; }, 1000);
+      return;
+    }
+
+    const btn = document.getElementById('login-btn');
+    btn.disabled = true;
+    showMsg('login-msg', '⏳ VERIFYING...', 'loading');
+
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action:'login', username:u, password:p })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showMsg('login-msg','✅ IDENTITY VERIFIED','success');
+        setTimeout(() => {
+          sessionStorage.setItem('lrp_user', JSON.stringify({ username: data.user.username, team: data.user.team }));
+          showDashboard(data.user.username, data.user.team);
+        }, 1200);
+      } else {
+        showMsg('login-msg','⚠ INVALID CREDENTIALS — ACCESS DENIED.','error');
+      }
+    } catch(err) {
+      showMsg('login-msg','⚠ CONNECTION ERROR. CHECK NETWORK.','error');
+    }
+    btn.disabled = false;
   }
 
   function showDashboard(username, team) {
@@ -283,41 +327,16 @@
       .wv1{animation:wv 8s linear infinite;opacity:.9;}
       .wv2{animation:wv 12s linear infinite reverse;opacity:.5;bottom:8px;}
       @keyframes wv{0%{transform:translateX(0)}100%{transform:translateX(25%)}}
-
-      /* ── TOP BAR ── */
-      .db-topbar{
-        position:relative;z-index:10;
-        display:grid;
-        grid-template-columns:auto 1fr auto;
-        align-items:center;
-        padding:14px 28px;
-        background:rgba(4,28,53,.9);
-        border-bottom:1px solid rgba(0,180,255,.2);
-        backdrop-filter:blur(12px);
-        gap:16px;
-      }
+      .db-topbar{position:relative;z-index:10;display:grid;grid-template-columns:auto 1fr auto;align-items:center;padding:14px 28px;background:rgba(4,28,53,.9);border-bottom:1px solid rgba(0,180,255,.2);backdrop-filter:blur(12px);gap:16px;}
       .db-brand{display:flex;align-items:center;gap:12px;}
       .db-brand-icon{width:40px;height:40px;background:linear-gradient(135deg,#c0441a,#e8610a);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
       .db-brand h1{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:900;color:#e0f4ff;letter-spacing:3px;white-space:nowrap;}
-
-      /* center user info */
-      .db-user-info{
-        display:flex;flex-direction:column;align-items:center;justify-content:center;
-      }
+      .db-user-info{display:flex;flex-direction:column;align-items:center;justify-content:center;}
       .db-user-info .name{font-family:'Orbitron',sans-serif;font-size:11px;color:#a8e8ff;letter-spacing:2px;}
       .db-user-info .team-lbl{font-size:11px;color:rgba(0,200,255,.6);letter-spacing:1px;}
-
-      /* sign out always far right */
       .db-signout-wrap{display:flex;justify-content:flex-end;align-items:center;}
-      .db-logout{
-        font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;
-        padding:8px 18px;
-        background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);
-        border-radius:3px;color:#ff9977;cursor:pointer;transition:all .3s;
-        text-transform:uppercase;white-space:nowrap;
-      }
+      .db-logout{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:8px 18px;background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);border-radius:3px;color:#ff9977;cursor:pointer;transition:all .3s;text-transform:uppercase;white-space:nowrap;}
       .db-logout:hover{background:rgba(180,40,20,.55);color:#fff;border-color:rgba(255,80,60,.8);}
-
       .db-body{position:relative;z-index:5;display:flex;align-items:center;justify-content:center;height:calc(100vh - 73px);gap:40px;padding:20px;}
       .db-card{width:320px;background:rgba(4,28,53,.88);border:1px solid rgba(0,180,255,.25);border-radius:4px;padding:36px 32px;cursor:pointer;transition:all .35s;backdrop-filter:blur(18px);box-shadow:0 20px 60px rgba(0,0,0,.6);position:relative;overflow:hidden;}
       .db-card::before,.db-card::after{content:'';position:absolute;width:14px;height:14px;border-color:rgba(0,180,255,.5);border-style:solid;}
@@ -340,26 +359,11 @@
       <div class="db-wave wv1"><svg viewBox="0 0 1200 200" preserveAspectRatio="none"><path d="M0,100 C150,40 300,160 450,100 C600,40 750,160 900,100 C1050,40 1150,120 1200,100 L1200,200 L0,200 Z" fill="#0a3558" opacity=".9"/></svg></div>
       <div class="db-wave wv2"><svg viewBox="0 0 1200 200" preserveAspectRatio="none"><path d="M0,130 C200,70 400,170 600,130 C800,90 1000,170 1200,130 L1200,200 L0,200 Z" fill="#041828" opacity=".7"/></svg></div>
     </div>
-
     <div class="db-topbar">
-      <!-- LEFT: Brand -->
-      <div class="db-brand">
-        <div class="db-brand-icon">🚢</div>
-        <h1>LRP SUPPORT PORTAL</h1>
-      </div>
-
-      <!-- CENTER: User info -->
-      <div class="db-user-info">
-        <div class="name">${username.toUpperCase()}</div>
-        <div class="team-lbl">⚓ ${team}</div>
-      </div>
-
-      <!-- RIGHT: Sign out -->
-      <div class="db-signout-wrap">
-        <button class="db-logout" onclick="location.reload()">⎋ SIGN OUT</button>
-      </div>
+      <div class="db-brand"><div class="db-brand-icon">🚢</div><h1>LRP SUPPORT PORTAL</h1></div>
+      <div class="db-user-info"><div class="name">${username.toUpperCase()}</div><div class="team-lbl">⚓ ${team}</div></div>
+      <div class="db-signout-wrap"><button class="db-logout" onclick="location.reload()">⎋ SIGN OUT</button></div>
     </div>
-
     <div class="db-body">
       <div class="db-card" onclick="openTool('handover')">
         <span class="db-card-badge badge-ops">OPERATIONS</span>
@@ -385,11 +389,7 @@
       overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;background:#020f1e;';
       const toolLabel = tool === 'handover' ? '📋 Shift Handover Logger' : '⏱️ Support Ticket Time Logger';
       const bar = document.createElement('div');
-      bar.style.cssText = `
-        display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;
-        padding:10px 24px;background:rgba(4,28,53,.95);
-        border-bottom:1px solid rgba(0,180,255,.2);flex-shrink:0;
-      `;
+      bar.style.cssText = `display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;padding:10px 24px;background:rgba(4,28,53,.95);border-bottom:1px solid rgba(0,180,255,.2);flex-shrink:0;`;
       bar.innerHTML = `
         <div style="display:flex;align-items:center;gap:12px;">
           <div style="width:34px;height:34px;background:linear-gradient(135deg,#c0441a,#e8610a);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;">🚢</div>
@@ -400,10 +400,9 @@
         </div>
         <div></div>
         <div style="display:flex;align-items:center;gap:10px;justify-content:flex-end;">
-          <button id="back-to-home" style="font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(0,100,180,.25);border:1px solid rgba(0,180,255,.4);border-radius:3px;color:#a8e8ff;cursor:pointer;text-transform:uppercase;transition:all .3s;">← BACK TO HOME</button>
-          <button id="tool-signout" style="font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);border-radius:3px;color:#ff9977;cursor:pointer;text-transform:uppercase;transition:all .3s;">⎋ SIGN OUT</button>
-        </div>
-      `;
+          <button id="back-to-home" style="font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(0,100,180,.25);border:1px solid rgba(0,180,255,.4);border-radius:3px;color:#a8e8ff;cursor:pointer;text-transform:uppercase;">← BACK TO HOME</button>
+          <button id="tool-signout" style="font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);border-radius:3px;color:#ff9977;cursor:pointer;text-transform:uppercase;">⎋ SIGN OUT</button>
+        </div>`;
       const iframe = document.createElement('iframe');
       iframe.src = files[tool];
       iframe.style.cssText = 'flex:1;border:none;width:100%;height:100%;';
@@ -412,18 +411,12 @@
       document.body.appendChild(overlay);
       document.getElementById('back-to-home').addEventListener('click', () => overlay.remove());
       document.getElementById('tool-signout').addEventListener('click', () => { overlay.remove(); location.reload(); });
-      const backBtn = document.getElementById('back-to-home');
-      const soBtn = document.getElementById('tool-signout');
-      backBtn.addEventListener('mouseover', () => { backBtn.style.background='rgba(0,100,180,.5)'; backBtn.style.color='#fff'; });
-      backBtn.addEventListener('mouseout',  () => { backBtn.style.background='rgba(0,100,180,.25)'; backBtn.style.color='#a8e8ff'; });
-      soBtn.addEventListener('mouseover', () => { soBtn.style.background='rgba(180,40,20,.5)'; soBtn.style.color='#fff'; });
-      soBtn.addEventListener('mouseout',  () => { soBtn.style.background='rgba(180,40,20,.25)'; soBtn.style.color='#ff9977'; });
     };
   }
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Enter') {
-      const loginActive = document.getElementById('view-login').classList.contains('active');
+      const loginActive = document.getElementById('view-login') && document.getElementById('view-login').classList.contains('active');
       if (loginActive) handleLogin(); else handleRegister();
     }
   });
