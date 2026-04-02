@@ -86,7 +86,7 @@
     <div class="topbar-right">
       <span style="font-size:11px;color:rgba(0,200,255,.6);letter-spacing:1px;" id="lastRefreshed"></span>
       <button class="refresh-btn" onclick="loadUsers()">↻ Refresh</button>
-      <button class="logout-btn" onclick="adminLogout()">⎋ Logout</button>
+      <button class="logout-btn" onclick="adminLogout()">⎋ Sign Out</button>
     </div>
   </div>
 
@@ -131,10 +131,20 @@
 
   let allUsers = [];
 
+  // Check if already logged in on page load
+  window.addEventListener('load', () => {
+    if (sessionStorage.getItem('admin_logged_in') === 'true') {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      loadUsers();
+    }
+  });
+
   function adminLogin() {
     const u = document.getElementById('adm-user').value.trim();
     const p = document.getElementById('adm-pass').value;
     if (u === ADMIN_USER && p === ADMIN_PASS) {
+      sessionStorage.setItem('admin_logged_in', 'true');
       document.getElementById('loginScreen').style.display = 'none';
       document.getElementById('dashboard').style.display = 'block';
       loadUsers();
@@ -144,6 +154,8 @@
   }
 
   function adminLogout() {
+    if (!confirm('Are you sure you want to sign out?')) return;
+    sessionStorage.removeItem('admin_logged_in');
     document.getElementById('loginScreen').style.display = 'flex';
     document.getElementById('dashboard').style.display = 'none';
     document.getElementById('adm-user').value = '';
