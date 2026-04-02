@@ -57,6 +57,8 @@
   .reset-btn{background:rgba(255,160,0,.15);border:1px solid rgba(255,160,0,.4);border-radius:4px;color:#ffa040;cursor:pointer;font-size:11px;font-weight:700;letter-spacing:1px;padding:4px 10px;transition:all .3s;white-space:nowrap;}
   .reset-btn:hover{background:rgba(255,160,0,.35);color:#fff;}
   .reset-btn.done{background:rgba(0,255,136,.15);border-color:rgba(0,255,136,.4);color:#00ff88;}
+  .delete-btn{background:rgba(255,50,50,.15);border:1px solid rgba(255,50,50,.4);border-radius:4px;color:#ff7777;cursor:pointer;font-size:11px;font-weight:700;letter-spacing:1px;padding:4px 10px;transition:all .3s;white-space:nowrap;margin-left:6px;}
+  .delete-btn:hover{background:rgba(255,50,50,.35);color:#fff;}
   .toast{position:fixed;bottom:24px;right:24px;background:#1a3a5c;border:1px solid rgba(0,180,255,.4);border-radius:8px;padding:12px 20px;font-size:13px;color:#a8e8ff;box-shadow:0 8px 24px rgba(0,0,0,.4);opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;}
   .toast.show{opacity:1;}
 </style>
@@ -130,7 +132,7 @@
 </div>
 
 <script>
-  const API_URL = 'https://script.google.com/macros/s/AKfycbwWGNcbROHDByA4Z5wn5naB6-9mR_IvrO3uM0TXaGz5eSZzGG5jP8ysft5zkY1ZX0z4XA/exec';
+  const API_URL = 'https://script.google.com/macros/s/AKfycbzcjCGs6SAi5bkhyHHdd-_m8mRQFCQu-lFvyKaIacJY2vFygbZTs70rk4LXppJNK7yXVw/exec';
   const ADMIN_USER = 'admin';
   const ADMIN_PASS = 'admin@lrp';
 
@@ -229,7 +231,10 @@
         <td><span class="badge ${st.cls}">${st.label}</span></td>
         <td class="last-login">${formatDate(u.lastLogin)}</td>
         <td class="last-login">${formatDate(u.registeredAt)}</td>
-        <td><button class="reset-btn" id="rbtn_${i}" onclick="resetPassword('${u.username}', ${i})">🔑 Reset PW</button></td>
+        <td>
+          <button class="reset-btn" id="rbtn_${i}" onclick="resetPassword('${u.username}', ${i})">🔑 Reset PW</button>
+          <button class="delete-btn" id="dbtn_${i}" onclick="deleteUser('${u.username}', ${i})">🗑 Delete</button>
+        </td>
       </tr>`;
     }).join('');
 
@@ -277,6 +282,30 @@
     t.style.color = success ? '#00ff88' : '#ff9977';
     t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  async function deleteUser(username, idx) {
+    if (!confirm(`⚠ Permanently delete account "${username}"?\n\nThis cannot be undone!`)) return;
+    const btn = document.getElementById('dbtn_' + idx);
+    btn.textContent = '⏳...';
+    btn.disabled = true;
+    try {
+      const params = new URLSearchParams({ action:'deleteUser', username });
+      const res  = await fetch(API_URL + '?' + params.toString());
+      const data = await res.json();
+      if (data.success) {
+        showToast(`🗑 Account "${username}" deleted successfully.`);
+        setTimeout(() => loadUsers(), 1000);
+      } else {
+        btn.textContent = '🗑 Delete';
+        btn.disabled = false;
+        showToast('⚠ Delete failed. Try again.', false);
+      }
+    } catch(err) {
+      btn.textContent = '🗑 Delete';
+      btn.disabled = false;
+      showToast('⚠ Connection error.', false);
+    }
   }
 
   async function resetPassword(username, idx) {
