@@ -93,8 +93,10 @@
   .modal .vessel-id { font-family: 'Share Tech Mono',monospace; font-size: 11px; color: rgba(0,200,255,.7); letter-spacing: 2px; margin-bottom: 20px; padding: 6px 10px; background: rgba(0,0,0,.3); border-radius: 2px; display: inline-block; }
   .modal button { padding: 10px 28px; background: linear-gradient(135deg,#0a4a7a,#0d6fa8); border: 1px solid rgba(0,200,255,.4); border-radius: 3px; font-family: 'Orbitron',sans-serif; font-size: 11px; letter-spacing: 2px; color: #a8f0ff; cursor: pointer; transition: all .3s; }
   .modal button:hover { background: linear-gradient(135deg,#0d6fa8,#14a0d0); color: #fff; }
-  .form-view { display: none; }
-  .form-view.active { display: block; }
+  .change-pw-box { background: rgba(4,28,53,.95); border: 1px solid rgba(255,160,0,.4); border-radius: 6px; padding: 28px 32px; text-align: center; }
+  .change-pw-box h2 { font-family: 'Orbitron',sans-serif; font-size: 13px; letter-spacing: 3px; color: #ffa040; margin-bottom: 8px; }
+  .change-pw-box p { font-size: 12px; color: rgba(168,216,234,.7); margin-bottom: 20px; line-height: 1.6; }
+  .change-pw-box .form-group { text-align: left; }
 </style>
 </head>
 <body>
@@ -297,7 +299,11 @@
         showMsg('login-msg','✅ IDENTITY VERIFIED','success');
         setTimeout(() => {
           sessionStorage.setItem('lrp_user', JSON.stringify({ username: data.user.username, team: data.user.team }));
-          showDashboard(data.user.username, data.user.team);
+          if (data.isDefault) {
+            showChangePassword(data.user.username, data.user.team);
+          } else {
+            showDashboard(data.user.username, data.user.team);
+          }
         }, 1200);
       } else {
         showMsg('login-msg','⚠ INVALID CREDENTIALS — ACCESS DENIED.','error');
@@ -306,6 +312,60 @@
       showMsg('login-msg','⚠ CONNECTION ERROR. CHECK NETWORK.','error');
     }
     btn.disabled = false;
+  }
+
+  function showChangePassword(username, team) {
+    document.querySelector('.panel-wrap').innerHTML = `
+      <div class="panel">
+        <div class="brand-bar">
+          <div class="brand-icon">🔐</div>
+          <div class="brand-text"><h1>SET NEW PASSWORD</h1></div>
+        </div>
+        <div class="divider"></div>
+        <div style="background:rgba(255,160,0,.1);border:1px solid rgba(255,160,0,.3);border-radius:4px;padding:10px 14px;margin-bottom:18px;">
+          <div style="font-size:11px;color:#ffa040;font-weight:700;letter-spacing:1px;">⚠ DEFAULT PASSWORD DETECTED</div>
+          <div style="font-size:11px;color:rgba(168,216,234,.7);margin-top:4px;">You must set a new personal password before continuing.</div>
+        </div>
+        <div class="form-group">
+          <label>New Password</label>
+          <div class="input-wrap"><span class="input-icon">🔐</span><input type="password" id="new-pass" placeholder="Min 6 characters"/></div>
+        </div>
+        <div class="form-group">
+          <label>Confirm New Password</label>
+          <div class="input-wrap"><span class="input-icon">✅</span><input type="password" id="new-confirm" placeholder="Re-enter new password"/></div>
+        </div>
+        <div id="cpw-msg" class="msg"></div>
+        <button class="btn-primary" id="cpw-btn" onclick="submitNewPassword('${username}','${team}')">🔒 SET NEW PASSWORD</button>
+      </div>`;
+  }
+
+  async function submitNewPassword(username, team) {
+    const np = document.getElementById('new-pass').value;
+    const nc = document.getElementById('new-confirm').value;
+    if (!np || !nc) { showMsg('cpw-msg','⚠ BOTH FIELDS ARE REQUIRED.','error'); return; }
+    if (np.length < 6) { showMsg('cpw-msg','⚠ PASSWORD MUST BE ≥ 6 CHARACTERS.','error'); return; }
+    if (np !== nc) { showMsg('cpw-msg','⚠ PASSWORDS DO NOT MATCH.','error'); return; }
+    if (np === 'LRP@1234') { showMsg('cpw-msg','⚠ CANNOT USE DEFAULT PASSWORD. CHOOSE A NEW ONE.','error'); return; }
+
+    const btn = document.getElementById('cpw-btn');
+    btn.disabled = true;
+    showMsg('cpw-msg','⏳ UPDATING PASSWORD...','loading');
+
+    try {
+      const params = new URLSearchParams({ action:'changePassword', username, newPassword:np });
+      const res = await fetch(API_URL + '?' + params.toString());
+      const data = await res.json();
+      if (data.success) {
+        showMsg('cpw-msg','✅ PASSWORD UPDATED SUCCESSFULLY!','success');
+        setTimeout(() => showDashboard(username, team), 1200);
+      } else {
+        showMsg('cpw-msg','⚠ FAILED TO UPDATE. TRY AGAIN.','error');
+        btn.disabled = false;
+      }
+    } catch(err) {
+      showMsg('cpw-msg','⚠ CONNECTION ERROR.','error');
+      btn.disabled = false;
+    }
   }
 
   function showDashboard(username, team) {
