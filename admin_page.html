@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LRP Admin Dashboard</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#020f1e;color:#e0f4ff;min-height:100vh;}
+  .topbar{background:rgba(4,28,53,.95);border-bottom:1px solid rgba(0,180,255,.2);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px);}
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand-icon{width:40px;height:40px;background:linear-gradient(135deg,#c0441a,#e8610a);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:20px;}
+  .brand h1{font-family:'Courier New',monospace;font-size:14px;font-weight:900;color:#e0f4ff;letter-spacing:3px;}
+  .brand-sub{font-size:10px;color:rgba(0,200,255,.7);letter-spacing:2px;margin-top:2px;}
+  .topbar-right{display:flex;align-items:center;gap:12px;}
+  .refresh-btn{padding:8px 16px;background:rgba(0,180,255,.15);border:1px solid rgba(0,180,255,.4);border-radius:4px;color:#a8e8ff;cursor:pointer;font-size:12px;font-weight:600;letter-spacing:1px;transition:all .3s;}
+  .refresh-btn:hover{background:rgba(0,180,255,.3);color:#fff;}
+  .logout-btn{padding:8px 16px;background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);border-radius:4px;color:#ff9977;cursor:pointer;font-size:12px;font-weight:600;letter-spacing:1px;transition:all .3s;}
+  .logout-btn:hover{background:rgba(180,40,20,.55);color:#fff;}
+  .main{padding:24px 28px;}
+  .page-title{font-family:'Courier New',monospace;font-size:22px;font-weight:900;color:#e0f4ff;letter-spacing:4px;margin-bottom:4px;}
+  .page-sub{font-size:13px;color:rgba(0,200,255,.6);letter-spacing:1px;margin-bottom:24px;}
+  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
+  .stat-card{background:rgba(4,28,53,.88);border:1px solid rgba(0,180,255,.2);border-radius:8px;padding:20px;text-align:center;}
+  .stat-num{font-size:32px;font-weight:800;margin-bottom:4px;}
+  .stat-lbl{font-size:11px;color:rgba(168,216,234,.6);letter-spacing:1px;text-transform:uppercase;}
+  .blue{color:#00c8ff;} .green{color:#00ff88;} .orange{color:#ffa040;} .red{color:#ff4444;}
+  .section-title{font-size:13px;font-weight:700;color:rgba(0,200,255,.8);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+  .table-wrap{background:rgba(4,28,53,.88);border:1px solid rgba(0,180,255,.2);border-radius:8px;overflow:hidden;margin-bottom:28px;}
+  .search-bar{padding:14px 18px;border-bottom:1px solid rgba(0,180,255,.15);display:flex;align-items:center;gap:12px;}
+  .search-bar input{flex:1;background:rgba(2,15,30,.7);border:1px solid rgba(0,120,180,.35);border-radius:4px;padding:8px 12px;font-size:13px;color:#a8e8ff;outline:none;font-family:'Courier New',monospace;}
+  .search-bar input:focus{border-color:rgba(0,200,255,.7);}
+  .search-bar input::placeholder{color:rgba(100,160,200,.4);}
+  table{width:100%;border-collapse:collapse;}
+  thead tr{background:rgba(0,60,100,.5);}
+  th{padding:12px 16px;text-align:left;font-size:11px;font-weight:700;color:rgba(0,200,255,.8);text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid rgba(0,180,255,.2);}
+  td{padding:12px 16px;font-size:13px;border-bottom:1px solid rgba(0,180,255,.08);color:#a8d8ea;}
+  tr:hover td{background:rgba(0,60,100,.3);}
+  tr:last-child td{border-bottom:none;}
+  .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;}
+  .badge-online{background:rgba(0,255,136,.15);border:1px solid rgba(0,255,136,.4);color:#00ff88;}
+  .badge-recent{background:rgba(255,160,64,.15);border:1px solid rgba(255,160,64,.4);color:#ffa040;}
+  .badge-offline{background:rgba(100,100,100,.2);border:1px solid rgba(100,100,100,.4);color:#888;}
+  .vessel-id{font-family:'Courier New',monospace;font-size:11px;color:rgba(0,200,255,.6);}
+  .loading{text-align:center;padding:40px;color:rgba(0,200,255,.6);font-size:14px;letter-spacing:2px;}
+  .error-msg{text-align:center;padding:40px;color:#ff9999;font-size:14px;}
+  .last-login{font-size:11px;color:rgba(168,216,234,.5);}
+  .login-screen{position:fixed;inset:0;background:#020f1e;display:flex;align-items:center;justify-content:center;z-index:999;}
+  .login-box{background:rgba(4,28,53,.95);border:1px solid rgba(0,180,255,.3);border-radius:8px;padding:40px;width:340px;text-align:center;}
+  .login-box h2{font-family:'Courier New',monospace;font-size:16px;letter-spacing:3px;color:#e0f4ff;margin-bottom:6px;}
+  .login-box p{font-size:12px;color:rgba(0,200,255,.6);margin-bottom:24px;letter-spacing:1px;}
+  .login-box input{width:100%;background:rgba(2,15,30,.7);border:1px solid rgba(0,120,180,.35);border-radius:4px;padding:11px 14px;font-size:13px;color:#a8e8ff;outline:none;margin-bottom:12px;font-family:'Courier New',monospace;}
+  .login-box input:focus{border-color:rgba(0,200,255,.7);}
+  .login-box button{width:100%;padding:12px;background:linear-gradient(135deg,#0a4a7a,#0d6fa8);border:1px solid rgba(0,200,255,.4);border-radius:4px;font-size:13px;font-weight:700;letter-spacing:2px;color:#a8f0ff;cursor:pointer;transition:all .3s;text-transform:uppercase;}
+  .login-box button:hover{background:linear-gradient(135deg,#0d6fa8,#14a0d0);color:#fff;}
+  .login-err{color:#ff9999;font-size:12px;margin-top:8px;display:none;}
+  .empty-state{text-align:center;padding:40px;color:rgba(168,216,234,.4);font-size:13px;}
+  .tag{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:600;background:rgba(0,100,180,.2);border:1px solid rgba(0,180,255,.2);color:rgba(0,200,255,.8);margin-left:4px;}
+</style>
+</head>
+<body>
+
+<!-- Login Screen -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div style="font-size:40px;margin-bottom:12px;">🛡️</div>
+    <h2>ADMIN ACCESS</h2>
+    <p>LRP SUPPORT PORTAL — COMMAND</p>
+    <input type="text" id="adm-user" placeholder="Admin username" autocomplete="off"/>
+    <input type="password" id="adm-pass" placeholder="Admin password"/>
+    <button onclick="adminLogin()">⚓ ENTER COMMAND</button>
+    <div class="login-err" id="adm-err">⚠ Invalid admin credentials.</div>
+  </div>
+</div>
+
+<!-- Main Dashboard -->
+<div id="dashboard" style="display:none;">
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-icon">🚢</div>
+      <div>
+        <h1>LRP SUPPORT PORTAL</h1>
+        <div class="brand-sub">ADMIN COMMAND CENTER</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span style="font-size:11px;color:rgba(0,200,255,.6);letter-spacing:1px;" id="lastRefreshed"></span>
+      <button class="refresh-btn" onclick="loadUsers()">↻ Refresh</button>
+      <button class="logout-btn" onclick="adminLogout()">⎋ Logout</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="page-title">AGENT OVERVIEW</div>
+    <div class="page-sub">Real-time agent registrations and login activity</div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num blue" id="s-total">—</div>
+        <div class="stat-lbl">Total Agents</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num green" id="s-online">—</div>
+        <div class="stat-lbl">Active Today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num orange" id="s-recent">—</div>
+        <div class="stat-lbl">This Week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num red" id="s-inactive">—</div>
+        <div class="stat-lbl">Never Logged In</div>
+      </div>
+    </div>
+
+    <div class="section-title">🧑‍✈️ Registered Agents</div>
+    <div class="table-wrap">
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="🔍  Search by name, team, or vessel ID..." oninput="filterTable()"/>
+        <span style="font-size:11px;color:rgba(168,216,234,.5);" id="filterCount"></span>
+      </div>
+      <div id="tableContainer"><div class="loading">⏳ LOADING AGENT DATA...</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API_URL = 'https://script.google.com/macros/s/AKfycbxNMzughMHKtWROJZWowMLHOUBGR0FO9qCyRKjCOL3IxBdnH1d3JP_M9pVbNJtY9Warbw/exec';
+  const ADMIN_USER = 'admin';
+  const ADMIN_PASS = 'admin@lrp';
+
+  let allUsers = [];
+
+  function adminLogin() {
+    const u = document.getElementById('adm-user').value.trim();
+    const p = document.getElementById('adm-pass').value;
+    if (u === ADMIN_USER && p === ADMIN_PASS) {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      loadUsers();
+    } else {
+      document.getElementById('adm-err').style.display = 'block';
+    }
+  }
+
+  function adminLogout() {
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('adm-user').value = '';
+    document.getElementById('adm-pass').value = '';
+  }
+
+  function getStatus(lastLogin) {
+    if (!lastLogin) return { label: 'NEVER', cls: 'badge-offline' };
+    const diff = (new Date() - new Date(lastLogin)) / 3600000;
+    if (diff < 24) return { label: 'TODAY', cls: 'badge-online' };
+    if (diff < 168) return { label: 'THIS WEEK', cls: 'badge-recent' };
+    return { label: 'INACTIVE', cls: 'badge-offline' };
+  }
+
+  function formatDate(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }) +
+           ' ' + d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+  }
+
+  async function loadUsers() {
+    document.getElementById('tableContainer').innerHTML = '<div class="loading">⏳ FETCHING AGENT DATA...</div>';
+    try {
+      const res = await fetch(API_URL + '?action=getUsers&t=' + Date.now());
+      const data = await res.json();
+      if (data.success) {
+        allUsers = data.users || [];
+        updateStats(allUsers);
+        renderTable(allUsers);
+        document.getElementById('lastRefreshed').textContent = 'Last refreshed: ' + new Date().toLocaleTimeString();
+      } else {
+        document.getElementById('tableContainer').innerHTML = '<div class="error-msg">⚠ Failed to load data. Try refreshing.</div>';
+      }
+    } catch(err) {
+      document.getElementById('tableContainer').innerHTML = '<div class="error-msg">⚠ Connection error: ' + err.message + '</div>';
+    }
+  }
+
+  function updateStats(users) {
+    const today = users.filter(u => { if(!u.lastLogin) return false; return (new Date()-new Date(u.lastLogin))/3600000 < 24; }).length;
+    const week  = users.filter(u => { if(!u.lastLogin) return false; const h=(new Date()-new Date(u.lastLogin))/3600000; return h>=24&&h<168; }).length;
+    const never = users.filter(u => !u.lastLogin).length;
+    document.getElementById('s-total').textContent    = users.length;
+    document.getElementById('s-online').textContent   = today;
+    document.getElementById('s-recent').textContent   = week;
+    document.getElementById('s-inactive').textContent = never;
+  }
+
+  function renderTable(users) {
+    if (!users.length) {
+      document.getElementById('tableContainer').innerHTML = '<div class="empty-state">No agents registered yet.</div>';
+      document.getElementById('filterCount').textContent = '';
+      return;
+    }
+    document.getElementById('filterCount').textContent = users.length + ' agents';
+    let rows = users.map((u, i) => {
+      const st = getStatus(u.lastLogin);
+      return `<tr>
+        <td style="color:rgba(0,200,255,.5);font-size:12px;">${i+1}</td>
+        <td style="font-weight:700;color:#e0f4ff;">👤 ${u.username}</td>
+        <td style="color:#a8d8ea;">${u.email || '—'}</td>
+        <td><span style="background:rgba(0,100,180,.2);border:1px solid rgba(0,180,255,.2);border-radius:3px;padding:2px 8px;font-size:11px;color:rgba(0,200,255,.8);">⚓ ${u.team || '—'}</span></td>
+        <td class="vessel-id">${u.vesselId || '—'}</td>
+        <td><span class="badge ${st.cls}">${st.label}</span></td>
+        <td class="last-login">${formatDate(u.lastLogin)}</td>
+        <td class="last-login">${formatDate(u.registeredAt)}</td>
+      </tr>`;
+    }).join('');
+
+    document.getElementById('tableContainer').innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Agent Name</th>
+            <th>Email</th>
+            <th>Team</th>
+            <th>Vessel ID</th>
+            <th>Status</th>
+            <th>Last Login</th>
+            <th>Registered</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+  }
+
+  function filterTable() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    const filtered = allUsers.filter(u =>
+      (u.username||'').toLowerCase().includes(q) ||
+      (u.team||'').toLowerCase().includes(q) ||
+      (u.vesselId||'').toLowerCase().includes(q) ||
+      (u.email||'').toLowerCase().includes(q)
+    );
+    renderTable(filtered);
+    document.getElementById('filterCount').textContent = filtered.length + ' of ' + allUsers.length + ' agents';
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      if (document.getElementById('loginScreen').style.display !== 'none') adminLogin();
+    }
+  });
+
+  // Auto-refresh every 60 seconds
+  setInterval(() => {
+    if (document.getElementById('dashboard').style.display !== 'none') loadUsers();
+  }, 60000);
+</script>
+</body>
+</html>
