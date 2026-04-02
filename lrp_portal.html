@@ -220,8 +220,7 @@
 </div>
 
 <script>
-  const API_URL = 'https://script.google.com/macros/s/AKfycbxNMzughMHKtWROJZWowMLHOUBGR0FO9qCyRKjCOL3IxBdnH1d3JP_M9pVbNJtY9Warbw/exec';
-  // Version 2.0 - Google Sheets backend
+  const API_URL = 'https://script.google.com/macros/s/AKfycbwcR11oAeEKhBozwny6yxYsf5VOnvVCLU_XUbQ3jbNyjZDeW6avgTO5qIf2N64C6Ao1zQ/exec';
 
   function showTab(t) {
     document.getElementById('view-login').classList.toggle('active', t === 'login');
@@ -253,10 +252,8 @@
 
     const vesselId = 'VID-' + Math.random().toString(36).toUpperCase().slice(2,8);
     try {
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action:'register', username:u, email:e, team:t, password:p, vesselId })
-      });
+      const params = new URLSearchParams({ action:'register', username:u, email:e, team:t, password:p, vesselId });
+      const res = await fetch(API_URL + '?' + params.toString());
       const data = await res.json();
       if (data.success) {
         document.getElementById('modal-name').textContent = u;
@@ -293,10 +290,8 @@
     showMsg('login-msg', '⏳ VERIFYING...', 'loading');
 
     try {
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action:'login', username:u, password:p })
-      });
+      const params = new URLSearchParams({ action:'login', username:u, password:p });
+      const res = await fetch(API_URL + '?' + params.toString());
       const data = await res.json();
       if (data.success) {
         showMsg('login-msg','✅ IDENTITY VERIFIED','success');
