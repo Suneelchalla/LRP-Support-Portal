@@ -18,13 +18,23 @@
   .logout-btn{padding:8px 16px;background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);border-radius:4px;color:#ff9977;cursor:pointer;font-size:12px;font-weight:600;letter-spacing:1px;transition:all .3s;}
   .logout-btn:hover{background:rgba(180,40,20,.55);color:#fff;}
   .main{padding:24px 28px;}
+
+  /* ── TABS ── */
+  .admin-tabs{display:flex;gap:0;margin-bottom:28px;border-bottom:1px solid rgba(0,180,255,.2);}
+  .admin-tab{padding:12px 28px;background:none;border:none;font-family:'Courier New',monospace;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(0,180,255,.45);cursor:pointer;position:relative;transition:color .3s;}
+  .admin-tab.active{color:#00c8ff;}
+  .admin-tab.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#00c8ff,transparent);}
+
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
   .page-title{font-family:'Courier New',monospace;font-size:22px;font-weight:900;color:#e0f4ff;letter-spacing:4px;margin-bottom:4px;}
   .page-sub{font-size:13px;color:rgba(0,200,255,.6);letter-spacing:1px;margin-bottom:24px;}
   .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
   .stat-card{background:rgba(4,28,53,.88);border:1px solid rgba(0,180,255,.2);border-radius:8px;padding:20px;text-align:center;}
   .stat-num{font-size:32px;font-weight:800;margin-bottom:4px;}
   .stat-lbl{font-size:11px;color:rgba(168,216,234,.6);letter-spacing:1px;text-transform:uppercase;}
-  .blue{color:#00c8ff;} .green{color:#00ff88;} .orange{color:#ffa040;} .red{color:#ff4444;}
+  .blue{color:#00c8ff;} .green{color:#00ff88;} .orange{color:#ffa040;} .red{color:#ff4444;} .purple{color:#c080ff;}
   .section-title{font-size:13px;font-weight:700;color:rgba(0,200,255,.8);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
   .table-wrap{background:rgba(4,28,53,.88);border:1px solid rgba(0,180,255,.2);border-radius:8px;overflow:hidden;margin-bottom:28px;}
   .search-bar{padding:14px 18px;border-bottom:1px solid rgba(0,180,255,.15);display:flex;align-items:center;gap:12px;}
@@ -59,8 +69,38 @@
   .reset-btn.done{background:rgba(0,255,136,.15);border-color:rgba(0,255,136,.4);color:#00ff88;}
   .delete-btn{background:rgba(255,50,50,.15);border:1px solid rgba(255,50,50,.4);border-radius:4px;color:#ff7777;cursor:pointer;font-size:11px;font-weight:700;letter-spacing:1px;padding:4px 10px;transition:all .3s;white-space:nowrap;margin-left:6px;}
   .delete-btn:hover{background:rgba(255,50,50,.35);color:#fff;}
+  .edit-btn{background:rgba(0,120,220,.15);border:1px solid rgba(0,180,255,.4);border-radius:4px;color:#a8e8ff;cursor:pointer;font-size:11px;font-weight:700;letter-spacing:1px;padding:4px 10px;transition:all .3s;white-space:nowrap;}
+  .edit-btn:hover{background:rgba(0,120,220,.35);color:#fff;}
   .toast{position:fixed;bottom:24px;right:24px;background:#1a3a5c;border:1px solid rgba(0,180,255,.4);border-radius:8px;padding:12px 20px;font-size:13px;color:#a8e8ff;box-shadow:0 8px 24px rgba(0,0,0,.4);opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;}
   .toast.show{opacity:1;}
+
+  /* ── ADD CREDENTIAL FORM ── */
+  .cred-form-wrap{background:rgba(4,28,53,.88);border:1px solid rgba(120,60,200,.3);border-radius:8px;padding:24px;margin-bottom:28px;}
+  .cred-form-title{font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:rgba(160,80,255,.9);letter-spacing:2px;text-transform:uppercase;margin-bottom:18px;}
+  .cred-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+  .cred-form-grid.full{grid-template-columns:1fr;}
+  .cred-field label{display:block;font-size:10px;font-weight:700;letter-spacing:1.5px;color:rgba(0,180,255,.7);text-transform:uppercase;margin-bottom:5px;}
+  .cred-field input, .cred-field select{width:100%;background:rgba(2,15,30,.7);border:1px solid rgba(0,120,180,.35);border-radius:4px;padding:9px 12px;font-size:13px;color:#a8e8ff;outline:none;font-family:'Courier New',monospace;transition:border-color .3s;}
+  .cred-field input:focus, .cred-field select:focus{border-color:rgba(0,200,255,.7);}
+  .cred-field input::placeholder{color:rgba(100,160,200,.35);}
+  .cred-field select option{background:#041c35;color:#a8e8ff;}
+  .cred-form-actions{display:flex;gap:12px;}
+  .btn-add{padding:10px 24px;background:linear-gradient(135deg,#4a1a8b,#6a2ab0);border:1px solid rgba(160,80,255,.4);border-radius:4px;color:#c080ff;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;transition:all .3s;}
+  .btn-add:hover{background:linear-gradient(135deg,#6a2ab0,#8a40d0);color:#fff;}
+  .btn-cancel{padding:10px 24px;background:rgba(100,100,100,.15);border:1px solid rgba(100,100,100,.3);border-radius:4px;color:#aaa;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;transition:all .3s;}
+  .btn-cancel:hover{background:rgba(100,100,100,.3);color:#fff;}
+  .btn-new-cred{padding:9px 20px;background:rgba(120,60,200,.2);border:1px solid rgba(160,80,255,.4);border-radius:4px;color:#c080ff;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;transition:all .3s;white-space:nowrap;}
+  .btn-new-cred:hover{background:rgba(120,60,200,.4);color:#fff;}
+
+  /* ── CRED TABLE ── */
+  .env-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;}
+  .env-prod{background:rgba(255,60,60,.15);border:1px solid rgba(255,60,60,.4);color:#ff8888;}
+  .env-uat{background:rgba(255,160,0,.15);border:1px solid rgba(255,160,0,.4);color:#ffa040;}
+  .env-dev{background:rgba(0,180,80,.15);border:1px solid rgba(0,180,80,.4);color:#00ff88;}
+  .env-staging{background:rgba(100,100,255,.15);border:1px solid rgba(100,100,255,.4);color:#aaaaff;}
+  .env-default{background:rgba(100,100,100,.15);border:1px solid rgba(100,100,100,.35);color:#aaa;}
+  .pw-cell{font-family:'Courier New',monospace;font-size:12px;}
+  .pw-toggle-sm{background:none;border:none;color:rgba(0,180,255,.6);cursor:pointer;font-size:12px;padding:0 4px;}
 </style>
 </head>
 <body>
@@ -92,53 +132,105 @@
     </div>
     <div class="topbar-right">
       <span style="font-size:11px;color:rgba(0,200,255,.6);letter-spacing:1px;" id="lastRefreshed"></span>
-      <button class="refresh-btn" onclick="loadUsers()">↻ Refresh</button>
+      <button class="refresh-btn" onclick="refreshCurrent()">↻ Refresh</button>
       <button class="logout-btn" onclick="adminLogout()">⎋ Sign Out</button>
     </div>
   </div>
 
   <div class="main">
-    <div class="page-title">AGENT OVERVIEW</div>
-    <div class="page-sub">Real-time agent registrations and login activity</div>
+    <!-- ADMIN TABS -->
+    <div class="admin-tabs">
+      <button class="admin-tab active" id="atab-agents" onclick="switchAdminTab('agents')">🧑‍✈️ AGENTS</button>
+      <button class="admin-tab" id="atab-creds" onclick="switchAdminTab('creds')">🔐 CLIENT CREDENTIALS</button>
+    </div>
 
-    <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-num blue" id="s-total">—</div>
-        <div class="stat-lbl">Total Agents</div>
+    <!-- ══ TAB: AGENTS ══ -->
+    <div class="tab-panel active" id="panel-agents">
+      <div class="page-title">AGENT OVERVIEW</div>
+      <div class="page-sub">Real-time agent registrations and login activity</div>
+
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-num blue" id="s-total">—</div><div class="stat-lbl">Total Agents</div></div>
+        <div class="stat-card"><div class="stat-num green" id="s-online">—</div><div class="stat-lbl">Active Today</div></div>
+        <div class="stat-card"><div class="stat-num orange" id="s-recent">—</div><div class="stat-lbl">This Week</div></div>
+        <div class="stat-card"><div class="stat-num red" id="s-inactive">—</div><div class="stat-lbl">Never Logged In</div></div>
       </div>
-      <div class="stat-card">
-        <div class="stat-num green" id="s-online">—</div>
-        <div class="stat-lbl">Active Today</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num orange" id="s-recent">—</div>
-        <div class="stat-lbl">This Week</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num red" id="s-inactive">—</div>
-        <div class="stat-lbl">Never Logged In</div>
+
+      <div class="section-title">🧑‍✈️ Registered Agents</div>
+      <div class="table-wrap">
+        <div class="search-bar">
+          <input type="text" id="searchInput" placeholder="🔍  Search by name, team, or vessel ID..." oninput="filterTable()"/>
+          <span style="font-size:11px;color:rgba(168,216,234,.5);" id="filterCount"></span>
+        </div>
+        <div id="tableContainer"><div class="loading">⏳ LOADING AGENT DATA...</div></div>
       </div>
     </div>
 
-    <div class="section-title">🧑‍✈️ Registered Agents</div>
-    <div class="table-wrap">
-      <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="🔍  Search by name, team, or vessel ID..." oninput="filterTable()"/>
-        <span style="font-size:11px;color:rgba(168,216,234,.5);" id="filterCount"></span>
+    <!-- ══ TAB: CLIENT CREDENTIALS ══ -->
+    <div class="tab-panel" id="panel-creds">
+      <div class="page-title">CLIENT CREDENTIALS</div>
+      <div class="page-sub">Manage client login credentials for all agents</div>
+
+      <!-- ADD / EDIT FORM -->
+      <div class="cred-form-wrap" id="credFormWrap">
+        <div class="cred-form-title" id="credFormTitle">➕ Add New Client Credential</div>
+        <input type="hidden" id="edit-cred-id"/>
+        <div class="cred-form-grid">
+          <div class="cred-field">
+            <label>Client Name *</label>
+            <input type="text" id="cred-client" placeholder="e.g. Acme Corp"/>
+          </div>
+          <div class="cred-field">
+            <label>Environment *</label>
+            <select id="cred-env">
+              <option value="">— Select —</option>
+              <option value="Production">Production</option>
+              <option value="UAT">UAT</option>
+              <option value="Staging">Staging</option>
+              <option value="Development">Development</option>
+            </select>
+          </div>
+          <div class="cred-field">
+            <label>Application URL</label>
+            <input type="text" id="cred-url" placeholder="https://app.example.com"/>
+          </div>
+          <div class="cred-field">
+            <label>User ID *</label>
+            <input type="text" id="cred-userid" placeholder="e.g. admin@acme.com"/>
+          </div>
+          <div class="cred-field">
+            <label>Password *</label>
+            <input type="text" id="cred-pass" placeholder="Enter password"/>
+          </div>
+        </div>
+        <div class="cred-form-actions">
+          <button class="btn-add" id="cred-submit-btn" onclick="submitCredential()">💾 Save Credential</button>
+          <button class="btn-cancel" id="cred-cancel-btn" onclick="cancelCredEdit()" style="display:none;">✕ Cancel Edit</button>
+        </div>
       </div>
-      <div id="tableContainer"><div class="loading">⏳ LOADING AGENT DATA...</div></div>
+
+      <!-- CREDENTIALS TABLE -->
+      <div class="section-title" style="margin-top:8px;">
+        🗂 All Client Credentials
+        <span style="font-size:11px;color:rgba(168,216,234,.5);margin-left:8px;" id="cred-count"></span>
+      </div>
+      <div class="table-wrap">
+        <div class="search-bar">
+          <input type="text" id="credSearchInput" placeholder="🔍  Search by client name..." oninput="filterCredTable()"/>
+        </div>
+        <div id="credTableContainer"><div class="loading">⏳ LOADING...</div></div>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-  const API_URL = 'https://script.google.com/macros/s/AKfycbzcjCGs6SAi5bkhyHHdd-_m8mRQFCQu-lFvyKaIacJY2vFygbZTs70rk4LXppJNK7yXVw/exec';
+  const API_URL    = 'https://script.google.com/macros/s/AKfycbxPNFPaXPmAMJvNl5_6Rrf0-Yx_OLvJ08MFBNWLEQ2MV59JcyvkMLImerdPXcKq52Ojvg/exec';
   const ADMIN_USER = 'admin';
   const ADMIN_PASS = 'admin@lrp';
 
-  let allUsers = [];
+  let allUsers = [], allCreds = [], currentAdminTab = 'agents';
 
-  // Check if already logged in on page load
   window.addEventListener('load', () => {
     if (sessionStorage.getItem('admin_logged_in') === 'true') {
       document.getElementById('loginScreen').style.display = 'none';
@@ -151,7 +243,7 @@
     const u = document.getElementById('adm-user').value.trim();
     const p = document.getElementById('adm-pass').value;
     if (u === ADMIN_USER && p === ADMIN_PASS) {
-      sessionStorage.setItem('admin_logged_in', 'true');
+      sessionStorage.setItem('admin_logged_in','true');
       document.getElementById('loginScreen').style.display = 'none';
       document.getElementById('dashboard').style.display = 'block';
       loadUsers();
@@ -169,25 +261,44 @@
     document.getElementById('adm-pass').value = '';
   }
 
+  /* ── ADMIN TAB SWITCH ── */
+  function switchAdminTab(tab) {
+    currentAdminTab = tab;
+    ['agents','creds'].forEach(t => {
+      document.getElementById('atab-' + t).classList.toggle('active', t === tab);
+      document.getElementById('panel-' + t).classList.toggle('active', t === tab);
+    });
+    if (tab === 'creds') loadCreds();
+    document.getElementById('lastRefreshed').textContent = '';
+  }
+
+  function refreshCurrent() {
+    if (currentAdminTab === 'agents') loadUsers();
+    else loadCreds();
+  }
+
+  /* ══════════════════════════════
+     AGENTS TAB
+  ══════════════════════════════ */
   function getStatus(lastLogin) {
-    if (!lastLogin) return { label: 'NEVER', cls: 'badge-offline' };
+    if (!lastLogin) return { label:'NEVER', cls:'badge-offline' };
     const diff = (new Date() - new Date(lastLogin)) / 3600000;
-    if (diff < 24) return { label: 'TODAY', cls: 'badge-online' };
-    if (diff < 168) return { label: 'THIS WEEK', cls: 'badge-recent' };
-    return { label: 'INACTIVE', cls: 'badge-offline' };
+    if (diff < 24)  return { label:'TODAY',     cls:'badge-online' };
+    if (diff < 168) return { label:'THIS WEEK', cls:'badge-recent' };
+    return { label:'INACTIVE', cls:'badge-offline' };
   }
 
   function formatDate(iso) {
     if (!iso) return '—';
     const d = new Date(iso);
-    return d.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }) +
-           ' ' + d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+    return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}) + ' ' +
+           d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
   }
 
   async function loadUsers() {
     document.getElementById('tableContainer').innerHTML = '<div class="loading">⏳ FETCHING AGENT DATA...</div>';
     try {
-      const res = await fetch(API_URL + '?action=getUsers&t=' + Date.now());
+      const res  = await fetch(API_URL + '?action=getUsers&t=' + Date.now());
       const data = await res.json();
       if (data.success) {
         allUsers = data.users || [];
@@ -195,7 +306,7 @@
         renderTable(allUsers);
         document.getElementById('lastRefreshed').textContent = 'Last refreshed: ' + new Date().toLocaleTimeString();
       } else {
-        document.getElementById('tableContainer').innerHTML = '<div class="error-msg">⚠ Failed to load data. Try refreshing.</div>';
+        document.getElementById('tableContainer').innerHTML = '<div class="error-msg">⚠ Failed to load data.</div>';
       }
     } catch(err) {
       document.getElementById('tableContainer').innerHTML = '<div class="error-msg">⚠ Connection error: ' + err.message + '</div>';
@@ -203,9 +314,9 @@
   }
 
   function updateStats(users) {
-    const today = users.filter(u => { if(!u.lastLogin) return false; return (new Date()-new Date(u.lastLogin))/3600000 < 24; }).length;
-    const week  = users.filter(u => { if(!u.lastLogin) return false; const h=(new Date()-new Date(u.lastLogin))/3600000; return h>=24&&h<168; }).length;
-    const never = users.filter(u => !u.lastLogin).length;
+    const today  = users.filter(u => u.lastLogin && (new Date()-new Date(u.lastLogin))/3600000 < 24).length;
+    const week   = users.filter(u => { if(!u.lastLogin) return false; const h=(new Date()-new Date(u.lastLogin))/3600000; return h>=24&&h<168; }).length;
+    const never  = users.filter(u => !u.lastLogin).length;
     document.getElementById('s-total').textContent    = users.length;
     document.getElementById('s-online').textContent   = today;
     document.getElementById('s-recent').textContent   = week;
@@ -214,47 +325,34 @@
 
   function renderTable(users) {
     if (!users.length) {
-      document.getElementById('tableContainer').innerHTML = '<div class="empty-state">No agents registered yet.</div>';
+      document.getElementById('tableContainer').innerHTML = '<div class="loading" style="color:#888;">No agents found.</div>';
       document.getElementById('filterCount').textContent = '';
       return;
     }
     document.getElementById('filterCount').textContent = users.length + ' agents';
-    let rows = users.map((u, i) => {
+    const rows = users.map((u, i) => {
       const st = getStatus(u.lastLogin);
-      const defaultBadge = u.isDefault ? `<span style="background:rgba(255,160,0,.15);border:1px solid rgba(255,160,0,.4);border-radius:3px;padding:2px 7px;font-size:10px;font-weight:700;color:#ffa040;margin-left:6px;">DEFAULT PW</span>` : '';
+      const defBadge = u.isDefault ? `<span style="background:rgba(255,160,0,.15);border:1px solid rgba(255,160,0,.4);border-radius:3px;padding:2px 7px;font-size:10px;font-weight:700;color:#ffa040;margin-left:6px;">DEFAULT PW</span>` : '';
       return `<tr>
         <td style="color:rgba(0,200,255,.5);font-size:12px;">${i+1}</td>
-        <td style="font-weight:700;color:#e0f4ff;">👤 ${u.username}${defaultBadge}</td>
-        <td style="color:#a8d8ea;">${u.email || '—'}</td>
-        <td><span style="background:rgba(0,100,180,.2);border:1px solid rgba(0,180,255,.2);border-radius:3px;padding:2px 8px;font-size:11px;color:rgba(0,200,255,.8);">⚓ ${u.team || '—'}</span></td>
-        <td class="vessel-id">${u.vesselId || '—'}</td>
+        <td style="font-weight:700;color:#e0f4ff;">👤 ${u.username}${defBadge}</td>
+        <td style="color:#a8d8ea;">${u.email||'—'}</td>
+        <td><span style="background:rgba(0,100,180,.2);border:1px solid rgba(0,180,255,.2);border-radius:3px;padding:2px 8px;font-size:11px;color:rgba(0,200,255,.8);">⚓ ${u.team||'—'}</span></td>
+        <td class="vessel-id">${u.vesselId||'—'}</td>
         <td><span class="badge ${st.cls}">${st.label}</span></td>
         <td class="last-login">${formatDate(u.lastLogin)}</td>
         <td class="last-login">${formatDate(u.registeredAt)}</td>
         <td>
-          <button class="reset-btn" id="rbtn_${i}" onclick="resetPassword('${u.username}', ${i})">🔑 Reset PW</button>
-          <button class="delete-btn" id="dbtn_${i}" onclick="deleteUser('${u.username}', ${i})">🗑 Delete</button>
+          <button class="reset-btn" id="rbtn_${i}" onclick="resetPassword('${u.username}',${i})">🔑 Reset PW</button>
+          <button class="delete-btn" id="dbtn_${i}" onclick="deleteUser('${u.username}',${i})">🗑 Delete</button>
         </td>
       </tr>`;
     }).join('');
-
     document.getElementById('tableContainer').innerHTML = `
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Agent Name</th>
-            <th>Email</th>
-            <th>Team</th>
-            <th>Vessel ID</th>
-            <th>Status</th>
-            <th>Last Login</th>
-            <th>Registered</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>`;
+      <table><thead><tr>
+        <th>#</th><th>Agent Name</th><th>Email</th><th>Team</th><th>Vessel ID</th>
+        <th>Status</th><th>Last Login</th><th>Registered</th><th>Action</th>
+      </tr></thead><tbody>${rows}</tbody></table>`;
   }
 
   function filterTable() {
@@ -269,12 +367,172 @@
     document.getElementById('filterCount').textContent = filtered.length + ' of ' + allUsers.length + ' agents';
   }
 
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Enter') {
-      if (document.getElementById('loginScreen').style.display !== 'none') adminLogin();
-    }
-  });
+  async function deleteUser(username, idx) {
+    if (!confirm(`⚠ Permanently delete account "${username}"?\n\nThis cannot be undone!`)) return;
+    const btn = document.getElementById('dbtn_' + idx);
+    btn.textContent = '⏳...'; btn.disabled = true;
+    try {
+      const res  = await fetch(API_URL + '?' + new URLSearchParams({action:'deleteUser', username}));
+      const data = await res.json();
+      if (data.success) { showToast(`🗑 Account "${username}" deleted.`); setTimeout(loadUsers, 1000); }
+      else { btn.textContent = '🗑 Delete'; btn.disabled = false; showToast('⚠ Delete failed.', false); }
+    } catch { btn.textContent = '🗑 Delete'; btn.disabled = false; showToast('⚠ Connection error.', false); }
+  }
 
+  async function resetPassword(username, idx) {
+    if (!confirm(`Reset password for "${username}" to default LRP@1234?`)) return;
+    const btn = document.getElementById('rbtn_' + idx);
+    btn.textContent = '⏳ Resetting...'; btn.disabled = true;
+    try {
+      const res  = await fetch(API_URL + '?' + new URLSearchParams({action:'resetPassword', username}));
+      const data = await res.json();
+      if (data.success) { btn.textContent='✅ Reset Done'; btn.classList.add('done'); showToast(`✅ Password reset for ${username}.`); setTimeout(loadUsers, 2000); }
+      else { btn.textContent='🔑 Reset PW'; btn.disabled=false; showToast('⚠ Reset failed.', false); }
+    } catch { btn.textContent='🔑 Reset PW'; btn.disabled=false; showToast('⚠ Connection error.', false); }
+  }
+
+  /* ══════════════════════════════
+     CREDENTIALS TAB
+  ══════════════════════════════ */
+  async function loadCreds() {
+    document.getElementById('credTableContainer').innerHTML = '<div class="loading">⏳ LOADING CREDENTIALS...</div>';
+    try {
+      const res  = await fetch(API_URL + '?action=getCredentials&t=' + Date.now());
+      const data = await res.json();
+      if (data.success) {
+        allCreds = data.credentials || [];
+        renderCredTable(allCreds);
+        document.getElementById('lastRefreshed').textContent = 'Last refreshed: ' + new Date().toLocaleTimeString();
+      } else {
+        document.getElementById('credTableContainer').innerHTML = '<div class="error-msg">⚠ Failed to load credentials.</div>';
+      }
+    } catch(e) {
+      document.getElementById('credTableContainer').innerHTML = '<div class="error-msg">⚠ Connection error.</div>';
+    }
+  }
+
+  function envClass(e) {
+    const v = (e||'').toLowerCase();
+    if (v.includes('prod'))  return 'env-prod';
+    if (v.includes('uat'))   return 'env-uat';
+    if (v.includes('dev'))   return 'env-dev';
+    if (v.includes('stag'))  return 'env-staging';
+    return 'env-default';
+  }
+
+  function renderCredTable(list) {
+    document.getElementById('cred-count').textContent = list.length + ' records';
+    if (!list.length) {
+      document.getElementById('credTableContainer').innerHTML = '<div class="loading" style="color:#888;">No credentials added yet. Use the form above to add one.</div>';
+      return;
+    }
+    const rows = list.map((c, i) => `
+      <tr>
+        <td style="color:rgba(0,200,255,.5);font-size:12px;">${i+1}</td>
+        <td style="font-weight:700;color:#e0f4ff;">🏢 ${c.clientName||'—'}</td>
+        <td style="font-family:'Courier New',monospace;font-size:11px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+          ${c.appUrl ? '<a href="' + c.appUrl + '" target="_blank" style="color:#00c8ff;text-decoration:none;">🔗 ' + c.appUrl + '</a>' : '—'}
+        </td>
+        <td><span class="env-badge ${envClass(c.environment)}">${c.environment||'—'}</span></td>
+        <td style="font-family:'Courier New',monospace;font-size:12px;">${c.userId||'—'}</td>
+        <td class="pw-cell">
+          <span id="adm-pw-${i}">••••••••</span>
+          <button class="pw-toggle-sm" onclick="admTogglePw(${i},'${encodeURIComponent(c.password||'')}')">👁</button>
+        </td>
+        <td>
+          <button class="edit-btn" onclick="editCred(${i})">✏ Edit</button>
+          <button class="delete-btn" id="cdel-${i}" onclick="deleteCred('${c.id||c.clientName}',${i})">🗑 Delete</button>
+        </td>
+      </tr>`).join('');
+    document.getElementById('credTableContainer').innerHTML = `
+      <table><thead><tr>
+        <th>#</th><th>Client Name</th><th>Application URL</th>
+        <th>Environment</th><th>User ID</th><th>Password</th><th>Actions</th>
+      </tr></thead><tbody>${rows}</tbody></table>`;
+  }
+
+  function filterCredTable() {
+    const q = document.getElementById('credSearchInput').value.toLowerCase();
+    const filtered = allCreds.filter(c => (c.clientName||'').toLowerCase().includes(q));
+    renderCredTable(filtered);
+  }
+
+  function admTogglePw(i, encoded) {
+    const el = document.getElementById('adm-pw-' + i);
+    el.textContent = el.textContent === '••••••••' ? decodeURIComponent(encoded) : '••••••••';
+  }
+
+  /* ADD / EDIT FORM */
+  async function submitCredential() {
+    const id     = document.getElementById('edit-cred-id').value;
+    const client = document.getElementById('cred-client').value.trim();
+    const env    = document.getElementById('cred-env').value;
+    const url    = document.getElementById('cred-url').value.trim();
+    const userid = document.getElementById('cred-userid').value.trim();
+    const pass   = document.getElementById('cred-pass').value.trim();
+
+    if (!client || !env || !userid || !pass) { showToast('⚠ Please fill all required fields.', false); return; }
+
+    const btn = document.getElementById('cred-submit-btn');
+    btn.textContent = '⏳ Saving...'; btn.disabled = true;
+
+    const action = id ? 'updateCredential' : 'addCredential';
+    const params = new URLSearchParams({ action, id, clientName:client, environment:env, appUrl:url, userId:userid, password:pass });
+
+    try {
+      const res  = await fetch(API_URL + '?' + params.toString());
+      const data = await res.json();
+      if (data.success) {
+        showToast(id ? '✅ Credential updated!' : '✅ Credential added!');
+        clearCredForm();
+        loadCreds();
+      } else {
+        showToast('⚠ Save failed. Try again.', false);
+      }
+    } catch {
+      showToast('⚠ Connection error.', false);
+    }
+    btn.textContent = '💾 Save Credential'; btn.disabled = false;
+  }
+
+  function editCred(i) {
+    const c = allCreds[i];
+    document.getElementById('edit-cred-id').value    = c.id || '';
+    document.getElementById('cred-client').value     = c.clientName || '';
+    document.getElementById('cred-env').value        = c.environment || '';
+    document.getElementById('cred-url').value        = c.appUrl || '';
+    document.getElementById('cred-userid').value     = c.userId || '';
+    document.getElementById('cred-pass').value       = c.password || '';
+    document.getElementById('credFormTitle').textContent = '✏ Edit Credential: ' + c.clientName;
+    document.getElementById('cred-cancel-btn').style.display = 'inline-block';
+    document.getElementById('credFormWrap').scrollIntoView({ behavior:'smooth' });
+  }
+
+  function cancelCredEdit() {
+    clearCredForm();
+  }
+
+  function clearCredForm() {
+    ['edit-cred-id','cred-client','cred-url','cred-userid','cred-pass'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('cred-env').value = '';
+    document.getElementById('credFormTitle').textContent = '➕ Add New Client Credential';
+    document.getElementById('cred-cancel-btn').style.display = 'none';
+  }
+
+  async function deleteCred(credId, i) {
+    const name = allCreds[i]?.clientName || credId;
+    if (!confirm(`⚠ Delete credential for "${name}"?\n\nThis cannot be undone!`)) return;
+    const btn = document.getElementById('cdel-' + i);
+    btn.textContent = '⏳...'; btn.disabled = true;
+    try {
+      const res  = await fetch(API_URL + '?' + new URLSearchParams({action:'deleteCredential', id:credId}));
+      const data = await res.json();
+      if (data.success) { showToast(`🗑 Credential for "${name}" deleted.`); loadCreds(); }
+      else { btn.textContent='🗑 Delete'; btn.disabled=false; showToast('⚠ Delete failed.', false); }
+    } catch { btn.textContent='🗑 Delete'; btn.disabled=false; showToast('⚠ Connection error.', false); }
+  }
+
+  /* ── UTILS ── */
   function showToast(msg, success=true) {
     const t = document.getElementById('toast');
     t.textContent = msg;
@@ -284,59 +542,14 @@
     setTimeout(() => t.classList.remove('show'), 3000);
   }
 
-  async function deleteUser(username, idx) {
-    if (!confirm(`⚠ Permanently delete account "${username}"?\n\nThis cannot be undone!`)) return;
-    const btn = document.getElementById('dbtn_' + idx);
-    btn.textContent = '⏳...';
-    btn.disabled = true;
-    try {
-      const params = new URLSearchParams({ action:'deleteUser', username });
-      const res  = await fetch(API_URL + '?' + params.toString());
-      const data = await res.json();
-      if (data.success) {
-        showToast(`🗑 Account "${username}" deleted successfully.`);
-        setTimeout(() => loadUsers(), 1000);
-      } else {
-        btn.textContent = '🗑 Delete';
-        btn.disabled = false;
-        showToast('⚠ Delete failed. Try again.', false);
-      }
-    } catch(err) {
-      btn.textContent = '🗑 Delete';
-      btn.disabled = false;
-      showToast('⚠ Connection error.', false);
-    }
-  }
+  document.addEventListener('keydown', e => {
+    if (e.key==='Enter' && document.getElementById('loginScreen').style.display!=='none') adminLogin();
+  });
 
-  async function resetPassword(username, idx) {
-    if (!confirm(`Reset password for "${username}" to default LRP@1234?`)) return;
-    const btn = document.getElementById('rbtn_' + idx);
-    btn.textContent = '⏳ Resetting...';
-    btn.disabled = true;
-    try {
-      const params = new URLSearchParams({ action:'resetPassword', username });
-      const res = await fetch(API_URL + '?' + params.toString());
-      const data = await res.json();
-      if (data.success) {
-        btn.textContent = '✅ Reset Done';
-        btn.classList.add('done');
-        showToast(`✅ Password reset for ${username}. Default: LRP@1234`);
-        setTimeout(() => loadUsers(), 2000);
-      } else {
-        btn.textContent = '🔑 Reset PW';
-        btn.disabled = false;
-        showToast('⚠ Reset failed. Try again.', false);
-      }
-    } catch(err) {
-      btn.textContent = '🔑 Reset PW';
-      btn.disabled = false;
-      showToast('⚠ Connection error.', false);
-    }
-  }
-
-  // Auto-refresh every 60 seconds
   setInterval(() => {
-    if (document.getElementById('dashboard').style.display !== 'none') loadUsers();
+    if (document.getElementById('dashboard').style.display !== 'none') {
+      if (currentAdminTab === 'agents') loadUsers();
+    }
   }, 60000);
 </script>
 </body>
