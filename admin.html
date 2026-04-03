@@ -1,672 +1,515 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>LRP Admin Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LRP Support Portal</title>
 <style>
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#020f1e;color:#e0f4ff;min-height:100vh;}
-  .topbar{background:rgba(4,28,53,.95);border-bottom:1px solid rgba(0,180,255,.2);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px);}
-  .brand{display:flex;align-items:center;gap:12px;}
-  .brand-icon{width:40px;height:40px;background:linear-gradient(135deg,#c0441a,#e8610a);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:20px;}
-  .brand h1{font-family:'Courier New',monospace;font-size:14px;font-weight:900;color:#e0f4ff;letter-spacing:3px;}
-  .brand-sub{font-size:10px;color:rgba(0,200,255,.7);letter-spacing:2px;margin-top:2px;}
-  .topbar-right{display:flex;align-items:center;gap:12px;}
-  .refresh-btn{padding:8px 16px;background:rgba(0,180,255,.15);border:1px solid rgba(0,180,255,.4);border-radius:4px;color:#a8e8ff;cursor:pointer;font-size:12px;font-weight:600;letter-spacing:1px;transition:all .3s;}
-  .refresh-btn:hover{background:rgba(0,180,255,.3);color:#fff;}
-  .logout-btn{padding:8px 16px;background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);border-radius:4px;color:#ff9977;cursor:pointer;font-size:12px;font-weight:600;letter-spacing:1px;transition:all .3s;}
-  .logout-btn:hover{background:rgba(180,40,20,.55);color:#fff;}
-  .main{padding:24px 28px;}
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+  :root {
+    --ocean-deep: #020f1e; --rust: #c0441a; --signal-orange: #e8610a;
+    --nav-light-green: #00ff88; --nav-light-red: #ff3344; --panel: rgba(4,28,53,0.92);
+  }
+  body { font-family: 'Rajdhani', sans-serif; background: var(--ocean-deep); min-height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .scene { position: fixed; inset: 0; overflow: hidden; }
+  .sky { position: absolute; inset: 0; background: linear-gradient(180deg,#020810 0%,#041428 25%,#06203f 50%,#0a3558 70%,#1a5c7a 85%,#2a7a96 100%); }
+  .stars { position: absolute; inset: 0; background-image: radial-gradient(1px 1px at 10% 15%,rgba(255,255,255,.9) 0%,transparent 100%),radial-gradient(1px 1px at 25% 8%,rgba(255,255,255,.7) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 40% 20%,rgba(255,255,255,.8) 0%,transparent 100%),radial-gradient(1px 1px at 55% 5%,rgba(255,255,255,.6) 0%,transparent 100%),radial-gradient(1px 1px at 70% 12%,rgba(255,255,255,.9) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 85% 18%,rgba(255,255,255,.7) 0%,transparent 100%),radial-gradient(1px 1px at 15% 35%,rgba(255,255,255,.5) 0%,transparent 100%),radial-gradient(1px 1px at 90% 30%,rgba(255,255,255,.6) 0%,transparent 100%); }
+  .moon { position: absolute; top: 6%; right: 12%; width: 70px; height: 70px; border-radius: 50%; background: radial-gradient(circle at 35% 35%,#fffae0,#f0d080 40%,#c8a020); box-shadow: 0 0 30px 10px rgba(240,200,80,.3),0 0 80px 30px rgba(240,200,80,.1); }
+  .moon-reflection { position: absolute; bottom: 28%; right: 11%; width: 20px; height: 100px; background: linear-gradient(180deg,rgba(240,200,80,.5),transparent); border-radius: 50%; filter: blur(4px); animation: shimmer 3s ease-in-out infinite; }
+  @keyframes shimmer { 0%,100%{transform:scaleX(1);opacity:.6} 50%{transform:scaleX(1.8);opacity:.9} }
+  .ocean { position: absolute; bottom: 0; left: 0; right: 0; height: 32%; overflow: hidden; }
+  .wave-layer { position: absolute; bottom: 0; left: -50%; width: 200%; height: 100%; }
+  .wave-layer svg { width: 100%; height: 100%; }
+  .wave1 { animation: waveMove 8s linear infinite; opacity: .9; }
+  .wave2 { animation: waveMove 12s linear infinite reverse; opacity: .6; bottom: 10px; }
+  .wave3 { animation: waveMove 6s linear infinite; opacity: .4; bottom: 20px; }
+  @keyframes waveMove { 0%{transform:translateX(0)} 100%{transform:translateX(25%)} }
+  .ship-wrapper { position: absolute; bottom: 28%; left: -420px; animation: sailAcross 45s linear infinite; }
+  @keyframes sailAcross { 0%{left:-420px} 100%{left:calc(100vw + 50px)} }
+  .ship { position: relative; filter: drop-shadow(0 10px 30px rgba(0,0,0,.8)); }
+  .nav-light-port { position: absolute; top: 28px; left: 38px; width: 6px; height: 6px; border-radius: 50%; background: var(--nav-light-red); box-shadow: 0 0 8px 3px rgba(255,51,68,.8); animation: blink 2s ease-in-out infinite; }
+  .nav-light-starboard { position: absolute; top: 28px; right: 30px; width: 6px; height: 6px; border-radius: 50%; background: var(--nav-light-green); box-shadow: 0 0 8px 3px rgba(0,255,136,.8); animation: blink 2s ease-in-out infinite 1s; }
+  .mast-light { position: absolute; top: 0; left: 50%; width: 8px; height: 8px; border-radius: 50%; background: #fff; box-shadow: 0 0 10px 4px rgba(255,255,255,.9); animation: blink 1.5s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+  .smoke { position: absolute; top: -30px; left: 52%; }
+  .smoke-puff { position: absolute; border-radius: 50%; background: rgba(180,180,180,.3); animation: smokePuff 4s ease-out infinite; }
+  .smoke-puff:nth-child(1){width:16px;height:16px;animation-delay:0s}
+  .smoke-puff:nth-child(2){width:22px;height:22px;animation-delay:1.3s}
+  .smoke-puff:nth-child(3){width:12px;height:12px;animation-delay:2.6s}
+  @keyframes smokePuff { 0%{transform:translate(0,0) scale(1);opacity:.6} 100%{transform:translate(-30px,-60px) scale(3);opacity:0} }
+  .wake { position: absolute; top: 50%; right: 100%; width: 200px; height: 20px; background: linear-gradient(90deg,transparent,rgba(168,216,234,.4),rgba(168,216,234,.15)); clip-path: polygon(0 50%,100% 30%,100% 70%); transform: translateY(-50%); }
+  .lighthouse { position: absolute; bottom: 29%; right: 5%; }
+  .lighthouse svg { width: 40px; }
+  .lighthouse-beam { position: absolute; top: 2px; left: 50%; width: 0; height: 0; border-left: 60px solid transparent; border-right: 60px solid transparent; border-bottom: 120px solid rgba(255,220,80,.08); transform-origin: center bottom; transform: translateX(-50%); animation: rotate 4s linear infinite; }
+  @keyframes rotate { 0%{transform:translateX(-50%) rotate(-20deg);opacity:.8} 50%{transform:translateX(-50%) rotate(20deg);opacity:.2} 100%{transform:translateX(-50%) rotate(-20deg);opacity:.8} }
+  .floating-container { position: absolute; border-radius: 3px; opacity: .4; animation: float 6s ease-in-out infinite; }
+  .fc1{width:50px;height:20px;background:#8b1a1a;bottom:34%;left:8%;animation-delay:0s}
+  .fc2{width:40px;height:16px;background:#1a4a8b;bottom:35%;left:15%;animation-delay:1s}
+  .fc3{width:35px;height:14px;background:#1a6b2a;bottom:33%;right:20%;animation-delay:2s}
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
 
-  /* TABS */
-  .admin-tabs{display:flex;gap:0;margin-bottom:28px;border-bottom:1px solid rgba(0,180,255,.2);}
-  .admin-tab{padding:12px 28px;background:none;border:none;font-family:'Courier New',monospace;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(0,180,255,.45);cursor:pointer;position:relative;transition:color .3s;}
-  .admin-tab.active{color:#00c8ff;}
-  .admin-tab.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#00c8ff,transparent);}
-  .tab-panel{display:none;}
-  .tab-panel.active{display:block;}
-
-  .page-title{font-family:'Courier New',monospace;font-size:22px;font-weight:900;color:#e0f4ff;letter-spacing:4px;margin-bottom:4px;}
-  .page-sub{font-size:13px;color:rgba(0,200,255,.6);letter-spacing:1px;margin-bottom:24px;}
-  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
-  .stat-card{background:rgba(4,28,53,.88);border:1px solid rgba(0,180,255,.2);border-radius:8px;padding:20px;text-align:center;}
-  .stat-num{font-size:32px;font-weight:800;margin-bottom:4px;}
-  .stat-lbl{font-size:11px;color:rgba(168,216,234,.6);letter-spacing:1px;text-transform:uppercase;}
-  .blue{color:#00c8ff;}.green{color:#00ff88;}.orange{color:#ffa040;}.red{color:#ff4444;}
-  .section-title{font-size:13px;font-weight:700;color:rgba(0,200,255,.8);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
-  .table-wrap{background:rgba(4,28,53,.88);border:1px solid rgba(0,180,255,.2);border-radius:8px;overflow:hidden;margin-bottom:28px;}
-  .search-bar{padding:14px 18px;border-bottom:1px solid rgba(0,180,255,.15);display:flex;align-items:center;gap:12px;}
-  .search-bar input{flex:1;background:rgba(2,15,30,.7);border:1px solid rgba(0,120,180,.35);border-radius:4px;padding:8px 12px;font-size:13px;color:#a8e8ff;outline:none;font-family:'Courier New',monospace;}
-  .search-bar input:focus{border-color:rgba(0,200,255,.7);}
-  .search-bar input::placeholder{color:rgba(100,160,200,.4);}
-  table{width:100%;border-collapse:collapse;}
-  thead tr{background:rgba(0,60,100,.5);}
-  th{padding:12px 16px;text-align:left;font-size:11px;font-weight:700;color:rgba(0,200,255,.8);text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid rgba(0,180,255,.2);}
-  td{padding:12px 16px;font-size:13px;border-bottom:1px solid rgba(0,180,255,.08);color:#a8d8ea;}
-  tr:hover td{background:rgba(0,60,100,.3);}
-  tr:last-child td{border-bottom:none;}
-  .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;}
-  .badge-online{background:rgba(0,255,136,.15);border:1px solid rgba(0,255,136,.4);color:#00ff88;}
-  .badge-recent{background:rgba(255,160,64,.15);border:1px solid rgba(255,160,64,.4);color:#ffa040;}
-  .badge-offline{background:rgba(100,100,100,.2);border:1px solid rgba(100,100,100,.4);color:#888;}
-  .vessel-id{font-family:'Courier New',monospace;font-size:11px;color:rgba(0,200,255,.6);}
-  .loading{text-align:center;padding:40px;color:rgba(0,200,255,.6);font-size:14px;letter-spacing:2px;}
-  .error-msg{text-align:center;padding:40px;color:#ff9999;font-size:14px;}
-  .last-login{font-size:11px;color:rgba(168,216,234,.5);}
-
-  /* LOGIN SCREEN */
-  .login-screen{position:fixed;inset:0;background:#020f1e;display:flex;align-items:center;justify-content:center;z-index:999;}
-  .login-box{background:rgba(4,28,53,.95);border:1px solid rgba(0,180,255,.3);border-radius:8px;padding:40px;width:340px;text-align:center;}
-  .login-box h2{font-family:'Courier New',monospace;font-size:16px;letter-spacing:3px;color:#e0f4ff;margin-bottom:6px;}
-  .login-box p{font-size:12px;color:rgba(0,200,255,.6);margin-bottom:24px;letter-spacing:1px;}
-  .login-box input{width:100%;background:rgba(2,15,30,.7);border:1px solid rgba(0,120,180,.35);border-radius:4px;padding:11px 14px;font-size:13px;color:#a8e8ff;outline:none;margin-bottom:12px;font-family:'Courier New',monospace;}
-  .login-box input:focus{border-color:rgba(0,200,255,.7);}
-  .login-box button{width:100%;padding:12px;background:linear-gradient(135deg,#0a4a7a,#0d6fa8);border:1px solid rgba(0,200,255,.4);border-radius:4px;font-size:13px;font-weight:700;letter-spacing:2px;color:#a8f0ff;cursor:pointer;transition:all .3s;text-transform:uppercase;}
-  .login-box button:hover{background:linear-gradient(135deg,#0d6fa8,#14a0d0);color:#fff;}
-  .login-err{color:#ff9999;font-size:12px;margin-top:8px;display:none;}
-
-  /* ACTION BUTTONS */
-  .reset-btn{background:rgba(255,160,0,.15);border:1px solid rgba(255,160,0,.4);border-radius:4px;color:#ffa040;cursor:pointer;font-size:11px;font-weight:700;letter-spacing:1px;padding:4px 10px;transition:all .3s;white-space:nowrap;}
-  .reset-btn:hover{background:rgba(255,160,0,.35);color:#fff;}
-  .reset-btn.done{background:rgba(0,255,136,.15);border-color:rgba(0,255,136,.4);color:#00ff88;}
-  .delete-btn{background:rgba(255,50,50,.15);border:1px solid rgba(255,50,50,.4);border-radius:4px;color:#ff7777;cursor:pointer;font-size:11px;font-weight:700;letter-spacing:1px;padding:4px 10px;transition:all .3s;white-space:nowrap;margin-left:6px;}
-  .delete-btn:hover{background:rgba(255,50,50,.35);color:#fff;}
-  .edit-btn{background:rgba(0,120,220,.15);border:1px solid rgba(0,180,255,.4);border-radius:4px;color:#a8e8ff;cursor:pointer;font-size:11px;font-weight:700;letter-spacing:1px;padding:4px 10px;transition:all .3s;white-space:nowrap;}
-  .edit-btn:hover{background:rgba(0,120,220,.35);color:#fff;}
-
-  /* TOAST */
-  .toast{position:fixed;bottom:24px;right:24px;background:#1a3a5c;border:1px solid rgba(0,180,255,.4);border-radius:8px;padding:12px 20px;font-size:13px;color:#a8e8ff;box-shadow:0 8px 24px rgba(0,0,0,.4);opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;}
-  .toast.show{opacity:1;}
-
-  /* FORM PANELS */
-  .form-panel{background:rgba(4,28,53,.88);border-radius:8px;padding:24px;margin-bottom:28px;}
-  .form-panel.green-border{border:1px solid rgba(0,180,80,.3);}
-  .form-panel.purple-border{border:1px solid rgba(120,60,200,.3);}
-  .form-panel-title{font-family:'Courier New',monospace;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:18px;}
-  .form-panel-title.green{color:rgba(0,220,100,.9);}
-  .form-panel-title.purple{color:rgba(160,80,255,.9);}
-  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
-  .form-field label{display:block;font-size:10px;font-weight:700;letter-spacing:1.5px;color:rgba(0,180,255,.7);text-transform:uppercase;margin-bottom:5px;}
-  .form-field input,.form-field select{width:100%;background:rgba(2,15,30,.7);border:1px solid rgba(0,120,180,.35);border-radius:4px;padding:9px 12px;font-size:13px;color:#a8e8ff;outline:none;font-family:'Courier New',monospace;transition:border-color .3s;}
-  .form-field input:focus,.form-field select:focus{border-color:rgba(0,200,255,.7);}
-  .form-field input::placeholder{color:rgba(100,160,200,.35);}
-  .form-field select option{background:#041c35;color:#a8e8ff;}
-  .form-actions{display:flex;gap:12px;align-items:center;}
-  .btn-green{padding:10px 24px;background:linear-gradient(135deg,#0a5a2a,#0d8a3a);border:1px solid rgba(0,200,80,.4);border-radius:4px;color:#88ffcc;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;transition:all .3s;}
-  .btn-green:hover{background:linear-gradient(135deg,#0d8a3a,#14c050);color:#fff;}
-  .btn-green:disabled{opacity:.6;cursor:not-allowed;}
-  .btn-purple{padding:10px 24px;background:linear-gradient(135deg,#4a1a8b,#6a2ab0);border:1px solid rgba(160,80,255,.4);border-radius:4px;color:#c080ff;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;transition:all .3s;}
-  .btn-purple:hover{background:linear-gradient(135deg,#6a2ab0,#8a40d0);color:#fff;}
-  .btn-purple:disabled{opacity:.6;cursor:not-allowed;}
-  .btn-cancel{padding:10px 24px;background:rgba(100,100,100,.15);border:1px solid rgba(100,100,100,.3);border-radius:4px;color:#aaa;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;transition:all .3s;}
-  .btn-cancel:hover{background:rgba(100,100,100,.3);color:#fff;}
-  .form-msg{font-size:11px;font-weight:700;letter-spacing:1px;padding:6px 12px;border-radius:3px;display:none;}
-  .form-msg.error{background:rgba(180,40,40,.2);border-left:2px solid #ff4444;color:#ff9999;}
-  .form-msg.success{background:rgba(20,160,80,.15);border-left:2px solid #00ff88;color:#88ffcc;}
-  .form-msg.loading{background:rgba(0,100,180,.15);border-left:2px solid #00c8ff;color:#a8e8ff;}
-
-  /* CRED TABLE */
-  .env-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;}
-  .env-prod{background:rgba(255,60,60,.15);border:1px solid rgba(255,60,60,.4);color:#ff8888;}
-  .env-uat{background:rgba(255,160,0,.15);border:1px solid rgba(255,160,0,.4);color:#ffa040;}
-  .env-dev{background:rgba(0,180,80,.15);border:1px solid rgba(0,180,80,.4);color:#00ff88;}
-  .env-staging{background:rgba(100,100,255,.15);border:1px solid rgba(100,100,255,.4);color:#aaaaff;}
-  .env-default{background:rgba(100,100,100,.15);border:1px solid rgba(100,100,100,.35);color:#aaa;}
-  .pw-toggle-sm{background:none;border:none;color:rgba(0,180,255,.6);cursor:pointer;font-size:13px;padding:0 4px;}
+  .panel-wrap { position: relative; z-index: 100; width: 100%; max-width: 420px; padding: 16px; }
+  .panel { background: var(--panel); border: 1px solid rgba(0,180,255,.25); border-radius: 6px; padding: 30px 32px 28px; backdrop-filter: blur(18px); box-shadow: 0 0 0 1px rgba(0,180,255,.1),0 20px 60px rgba(0,0,0,.7); position: relative; }
+  .panel::before,.panel::after { content: ''; position: absolute; width: 18px; height: 18px; border-color: rgba(0,180,255,.5); border-style: solid; }
+  .panel::before{top:-1px;left:-1px;border-width:2px 0 0 2px}
+  .panel::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
+  .brand-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+  .brand-icon { width: 40px; height: 40px; background: linear-gradient(135deg,var(--rust),var(--signal-orange)); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; box-shadow: 0 4px 12px rgba(200,80,20,.4); }
+  .brand-text h1 { font-family: 'Orbitron',sans-serif; font-size: 13px; font-weight: 900; color: #e0f4ff; letter-spacing: 3px; line-height: 1; }
+  .brand-text p { font-size: 10px; color: rgba(0,200,255,.6); letter-spacing: 2px; margin-top: 3px; }
+  .divider { height: 1px; background: linear-gradient(90deg,transparent,rgba(0,180,255,.4),transparent); margin: 14px 0 20px; }
+  .form-group { margin-bottom: 14px; }
+  .form-group label { display: block; font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: rgba(0,180,255,.7); margin-bottom: 5px; }
+  .input-wrap { position: relative; display: flex; align-items: center; }
+  .input-icon { position: absolute; left: 11px; font-size: 14px; opacity: .6; z-index: 1; }
+  .form-group input { width: 100%; background: rgba(2,15,30,.7); border: 1px solid rgba(0,120,180,.35); border-radius: 3px; padding: 10px 12px 10px 36px; font-family: 'Share Tech Mono',monospace; font-size: 12px; color: #a8e8ff; outline: none; transition: border-color .3s,box-shadow .3s; }
+  .form-group input::placeholder { color: rgba(100,160,200,.4); }
+  .form-group input:focus { border-color: rgba(0,200,255,.7); box-shadow: 0 0 0 3px rgba(0,180,255,.1); }
+  .btn-primary { width: 100%; margin-top: 6px; padding: 12px; background: linear-gradient(135deg,#0a4a7a,#0d6fa8); border: 1px solid rgba(0,200,255,.4); border-radius: 3px; font-family: 'Orbitron',sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #a8f0ff; cursor: pointer; transition: all .3s; }
+  .btn-primary:hover { background: linear-gradient(135deg,#0d6fa8,#14a0d0); box-shadow: 0 0 20px rgba(0,180,255,.3); color: #fff; }
+  .btn-primary:disabled { opacity: .6; cursor: not-allowed; }
+  .msg { margin-top: 8px; padding: 8px 12px; border-radius: 3px; font-size: 11px; font-weight: 600; letter-spacing: 1px; display: none; }
+  .msg.error   { background: rgba(180,40,40,.25);  border-left: 2px solid #ff4444; color: #ff9999; }
+  .msg.success { background: rgba(20,160,80,.2);   border-left: 2px solid #00ff88; color: #88ffcc; }
+  .msg.loading { background: rgba(0,100,180,.2);   border-left: 2px solid #00c8ff; color: #a8e8ff; }
+  .msg.warn    { background: rgba(255,160,0,.15);  border-left: 2px solid #ffa040; color: #ffd080; }
+  .access-note { text-align: center; margin-top: 18px; font-size: 11px; color: rgba(0,180,255,.4); letter-spacing: 1px; line-height: 1.6; }
 </style>
 </head>
 <body>
 
-<div class="toast" id="toast"></div>
-
-<!-- Login Screen -->
-<div class="login-screen" id="loginScreen">
-  <div class="login-box">
-    <div style="font-size:40px;margin-bottom:12px;">🛡️</div>
-    <h2>ADMIN ACCESS</h2>
-    <p>LRP SUPPORT PORTAL — COMMAND</p>
-    <input type="text" id="adm-user" placeholder="Admin username" autocomplete="off"/>
-    <input type="password" id="adm-pass" placeholder="Admin password"/>
-    <button onclick="adminLogin()">⚓ ENTER COMMAND</button>
-    <div class="login-err" id="adm-err">⚠ Invalid admin credentials.</div>
+<div class="scene">
+  <div class="sky"></div>
+  <div class="stars"></div>
+  <div class="moon"></div>
+  <div class="moon-reflection"></div>
+  <div class="lighthouse">
+    <div class="lighthouse-beam"></div>
+    <svg viewBox="0 0 40 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="14" y="40" width="12" height="35" fill="#1a3a5c"/>
+      <rect x="12" y="25" width="16" height="18" fill="#8b3a2a" rx="1"/>
+      <rect x="10" y="22" width="20" height="5" fill="#6b2a1a"/>
+      <polygon points="14,22 26,22 23,10 17,10" fill="#c0441a"/>
+      <rect x="16" y="8" width="8" height="4" fill="#ffd700" opacity=".8"/>
+    </svg>
+  </div>
+  <div class="floating-container fc1"></div>
+  <div class="floating-container fc2"></div>
+  <div class="floating-container fc3"></div>
+  <div class="ship-wrapper">
+    <div class="ship">
+      <div class="mast-light"></div>
+      <div class="nav-light-port"></div>
+      <div class="nav-light-starboard"></div>
+      <div class="smoke"><div class="smoke-puff"></div><div class="smoke-puff"></div><div class="smoke-puff"></div></div>
+      <div class="wake"></div>
+      <svg width="400" height="100" viewBox="0 0 400 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 75 L380 75 L370 90 L30 92 Z" fill="#1a2a3a"/>
+        <rect x="12" y="72" width="366" height="5" fill="#c0441a"/>
+        <rect x="20" y="55" width="355" height="20" fill="#2a3d50" rx="1"/>
+        <rect x="30"  y="38" width="48" height="18" fill="#8b1a1a" rx="1"/>
+        <rect x="82"  y="38" width="48" height="18" fill="#1a4a8b" rx="1"/>
+        <rect x="134" y="38" width="48" height="18" fill="#1a6b2a" rx="1"/>
+        <rect x="186" y="38" width="48" height="18" fill="#7a5a10" rx="1"/>
+        <rect x="238" y="38" width="48" height="18" fill="#4a1a6b" rx="1"/>
+        <rect x="290" y="38" width="48" height="18" fill="#8b1a1a" rx="1"/>
+        <rect x="310" y="16" width="55" height="40" fill="#2a4a6a" rx="2"/>
+        <rect x="316" y="20" width="18" height="14" fill="rgba(100,200,255,.3)" rx="1"/>
+        <rect x="340" y="20" width="18" height="14" fill="rgba(100,200,255,.3)" rx="1"/>
+        <line x1="345" y1="0" x2="345" y2="16" stroke="#5a6a7a" stroke-width="2"/>
+      </svg>
+    </div>
+  </div>
+  <div class="ocean">
+    <div class="wave-layer wave1"><svg viewBox="0 0 1200 200" preserveAspectRatio="none"><path d="M0,100 C150,40 300,160 450,100 C600,40 750,160 900,100 C1050,40 1150,120 1200,100 L1200,200 L0,200 Z" fill="#0a3558" opacity=".9"/></svg></div>
+    <div class="wave-layer wave2"><svg viewBox="0 0 1200 200" preserveAspectRatio="none"><path d="M0,130 C200,70 400,170 600,130 C800,90 1000,170 1200,130 L1200,200 L0,200 Z" fill="#041828" opacity=".7"/></svg></div>
+    <div class="wave-layer wave3"><svg viewBox="0 0 1200 200" preserveAspectRatio="none"><path d="M0,140 C150,110 350,165 550,140 C750,115 950,165 1200,140 L1200,200 L0,200 Z" fill="rgba(168,216,234,.08)"/></svg></div>
   </div>
 </div>
 
-<!-- Dashboard -->
-<div id="dashboard" style="display:none;">
-  <div class="topbar">
-    <div class="brand">
+<!-- LOGIN PANEL -->
+<div class="panel-wrap" id="panelWrap">
+  <div class="panel">
+    <div class="brand-bar">
       <div class="brand-icon">🚢</div>
-      <div><h1>LRP SUPPORT PORTAL</h1><div class="brand-sub">ADMIN COMMAND CENTER</div></div>
-    </div>
-    <div class="topbar-right">
-      <span style="font-size:11px;color:rgba(0,200,255,.6);letter-spacing:1px;" id="lastRefreshed"></span>
-      <button class="refresh-btn" onclick="refreshCurrent()">↻ Refresh</button>
-      <button class="logout-btn" onclick="adminLogout()">⎋ Sign Out</button>
-    </div>
-  </div>
-
-  <div class="main">
-    <div class="admin-tabs">
-      <button class="admin-tab active" id="atab-agents" onclick="switchTab('agents')">🧑‍✈️ AGENTS</button>
-      <button class="admin-tab" id="atab-creds" onclick="switchTab('creds')">🔐 CLIENT CREDENTIALS</button>
-    </div>
-
-    <!-- ══ AGENTS TAB ══ -->
-    <div class="tab-panel active" id="panel-agents">
-      <div class="page-title">AGENT MANAGEMENT</div>
-      <div class="page-sub">Create agent logins and monitor activity</div>
-
-      <!-- STATS -->
-      <div class="stats-row">
-        <div class="stat-card"><div class="stat-num blue" id="s-total">—</div><div class="stat-lbl">Total Agents</div></div>
-        <div class="stat-card"><div class="stat-num green" id="s-online">—</div><div class="stat-lbl">Active Today</div></div>
-        <div class="stat-card"><div class="stat-num orange" id="s-recent">—</div><div class="stat-lbl">This Week</div></div>
-        <div class="stat-card"><div class="stat-num red" id="s-inactive">—</div><div class="stat-lbl">Never Logged In</div></div>
-      </div>
-
-      <!-- CREATE AGENT FORM -->
-      <div class="form-panel green-border">
-        <div class="form-panel-title green" id="agentFormTitle">➕ Create New Agent Login</div>
-        <input type="hidden" id="edit-agent-original-username"/>
-        <div class="form-grid">
-          <div class="form-field">
-            <label>Full Name *</label>
-            <input type="text" id="ag-name" placeholder="e.g. John Smith"/>
-          </div>
-          <div class="form-field">
-            <label>Email *</label>
-            <input type="email" id="ag-email" placeholder="agent@example.com"/>
-          </div>
-          <div class="form-field">
-            <label>Team *</label>
-            <input type="text" id="ag-team" placeholder="e.g. LRP Support"/>
-          </div>
-          <div class="form-field">
-            <label>Username *</label>
-            <input type="text" id="ag-username" placeholder="e.g. john.smith" autocomplete="off"/>
-          </div>
-          <div class="form-field">
-            <label>Password * <span style="font-size:9px;color:rgba(0,200,255,.5);font-weight:400;">(agent must change on first login)</span></label>
-            <input type="text" id="ag-password" placeholder="Set a temporary password"/>
-          </div>
-        </div>
-        <div class="form-actions">
-          <button class="btn-green" id="ag-submit-btn" onclick="submitAgent()">💾 Create Agent Login</button>
-          <button class="btn-cancel" id="ag-cancel-btn" onclick="cancelAgentEdit()" style="display:none;">✕ Cancel</button>
-          <span class="form-msg" id="ag-msg"></span>
-        </div>
-      </div>
-
-      <!-- AGENTS TABLE -->
-      <div class="section-title">🧑‍✈️ Registered Agents</div>
-      <div class="table-wrap">
-        <div class="search-bar">
-          <input type="text" id="searchInput" placeholder="🔍  Search by name, email, or team..." oninput="filterTable()"/>
-          <span style="font-size:11px;color:rgba(168,216,234,.5);" id="filterCount"></span>
-        </div>
-        <div id="tableContainer"><div class="loading">⏳ LOADING AGENT DATA...</div></div>
+      <div class="brand-text">
+        <h1>LRP SUPPORT PORTAL</h1>
+        <p>AGENT ACCESS</p>
       </div>
     </div>
+    <div class="divider"></div>
 
-    <!-- ══ CREDENTIALS TAB ══ -->
-    <div class="tab-panel" id="panel-creds">
-      <div class="page-title">CLIENT CREDENTIALS</div>
-      <div class="page-sub">Manage client login credentials visible to all agents</div>
-
-      <!-- ADD/EDIT CRED FORM -->
-      <div class="form-panel purple-border">
-        <div class="form-panel-title purple" id="credFormTitle">➕ Add New Client Credential</div>
-        <input type="hidden" id="edit-cred-id"/>
-        <div class="form-grid">
-          <div class="form-field">
-            <label>Client Name *</label>
-            <input type="text" id="cred-client" placeholder="e.g. Acme Corp"/>
-          </div>
-          <div class="form-field">
-            <label>Environment *</label>
-            <select id="cred-env">
-              <option value="">— Select —</option>
-              <option value="Production">Production</option>
-              <option value="UAT">UAT</option>
-              <option value="Staging">Staging</option>
-              <option value="Development">Development</option>
-            </select>
-          </div>
-          <div class="form-field">
-            <label>Application URL</label>
-            <input type="text" id="cred-url" placeholder="https://app.example.com"/>
-          </div>
-          <div class="form-field">
-            <label>User ID *</label>
-            <input type="text" id="cred-userid" placeholder="e.g. admin@acme.com"/>
-          </div>
-          <div class="form-field">
-            <label>Password *</label>
-            <input type="text" id="cred-pass" placeholder="Enter password"/>
-          </div>
-        </div>
-        <div class="form-actions">
-          <button class="btn-purple" id="cred-submit-btn" onclick="submitCredential()">💾 Save Credential</button>
-          <button class="btn-cancel" id="cred-cancel-btn" onclick="cancelCredEdit()" style="display:none;">✕ Cancel Edit</button>
-          <span class="form-msg" id="cred-msg"></span>
-        </div>
-      </div>
-
-      <!-- CREDS TABLE -->
-      <div class="section-title">
-        🗂 All Client Credentials
-        <span style="font-size:11px;color:rgba(168,216,234,.5);margin-left:8px;" id="cred-count"></span>
-      </div>
-      <div class="table-wrap">
-        <div class="search-bar">
-          <input type="text" id="credSearchInput" placeholder="🔍  Search by client name..." oninput="filterCredTable()"/>
-        </div>
-        <div id="credTableContainer"><div class="loading">⏳ LOADING...</div></div>
-      </div>
+    <div class="form-group">
+      <label>Username</label>
+      <div class="input-wrap"><span class="input-icon">👤</span><input type="text" id="login-user" placeholder="Enter your username" autocomplete="off"/></div>
     </div>
+    <div class="form-group">
+      <label>Password</label>
+      <div class="input-wrap"><span class="input-icon">🔒</span><input type="password" id="login-pass" placeholder="••••••••••"/></div>
+    </div>
+    <div id="login-msg" class="msg"></div>
+    <button class="btn-primary" id="login-btn" onclick="handleLogin()">⚓ SIGN IN</button>
+
+    <div class="access-note">🛡️ Access is provided by your administrator.<br>Contact admin if you need an account.</div>
   </div>
 </div>
 
 <script>
-  const API_URL    = 'https://script.google.com/macros/s/AKfycbxPNFPaXPmAMJvNl5_6Rrf0-Yx_OLvJ08MFBNWLEQ2MV59JcyvkMLImerdPXcKq52Ojvg/exec';
-  const ADMIN_USER = 'admin';
-  const ADMIN_PASS = 'admin@lrp';
+  const API_URL = 'https://script.google.com/macros/s/AKfycby9zm9hsp-iC3GJq2qj-MHJoQtDBG0F1Eb-gZkaEvQfXaZvtKTVdzFIREdQYxyNPSqeEA/exec';
 
-  let allUsers = [], allCreds = [], currentTab = 'agents';
-
-  window.addEventListener('load', () => {
-    if (sessionStorage.getItem('admin_logged_in') === 'true') {
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('dashboard').style.display = 'block';
-      loadUsers();
-    }
-  });
-
-  function adminLogin() {
-    const u = document.getElementById('adm-user').value.trim();
-    const p = document.getElementById('adm-pass').value;
-    if (u === ADMIN_USER && p === ADMIN_PASS) {
-      sessionStorage.setItem('admin_logged_in','true');
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('dashboard').style.display = 'block';
-      loadUsers();
-    } else {
-      document.getElementById('adm-err').style.display = 'block';
-    }
-  }
-
-  function adminLogout() {
-    if (!confirm('Are you sure you want to sign out?')) return;
-    sessionStorage.removeItem('admin_logged_in');
-    document.getElementById('loginScreen').style.display = 'flex';
-    document.getElementById('dashboard').style.display = 'none';
-    document.getElementById('adm-user').value = '';
-    document.getElementById('adm-pass').value = '';
-  }
-
-  function switchTab(tab) {
-    currentTab = tab;
-    ['agents','creds'].forEach(t => {
-      document.getElementById('atab-' + t).classList.toggle('active', t === tab);
-      document.getElementById('panel-' + t).classList.toggle('active', t === tab);
-    });
-    if (tab === 'creds') loadCreds();
-    document.getElementById('lastRefreshed').textContent = '';
-  }
-
-  function refreshCurrent() {
-    if (currentTab === 'agents') loadUsers(); else loadCreds();
-  }
-
-  function showFormMsg(id, text, type) {
+  function showMsg(id, text, type) {
     const el = document.getElementById(id);
-    el.textContent = text; el.className = 'form-msg ' + type; el.style.display = 'inline-block';
-    if (type !== 'loading') setTimeout(() => { el.style.display = 'none'; }, 3000);
+    el.textContent = text; el.className = 'msg ' + type; el.style.display = 'block';
   }
 
-  /* ══════════════════════════════
-     AGENTS
-  ══════════════════════════════ */
-  async function loadUsers() {
-    document.getElementById('tableContainer').innerHTML = '<div class="loading">⏳ FETCHING AGENT DATA...</div>';
+  async function handleLogin() {
+    const u = document.getElementById('login-user').value.trim();
+    const p = document.getElementById('login-pass').value;
+    if (!u || !p) { showMsg('login-msg','⚠ ENTER USERNAME AND PASSWORD.','error'); return; }
+
+    if (u.toLowerCase() === 'admin' && p === 'admin@lrp') {
+      showMsg('login-msg','✅ ADMIN ACCESS GRANTED','success');
+      setTimeout(() => { window.location.href = 'admin.html'; }, 1000);
+      return;
+    }
+
+    const btn = document.getElementById('login-btn');
+    btn.disabled = true;
+    showMsg('login-msg','⏳ VERIFYING...','loading');
     try {
-      const res  = await fetch(API_URL + '?action=getUsers&t=' + Date.now());
+      const res  = await fetch(API_URL + '?' + new URLSearchParams({ action:'login', username:u, password:p }));
       const data = await res.json();
       if (data.success) {
-        allUsers = data.users || [];
-        updateStats(allUsers);
-        renderTable(allUsers);
-        document.getElementById('lastRefreshed').textContent = 'Last refreshed: ' + new Date().toLocaleTimeString();
+        showMsg('login-msg','✅ IDENTITY VERIFIED','success');
+        setTimeout(() => {
+          sessionStorage.setItem('lrp_user', JSON.stringify({ username: data.user.username, team: data.user.team }));
+          if (data.isDefault) {
+            showChangePassword(data.user.username, data.user.team);
+          } else {
+            showDashboard(data.user.username, data.user.team);
+          }
+        }, 1200);
       } else {
-        document.getElementById('tableContainer').innerHTML = '<div class="error-msg">⚠ Failed to load data.</div>';
+        showMsg('login-msg','⚠ INVALID CREDENTIALS — ACCESS DENIED.','error');
+        btn.disabled = false;
       }
     } catch(err) {
-      document.getElementById('tableContainer').innerHTML = '<div class="error-msg">⚠ Connection error.</div>';
+      showMsg('login-msg','⚠ CONNECTION ERROR. CHECK NETWORK.','error');
+      btn.disabled = false;
     }
   }
 
-  function updateStats(users) {
-    const today = users.filter(u => u.lastLogin && (new Date()-new Date(u.lastLogin))/3600000 < 24).length;
-    const week  = users.filter(u => { if(!u.lastLogin) return false; const h=(new Date()-new Date(u.lastLogin))/3600000; return h>=24&&h<168; }).length;
-    const never = users.filter(u => !u.lastLogin).length;
-    document.getElementById('s-total').textContent    = users.length;
-    document.getElementById('s-online').textContent   = today;
-    document.getElementById('s-recent').textContent   = week;
-    document.getElementById('s-inactive').textContent = never;
+  /* ── CHANGE PASSWORD SCREEN ── */
+  function showChangePassword(username, team) {
+    document.getElementById('panelWrap').innerHTML = `
+      <div class="panel">
+        <div class="brand-bar">
+          <div class="brand-icon">🔐</div>
+          <div class="brand-text"><h1>SET NEW PASSWORD</h1><p>FIRST TIME LOGIN</p></div>
+        </div>
+        <div class="divider"></div>
+        <div style="background:rgba(255,160,0,.1);border:1px solid rgba(255,160,0,.35);border-radius:4px;padding:10px 14px;margin-bottom:18px;">
+          <div style="font-size:11px;font-weight:700;color:#ffa040;letter-spacing:1px;">⚠ TEMPORARY PASSWORD DETECTED</div>
+          <div style="font-size:11px;color:rgba(168,216,234,.7);margin-top:4px;line-height:1.5;">Your admin has set a temporary password. Please create your personal password to continue.</div>
+        </div>
+        <div class="form-group">
+          <label>New Password</label>
+          <div class="input-wrap"><span class="input-icon">🔐</span><input type="password" id="new-pass" placeholder="Min 6 characters"/></div>
+        </div>
+        <div class="form-group">
+          <label>Confirm New Password</label>
+          <div class="input-wrap"><span class="input-icon">✅</span><input type="password" id="new-confirm" placeholder="Re-enter new password"/></div>
+        </div>
+        <div id="cpw-msg" class="msg"></div>
+        <button class="btn-primary" id="cpw-btn" onclick="submitNewPassword('${username}','${team}')">🔒 SET MY PASSWORD</button>
+      </div>`;
   }
 
-  function getStatus(lastLogin) {
-    if (!lastLogin) return { label:'NEVER', cls:'badge-offline' };
-    const diff = (new Date()-new Date(lastLogin))/3600000;
-    if (diff < 24)  return { label:'TODAY',     cls:'badge-online' };
-    if (diff < 168) return { label:'THIS WEEK', cls:'badge-recent' };
-    return { label:'INACTIVE', cls:'badge-offline' };
-  }
-
-  function formatDate(iso) {
-    if (!iso) return '—';
-    const d = new Date(iso);
-    return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}) + ' ' +
-           d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-  }
-
-  function renderTable(users) {
-    if (!users.length) {
-      document.getElementById('tableContainer').innerHTML = '<div class="loading" style="color:#888;">No agents found.</div>';
-      document.getElementById('filterCount').textContent = '';
-      return;
-    }
-    document.getElementById('filterCount').textContent = users.length + ' agents';
-    const rows = users.map((u, i) => {
-      const st = getStatus(u.lastLogin);
-      const defBadge = u.isDefault
-        ? `<span style="background:rgba(255,160,0,.15);border:1px solid rgba(255,160,0,.4);border-radius:3px;padding:2px 7px;font-size:10px;font-weight:700;color:#ffa040;margin-left:6px;">TEMP PW</span>` : '';
-      return `<tr>
-        <td style="color:rgba(0,200,255,.5);font-size:12px;">${i+1}</td>
-        <td style="font-weight:700;color:#e0f4ff;">👤 ${u.username}${defBadge}</td>
-        <td>${u.email||'—'}</td>
-        <td><span style="background:rgba(0,100,180,.2);border:1px solid rgba(0,180,255,.2);border-radius:3px;padding:2px 8px;font-size:11px;color:rgba(0,200,255,.8);">⚓ ${u.team||'—'}</span></td>
-        <td><span class="badge ${st.cls}">${st.label}</span></td>
-        <td class="last-login">${formatDate(u.lastLogin)}</td>
-        <td class="last-login">${formatDate(u.registeredAt)}</td>
-        <td>
-          <button class="edit-btn" onclick="editAgent(${i})">✏ Edit</button>
-          <button class="reset-btn" id="rbtn_${i}" onclick="resetPassword('${u.username}',${i})">🔑 Reset PW</button>
-          <button class="delete-btn" id="dbtn_${i}" onclick="deleteUser('${u.username}',${i})">🗑 Delete</button>
-        </td>
-      </tr>`;
-    }).join('');
-    document.getElementById('tableContainer').innerHTML = `
-      <table><thead><tr>
-        <th>#</th><th>Username</th><th>Email</th><th>Team</th>
-        <th>Status</th><th>Last Login</th><th>Created</th><th>Actions</th>
-      </tr></thead><tbody>${rows}</tbody></table>`;
-  }
-
-  function filterTable() {
-    const q = document.getElementById('searchInput').value.toLowerCase();
-    const f = allUsers.filter(u =>
-      (u.username||'').toLowerCase().includes(q) ||
-      (u.email||'').toLowerCase().includes(q) ||
-      (u.team||'').toLowerCase().includes(q)
-    );
-    renderTable(f);
-    document.getElementById('filterCount').textContent = f.length + ' of ' + allUsers.length + ' agents';
-  }
-
-  /* CREATE / EDIT AGENT */
-  async function submitAgent() {
-    const origUsername = document.getElementById('edit-agent-original-username').value;
-    const name     = document.getElementById('ag-name').value.trim();
-    const email    = document.getElementById('ag-email').value.trim();
-    const team     = document.getElementById('ag-team').value.trim();
-    const username = document.getElementById('ag-username').value.trim();
-    const password = document.getElementById('ag-password').value.trim();
-
-    if (!name||!email||!team||!username||!password) {
-      showFormMsg('ag-msg','⚠ All fields are required.','error'); return;
-    }
-    if (password.length < 6) {
-      showFormMsg('ag-msg','⚠ Password must be ≥ 6 characters.','error'); return;
-    }
-
-    const btn = document.getElementById('ag-submit-btn');
+  async function submitNewPassword(username, team) {
+    const np = document.getElementById('new-pass').value;
+    const nc = document.getElementById('new-confirm').value;
+    if (!np||!nc)    { showMsg('cpw-msg','⚠ BOTH FIELDS ARE REQUIRED.','error'); return; }
+    if (np.length<6) { showMsg('cpw-msg','⚠ PASSWORD MUST BE ≥ 6 CHARACTERS.','error'); return; }
+    if (np !== nc)   { showMsg('cpw-msg','⚠ PASSWORDS DO NOT MATCH.','error'); return; }
+    const btn = document.getElementById('cpw-btn');
     btn.disabled = true;
-    showFormMsg('ag-msg','⏳ Saving...','loading');
-
-    // Generate a vesselId for new agents
-    const vesselId = origUsername ? '' : 'VID-' + Math.random().toString(36).toUpperCase().slice(2,8);
-    const action   = origUsername ? 'updateAgent' : 'register';
-    const params   = new URLSearchParams({ action, username, email, team, password, vesselId,
-                                           originalUsername: origUsername || username });
+    showMsg('cpw-msg','⏳ UPDATING PASSWORD...','loading');
     try {
-      const res  = await fetch(API_URL + '?' + params.toString());
+      const res  = await fetch(API_URL + '?' + new URLSearchParams({ action:'changePassword', username, newPassword:np }));
       const data = await res.json();
       if (data.success) {
-        showFormMsg('ag-msg', origUsername ? '✅ Agent updated!' : '✅ Agent login created!', 'success');
-        clearAgentForm();
-        setTimeout(loadUsers, 800);
-      } else if (data.error === 'USERNAME_EXISTS') {
-        showFormMsg('ag-msg','⚠ Username already taken.','error');
+        showMsg('cpw-msg','✅ PASSWORD SET! ENTERING PORTAL...','success');
+        setTimeout(() => showDashboard(username, team), 1200);
       } else {
-        showFormMsg('ag-msg','⚠ Failed. Try again.','error');
+        showMsg('cpw-msg','⚠ FAILED TO UPDATE. TRY AGAIN.','error');
+        btn.disabled = false;
       }
-    } catch {
-      showFormMsg('ag-msg','⚠ Connection error.','error');
-    }
-    btn.disabled = false;
-  }
-
-  function editAgent(i) {
-    const u = allUsers[i];
-    document.getElementById('edit-agent-original-username').value = u.username;
-    document.getElementById('ag-name').value     = u.username; // name same as username if not stored separately
-    document.getElementById('ag-email').value    = u.email || '';
-    document.getElementById('ag-team').value     = u.team || '';
-    document.getElementById('ag-username').value = u.username;
-    document.getElementById('ag-password').value = '';
-    document.getElementById('agentFormTitle').textContent = '✏ Edit Agent: ' + u.username;
-    document.getElementById('ag-submit-btn').textContent = '💾 Update Agent';
-    document.getElementById('ag-cancel-btn').style.display = 'inline-block';
-    document.getElementById('form-panel-title').scrollIntoView && document.getElementById('agentFormTitle').scrollIntoView({ behavior:'smooth' });
-  }
-
-  function cancelAgentEdit() { clearAgentForm(); }
-
-  function clearAgentForm() {
-    ['edit-agent-original-username','ag-name','ag-email','ag-team','ag-username','ag-password'].forEach(id => {
-      document.getElementById(id).value = '';
-    });
-    document.getElementById('agentFormTitle').textContent = '➕ Create New Agent Login';
-    document.getElementById('ag-submit-btn').textContent  = '💾 Create Agent Login';
-    document.getElementById('ag-cancel-btn').style.display = 'none';
-    document.getElementById('ag-msg').style.display = 'none';
-  }
-
-  async function resetPassword(username, idx) {
-    if (!confirm(`Reset password for "${username}" to a temporary password?\nThey will be forced to change it on next login.`)) return;
-    const btn = document.getElementById('rbtn_' + idx);
-    btn.textContent = '⏳...'; btn.disabled = true;
-    try {
-      const res  = await fetch(API_URL + '?' + new URLSearchParams({action:'resetPassword', username}));
-      const data = await res.json();
-      if (data.success) {
-        btn.textContent = '✅ Done'; btn.classList.add('done');
-        showToast(`✅ Password reset for ${username}. Temp: LRP@1234`);
-        setTimeout(loadUsers, 2000);
-      } else {
-        btn.textContent = '🔑 Reset PW'; btn.disabled = false;
-        showToast('⚠ Reset failed.', false);
-      }
-    } catch {
-      btn.textContent = '🔑 Reset PW'; btn.disabled = false;
-      showToast('⚠ Connection error.', false);
+    } catch(err) {
+      showMsg('cpw-msg','⚠ CONNECTION ERROR.','error');
+      btn.disabled = false;
     }
   }
 
-  async function deleteUser(username, idx) {
-    if (!confirm(`⚠ Permanently delete agent "${username}"?\n\nThis cannot be undone!`)) return;
-    const btn = document.getElementById('dbtn_' + idx);
-    btn.textContent = '⏳...'; btn.disabled = true;
-    try {
-      const res  = await fetch(API_URL + '?' + new URLSearchParams({action:'deleteUser', username}));
-      const data = await res.json();
-      if (data.success) { showToast(`🗑 Agent "${username}" deleted.`); setTimeout(loadUsers, 800); }
-      else { btn.textContent = '🗑 Delete'; btn.disabled = false; showToast('⚠ Delete failed.', false); }
-    } catch { btn.textContent = '🗑 Delete'; btn.disabled = false; showToast('⚠ Connection error.', false); }
-  }
+  /* ── DASHBOARD ── */
+  function showDashboard(username, team) {
+    document.body.innerHTML = `
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap');
+      *{margin:0;padding:0;box-sizing:border-box;}
+      body{font-family:'Rajdhani',sans-serif;background:#020f1e;min-height:100vh;overflow:hidden;}
+      .db-bg{position:fixed;inset:0;background:linear-gradient(180deg,#020810 0%,#041428 40%,#0a3558 100%);}
+      .db-stars{position:fixed;inset:0;background-image:radial-gradient(1px 1px at 10% 15%,rgba(255,255,255,.8) 0%,transparent 100%),radial-gradient(1px 1px at 30% 8%,rgba(255,255,255,.6) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 55% 20%,rgba(255,255,255,.7) 0%,transparent 100%),radial-gradient(1px 1px at 75% 10%,rgba(255,255,255,.5) 0%,transparent 100%);}
+      .db-ocean{position:fixed;bottom:0;left:0;right:0;height:22%;overflow:hidden;}
+      .db-wave{position:absolute;bottom:0;left:-50%;width:200%;height:100%;}
+      .db-wave svg{width:100%;height:100%;}
+      .wv1{animation:wv 8s linear infinite;opacity:.9;}
+      .wv2{animation:wv 12s linear infinite reverse;opacity:.5;bottom:8px;}
+      @keyframes wv{0%{transform:translateX(0)}100%{transform:translateX(25%)}}
+      .db-topbar{position:relative;z-index:10;display:grid;grid-template-columns:auto 1fr auto;align-items:center;padding:14px 28px;background:rgba(4,28,53,.9);border-bottom:1px solid rgba(0,180,255,.2);backdrop-filter:blur(12px);gap:16px;}
+      .db-brand{display:flex;align-items:center;gap:12px;}
+      .db-brand-icon{width:40px;height:40px;background:linear-gradient(135deg,#c0441a,#e8610a);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+      .db-brand h1{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:900;color:#e0f4ff;letter-spacing:3px;white-space:nowrap;}
+      .db-user-info{display:flex;flex-direction:column;align-items:center;}
+      .db-user-info .name{font-family:'Orbitron',sans-serif;font-size:11px;color:#a8e8ff;letter-spacing:2px;}
+      .db-user-info .team-lbl{font-size:11px;color:rgba(0,200,255,.6);}
+      .db-logout{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:8px 18px;background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);border-radius:3px;color:#ff9977;cursor:pointer;transition:all .3s;text-transform:uppercase;}
+      .db-logout:hover{background:rgba(180,40,20,.55);color:#fff;}
+      .db-body{position:relative;z-index:5;display:flex;align-items:center;justify-content:center;height:calc(100vh - 73px);gap:24px;padding:20px;flex-wrap:wrap;}
+      .db-card{width:280px;background:rgba(4,28,53,.88);border:1px solid rgba(0,180,255,.25);border-radius:4px;padding:30px 26px;cursor:pointer;transition:all .35s;backdrop-filter:blur(18px);box-shadow:0 20px 60px rgba(0,0,0,.6);position:relative;}
+      .db-card:hover{transform:translateY(-8px);border-color:rgba(0,200,255,.6);box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 40px rgba(0,180,255,.15);}
+      .db-card-icon{font-size:44px;margin-bottom:16px;display:block;}
+      .db-card-title{font-family:'Orbitron',sans-serif;font-size:12px;font-weight:900;color:#e0f4ff;letter-spacing:2px;margin-bottom:10px;line-height:1.4;}
+      .db-card-desc{font-size:13px;color:rgba(168,216,234,.7);line-height:1.6;margin-bottom:20px;}
+      .db-card-btn{display:block;width:100%;padding:10px;text-align:center;background:linear-gradient(135deg,#0a4a7a,#0d6fa8);border:1px solid rgba(0,200,255,.4);border-radius:3px;font-family:'Orbitron',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;color:#a8f0ff;transition:all .3s;}
+      .db-card:hover .db-card-btn{background:linear-gradient(135deg,#0d6fa8,#14a0d0);color:#fff;}
+      .db-divider{width:1px;height:200px;background:linear-gradient(180deg,transparent,rgba(0,180,255,.4),transparent);}
+      .db-card-badge{position:absolute;top:12px;right:12px;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;padding:3px 8px;border-radius:2px;}
+      .badge-ops{background:rgba(0,180,80,.15);border:1px solid rgba(0,180,80,.4);color:#00ff88;}
+      .badge-log{background:rgba(180,100,0,.15);border:1px solid rgba(180,100,0,.4);color:#ffa040;}
+      .badge-cred{background:rgba(120,60,180,.2);border:1px solid rgba(160,80,220,.4);color:#c080ff;}
+    </style>
+    <div class="db-bg"></div><div class="db-stars"></div>
+    <div class="db-ocean">
+      <div class="db-wave wv1"><svg viewBox="0 0 1200 200" preserveAspectRatio="none"><path d="M0,100 C150,40 300,160 450,100 C600,40 750,160 900,100 C1050,40 1150,120 1200,100 L1200,200 L0,200 Z" fill="#0a3558" opacity=".9"/></svg></div>
+      <div class="db-wave wv2"><svg viewBox="0 0 1200 200" preserveAspectRatio="none"><path d="M0,130 C200,70 400,170 600,130 C800,90 1000,170 1200,130 L1200,200 L0,200 Z" fill="#041828" opacity=".7"/></svg></div>
+    </div>
+    <div class="db-topbar">
+      <div class="db-brand"><div class="db-brand-icon">🚢</div><h1>LRP SUPPORT PORTAL</h1></div>
+      <div class="db-user-info"><div class="name">${username.toUpperCase()}</div><div class="team-lbl">⚓ ${team}</div></div>
+      <button class="db-logout" onclick="location.reload()">⎋ SIGN OUT</button>
+    </div>
+    <div class="db-body">
+      <div class="db-card" onclick="openTool('handover')">
+        <span class="db-card-badge badge-ops">OPERATIONS</span>
+        <span class="db-card-icon">📋</span>
+        <div class="db-card-title">SHIFT HANDOVER LOGGER</div>
+        <div class="db-card-desc">Manage shift transitions, track ticket statuses across shifts, and generate handover reports for your team.</div>
+        <div class="db-card-btn">OPEN MODULE →</div>
+      </div>
+      <div class="db-divider"></div>
+      <div class="db-card" onclick="openTool('playbook')">
+        <span class="db-card-badge badge-log">TRACKING</span>
+        <span class="db-card-icon">⏱️</span>
+        <div class="db-card-title">SUPPORT TICKET TIME LOGGER</div>
+        <div class="db-card-desc">Track ticket resolution times, follow the support playbook checklist, and log your end-of-shift performance summary.</div>
+        <div class="db-card-btn">OPEN MODULE →</div>
+      </div>
+      <div class="db-divider"></div>
+      <div class="db-card" onclick="openCredentials()">
+        <span class="db-card-badge badge-cred">SECURE</span>
+        <span class="db-card-icon">🔐</span>
+        <div class="db-card-title">CLIENT CREDENTIALS</div>
+        <div class="db-card-desc">Access client login credentials — App URLs, User IDs and passwords for all environments. Search by client name.</div>
+        <div class="db-card-btn">OPEN MODULE →</div>
+      </div>
+    </div>`;
 
-  /* ══════════════════════════════
-     CREDENTIALS
-  ══════════════════════════════ */
-  async function loadCreds() {
-    document.getElementById('credTableContainer').innerHTML = '<div class="loading">⏳ LOADING CREDENTIALS...</div>';
-    try {
-      const res  = await fetch(API_URL + '?action=getCredentials&t=' + Date.now());
-      const data = await res.json();
-      if (data.success) {
-        allCreds = data.credentials || [];
-        renderCredTable(allCreds);
-        document.getElementById('lastRefreshed').textContent = 'Last refreshed: ' + new Date().toLocaleTimeString();
-      } else {
-        document.getElementById('credTableContainer').innerHTML = '<div class="error-msg">⚠ Failed to load credentials.</div>';
-      }
-    } catch {
-      document.getElementById('credTableContainer').innerHTML = '<div class="error-msg">⚠ Connection error.</div>';
-    }
-  }
+    window.openTool = function(tool) {
+      const files = { handover:'Shift_Handover_V5.html', playbook:'Support Ticket Logger_V7.html' };
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;background:#020f1e;';
+      const toolLabel = tool==='handover' ? '📋 Shift Handover Logger' : '⏱️ Support Ticket Time Logger';
+      const bar = document.createElement('div');
+      bar.style.cssText = 'display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;padding:10px 24px;background:rgba(4,28,53,.95);border-bottom:1px solid rgba(0,180,255,.2);flex-shrink:0;';
+      bar.innerHTML = `
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:34px;height:34px;background:linear-gradient(135deg,#c0441a,#e8610a);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;">🚢</div>
+          <div>
+            <div style="font-family:'Orbitron',sans-serif;font-size:12px;font-weight:900;color:#e0f4ff;letter-spacing:2px;">LRP SUPPORT PORTAL</div>
+            <div style="font-size:10px;color:rgba(0,200,255,.6);letter-spacing:1px;">${toolLabel}</div>
+          </div>
+        </div>
+        <div></div>
+        <div style="display:flex;gap:10px;">
+          <button id="back-btn" style="font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(0,100,180,.25);border:1px solid rgba(0,180,255,.4);border-radius:3px;color:#a8e8ff;cursor:pointer;text-transform:uppercase;">← BACK</button>
+          <button id="so-btn"   style="font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);border-radius:3px;color:#ff9977;cursor:pointer;text-transform:uppercase;">⎋ SIGN OUT</button>
+        </div>`;
+      const iframe = document.createElement('iframe');
+      iframe.src = files[tool];
+      iframe.style.cssText = 'flex:1;border:none;width:100%;height:100%;';
+      overlay.appendChild(bar); overlay.appendChild(iframe);
+      document.body.appendChild(overlay);
+      document.getElementById('back-btn').onclick = () => overlay.remove();
+      document.getElementById('so-btn').onclick   = () => { overlay.remove(); location.reload(); };
+    };
 
-  function envClass(e) {
-    const v = (e||'').toLowerCase();
-    if (v.includes('prod'))  return 'env-prod';
-    if (v.includes('uat'))   return 'env-uat';
-    if (v.includes('dev'))   return 'env-dev';
-    if (v.includes('stag'))  return 'env-staging';
-    return 'env-default';
-  }
+    window.openCredentials = function() {
+      const overlay = document.createElement('div');
+      overlay.id = 'cred-overlay';
+      overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;background:#020f1e;font-family:Rajdhani,sans-serif;';
+      overlay.innerHTML = `
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap');
+          .cr-bar{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;padding:12px 24px;background:rgba(4,28,53,.95);border-bottom:1px solid rgba(0,180,255,.2);flex-shrink:0;}
+          .cr-body{flex:1;overflow-y:auto;padding:24px 28px;}
+          .cr-search-wrap{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+          .sw-inner{position:relative;flex:1;display:flex;align-items:center;}
+          .cr-search{flex:1;background:rgba(2,15,30,.8);border:1px solid rgba(0,120,180,.4);border-radius:4px;padding:11px 16px 11px 40px;font-family:'Share Tech Mono',monospace;font-size:13px;color:#a8e8ff;outline:none;transition:border-color .3s;width:100%;}
+          .cr-search:focus{border-color:rgba(0,200,255,.7);box-shadow:0 0 0 3px rgba(0,180,255,.1);}
+          .cr-search::placeholder{color:rgba(100,160,200,.4);}
+          .cr-search-icon{position:absolute;left:12px;font-size:16px;pointer-events:none;}
+          .cr-count{font-size:11px;color:rgba(0,200,255,.6);letter-spacing:1px;white-space:nowrap;}
+          .cr-table-wrap{background:rgba(4,28,53,.85);border:1px solid rgba(0,180,255,.2);border-radius:6px;overflow:hidden;}
+          .cr-table{width:100%;border-collapse:collapse;}
+          .cr-table thead tr{background:rgba(0,60,100,.5);}
+          .cr-table th{padding:12px 14px;text-align:left;font-size:10px;font-weight:700;color:rgba(0,200,255,.8);text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid rgba(0,180,255,.2);}
+          .cr-table td{padding:12px 14px;font-size:13px;border-bottom:1px solid rgba(0,180,255,.07);color:#a8d8ea;vertical-align:middle;}
+          .cr-table tr:last-child td{border-bottom:none;}
+          .cr-table tr:hover td{background:rgba(0,60,100,.25);}
+          .cr-client{font-weight:700;color:#e0f4ff;font-size:14px;}
+          .cr-url a{color:#00c8ff;text-decoration:none;font-family:'Share Tech Mono',monospace;font-size:11px;}
+          .cr-url a:hover{text-decoration:underline;}
+          .cr-env{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;}
+          .env-prod{background:rgba(255,60,60,.15);border:1px solid rgba(255,60,60,.4);color:#ff8888;}
+          .env-uat{background:rgba(255,160,0,.15);border:1px solid rgba(255,160,0,.4);color:#ffa040;}
+          .env-dev{background:rgba(0,180,80,.15);border:1px solid rgba(0,180,80,.4);color:#00ff88;}
+          .env-staging{background:rgba(100,100,255,.15);border:1px solid rgba(100,100,255,.4);color:#aaaaff;}
+          .env-default{background:rgba(100,100,100,.15);border:1px solid rgba(100,100,100,.4);color:#aaa;}
+          .cr-uid{font-family:'Share Tech Mono',monospace;font-size:12px;color:#a8e8ff;}
+          .pw-wrap{display:flex;align-items:center;gap:8px;}
+          .pw-val{font-family:'Share Tech Mono',monospace;font-size:12px;color:#a8e8ff;letter-spacing:1px;}
+          .pw-toggle{background:rgba(0,100,180,.2);border:1px solid rgba(0,180,255,.3);border-radius:3px;padding:3px 8px;font-size:10px;color:#a8e8ff;cursor:pointer;transition:all .2s;white-space:nowrap;}
+          .pw-toggle:hover{background:rgba(0,100,180,.4);color:#fff;}
+          .cr-copy{background:rgba(0,150,80,.15);border:1px solid rgba(0,200,80,.3);border-radius:3px;padding:3px 8px;font-size:10px;color:#00dd88;cursor:pointer;transition:all .2s;white-space:nowrap;}
+          .cr-copy:hover{background:rgba(0,150,80,.35);color:#fff;}
+          .cr-copy.copied{background:rgba(0,200,100,.2);border-color:rgba(0,255,136,.5);color:#00ff88;}
+          .cr-empty{text-align:center;padding:60px 20px;color:rgba(0,200,255,.5);font-size:14px;letter-spacing:2px;}
+          .cr-loading{text-align:center;padding:60px 20px;color:rgba(0,200,255,.6);font-size:14px;letter-spacing:2px;}
+          .cr-section-title{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:900;color:rgba(0,200,255,.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;}
+        </style>
+        <div class="cr-bar">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:34px;height:34px;background:linear-gradient(135deg,#c0441a,#e8610a);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;">🚢</div>
+            <div>
+              <div style="font-family:'Orbitron',sans-serif;font-size:12px;font-weight:900;color:#e0f4ff;letter-spacing:2px;">LRP SUPPORT PORTAL</div>
+              <div style="font-size:10px;color:rgba(160,80,255,.8);letter-spacing:1px;">🔐 CLIENT CREDENTIALS</div>
+            </div>
+          </div>
+          <div></div>
+          <div style="display:flex;gap:10px;">
+            <button onclick="document.getElementById('cred-overlay').remove()" style="font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(0,100,180,.25);border:1px solid rgba(0,180,255,.4);border-radius:3px;color:#a8e8ff;cursor:pointer;text-transform:uppercase;">← BACK</button>
+            <button onclick="location.reload()" style="font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);border-radius:3px;color:#ff9977;cursor:pointer;text-transform:uppercase;">⎋ SIGN OUT</button>
+          </div>
+        </div>
+        <div class="cr-body">
+          <div class="cr-section-title">🔐 Client Login Credentials</div>
+          <div class="cr-search-wrap">
+            <div class="sw-inner">
+              <span class="cr-search-icon">🔍</span>
+              <input class="cr-search" id="cr-search-input" type="text" placeholder="Search by client name..." oninput="filterCredentials()"/>
+            </div>
+            <span class="cr-count" id="cr-count"></span>
+          </div>
+          <div class="cr-table-wrap">
+            <div id="cr-table-container" class="cr-loading">⏳ LOADING CREDENTIALS...</div>
+          </div>
+        </div>`;
 
-  function renderCredTable(list) {
-    document.getElementById('cred-count').textContent = list.length + ' records';
-    if (!list.length) {
-      document.getElementById('credTableContainer').innerHTML = '<div class="loading" style="color:#888;">No credentials yet. Use the form above to add one.</div>';
-      return;
-    }
-    const rows = list.map((c, i) => `
-      <tr>
-        <td style="color:rgba(0,200,255,.5);font-size:12px;">${i+1}</td>
-        <td style="font-weight:700;color:#e0f4ff;">🏢 ${c.clientName||'—'}</td>
-        <td style="font-family:'Courier New',monospace;font-size:11px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-          ${c.appUrl ? '<a href="'+c.appUrl+'" target="_blank" style="color:#00c8ff;text-decoration:none;">🔗 '+c.appUrl+'</a>' : '—'}
-        </td>
-        <td><span class="env-badge ${envClass(c.environment)}">${c.environment||'—'}</span></td>
-        <td style="font-family:'Courier New',monospace;font-size:12px;">${c.userId||'—'}</td>
-        <td>
-          <span id="adm-pw-${i}" style="font-family:'Courier New',monospace;font-size:12px;">••••••••</span>
-          <button class="pw-toggle-sm" onclick="admTogglePw(${i},'${encodeURIComponent(c.password||'')}')">👁</button>
-        </td>
-        <td>
-          <button class="edit-btn" onclick="editCred(${i})">✏ Edit</button>
-          <button class="delete-btn" id="cdel-${i}" onclick="deleteCred('${c.id}',${i})">🗑 Delete</button>
-        </td>
-      </tr>`).join('');
-    document.getElementById('credTableContainer').innerHTML = `
-      <table><thead><tr>
-        <th>#</th><th>Client Name</th><th>App URL</th>
-        <th>Environment</th><th>User ID</th><th>Password</th><th>Actions</th>
-      </tr></thead><tbody>${rows}</tbody></table>`;
-  }
+      document.body.appendChild(overlay);
 
-  function filterCredTable() {
-    const q = document.getElementById('credSearchInput').value.toLowerCase();
-    renderCredTable(allCreds.filter(c => (c.clientName||'').toLowerCase().includes(q)));
-  }
+      let allCreds = [];
 
-  function admTogglePw(i, encoded) {
-    const el = document.getElementById('adm-pw-'+i);
-    el.textContent = el.textContent === '••••••••' ? decodeURIComponent(encoded) : '••••••••';
-  }
+      window.loadCredentials = async function() {
+        try {
+          const res  = await fetch(API_URL + '?action=getCredentials&t=' + Date.now());
+          const data = await res.json();
+          if (data.success) {
+            allCreds = data.credentials || [];
+            renderCredentials(allCreds);
+          } else {
+            document.getElementById('cr-table-container').innerHTML = '<div class="cr-empty">⚠ Failed to load credentials.</div>';
+          }
+        } catch(e) {
+          document.getElementById('cr-table-container').innerHTML = '<div class="cr-empty">⚠ Connection error. Try again.</div>';
+        }
+      };
 
-  async function submitCredential() {
-    const id     = document.getElementById('edit-cred-id').value;
-    const client = document.getElementById('cred-client').value.trim();
-    const env    = document.getElementById('cred-env').value;
-    const url    = document.getElementById('cred-url').value.trim();
-    const userid = document.getElementById('cred-userid').value.trim();
-    const pass   = document.getElementById('cred-pass').value.trim();
-    if (!client||!env||!userid||!pass) { showFormMsg('cred-msg','⚠ Fill all required fields.','error'); return; }
+      window.filterCredentials = function() {
+        const q = document.getElementById('cr-search-input').value.toLowerCase().trim();
+        const filtered = q ? allCreds.filter(c => (c.clientName||'').toLowerCase().includes(q)) : allCreds;
+        renderCredentials(filtered, allCreds.length);
+      };
 
-    const btn = document.getElementById('cred-submit-btn');
-    btn.disabled = true;
-    showFormMsg('cred-msg','⏳ Saving...','loading');
-    const action = id ? 'updateCredential' : 'addCredential';
-    try {
-      const res  = await fetch(API_URL + '?' + new URLSearchParams({action, id, clientName:client, environment:env, appUrl:url, userId:userid, password:pass}));
-      const data = await res.json();
-      if (data.success) {
-        showFormMsg('cred-msg', id ? '✅ Updated!' : '✅ Added!','success');
-        clearCredForm(); loadCreds();
-      } else {
-        showFormMsg('cred-msg','⚠ Save failed.','error');
-      }
-    } catch { showFormMsg('cred-msg','⚠ Connection error.','error'); }
-    btn.disabled = false;
-  }
+      window.renderCredentials = function(list, total) {
+        const cnt = document.getElementById('cr-count');
+        if (!list.length) {
+          cnt.textContent = '0 results';
+          document.getElementById('cr-table-container').innerHTML = '<div class="cr-empty">🔍 No clients found.</div>';
+          return;
+        }
+        cnt.textContent = total ? list.length + ' of ' + total + ' clients' : list.length + ' clients';
+        const envClass = e => {
+          const v = (e||'').toLowerCase();
+          if (v.includes('prod')) return 'env-prod';
+          if (v.includes('uat'))  return 'env-uat';
+          if (v.includes('dev'))  return 'env-dev';
+          if (v.includes('stag')) return 'env-staging';
+          return 'env-default';
+        };
+        const rows = list.map((c, i) => `
+          <tr>
+            <td class="cr-client">🏢 ${c.clientName||'—'}</td>
+            <td class="cr-url">${c.appUrl ? '<a href="'+c.appUrl+'" target="_blank">🔗 '+c.appUrl+'</a>' : '—'}</td>
+            <td><span class="cr-env ${envClass(c.environment)}">${c.environment||'—'}</span></td>
+            <td class="cr-uid">${c.userId||'—'}</td>
+            <td>
+              <div class="pw-wrap">
+                <span class="pw-val" id="pw-val-${i}">••••••••</span>
+                <button class="pw-toggle" onclick="togglePw(${i},'${encodeURIComponent(c.password||'')}')">👁 Show</button>
+                <button class="cr-copy" id="copy-btn-${i}" onclick="copyPw(${i},'${encodeURIComponent(c.password||'')}')">📋 Copy</button>
+              </div>
+            </td>
+          </tr>`).join('');
+        document.getElementById('cr-table-container').innerHTML = `
+          <table class="cr-table">
+            <thead><tr><th>Client Name</th><th>Application URL</th><th>Environment</th><th>User ID</th><th>Password</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>`;
+      };
 
-  function editCred(i) {
-    const c = allCreds[i];
-    document.getElementById('edit-cred-id').value  = c.id||'';
-    document.getElementById('cred-client').value   = c.clientName||'';
-    document.getElementById('cred-env').value      = c.environment||'';
-    document.getElementById('cred-url').value      = c.appUrl||'';
-    document.getElementById('cred-userid').value   = c.userId||'';
-    document.getElementById('cred-pass').value     = c.password||'';
-    document.getElementById('credFormTitle').textContent = '✏ Edit: ' + c.clientName;
-    document.getElementById('cred-cancel-btn').style.display = 'inline-block';
-    document.getElementById('credFormTitle').scrollIntoView({ behavior:'smooth' });
-  }
+      window.togglePw = function(i, encoded) {
+        const el = document.getElementById('pw-val-'+i);
+        const btn = el.nextElementSibling;
+        if (el.textContent === '••••••••') { el.textContent = decodeURIComponent(encoded); btn.textContent = '🙈 Hide'; }
+        else { el.textContent = '••••••••'; btn.textContent = '👁 Show'; }
+      };
 
-  function cancelCredEdit() { clearCredForm(); }
+      window.copyPw = function(i, encoded) {
+        navigator.clipboard.writeText(decodeURIComponent(encoded)).then(() => {
+          const btn = document.getElementById('copy-btn-'+i);
+          btn.textContent = '✅ Copied'; btn.classList.add('copied');
+          setTimeout(() => { btn.textContent = '📋 Copy'; btn.classList.remove('copied'); }, 2000);
+        });
+      };
 
-  function clearCredForm() {
-    ['edit-cred-id','cred-client','cred-url','cred-userid','cred-pass'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('cred-env').value = '';
-    document.getElementById('credFormTitle').textContent = '➕ Add New Client Credential';
-    document.getElementById('cred-cancel-btn').style.display = 'none';
-    document.getElementById('cred-msg').style.display = 'none';
-  }
-
-  async function deleteCred(credId, i) {
-    const name = allCreds[i]?.clientName || credId;
-    if (!confirm(`⚠ Delete credential for "${name}"?\n\nThis cannot be undone!`)) return;
-    const btn = document.getElementById('cdel-'+i);
-    btn.textContent = '⏳...'; btn.disabled = true;
-    try {
-      const res  = await fetch(API_URL + '?' + new URLSearchParams({action:'deleteCredential', id:credId}));
-      const data = await res.json();
-      if (data.success) { showToast(`🗑 "${name}" deleted.`); loadCreds(); }
-      else { btn.textContent='🗑 Delete'; btn.disabled=false; showToast('⚠ Delete failed.', false); }
-    } catch { btn.textContent='🗑 Delete'; btn.disabled=false; showToast('⚠ Connection error.', false); }
-  }
-
-  /* UTILS */
-  function showToast(msg, success=true) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.style.borderColor = success ? 'rgba(0,255,136,.4)' : 'rgba(255,80,60,.4)';
-    t.style.color = success ? '#00ff88' : '#ff9977';
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
+      loadCredentials();
+    };
   }
 
   document.addEventListener('keydown', e => {
-    if (e.key==='Enter' && document.getElementById('loginScreen').style.display!=='none') adminLogin();
+    if (e.key === 'Enter') handleLogin();
   });
-
-  setInterval(() => {
-    if (document.getElementById('dashboard').style.display!=='none' && currentTab==='agents') loadUsers();
-  }, 60000);
 </script>
 </body>
 </html>
