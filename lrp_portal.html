@@ -12,7 +12,6 @@
     --nav-light-green: #00ff88; --nav-light-red: #ff3344; --panel: rgba(4,28,53,0.92);
   }
   body { font-family: 'Rajdhani', sans-serif; background: var(--ocean-deep); min-height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-
   .scene { position: fixed; inset: 0; overflow: hidden; }
   .sky { position: absolute; inset: 0; background: linear-gradient(180deg,#020810 0%,#041428 25%,#06203f 50%,#0a3558 70%,#1a5c7a 85%,#2a7a96 100%); }
   .stars { position: absolute; inset: 0; background-image: radial-gradient(1px 1px at 10% 15%,rgba(255,255,255,.9) 0%,transparent 100%),radial-gradient(1px 1px at 25% 8%,rgba(255,255,255,.7) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 40% 20%,rgba(255,255,255,.8) 0%,transparent 100%),radial-gradient(1px 1px at 55% 5%,rgba(255,255,255,.6) 0%,transparent 100%),radial-gradient(1px 1px at 70% 12%,rgba(255,255,255,.9) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 85% 18%,rgba(255,255,255,.7) 0%,transparent 100%),radial-gradient(1px 1px at 15% 35%,rgba(255,255,255,.5) 0%,transparent 100%),radial-gradient(1px 1px at 90% 30%,rgba(255,255,255,.6) 0%,transparent 100%); }
@@ -50,7 +49,7 @@
   .fc3{width:35px;height:14px;background:#1a6b2a;bottom:33%;right:20%;animation-delay:2s}
   @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
 
-  .panel-wrap { position: relative; z-index: 100; width: 100%; max-width: 440px; padding: 16px; }
+  .panel-wrap { position: relative; z-index: 100; width: 100%; max-width: 420px; padding: 16px; }
   .panel { background: var(--panel); border: 1px solid rgba(0,180,255,.25); border-radius: 6px; padding: 30px 32px 28px; backdrop-filter: blur(18px); box-shadow: 0 0 0 1px rgba(0,180,255,.1),0 20px 60px rgba(0,0,0,.7); position: relative; }
   .panel::before,.panel::after { content: ''; position: absolute; width: 18px; height: 18px; border-color: rgba(0,180,255,.5); border-style: solid; }
   .panel::before{top:-1px;left:-1px;border-width:2px 0 0 2px}
@@ -58,15 +57,8 @@
   .brand-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
   .brand-icon { width: 40px; height: 40px; background: linear-gradient(135deg,var(--rust),var(--signal-orange)); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; box-shadow: 0 4px 12px rgba(200,80,20,.4); }
   .brand-text h1 { font-family: 'Orbitron',sans-serif; font-size: 13px; font-weight: 900; color: #e0f4ff; letter-spacing: 3px; line-height: 1; }
-  .divider { height: 1px; background: linear-gradient(90deg,transparent,rgba(0,180,255,.4),transparent); margin: 12px 0 18px; }
-
-  .tabs { display: flex; border-bottom: 1px solid rgba(0,180,255,.2); margin-bottom: 20px; }
-  .tab { flex: 1; background: none; border: none; padding: 10px 0; font-family: 'Rajdhani',sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: rgba(0,180,255,.45); cursor: pointer; position: relative; transition: color .3s; }
-  .tab.active { color: #00c8ff; }
-  .tab.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: linear-gradient(90deg,transparent,#00c8ff,transparent); }
-
-  .form-view { display: none; }
-  .form-view.active { display: block; }
+  .brand-text p { font-size: 10px; color: rgba(0,200,255,.6); letter-spacing: 2px; margin-top: 3px; }
+  .divider { height: 1px; background: linear-gradient(90deg,transparent,rgba(0,180,255,.4),transparent); margin: 14px 0 20px; }
   .form-group { margin-bottom: 14px; }
   .form-group label { display: block; font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: rgba(0,180,255,.7); margin-bottom: 5px; }
   .input-wrap { position: relative; display: flex; align-items: center; }
@@ -74,27 +66,15 @@
   .form-group input { width: 100%; background: rgba(2,15,30,.7); border: 1px solid rgba(0,120,180,.35); border-radius: 3px; padding: 10px 12px 10px 36px; font-family: 'Share Tech Mono',monospace; font-size: 12px; color: #a8e8ff; outline: none; transition: border-color .3s,box-shadow .3s; }
   .form-group input::placeholder { color: rgba(100,160,200,.4); }
   .form-group input:focus { border-color: rgba(0,200,255,.7); box-shadow: 0 0 0 3px rgba(0,180,255,.1); }
-
-  .btn-primary { width: 100%; margin-top: 6px; padding: 12px; background: linear-gradient(135deg,#0a4a7a,#0d6fa8); border: 1px solid rgba(0,200,255,.4); border-radius: 3px; font-family: 'Orbitron',sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #a8f0ff; cursor: pointer; transition: all .3s; position: relative; overflow: hidden; }
+  .btn-primary { width: 100%; margin-top: 6px; padding: 12px; background: linear-gradient(135deg,#0a4a7a,#0d6fa8); border: 1px solid rgba(0,200,255,.4); border-radius: 3px; font-family: 'Orbitron',sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #a8f0ff; cursor: pointer; transition: all .3s; }
   .btn-primary:hover { background: linear-gradient(135deg,#0d6fa8,#14a0d0); box-shadow: 0 0 20px rgba(0,180,255,.3); color: #fff; }
   .btn-primary:disabled { opacity: .6; cursor: not-allowed; }
-
   .msg { margin-top: 8px; padding: 8px 12px; border-radius: 3px; font-size: 11px; font-weight: 600; letter-spacing: 1px; display: none; }
   .msg.error   { background: rgba(180,40,40,.25);  border-left: 2px solid #ff4444; color: #ff9999; }
   .msg.success { background: rgba(20,160,80,.2);   border-left: 2px solid #00ff88; color: #88ffcc; }
   .msg.loading { background: rgba(0,100,180,.2);   border-left: 2px solid #00c8ff; color: #a8e8ff; }
   .msg.warn    { background: rgba(255,160,0,.15);  border-left: 2px solid #ffa040; color: #ffd080; }
-
-  .modal-overlay { display: none; position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,.6); backdrop-filter: blur(4px); align-items: center; justify-content: center; }
-  .modal-overlay.show { display: flex; }
-  .modal { background: linear-gradient(135deg,#041c35,#062a4a); border: 1px solid rgba(0,200,255,.4); border-radius: 6px; padding: 32px 36px; text-align: center; max-width: 320px; width: 90%; box-shadow: 0 0 60px rgba(0,180,255,.2); animation: popIn .4s cubic-bezier(.175,.885,.32,1.275); }
-  @keyframes popIn { from{transform:scale(.6);opacity:0} to{transform:scale(1);opacity:1} }
-  .modal-anchor { font-size: 36px; margin-bottom: 10px; }
-  .modal h3 { font-family: 'Orbitron',sans-serif; font-size: 13px; letter-spacing: 3px; color: #00ff88; margin-bottom: 10px; }
-  .modal p { font-size: 12px; color: rgba(168,216,234,.8); line-height: 1.6; margin-bottom: 16px; }
-  .modal .vessel-id { font-family: 'Share Tech Mono',monospace; font-size: 10px; color: rgba(0,200,255,.7); letter-spacing: 2px; margin-bottom: 16px; padding: 5px 10px; background: rgba(0,0,0,.3); border-radius: 2px; display: inline-block; }
-  .modal button { padding: 9px 24px; background: linear-gradient(135deg,#0a4a7a,#0d6fa8); border: 1px solid rgba(0,200,255,.4); border-radius: 3px; font-family: 'Orbitron',sans-serif; font-size: 10px; letter-spacing: 2px; color: #a8f0ff; cursor: pointer; transition: all .3s; }
-  .modal button:hover { background: linear-gradient(135deg,#0d6fa8,#14a0d0); color: #fff; }
+  .access-note { text-align: center; margin-top: 18px; font-size: 11px; color: rgba(0,180,255,.4); letter-spacing: 1px; line-height: 1.6; }
 </style>
 </head>
 <body>
@@ -148,127 +128,45 @@
   </div>
 </div>
 
+<!-- LOGIN PANEL -->
 <div class="panel-wrap" id="panelWrap">
   <div class="panel">
     <div class="brand-bar">
       <div class="brand-icon">🚢</div>
-      <div class="brand-text"><h1>LRP SUPPORT PORTAL</h1></div>
+      <div class="brand-text">
+        <h1>LRP SUPPORT PORTAL</h1>
+        <p>AGENT ACCESS</p>
+      </div>
     </div>
     <div class="divider"></div>
-    <div class="tabs">
-      <button class="tab active" id="tab-login"    onclick="showTab('login')">⚓ LOGIN</button>
-      <button class="tab"        id="tab-register" onclick="showTab('register')">📋 REGISTER</button>
-    </div>
 
-    <div class="form-view active" id="view-login">
-      <div class="form-group">
-        <label>Username</label>
-        <div class="input-wrap"><span class="input-icon">👤</span><input type="text" id="login-user" placeholder="Enter your username" autocomplete="off"/></div>
-      </div>
-      <div class="form-group">
-        <label>Access Code</label>
-        <div class="input-wrap"><span class="input-icon">🔒</span><input type="password" id="login-pass" placeholder="••••••••••"/></div>
-      </div>
-      <div id="login-msg" class="msg"></div>
-      <button class="btn-primary" id="login-btn" onclick="handleLogin()">Sign In</button>
+    <div class="form-group">
+      <label>Username</label>
+      <div class="input-wrap"><span class="input-icon">👤</span><input type="text" id="login-user" placeholder="Enter your username" autocomplete="off"/></div>
     </div>
-
-    <div class="form-view" id="view-register">
-      <div class="form-group">
-        <label>Username</label>
-        <div class="input-wrap"><span class="input-icon">👤</span><input type="text" id="reg-user" placeholder="Choose your username" autocomplete="off"/></div>
-      </div>
-      <div class="form-group">
-        <label>User Email</label>
-        <div class="input-wrap"><span class="input-icon">📡</span><input type="email" id="reg-email" placeholder="user@example.com"/></div>
-      </div>
-      <div class="form-group">
-        <label>Team Name</label>
-        <div class="input-wrap"><span class="input-icon">🏴</span><input type="text" id="reg-team" placeholder="e.g. LRP Support"/></div>
-      </div>
-      <div class="form-group">
-        <label>Set Access Code</label>
-        <div class="input-wrap"><span class="input-icon">🔐</span><input type="password" id="reg-pass" placeholder="Min 6 characters"/></div>
-      </div>
-      <div class="form-group">
-        <label>Confirm Access Code</label>
-        <div class="input-wrap"><span class="input-icon">✅</span><input type="password" id="reg-confirm" placeholder="Re-enter code"/></div>
-      </div>
-      <div id="reg-msg" class="msg"></div>
-      <button class="btn-primary" id="reg-btn" onclick="handleRegister()">Register</button>
+    <div class="form-group">
+      <label>Password</label>
+      <div class="input-wrap"><span class="input-icon">🔒</span><input type="password" id="login-pass" placeholder="••••••••••"/></div>
     </div>
-  </div>
-</div>
+    <div id="login-msg" class="msg"></div>
+    <button class="btn-primary" id="login-btn" onclick="handleLogin()">⚓ SIGN IN</button>
 
-<div class="modal-overlay" id="modal">
-  <div class="modal">
-    <div class="modal-anchor">⚓</div>
-    <h3>REGISTRATION SUCCESSFUL</h3>
-    <p>Welcome, <strong id="modal-name"></strong>!<br>You have been successfully registered.</p>
-    <div class="vessel-id" id="modal-id"></div><br>
-    <button onclick="closeModal()">🚢 PROCEED TO LOGIN</button>
+    <div class="access-note">🛡️ Access is provided by your administrator.<br>Contact admin if you need an account.</div>
   </div>
 </div>
 
 <script>
   const API_URL = 'https://script.google.com/macros/s/AKfycbxPNFPaXPmAMJvNl5_6Rrf0-Yx_OLvJ08MFBNWLEQ2MV59JcyvkMLImerdPXcKq52Ojvg/exec';
 
-  function showTab(t) {
-    document.getElementById('view-login').classList.toggle('active', t === 'login');
-    document.getElementById('view-register').classList.toggle('active', t === 'register');
-    document.getElementById('tab-login').classList.toggle('active', t === 'login');
-    document.getElementById('tab-register').classList.toggle('active', t === 'register');
-    clearMsgs();
-  }
-  function clearMsgs() {
-    ['login-msg','reg-msg'].forEach(id => {
-      const el = document.getElementById(id);
-      el.style.display = 'none'; el.className = 'msg'; el.textContent = '';
-    });
-  }
   function showMsg(id, text, type) {
     const el = document.getElementById(id);
     el.textContent = text; el.className = 'msg ' + type; el.style.display = 'block';
   }
 
-  async function handleRegister() {
-    const u = document.getElementById('reg-user').value.trim();
-    const e = document.getElementById('reg-email').value.trim();
-    const t = document.getElementById('reg-team').value.trim();
-    const p = document.getElementById('reg-pass').value;
-    const c = document.getElementById('reg-confirm').value;
-    if (!u||!e||!t||!p||!c) { showMsg('reg-msg','⚠ ALL FIELDS ARE MANDATORY.','error'); return; }
-    if (p.length < 6)        { showMsg('reg-msg','⚠ ACCESS CODE MUST BE ≥ 6 CHARACTERS.','error'); return; }
-    if (p !== c)             { showMsg('reg-msg','⚠ ACCESS CODE MISMATCH — RE-ENTER.','error'); return; }
-    const btn = document.getElementById('reg-btn');
-    btn.disabled = true;
-    showMsg('reg-msg','⏳ REGISTERING...','loading');
-    const vesselId = 'VID-' + Math.random().toString(36).toUpperCase().slice(2,8);
-    try {
-      const params = new URLSearchParams({ action:'register', username:u, email:e, team:t, password:p, vesselId });
-      const res  = await fetch(API_URL + '?' + params.toString());
-      const data = await res.json();
-      if (data.success) {
-        document.getElementById('modal-name').textContent = u;
-        document.getElementById('modal-id').textContent   = 'ID: ' + vesselId + ' · TEAM: ' + t;
-        document.getElementById('modal').classList.add('show');
-        ['reg-user','reg-email','reg-team','reg-pass','reg-confirm'].forEach(id => document.getElementById(id).value = '');
-      } else if (data.error === 'USERNAME_EXISTS') {
-        showMsg('reg-msg','⚠ USERNAME ALREADY TAKEN — CHOOSE ANOTHER.','error');
-      } else {
-        showMsg('reg-msg','⚠ REGISTRATION FAILED. TRY AGAIN.','error');
-      }
-    } catch(err) {
-      showMsg('reg-msg','⚠ CONNECTION ERROR. CHECK NETWORK.','error');
-    }
-    btn.disabled = false;
-  }
-  function closeModal() { document.getElementById('modal').classList.remove('show'); showTab('login'); }
-
   async function handleLogin() {
     const u = document.getElementById('login-user').value.trim();
     const p = document.getElementById('login-pass').value;
-    if (!u||!p) { showMsg('login-msg','⚠ ENTER USERNAME AND ACCESS CODE.','error'); return; }
+    if (!u || !p) { showMsg('login-msg','⚠ ENTER USERNAME AND PASSWORD.','error'); return; }
 
     if (u.toLowerCase() === 'admin' && p === 'admin@lrp') {
       showMsg('login-msg','✅ ADMIN ACCESS GRANTED','success');
@@ -280,8 +178,7 @@
     btn.disabled = true;
     showMsg('login-msg','⏳ VERIFYING...','loading');
     try {
-      const params = new URLSearchParams({ action:'login', username:u, password:p });
-      const res  = await fetch(API_URL + '?' + params.toString());
+      const res  = await fetch(API_URL + '?' + new URLSearchParams({ action:'login', username:u, password:p }));
       const data = await res.json();
       if (data.success) {
         showMsg('login-msg','✅ IDENTITY VERIFIED','success');
@@ -303,17 +200,18 @@
     }
   }
 
+  /* ── CHANGE PASSWORD SCREEN ── */
   function showChangePassword(username, team) {
     document.getElementById('panelWrap').innerHTML = `
       <div class="panel">
         <div class="brand-bar">
           <div class="brand-icon">🔐</div>
-          <div class="brand-text"><h1>SET NEW PASSWORD</h1></div>
+          <div class="brand-text"><h1>SET NEW PASSWORD</h1><p>FIRST TIME LOGIN</p></div>
         </div>
         <div class="divider"></div>
         <div style="background:rgba(255,160,0,.1);border:1px solid rgba(255,160,0,.35);border-radius:4px;padding:10px 14px;margin-bottom:18px;">
-          <div style="font-size:11px;font-weight:700;color:#ffa040;letter-spacing:1px;">⚠ DEFAULT PASSWORD DETECTED</div>
-          <div style="font-size:11px;color:rgba(168,216,234,.7);margin-top:4px;line-height:1.5;">You are using the default password. Please set a personal password to continue.</div>
+          <div style="font-size:11px;font-weight:700;color:#ffa040;letter-spacing:1px;">⚠ TEMPORARY PASSWORD DETECTED</div>
+          <div style="font-size:11px;color:rgba(168,216,234,.7);margin-top:4px;line-height:1.5;">Your admin has set a temporary password. Please create your personal password to continue.</div>
         </div>
         <div class="form-group">
           <label>New Password</label>
@@ -324,7 +222,7 @@
           <div class="input-wrap"><span class="input-icon">✅</span><input type="password" id="new-confirm" placeholder="Re-enter new password"/></div>
         </div>
         <div id="cpw-msg" class="msg"></div>
-        <button class="btn-primary" id="cpw-btn" onclick="submitNewPassword('${username}','${team}')">🔒 SET NEW PASSWORD</button>
+        <button class="btn-primary" id="cpw-btn" onclick="submitNewPassword('${username}','${team}')">🔒 SET MY PASSWORD</button>
       </div>`;
   }
 
@@ -334,16 +232,14 @@
     if (!np||!nc)    { showMsg('cpw-msg','⚠ BOTH FIELDS ARE REQUIRED.','error'); return; }
     if (np.length<6) { showMsg('cpw-msg','⚠ PASSWORD MUST BE ≥ 6 CHARACTERS.','error'); return; }
     if (np !== nc)   { showMsg('cpw-msg','⚠ PASSWORDS DO NOT MATCH.','error'); return; }
-    if (np === 'LRP@1234') { showMsg('cpw-msg','⚠ CANNOT USE DEFAULT PASSWORD.','error'); return; }
     const btn = document.getElementById('cpw-btn');
     btn.disabled = true;
     showMsg('cpw-msg','⏳ UPDATING PASSWORD...','loading');
     try {
-      const params = new URLSearchParams({ action:'changePassword', username, newPassword:np });
-      const res  = await fetch(API_URL + '?' + params.toString());
+      const res  = await fetch(API_URL + '?' + new URLSearchParams({ action:'changePassword', username, newPassword:np }));
       const data = await res.json();
       if (data.success) {
-        showMsg('cpw-msg','✅ PASSWORD UPDATED! REDIRECTING...','success');
+        showMsg('cpw-msg','✅ PASSWORD SET! ENTERING PORTAL...','success');
         setTimeout(() => showDashboard(username, team), 1200);
       } else {
         showMsg('cpw-msg','⚠ FAILED TO UPDATE. TRY AGAIN.','error');
@@ -379,8 +275,6 @@
       .db-user-info .team-lbl{font-size:11px;color:rgba(0,200,255,.6);}
       .db-logout{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:8px 18px;background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);border-radius:3px;color:#ff9977;cursor:pointer;transition:all .3s;text-transform:uppercase;}
       .db-logout:hover{background:rgba(180,40,20,.55);color:#fff;}
-
-      /* 3-card layout */
       .db-body{position:relative;z-index:5;display:flex;align-items:center;justify-content:center;height:calc(100vh - 73px);gap:24px;padding:20px;flex-wrap:wrap;}
       .db-card{width:280px;background:rgba(4,28,53,.88);border:1px solid rgba(0,180,255,.25);border-radius:4px;padding:30px 26px;cursor:pointer;transition:all .35s;backdrop-filter:blur(18px);box-shadow:0 20px 60px rgba(0,0,0,.6);position:relative;}
       .db-card:hover{transform:translateY(-8px);border-color:rgba(0,200,255,.6);box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 40px rgba(0,180,255,.15);}
@@ -431,7 +325,6 @@
       </div>
     </div>`;
 
-    /* ── OPEN TOOL (iframe overlay) ── */
     window.openTool = function(tool) {
       const files = { handover:'Shift_Handover_V5.html', playbook:'Support Ticket Logger_V7.html' };
       const overlay = document.createElement('div');
@@ -461,23 +354,21 @@
       document.getElementById('so-btn').onclick   = () => { overlay.remove(); location.reload(); };
     };
 
-    /* ── OPEN CREDENTIALS MODULE ── */
     window.openCredentials = function() {
       const overlay = document.createElement('div');
       overlay.id = 'cred-overlay';
       overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;background:#020f1e;font-family:Rajdhani,sans-serif;';
-
       overlay.innerHTML = `
         <style>
           @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap');
           .cr-bar{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;padding:12px 24px;background:rgba(4,28,53,.95);border-bottom:1px solid rgba(0,180,255,.2);flex-shrink:0;}
           .cr-body{flex:1;overflow-y:auto;padding:24px 28px;}
           .cr-search-wrap{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
-          .cr-search{flex:1;background:rgba(2,15,30,.8);border:1px solid rgba(0,120,180,.4);border-radius:4px;padding:11px 16px 11px 40px;font-family:'Share Tech Mono',monospace;font-size:13px;color:#a8e8ff;outline:none;transition:border-color .3s;}
+          .sw-inner{position:relative;flex:1;display:flex;align-items:center;}
+          .cr-search{flex:1;background:rgba(2,15,30,.8);border:1px solid rgba(0,120,180,.4);border-radius:4px;padding:11px 16px 11px 40px;font-family:'Share Tech Mono',monospace;font-size:13px;color:#a8e8ff;outline:none;transition:border-color .3s;width:100%;}
           .cr-search:focus{border-color:rgba(0,200,255,.7);box-shadow:0 0 0 3px rgba(0,180,255,.1);}
           .cr-search::placeholder{color:rgba(100,160,200,.4);}
           .cr-search-icon{position:absolute;left:12px;font-size:16px;pointer-events:none;}
-          .cr-search-wrap .sw-inner{position:relative;flex:1;display:flex;align-items:center;}
           .cr-count{font-size:11px;color:rgba(0,200,255,.6);letter-spacing:1px;white-space:nowrap;}
           .cr-table-wrap{background:rgba(4,28,53,.85);border:1px solid rgba(0,180,255,.2);border-radius:6px;overflow:hidden;}
           .cr-table{width:100%;border-collapse:collapse;}
@@ -494,7 +385,7 @@
           .env-uat{background:rgba(255,160,0,.15);border:1px solid rgba(255,160,0,.4);color:#ffa040;}
           .env-dev{background:rgba(0,180,80,.15);border:1px solid rgba(0,180,80,.4);color:#00ff88;}
           .env-staging{background:rgba(100,100,255,.15);border:1px solid rgba(100,100,255,.4);color:#aaaaff;}
-          .env-default{background:rgba(100,100,100,.15);border:1px solid rgba(100,100,100,.4);color:#aaaaaa;}
+          .env-default{background:rgba(100,100,100,.15);border:1px solid rgba(100,100,100,.4);color:#aaa;}
           .cr-uid{font-family:'Share Tech Mono',monospace;font-size:12px;color:#a8e8ff;}
           .pw-wrap{display:flex;align-items:center;gap:8px;}
           .pw-val{font-family:'Share Tech Mono',monospace;font-size:12px;color:#a8e8ff;letter-spacing:1px;}
@@ -507,8 +398,6 @@
           .cr-loading{text-align:center;padding:60px 20px;color:rgba(0,200,255,.6);font-size:14px;letter-spacing:2px;}
           .cr-section-title{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:900;color:rgba(0,200,255,.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;}
         </style>
-
-        <!-- TOP BAR -->
         <div class="cr-bar">
           <div style="display:flex;align-items:center;gap:12px;">
             <div style="width:34px;height:34px;background:linear-gradient(135deg,#c0441a,#e8610a);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;">🚢</div>
@@ -523,8 +412,6 @@
             <button onclick="location.reload()" style="font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);border-radius:3px;color:#ff9977;cursor:pointer;text-transform:uppercase;">⎋ SIGN OUT</button>
           </div>
         </div>
-
-        <!-- BODY -->
         <div class="cr-body">
           <div class="cr-section-title">🔐 Client Login Credentials</div>
           <div class="cr-search-wrap">
@@ -540,105 +427,88 @@
         </div>`;
 
       document.body.appendChild(overlay);
-      loadCredentials();
-    };
 
-    /* ── CREDENTIALS DATA & RENDER ── */
-    let allCreds = [];
+      let allCreds = [];
 
-    window.loadCredentials = async function() {
-      try {
-        const res  = await fetch(API_URL + '?action=getCredentials&t=' + Date.now());
-        const data = await res.json();
-        if (data.success) {
-          allCreds = data.credentials || [];
-          renderCredentials(allCreds);
-        } else {
-          document.getElementById('cr-table-container').innerHTML = '<div class="cr-empty">⚠ Failed to load credentials.</div>';
+      window.loadCredentials = async function() {
+        try {
+          const res  = await fetch(API_URL + '?action=getCredentials&t=' + Date.now());
+          const data = await res.json();
+          if (data.success) {
+            allCreds = data.credentials || [];
+            renderCredentials(allCreds);
+          } else {
+            document.getElementById('cr-table-container').innerHTML = '<div class="cr-empty">⚠ Failed to load credentials.</div>';
+          }
+        } catch(e) {
+          document.getElementById('cr-table-container').innerHTML = '<div class="cr-empty">⚠ Connection error. Try again.</div>';
         }
-      } catch(e) {
-        document.getElementById('cr-table-container').innerHTML = '<div class="cr-empty">⚠ Connection error. Try again.</div>';
-      }
-    };
-
-    window.filterCredentials = function() {
-      const q = document.getElementById('cr-search-input').value.toLowerCase().trim();
-      const filtered = q ? allCreds.filter(c => (c.clientName||'').toLowerCase().includes(q)) : allCreds;
-      renderCredentials(filtered, allCreds.length);
-    };
-
-    window.renderCredentials = function(list, total) {
-      const cnt = document.getElementById('cr-count');
-      if (!list.length) {
-        cnt.textContent = '0 results';
-        document.getElementById('cr-table-container').innerHTML = '<div class="cr-empty">🔍 No clients found.</div>';
-        return;
-      }
-      cnt.textContent = total ? list.length + ' of ' + total + ' clients' : list.length + ' clients';
-
-      const envClass = e => {
-        const v = (e||'').toLowerCase();
-        if (v.includes('prod')) return 'env-prod';
-        if (v.includes('uat'))  return 'env-uat';
-        if (v.includes('dev'))  return 'env-dev';
-        if (v.includes('stag')) return 'env-staging';
-        return 'env-default';
       };
 
-      const rows = list.map((c, i) => `
-        <tr>
-          <td class="cr-client">🏢 ${c.clientName || '—'}</td>
-          <td class="cr-url">${c.appUrl ? '<a href="' + c.appUrl + '" target="_blank">🔗 ' + c.appUrl + '</a>' : '—'}</td>
-          <td><span class="cr-env ${envClass(c.environment)}">${c.environment || '—'}</span></td>
-          <td class="cr-uid">${c.userId || '—'}</td>
-          <td>
-            <div class="pw-wrap">
-              <span class="pw-val" id="pw-val-${i}">••••••••</span>
-              <button class="pw-toggle" onclick="togglePw(${i}, '${encodeURIComponent(c.password||'')}')">👁 Show</button>
-              <button class="cr-copy" id="copy-btn-${i}" onclick="copyPw(${i}, '${encodeURIComponent(c.password||'')}')">📋 Copy</button>
-            </div>
-          </td>
-        </tr>`).join('');
+      window.filterCredentials = function() {
+        const q = document.getElementById('cr-search-input').value.toLowerCase().trim();
+        const filtered = q ? allCreds.filter(c => (c.clientName||'').toLowerCase().includes(q)) : allCreds;
+        renderCredentials(filtered, allCreds.length);
+      };
 
-      document.getElementById('cr-table-container').innerHTML = `
-        <table class="cr-table">
-          <thead><tr>
-            <th>Client Name</th>
-            <th>Application URL</th>
-            <th>Environment</th>
-            <th>User ID</th>
-            <th>Password</th>
-          </tr></thead>
-          <tbody>${rows}</tbody>
-        </table>`;
-    };
+      window.renderCredentials = function(list, total) {
+        const cnt = document.getElementById('cr-count');
+        if (!list.length) {
+          cnt.textContent = '0 results';
+          document.getElementById('cr-table-container').innerHTML = '<div class="cr-empty">🔍 No clients found.</div>';
+          return;
+        }
+        cnt.textContent = total ? list.length + ' of ' + total + ' clients' : list.length + ' clients';
+        const envClass = e => {
+          const v = (e||'').toLowerCase();
+          if (v.includes('prod')) return 'env-prod';
+          if (v.includes('uat'))  return 'env-uat';
+          if (v.includes('dev'))  return 'env-dev';
+          if (v.includes('stag')) return 'env-staging';
+          return 'env-default';
+        };
+        const rows = list.map((c, i) => `
+          <tr>
+            <td class="cr-client">🏢 ${c.clientName||'—'}</td>
+            <td class="cr-url">${c.appUrl ? '<a href="'+c.appUrl+'" target="_blank">🔗 '+c.appUrl+'</a>' : '—'}</td>
+            <td><span class="cr-env ${envClass(c.environment)}">${c.environment||'—'}</span></td>
+            <td class="cr-uid">${c.userId||'—'}</td>
+            <td>
+              <div class="pw-wrap">
+                <span class="pw-val" id="pw-val-${i}">••••••••</span>
+                <button class="pw-toggle" onclick="togglePw(${i},'${encodeURIComponent(c.password||'')}')">👁 Show</button>
+                <button class="cr-copy" id="copy-btn-${i}" onclick="copyPw(${i},'${encodeURIComponent(c.password||'')}')">📋 Copy</button>
+              </div>
+            </td>
+          </tr>`).join('');
+        document.getElementById('cr-table-container').innerHTML = `
+          <table class="cr-table">
+            <thead><tr><th>Client Name</th><th>Application URL</th><th>Environment</th><th>User ID</th><th>Password</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>`;
+      };
 
-    window.togglePw = function(i, encoded) {
-      const el  = document.getElementById('pw-val-' + i);
-      const btn = el.nextElementSibling;
-      if (el.textContent === '••••••••') {
-        el.textContent = decodeURIComponent(encoded);
-        btn.textContent = '🙈 Hide';
-      } else {
-        el.textContent = '••••••••';
-        btn.textContent = '👁 Show';
-      }
-    };
+      window.togglePw = function(i, encoded) {
+        const el = document.getElementById('pw-val-'+i);
+        const btn = el.nextElementSibling;
+        if (el.textContent === '••••••••') { el.textContent = decodeURIComponent(encoded); btn.textContent = '🙈 Hide'; }
+        else { el.textContent = '••••••••'; btn.textContent = '👁 Show'; }
+      };
 
-    window.copyPw = function(i, encoded) {
-      navigator.clipboard.writeText(decodeURIComponent(encoded)).then(() => {
-        const btn = document.getElementById('copy-btn-' + i);
-        btn.textContent = '✅ Copied';
-        btn.classList.add('copied');
-        setTimeout(() => { btn.textContent = '📋 Copy'; btn.classList.remove('copied'); }, 2000);
-      });
+      window.copyPw = function(i, encoded) {
+        navigator.clipboard.writeText(decodeURIComponent(encoded)).then(() => {
+          const btn = document.getElementById('copy-btn-'+i);
+          btn.textContent = '✅ Copied'; btn.classList.add('copied');
+          setTimeout(() => { btn.textContent = '📋 Copy'; btn.classList.remove('copied'); }, 2000);
+        });
+      };
+
+      loadCredentials();
     };
   }
 
   document.addEventListener('keydown', e => {
-    if (e.key !== 'Enter') return;
-    const loginActive = document.getElementById('view-login') && document.getElementById('view-login').classList.contains('active');
-    if (loginActive) handleLogin(); else handleRegister();
+    if (e.key === 'Enter') handleLogin();
   });
 </script>
 </body>
