@@ -19,12 +19,11 @@
   .logout-btn:hover{background:rgba(180,40,20,.55);color:#fff;}
   .main{padding:24px 28px;}
 
-  /* ── TABS ── */
+  /* TABS */
   .admin-tabs{display:flex;gap:0;margin-bottom:28px;border-bottom:1px solid rgba(0,180,255,.2);}
   .admin-tab{padding:12px 28px;background:none;border:none;font-family:'Courier New',monospace;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(0,180,255,.45);cursor:pointer;position:relative;transition:color .3s;}
   .admin-tab.active{color:#00c8ff;}
   .admin-tab.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#00c8ff,transparent);}
-
   .tab-panel{display:none;}
   .tab-panel.active{display:block;}
 
@@ -34,7 +33,7 @@
   .stat-card{background:rgba(4,28,53,.88);border:1px solid rgba(0,180,255,.2);border-radius:8px;padding:20px;text-align:center;}
   .stat-num{font-size:32px;font-weight:800;margin-bottom:4px;}
   .stat-lbl{font-size:11px;color:rgba(168,216,234,.6);letter-spacing:1px;text-transform:uppercase;}
-  .blue{color:#00c8ff;} .green{color:#00ff88;} .orange{color:#ffa040;} .red{color:#ff4444;} .purple{color:#c080ff;}
+  .blue{color:#00c8ff;}.green{color:#00ff88;}.orange{color:#ffa040;}.red{color:#ff4444;}
   .section-title{font-size:13px;font-weight:700;color:rgba(0,200,255,.8);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
   .table-wrap{background:rgba(4,28,53,.88);border:1px solid rgba(0,180,255,.2);border-radius:8px;overflow:hidden;margin-bottom:28px;}
   .search-bar{padding:14px 18px;border-bottom:1px solid rgba(0,180,255,.15);display:flex;align-items:center;gap:12px;}
@@ -55,6 +54,8 @@
   .loading{text-align:center;padding:40px;color:rgba(0,200,255,.6);font-size:14px;letter-spacing:2px;}
   .error-msg{text-align:center;padding:40px;color:#ff9999;font-size:14px;}
   .last-login{font-size:11px;color:rgba(168,216,234,.5);}
+
+  /* LOGIN SCREEN */
   .login-screen{position:fixed;inset:0;background:#020f1e;display:flex;align-items:center;justify-content:center;z-index:999;}
   .login-box{background:rgba(4,28,53,.95);border:1px solid rgba(0,180,255,.3);border-radius:8px;padding:40px;width:340px;text-align:center;}
   .login-box h2{font-family:'Courier New',monospace;font-size:16px;letter-spacing:3px;color:#e0f4ff;margin-bottom:6px;}
@@ -64,6 +65,8 @@
   .login-box button{width:100%;padding:12px;background:linear-gradient(135deg,#0a4a7a,#0d6fa8);border:1px solid rgba(0,200,255,.4);border-radius:4px;font-size:13px;font-weight:700;letter-spacing:2px;color:#a8f0ff;cursor:pointer;transition:all .3s;text-transform:uppercase;}
   .login-box button:hover{background:linear-gradient(135deg,#0d6fa8,#14a0d0);color:#fff;}
   .login-err{color:#ff9999;font-size:12px;margin-top:8px;display:none;}
+
+  /* ACTION BUTTONS */
   .reset-btn{background:rgba(255,160,0,.15);border:1px solid rgba(255,160,0,.4);border-radius:4px;color:#ffa040;cursor:pointer;font-size:11px;font-weight:700;letter-spacing:1px;padding:4px 10px;transition:all .3s;white-space:nowrap;}
   .reset-btn:hover{background:rgba(255,160,0,.35);color:#fff;}
   .reset-btn.done{background:rgba(0,255,136,.15);border-color:rgba(0,255,136,.4);color:#00ff88;}
@@ -71,36 +74,46 @@
   .delete-btn:hover{background:rgba(255,50,50,.35);color:#fff;}
   .edit-btn{background:rgba(0,120,220,.15);border:1px solid rgba(0,180,255,.4);border-radius:4px;color:#a8e8ff;cursor:pointer;font-size:11px;font-weight:700;letter-spacing:1px;padding:4px 10px;transition:all .3s;white-space:nowrap;}
   .edit-btn:hover{background:rgba(0,120,220,.35);color:#fff;}
+
+  /* TOAST */
   .toast{position:fixed;bottom:24px;right:24px;background:#1a3a5c;border:1px solid rgba(0,180,255,.4);border-radius:8px;padding:12px 20px;font-size:13px;color:#a8e8ff;box-shadow:0 8px 24px rgba(0,0,0,.4);opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;}
   .toast.show{opacity:1;}
 
-  /* ── ADD CREDENTIAL FORM ── */
-  .cred-form-wrap{background:rgba(4,28,53,.88);border:1px solid rgba(120,60,200,.3);border-radius:8px;padding:24px;margin-bottom:28px;}
-  .cred-form-title{font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:rgba(160,80,255,.9);letter-spacing:2px;text-transform:uppercase;margin-bottom:18px;}
-  .cred-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
-  .cred-form-grid.full{grid-template-columns:1fr;}
-  .cred-field label{display:block;font-size:10px;font-weight:700;letter-spacing:1.5px;color:rgba(0,180,255,.7);text-transform:uppercase;margin-bottom:5px;}
-  .cred-field input, .cred-field select{width:100%;background:rgba(2,15,30,.7);border:1px solid rgba(0,120,180,.35);border-radius:4px;padding:9px 12px;font-size:13px;color:#a8e8ff;outline:none;font-family:'Courier New',monospace;transition:border-color .3s;}
-  .cred-field input:focus, .cred-field select:focus{border-color:rgba(0,200,255,.7);}
-  .cred-field input::placeholder{color:rgba(100,160,200,.35);}
-  .cred-field select option{background:#041c35;color:#a8e8ff;}
-  .cred-form-actions{display:flex;gap:12px;}
-  .btn-add{padding:10px 24px;background:linear-gradient(135deg,#4a1a8b,#6a2ab0);border:1px solid rgba(160,80,255,.4);border-radius:4px;color:#c080ff;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;transition:all .3s;}
-  .btn-add:hover{background:linear-gradient(135deg,#6a2ab0,#8a40d0);color:#fff;}
+  /* FORM PANELS */
+  .form-panel{background:rgba(4,28,53,.88);border-radius:8px;padding:24px;margin-bottom:28px;}
+  .form-panel.green-border{border:1px solid rgba(0,180,80,.3);}
+  .form-panel.purple-border{border:1px solid rgba(120,60,200,.3);}
+  .form-panel-title{font-family:'Courier New',monospace;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:18px;}
+  .form-panel-title.green{color:rgba(0,220,100,.9);}
+  .form-panel-title.purple{color:rgba(160,80,255,.9);}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+  .form-field label{display:block;font-size:10px;font-weight:700;letter-spacing:1.5px;color:rgba(0,180,255,.7);text-transform:uppercase;margin-bottom:5px;}
+  .form-field input,.form-field select{width:100%;background:rgba(2,15,30,.7);border:1px solid rgba(0,120,180,.35);border-radius:4px;padding:9px 12px;font-size:13px;color:#a8e8ff;outline:none;font-family:'Courier New',monospace;transition:border-color .3s;}
+  .form-field input:focus,.form-field select:focus{border-color:rgba(0,200,255,.7);}
+  .form-field input::placeholder{color:rgba(100,160,200,.35);}
+  .form-field select option{background:#041c35;color:#a8e8ff;}
+  .form-actions{display:flex;gap:12px;align-items:center;}
+  .btn-green{padding:10px 24px;background:linear-gradient(135deg,#0a5a2a,#0d8a3a);border:1px solid rgba(0,200,80,.4);border-radius:4px;color:#88ffcc;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;transition:all .3s;}
+  .btn-green:hover{background:linear-gradient(135deg,#0d8a3a,#14c050);color:#fff;}
+  .btn-green:disabled{opacity:.6;cursor:not-allowed;}
+  .btn-purple{padding:10px 24px;background:linear-gradient(135deg,#4a1a8b,#6a2ab0);border:1px solid rgba(160,80,255,.4);border-radius:4px;color:#c080ff;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;transition:all .3s;}
+  .btn-purple:hover{background:linear-gradient(135deg,#6a2ab0,#8a40d0);color:#fff;}
+  .btn-purple:disabled{opacity:.6;cursor:not-allowed;}
   .btn-cancel{padding:10px 24px;background:rgba(100,100,100,.15);border:1px solid rgba(100,100,100,.3);border-radius:4px;color:#aaa;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;transition:all .3s;}
   .btn-cancel:hover{background:rgba(100,100,100,.3);color:#fff;}
-  .btn-new-cred{padding:9px 20px;background:rgba(120,60,200,.2);border:1px solid rgba(160,80,255,.4);border-radius:4px;color:#c080ff;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;transition:all .3s;white-space:nowrap;}
-  .btn-new-cred:hover{background:rgba(120,60,200,.4);color:#fff;}
+  .form-msg{font-size:11px;font-weight:700;letter-spacing:1px;padding:6px 12px;border-radius:3px;display:none;}
+  .form-msg.error{background:rgba(180,40,40,.2);border-left:2px solid #ff4444;color:#ff9999;}
+  .form-msg.success{background:rgba(20,160,80,.15);border-left:2px solid #00ff88;color:#88ffcc;}
+  .form-msg.loading{background:rgba(0,100,180,.15);border-left:2px solid #00c8ff;color:#a8e8ff;}
 
-  /* ── CRED TABLE ── */
+  /* CRED TABLE */
   .env-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;}
   .env-prod{background:rgba(255,60,60,.15);border:1px solid rgba(255,60,60,.4);color:#ff8888;}
   .env-uat{background:rgba(255,160,0,.15);border:1px solid rgba(255,160,0,.4);color:#ffa040;}
   .env-dev{background:rgba(0,180,80,.15);border:1px solid rgba(0,180,80,.4);color:#00ff88;}
   .env-staging{background:rgba(100,100,255,.15);border:1px solid rgba(100,100,255,.4);color:#aaaaff;}
   .env-default{background:rgba(100,100,100,.15);border:1px solid rgba(100,100,100,.35);color:#aaa;}
-  .pw-cell{font-family:'Courier New',monospace;font-size:12px;}
-  .pw-toggle-sm{background:none;border:none;color:rgba(0,180,255,.6);cursor:pointer;font-size:12px;padding:0 4px;}
+  .pw-toggle-sm{background:none;border:none;color:rgba(0,180,255,.6);cursor:pointer;font-size:13px;padding:0 4px;}
 </style>
 </head>
 <body>
@@ -120,15 +133,12 @@
   </div>
 </div>
 
-<!-- Main Dashboard -->
+<!-- Dashboard -->
 <div id="dashboard" style="display:none;">
   <div class="topbar">
     <div class="brand">
       <div class="brand-icon">🚢</div>
-      <div>
-        <h1>LRP SUPPORT PORTAL</h1>
-        <div class="brand-sub">ADMIN COMMAND CENTER</div>
-      </div>
+      <div><h1>LRP SUPPORT PORTAL</h1><div class="brand-sub">ADMIN COMMAND CENTER</div></div>
     </div>
     <div class="topbar-right">
       <span style="font-size:11px;color:rgba(0,200,255,.6);letter-spacing:1px;" id="lastRefreshed"></span>
@@ -138,17 +148,17 @@
   </div>
 
   <div class="main">
-    <!-- ADMIN TABS -->
     <div class="admin-tabs">
-      <button class="admin-tab active" id="atab-agents" onclick="switchAdminTab('agents')">🧑‍✈️ AGENTS</button>
-      <button class="admin-tab" id="atab-creds" onclick="switchAdminTab('creds')">🔐 CLIENT CREDENTIALS</button>
+      <button class="admin-tab active" id="atab-agents" onclick="switchTab('agents')">🧑‍✈️ AGENTS</button>
+      <button class="admin-tab" id="atab-creds" onclick="switchTab('creds')">🔐 CLIENT CREDENTIALS</button>
     </div>
 
-    <!-- ══ TAB: AGENTS ══ -->
+    <!-- ══ AGENTS TAB ══ -->
     <div class="tab-panel active" id="panel-agents">
-      <div class="page-title">AGENT OVERVIEW</div>
-      <div class="page-sub">Real-time agent registrations and login activity</div>
+      <div class="page-title">AGENT MANAGEMENT</div>
+      <div class="page-sub">Create agent logins and monitor activity</div>
 
+      <!-- STATS -->
       <div class="stats-row">
         <div class="stat-card"><div class="stat-num blue" id="s-total">—</div><div class="stat-lbl">Total Agents</div></div>
         <div class="stat-card"><div class="stat-num green" id="s-online">—</div><div class="stat-lbl">Active Today</div></div>
@@ -156,31 +166,65 @@
         <div class="stat-card"><div class="stat-num red" id="s-inactive">—</div><div class="stat-lbl">Never Logged In</div></div>
       </div>
 
+      <!-- CREATE AGENT FORM -->
+      <div class="form-panel green-border">
+        <div class="form-panel-title green" id="agentFormTitle">➕ Create New Agent Login</div>
+        <input type="hidden" id="edit-agent-original-username"/>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Full Name *</label>
+            <input type="text" id="ag-name" placeholder="e.g. John Smith"/>
+          </div>
+          <div class="form-field">
+            <label>Email *</label>
+            <input type="email" id="ag-email" placeholder="agent@example.com"/>
+          </div>
+          <div class="form-field">
+            <label>Team *</label>
+            <input type="text" id="ag-team" placeholder="e.g. LRP Support"/>
+          </div>
+          <div class="form-field">
+            <label>Username *</label>
+            <input type="text" id="ag-username" placeholder="e.g. john.smith" autocomplete="off"/>
+          </div>
+          <div class="form-field">
+            <label>Password * <span style="font-size:9px;color:rgba(0,200,255,.5);font-weight:400;">(agent must change on first login)</span></label>
+            <input type="text" id="ag-password" placeholder="Set a temporary password"/>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-green" id="ag-submit-btn" onclick="submitAgent()">💾 Create Agent Login</button>
+          <button class="btn-cancel" id="ag-cancel-btn" onclick="cancelAgentEdit()" style="display:none;">✕ Cancel</button>
+          <span class="form-msg" id="ag-msg"></span>
+        </div>
+      </div>
+
+      <!-- AGENTS TABLE -->
       <div class="section-title">🧑‍✈️ Registered Agents</div>
       <div class="table-wrap">
         <div class="search-bar">
-          <input type="text" id="searchInput" placeholder="🔍  Search by name, team, or vessel ID..." oninput="filterTable()"/>
+          <input type="text" id="searchInput" placeholder="🔍  Search by name, email, or team..." oninput="filterTable()"/>
           <span style="font-size:11px;color:rgba(168,216,234,.5);" id="filterCount"></span>
         </div>
         <div id="tableContainer"><div class="loading">⏳ LOADING AGENT DATA...</div></div>
       </div>
     </div>
 
-    <!-- ══ TAB: CLIENT CREDENTIALS ══ -->
+    <!-- ══ CREDENTIALS TAB ══ -->
     <div class="tab-panel" id="panel-creds">
       <div class="page-title">CLIENT CREDENTIALS</div>
-      <div class="page-sub">Manage client login credentials for all agents</div>
+      <div class="page-sub">Manage client login credentials visible to all agents</div>
 
-      <!-- ADD / EDIT FORM -->
-      <div class="cred-form-wrap" id="credFormWrap">
-        <div class="cred-form-title" id="credFormTitle">➕ Add New Client Credential</div>
+      <!-- ADD/EDIT CRED FORM -->
+      <div class="form-panel purple-border">
+        <div class="form-panel-title purple" id="credFormTitle">➕ Add New Client Credential</div>
         <input type="hidden" id="edit-cred-id"/>
-        <div class="cred-form-grid">
-          <div class="cred-field">
+        <div class="form-grid">
+          <div class="form-field">
             <label>Client Name *</label>
             <input type="text" id="cred-client" placeholder="e.g. Acme Corp"/>
           </div>
-          <div class="cred-field">
+          <div class="form-field">
             <label>Environment *</label>
             <select id="cred-env">
               <option value="">— Select —</option>
@@ -190,27 +234,28 @@
               <option value="Development">Development</option>
             </select>
           </div>
-          <div class="cred-field">
+          <div class="form-field">
             <label>Application URL</label>
             <input type="text" id="cred-url" placeholder="https://app.example.com"/>
           </div>
-          <div class="cred-field">
+          <div class="form-field">
             <label>User ID *</label>
             <input type="text" id="cred-userid" placeholder="e.g. admin@acme.com"/>
           </div>
-          <div class="cred-field">
+          <div class="form-field">
             <label>Password *</label>
             <input type="text" id="cred-pass" placeholder="Enter password"/>
           </div>
         </div>
-        <div class="cred-form-actions">
-          <button class="btn-add" id="cred-submit-btn" onclick="submitCredential()">💾 Save Credential</button>
+        <div class="form-actions">
+          <button class="btn-purple" id="cred-submit-btn" onclick="submitCredential()">💾 Save Credential</button>
           <button class="btn-cancel" id="cred-cancel-btn" onclick="cancelCredEdit()" style="display:none;">✕ Cancel Edit</button>
+          <span class="form-msg" id="cred-msg"></span>
         </div>
       </div>
 
-      <!-- CREDENTIALS TABLE -->
-      <div class="section-title" style="margin-top:8px;">
+      <!-- CREDS TABLE -->
+      <div class="section-title">
         🗂 All Client Credentials
         <span style="font-size:11px;color:rgba(168,216,234,.5);margin-left:8px;" id="cred-count"></span>
       </div>
@@ -229,7 +274,7 @@
   const ADMIN_USER = 'admin';
   const ADMIN_PASS = 'admin@lrp';
 
-  let allUsers = [], allCreds = [], currentAdminTab = 'agents';
+  let allUsers = [], allCreds = [], currentTab = 'agents';
 
   window.addEventListener('load', () => {
     if (sessionStorage.getItem('admin_logged_in') === 'true') {
@@ -261,9 +306,8 @@
     document.getElementById('adm-pass').value = '';
   }
 
-  /* ── ADMIN TAB SWITCH ── */
-  function switchAdminTab(tab) {
-    currentAdminTab = tab;
+  function switchTab(tab) {
+    currentTab = tab;
     ['agents','creds'].forEach(t => {
       document.getElementById('atab-' + t).classList.toggle('active', t === tab);
       document.getElementById('panel-' + t).classList.toggle('active', t === tab);
@@ -273,28 +317,18 @@
   }
 
   function refreshCurrent() {
-    if (currentAdminTab === 'agents') loadUsers();
-    else loadCreds();
+    if (currentTab === 'agents') loadUsers(); else loadCreds();
+  }
+
+  function showFormMsg(id, text, type) {
+    const el = document.getElementById(id);
+    el.textContent = text; el.className = 'form-msg ' + type; el.style.display = 'inline-block';
+    if (type !== 'loading') setTimeout(() => { el.style.display = 'none'; }, 3000);
   }
 
   /* ══════════════════════════════
-     AGENTS TAB
+     AGENTS
   ══════════════════════════════ */
-  function getStatus(lastLogin) {
-    if (!lastLogin) return { label:'NEVER', cls:'badge-offline' };
-    const diff = (new Date() - new Date(lastLogin)) / 3600000;
-    if (diff < 24)  return { label:'TODAY',     cls:'badge-online' };
-    if (diff < 168) return { label:'THIS WEEK', cls:'badge-recent' };
-    return { label:'INACTIVE', cls:'badge-offline' };
-  }
-
-  function formatDate(iso) {
-    if (!iso) return '—';
-    const d = new Date(iso);
-    return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}) + ' ' +
-           d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-  }
-
   async function loadUsers() {
     document.getElementById('tableContainer').innerHTML = '<div class="loading">⏳ FETCHING AGENT DATA...</div>';
     try {
@@ -309,18 +343,33 @@
         document.getElementById('tableContainer').innerHTML = '<div class="error-msg">⚠ Failed to load data.</div>';
       }
     } catch(err) {
-      document.getElementById('tableContainer').innerHTML = '<div class="error-msg">⚠ Connection error: ' + err.message + '</div>';
+      document.getElementById('tableContainer').innerHTML = '<div class="error-msg">⚠ Connection error.</div>';
     }
   }
 
   function updateStats(users) {
-    const today  = users.filter(u => u.lastLogin && (new Date()-new Date(u.lastLogin))/3600000 < 24).length;
-    const week   = users.filter(u => { if(!u.lastLogin) return false; const h=(new Date()-new Date(u.lastLogin))/3600000; return h>=24&&h<168; }).length;
-    const never  = users.filter(u => !u.lastLogin).length;
+    const today = users.filter(u => u.lastLogin && (new Date()-new Date(u.lastLogin))/3600000 < 24).length;
+    const week  = users.filter(u => { if(!u.lastLogin) return false; const h=(new Date()-new Date(u.lastLogin))/3600000; return h>=24&&h<168; }).length;
+    const never = users.filter(u => !u.lastLogin).length;
     document.getElementById('s-total').textContent    = users.length;
     document.getElementById('s-online').textContent   = today;
     document.getElementById('s-recent').textContent   = week;
     document.getElementById('s-inactive').textContent = never;
+  }
+
+  function getStatus(lastLogin) {
+    if (!lastLogin) return { label:'NEVER', cls:'badge-offline' };
+    const diff = (new Date()-new Date(lastLogin))/3600000;
+    if (diff < 24)  return { label:'TODAY',     cls:'badge-online' };
+    if (diff < 168) return { label:'THIS WEEK', cls:'badge-recent' };
+    return { label:'INACTIVE', cls:'badge-offline' };
+  }
+
+  function formatDate(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}) + ' ' +
+           d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
   }
 
   function renderTable(users) {
@@ -332,17 +381,18 @@
     document.getElementById('filterCount').textContent = users.length + ' agents';
     const rows = users.map((u, i) => {
       const st = getStatus(u.lastLogin);
-      const defBadge = u.isDefault ? `<span style="background:rgba(255,160,0,.15);border:1px solid rgba(255,160,0,.4);border-radius:3px;padding:2px 7px;font-size:10px;font-weight:700;color:#ffa040;margin-left:6px;">DEFAULT PW</span>` : '';
+      const defBadge = u.isDefault
+        ? `<span style="background:rgba(255,160,0,.15);border:1px solid rgba(255,160,0,.4);border-radius:3px;padding:2px 7px;font-size:10px;font-weight:700;color:#ffa040;margin-left:6px;">TEMP PW</span>` : '';
       return `<tr>
         <td style="color:rgba(0,200,255,.5);font-size:12px;">${i+1}</td>
         <td style="font-weight:700;color:#e0f4ff;">👤 ${u.username}${defBadge}</td>
-        <td style="color:#a8d8ea;">${u.email||'—'}</td>
+        <td>${u.email||'—'}</td>
         <td><span style="background:rgba(0,100,180,.2);border:1px solid rgba(0,180,255,.2);border-radius:3px;padding:2px 8px;font-size:11px;color:rgba(0,200,255,.8);">⚓ ${u.team||'—'}</span></td>
-        <td class="vessel-id">${u.vesselId||'—'}</td>
         <td><span class="badge ${st.cls}">${st.label}</span></td>
         <td class="last-login">${formatDate(u.lastLogin)}</td>
         <td class="last-login">${formatDate(u.registeredAt)}</td>
         <td>
+          <button class="edit-btn" onclick="editAgent(${i})">✏ Edit</button>
           <button class="reset-btn" id="rbtn_${i}" onclick="resetPassword('${u.username}',${i})">🔑 Reset PW</button>
           <button class="delete-btn" id="dbtn_${i}" onclick="deleteUser('${u.username}',${i})">🗑 Delete</button>
         </td>
@@ -350,49 +400,126 @@
     }).join('');
     document.getElementById('tableContainer').innerHTML = `
       <table><thead><tr>
-        <th>#</th><th>Agent Name</th><th>Email</th><th>Team</th><th>Vessel ID</th>
-        <th>Status</th><th>Last Login</th><th>Registered</th><th>Action</th>
+        <th>#</th><th>Username</th><th>Email</th><th>Team</th>
+        <th>Status</th><th>Last Login</th><th>Created</th><th>Actions</th>
       </tr></thead><tbody>${rows}</tbody></table>`;
   }
 
   function filterTable() {
     const q = document.getElementById('searchInput').value.toLowerCase();
-    const filtered = allUsers.filter(u =>
+    const f = allUsers.filter(u =>
       (u.username||'').toLowerCase().includes(q) ||
-      (u.team||'').toLowerCase().includes(q) ||
-      (u.vesselId||'').toLowerCase().includes(q) ||
-      (u.email||'').toLowerCase().includes(q)
+      (u.email||'').toLowerCase().includes(q) ||
+      (u.team||'').toLowerCase().includes(q)
     );
-    renderTable(filtered);
-    document.getElementById('filterCount').textContent = filtered.length + ' of ' + allUsers.length + ' agents';
+    renderTable(f);
+    document.getElementById('filterCount').textContent = f.length + ' of ' + allUsers.length + ' agents';
+  }
+
+  /* CREATE / EDIT AGENT */
+  async function submitAgent() {
+    const origUsername = document.getElementById('edit-agent-original-username').value;
+    const name     = document.getElementById('ag-name').value.trim();
+    const email    = document.getElementById('ag-email').value.trim();
+    const team     = document.getElementById('ag-team').value.trim();
+    const username = document.getElementById('ag-username').value.trim();
+    const password = document.getElementById('ag-password').value.trim();
+
+    if (!name||!email||!team||!username||!password) {
+      showFormMsg('ag-msg','⚠ All fields are required.','error'); return;
+    }
+    if (password.length < 6) {
+      showFormMsg('ag-msg','⚠ Password must be ≥ 6 characters.','error'); return;
+    }
+
+    const btn = document.getElementById('ag-submit-btn');
+    btn.disabled = true;
+    showFormMsg('ag-msg','⏳ Saving...','loading');
+
+    // Generate a vesselId for new agents
+    const vesselId = origUsername ? '' : 'VID-' + Math.random().toString(36).toUpperCase().slice(2,8);
+    const action   = origUsername ? 'updateAgent' : 'register';
+    const params   = new URLSearchParams({ action, username, email, team, password, vesselId,
+                                           originalUsername: origUsername || username });
+    try {
+      const res  = await fetch(API_URL + '?' + params.toString());
+      const data = await res.json();
+      if (data.success) {
+        showFormMsg('ag-msg', origUsername ? '✅ Agent updated!' : '✅ Agent login created!', 'success');
+        clearAgentForm();
+        setTimeout(loadUsers, 800);
+      } else if (data.error === 'USERNAME_EXISTS') {
+        showFormMsg('ag-msg','⚠ Username already taken.','error');
+      } else {
+        showFormMsg('ag-msg','⚠ Failed. Try again.','error');
+      }
+    } catch {
+      showFormMsg('ag-msg','⚠ Connection error.','error');
+    }
+    btn.disabled = false;
+  }
+
+  function editAgent(i) {
+    const u = allUsers[i];
+    document.getElementById('edit-agent-original-username').value = u.username;
+    document.getElementById('ag-name').value     = u.username; // name same as username if not stored separately
+    document.getElementById('ag-email').value    = u.email || '';
+    document.getElementById('ag-team').value     = u.team || '';
+    document.getElementById('ag-username').value = u.username;
+    document.getElementById('ag-password').value = '';
+    document.getElementById('agentFormTitle').textContent = '✏ Edit Agent: ' + u.username;
+    document.getElementById('ag-submit-btn').textContent = '💾 Update Agent';
+    document.getElementById('ag-cancel-btn').style.display = 'inline-block';
+    document.getElementById('form-panel-title').scrollIntoView && document.getElementById('agentFormTitle').scrollIntoView({ behavior:'smooth' });
+  }
+
+  function cancelAgentEdit() { clearAgentForm(); }
+
+  function clearAgentForm() {
+    ['edit-agent-original-username','ag-name','ag-email','ag-team','ag-username','ag-password'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('agentFormTitle').textContent = '➕ Create New Agent Login';
+    document.getElementById('ag-submit-btn').textContent  = '💾 Create Agent Login';
+    document.getElementById('ag-cancel-btn').style.display = 'none';
+    document.getElementById('ag-msg').style.display = 'none';
+  }
+
+  async function resetPassword(username, idx) {
+    if (!confirm(`Reset password for "${username}" to a temporary password?\nThey will be forced to change it on next login.`)) return;
+    const btn = document.getElementById('rbtn_' + idx);
+    btn.textContent = '⏳...'; btn.disabled = true;
+    try {
+      const res  = await fetch(API_URL + '?' + new URLSearchParams({action:'resetPassword', username}));
+      const data = await res.json();
+      if (data.success) {
+        btn.textContent = '✅ Done'; btn.classList.add('done');
+        showToast(`✅ Password reset for ${username}. Temp: LRP@1234`);
+        setTimeout(loadUsers, 2000);
+      } else {
+        btn.textContent = '🔑 Reset PW'; btn.disabled = false;
+        showToast('⚠ Reset failed.', false);
+      }
+    } catch {
+      btn.textContent = '🔑 Reset PW'; btn.disabled = false;
+      showToast('⚠ Connection error.', false);
+    }
   }
 
   async function deleteUser(username, idx) {
-    if (!confirm(`⚠ Permanently delete account "${username}"?\n\nThis cannot be undone!`)) return;
+    if (!confirm(`⚠ Permanently delete agent "${username}"?\n\nThis cannot be undone!`)) return;
     const btn = document.getElementById('dbtn_' + idx);
     btn.textContent = '⏳...'; btn.disabled = true;
     try {
       const res  = await fetch(API_URL + '?' + new URLSearchParams({action:'deleteUser', username}));
       const data = await res.json();
-      if (data.success) { showToast(`🗑 Account "${username}" deleted.`); setTimeout(loadUsers, 1000); }
+      if (data.success) { showToast(`🗑 Agent "${username}" deleted.`); setTimeout(loadUsers, 800); }
       else { btn.textContent = '🗑 Delete'; btn.disabled = false; showToast('⚠ Delete failed.', false); }
     } catch { btn.textContent = '🗑 Delete'; btn.disabled = false; showToast('⚠ Connection error.', false); }
   }
 
-  async function resetPassword(username, idx) {
-    if (!confirm(`Reset password for "${username}" to default LRP@1234?`)) return;
-    const btn = document.getElementById('rbtn_' + idx);
-    btn.textContent = '⏳ Resetting...'; btn.disabled = true;
-    try {
-      const res  = await fetch(API_URL + '?' + new URLSearchParams({action:'resetPassword', username}));
-      const data = await res.json();
-      if (data.success) { btn.textContent='✅ Reset Done'; btn.classList.add('done'); showToast(`✅ Password reset for ${username}.`); setTimeout(loadUsers, 2000); }
-      else { btn.textContent='🔑 Reset PW'; btn.disabled=false; showToast('⚠ Reset failed.', false); }
-    } catch { btn.textContent='🔑 Reset PW'; btn.disabled=false; showToast('⚠ Connection error.', false); }
-  }
-
   /* ══════════════════════════════
-     CREDENTIALS TAB
+     CREDENTIALS
   ══════════════════════════════ */
   async function loadCreds() {
     document.getElementById('credTableContainer').innerHTML = '<div class="loading">⏳ LOADING CREDENTIALS...</div>';
@@ -406,7 +533,7 @@
       } else {
         document.getElementById('credTableContainer').innerHTML = '<div class="error-msg">⚠ Failed to load credentials.</div>';
       }
-    } catch(e) {
+    } catch {
       document.getElementById('credTableContainer').innerHTML = '<div class="error-msg">⚠ Connection error.</div>';
     }
   }
@@ -423,46 +550,44 @@
   function renderCredTable(list) {
     document.getElementById('cred-count').textContent = list.length + ' records';
     if (!list.length) {
-      document.getElementById('credTableContainer').innerHTML = '<div class="loading" style="color:#888;">No credentials added yet. Use the form above to add one.</div>';
+      document.getElementById('credTableContainer').innerHTML = '<div class="loading" style="color:#888;">No credentials yet. Use the form above to add one.</div>';
       return;
     }
     const rows = list.map((c, i) => `
       <tr>
         <td style="color:rgba(0,200,255,.5);font-size:12px;">${i+1}</td>
         <td style="font-weight:700;color:#e0f4ff;">🏢 ${c.clientName||'—'}</td>
-        <td style="font-family:'Courier New',monospace;font-size:11px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-          ${c.appUrl ? '<a href="' + c.appUrl + '" target="_blank" style="color:#00c8ff;text-decoration:none;">🔗 ' + c.appUrl + '</a>' : '—'}
+        <td style="font-family:'Courier New',monospace;font-size:11px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+          ${c.appUrl ? '<a href="'+c.appUrl+'" target="_blank" style="color:#00c8ff;text-decoration:none;">🔗 '+c.appUrl+'</a>' : '—'}
         </td>
         <td><span class="env-badge ${envClass(c.environment)}">${c.environment||'—'}</span></td>
         <td style="font-family:'Courier New',monospace;font-size:12px;">${c.userId||'—'}</td>
-        <td class="pw-cell">
-          <span id="adm-pw-${i}">••••••••</span>
+        <td>
+          <span id="adm-pw-${i}" style="font-family:'Courier New',monospace;font-size:12px;">••••••••</span>
           <button class="pw-toggle-sm" onclick="admTogglePw(${i},'${encodeURIComponent(c.password||'')}')">👁</button>
         </td>
         <td>
           <button class="edit-btn" onclick="editCred(${i})">✏ Edit</button>
-          <button class="delete-btn" id="cdel-${i}" onclick="deleteCred('${c.id||c.clientName}',${i})">🗑 Delete</button>
+          <button class="delete-btn" id="cdel-${i}" onclick="deleteCred('${c.id}',${i})">🗑 Delete</button>
         </td>
       </tr>`).join('');
     document.getElementById('credTableContainer').innerHTML = `
       <table><thead><tr>
-        <th>#</th><th>Client Name</th><th>Application URL</th>
+        <th>#</th><th>Client Name</th><th>App URL</th>
         <th>Environment</th><th>User ID</th><th>Password</th><th>Actions</th>
       </tr></thead><tbody>${rows}</tbody></table>`;
   }
 
   function filterCredTable() {
     const q = document.getElementById('credSearchInput').value.toLowerCase();
-    const filtered = allCreds.filter(c => (c.clientName||'').toLowerCase().includes(q));
-    renderCredTable(filtered);
+    renderCredTable(allCreds.filter(c => (c.clientName||'').toLowerCase().includes(q)));
   }
 
   function admTogglePw(i, encoded) {
-    const el = document.getElementById('adm-pw-' + i);
+    const el = document.getElementById('adm-pw-'+i);
     el.textContent = el.textContent === '••••••••' ? decodeURIComponent(encoded) : '••••••••';
   }
 
-  /* ADD / EDIT FORM */
   async function submitCredential() {
     const id     = document.getElementById('edit-cred-id').value;
     const client = document.getElementById('cred-client').value.trim();
@@ -470,69 +595,62 @@
     const url    = document.getElementById('cred-url').value.trim();
     const userid = document.getElementById('cred-userid').value.trim();
     const pass   = document.getElementById('cred-pass').value.trim();
-
-    if (!client || !env || !userid || !pass) { showToast('⚠ Please fill all required fields.', false); return; }
+    if (!client||!env||!userid||!pass) { showFormMsg('cred-msg','⚠ Fill all required fields.','error'); return; }
 
     const btn = document.getElementById('cred-submit-btn');
-    btn.textContent = '⏳ Saving...'; btn.disabled = true;
-
+    btn.disabled = true;
+    showFormMsg('cred-msg','⏳ Saving...','loading');
     const action = id ? 'updateCredential' : 'addCredential';
-    const params = new URLSearchParams({ action, id, clientName:client, environment:env, appUrl:url, userId:userid, password:pass });
-
     try {
-      const res  = await fetch(API_URL + '?' + params.toString());
+      const res  = await fetch(API_URL + '?' + new URLSearchParams({action, id, clientName:client, environment:env, appUrl:url, userId:userid, password:pass}));
       const data = await res.json();
       if (data.success) {
-        showToast(id ? '✅ Credential updated!' : '✅ Credential added!');
-        clearCredForm();
-        loadCreds();
+        showFormMsg('cred-msg', id ? '✅ Updated!' : '✅ Added!','success');
+        clearCredForm(); loadCreds();
       } else {
-        showToast('⚠ Save failed. Try again.', false);
+        showFormMsg('cred-msg','⚠ Save failed.','error');
       }
-    } catch {
-      showToast('⚠ Connection error.', false);
-    }
-    btn.textContent = '💾 Save Credential'; btn.disabled = false;
+    } catch { showFormMsg('cred-msg','⚠ Connection error.','error'); }
+    btn.disabled = false;
   }
 
   function editCred(i) {
     const c = allCreds[i];
-    document.getElementById('edit-cred-id').value    = c.id || '';
-    document.getElementById('cred-client').value     = c.clientName || '';
-    document.getElementById('cred-env').value        = c.environment || '';
-    document.getElementById('cred-url').value        = c.appUrl || '';
-    document.getElementById('cred-userid').value     = c.userId || '';
-    document.getElementById('cred-pass').value       = c.password || '';
-    document.getElementById('credFormTitle').textContent = '✏ Edit Credential: ' + c.clientName;
+    document.getElementById('edit-cred-id').value  = c.id||'';
+    document.getElementById('cred-client').value   = c.clientName||'';
+    document.getElementById('cred-env').value      = c.environment||'';
+    document.getElementById('cred-url').value      = c.appUrl||'';
+    document.getElementById('cred-userid').value   = c.userId||'';
+    document.getElementById('cred-pass').value     = c.password||'';
+    document.getElementById('credFormTitle').textContent = '✏ Edit: ' + c.clientName;
     document.getElementById('cred-cancel-btn').style.display = 'inline-block';
-    document.getElementById('credFormWrap').scrollIntoView({ behavior:'smooth' });
+    document.getElementById('credFormTitle').scrollIntoView({ behavior:'smooth' });
   }
 
-  function cancelCredEdit() {
-    clearCredForm();
-  }
+  function cancelCredEdit() { clearCredForm(); }
 
   function clearCredForm() {
     ['edit-cred-id','cred-client','cred-url','cred-userid','cred-pass'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('cred-env').value = '';
     document.getElementById('credFormTitle').textContent = '➕ Add New Client Credential';
     document.getElementById('cred-cancel-btn').style.display = 'none';
+    document.getElementById('cred-msg').style.display = 'none';
   }
 
   async function deleteCred(credId, i) {
     const name = allCreds[i]?.clientName || credId;
     if (!confirm(`⚠ Delete credential for "${name}"?\n\nThis cannot be undone!`)) return;
-    const btn = document.getElementById('cdel-' + i);
+    const btn = document.getElementById('cdel-'+i);
     btn.textContent = '⏳...'; btn.disabled = true;
     try {
       const res  = await fetch(API_URL + '?' + new URLSearchParams({action:'deleteCredential', id:credId}));
       const data = await res.json();
-      if (data.success) { showToast(`🗑 Credential for "${name}" deleted.`); loadCreds(); }
+      if (data.success) { showToast(`🗑 "${name}" deleted.`); loadCreds(); }
       else { btn.textContent='🗑 Delete'; btn.disabled=false; showToast('⚠ Delete failed.', false); }
     } catch { btn.textContent='🗑 Delete'; btn.disabled=false; showToast('⚠ Connection error.', false); }
   }
 
-  /* ── UTILS ── */
+  /* UTILS */
   function showToast(msg, success=true) {
     const t = document.getElementById('toast');
     t.textContent = msg;
@@ -547,9 +665,7 @@
   });
 
   setInterval(() => {
-    if (document.getElementById('dashboard').style.display !== 'none') {
-      if (currentAdminTab === 'agents') loadUsers();
-    }
+    if (document.getElementById('dashboard').style.display!=='none' && currentTab==='agents') loadUsers();
   }, 60000);
 </script>
 </body>
