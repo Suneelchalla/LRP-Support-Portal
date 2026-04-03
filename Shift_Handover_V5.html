@@ -79,7 +79,6 @@
   .info-box-textarea:focus { outline: none; box-shadow: none; border: none; }
   .info-box-textarea::placeholder { color: #b6975a; }
 
-  /* Multi-select */
   .ms-wrap { position: relative; }
   .ms-display { border: 1px solid #d0d7df; border-radius: 7px; padding: 6px 10px; background: #fff; cursor: pointer; min-height: 34px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; user-select: none; }
   .ms-display:hover { border-color: #185FA5; }
@@ -98,7 +97,6 @@
   .ms-check { width: 14px; height: 14px; border: 1px solid #c0c8d4; border-radius: 3px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 10px; }
   .ms-opt.selected .ms-check { background: #185FA5; border-color: #185FA5; color: #fff; }
 
-  /* Single-select dropdown for mails/jira */
   .ss-wrap { position: relative; }
   .ss-display { border: 1px solid #d0d7df; border-radius: 7px; padding: 6px 10px; background: #fff; cursor: pointer; min-height: 34px; display: flex; align-items: center; user-select: none; }
   .ss-display:hover { border-color: #185FA5; }
@@ -135,56 +133,27 @@
   .btn-remove { background: none; border: none; color: #E24B4A; font-size: 17px; cursor: pointer; line-height: 1; padding: 0 2px; flex-shrink: 0; }
   .btn-remove:hover { color: #a32d2d; }
 
-  /* ── Next Action Tooltip ── */
-  .f-action-wrap {
-    flex: 1.2;
-    position: relative;
-    min-width: 0;
-  }
-  .f-action-wrap input {
-    width: 100%;
-  }
-  .action-tooltip {
-    display: none;
-    position: absolute;
-    bottom: calc(100% + 6px);
-    left: 0;
-    z-index: 300;
-    background: #1e293b;
-    color: #f1f5f9;
-    font-size: 12px;
-    line-height: 1.5;
-    padding: 8px 12px;
-    border-radius: 8px;
-    white-space: pre-wrap;
-    word-break: break-word;
-    max-width: 320px;
-    min-width: 140px;
-    box-shadow: 0 6px 20px rgba(0,0,0,.22);
-    pointer-events: none;
-  }
-  .action-tooltip::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 14px;
-    border: 6px solid transparent;
-    border-top-color: #1e293b;
-  }
-  .action-tooltip .tt-label {
-    font-size: 10px;
-    font-weight: 700;
-    color: #94a3b8;
-    text-transform: uppercase;
-    letter-spacing: .5px;
-    margin-bottom: 4px;
-  }
-  .f-action-wrap:hover .action-tooltip,
-  .f-action-wrap input:focus + .action-tooltip {
-    display: block;
-  }
-  /* Hide tooltip when input is empty */
+  .f-action-wrap { flex: 1.2; position: relative; min-width: 0; }
+  .f-action-wrap input { width: 100%; }
+  .action-tooltip { display: none; position: absolute; bottom: calc(100% + 6px); left: 0; z-index: 300; background: #1e293b; color: #f1f5f9; font-size: 12px; line-height: 1.5; padding: 8px 12px; border-radius: 8px; white-space: pre-wrap; word-break: break-word; max-width: 320px; min-width: 140px; box-shadow: 0 6px 20px rgba(0,0,0,.22); pointer-events: none; }
+  .action-tooltip::after { content: ''; position: absolute; top: 100%; left: 14px; border: 6px solid transparent; border-top-color: #1e293b; }
+  .action-tooltip .tt-label { font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+  .f-action-wrap:hover .action-tooltip, .f-action-wrap input:focus + .action-tooltip { display: block; }
   .f-action-wrap.empty .action-tooltip { display: none !important; }
+
+  /* ── Submit to Admin button ── */
+  .btn-submit-admin {
+    width: 100%; background: linear-gradient(135deg,#0f766e,#0d9488); color: #fff;
+    border: none; border-radius: 8px; padding: 11px; font-size: 14px; font-weight: 600;
+    cursor: pointer; margin-top: 10px; transition: opacity .2s; display: flex;
+    align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-submit-admin:hover { opacity: .88; }
+  .btn-submit-admin:disabled { opacity: .5; cursor: not-allowed; }
+  .admin-submit-status { margin-top: 8px; font-size: 12px; font-weight: 600; text-align: center; padding: 7px 12px; border-radius: 7px; display: none; }
+  .admin-submit-status.loading { background: #dbeafe; color: #185FA5; display: block; }
+  .admin-submit-status.success { background: #d1fae5; color: #065f46; display: block; }
+  .admin-submit-status.error   { background: #fee2e2; color: #991b1b; display: block; }
 
   .btn-submit { width: 100%; background: #185FA5; color: #fff; border: none; border-radius: 8px; padding: 11px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 4px; transition: background .15s; }
   .btn-submit:hover { background: #0c447c; }
@@ -206,7 +175,6 @@
   .mini-cat { margin-bottom: 8px; }
   .mini-cat-head { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; margin-bottom: 4px; }
   .mini-ticket { font-size: 11px; color: #374151; background: #f8f8f8; border-left: 2px solid; border-radius: 4px; padding: 4px 8px; margin-bottom: 3px; display: flex; justify-content: space-between; align-items: center; }
-
   .status-pill { font-size: 10px; padding: 2px 7px; border-radius: 7px; flex-shrink: 0; }
   .status-completed { background: #d1fae5; color: #065f46; }
   .status-pending { background: #fee2e2; color: #991b1b; }
@@ -376,7 +344,15 @@
       </div>
     </div>
 
-    <button class="btn-submit" onclick="submitHandover()" style="margin-top:14px;">Submit Handover</button>
+    <!-- Submit Handover locally -->
+    <button class="btn-submit" onclick="submitHandover()" style="margin-top:14px;">✔ Submit Handover</button>
+
+    <!-- Submit to Admin (only visible after local submit) -->
+    <button class="btn-submit-admin" id="btnSubmitAdmin" onclick="submitToAdmin()" style="display:none;">
+      📤 Submit to Admin
+    </button>
+    <div class="admin-submit-status" id="adminSubmitStatus"></div>
+
   </div>
 
   <div class="right-panel">
@@ -442,6 +418,9 @@
 <div class="toast" id="toast"></div>
 
 <script>
+// ── API ──────────────────────────────────────────────────────
+const API_URL = 'https://script.google.com/macros/s/AKfycbx4Yt6dXiMOpztGU7ujn1TiJZUxfpTDCzSZ07rDd-EewnS8D0h4adFV6VP_3IzomL1H_w/exec';
+
 const CLIENT_MAP = {
   "SWIPHX":"SWIRE","SWI":"SWIRE","HSL":"HSL","MILAHA":"MILAHA","MIL":"MILAHA",
   "TASLI":"TASLI","TAS":"TASLI","ESLGEN":"ESL","ESL":"ESL","LSCSAIL":"LSCSAIL",
@@ -474,7 +453,6 @@ let selected = { "ms-current":[], "ms-next":[] };
 let ssSelected = { "ss-mails":"", "ss-jira":"" };
 let ticketCounter = 0;
 
-// ─── INIT ─────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("shiftDate").value = todayStr();
   buildDropdowns();
@@ -488,7 +466,6 @@ document.addEventListener("click", e => {
   }
 });
 
-// ─── UTILS ────────────────────────────────────────────────
 function todayStr(){
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
@@ -513,7 +490,6 @@ function showToast(msg, type="success"){
   setTimeout(()=>t.classList.remove("show"), 2800);
 }
 
-// ─── INFO BOXES ───────────────────────────────────────────
 function getInfoBoxes(){
   return [1,2,3,4].map(i => document.getElementById("infoBox"+i).value);
 }
@@ -523,7 +499,6 @@ function setInfoBoxes(arr){
   });
 }
 
-// ─── MULTI-SELECT ─────────────────────────────────────────
 function buildDropdowns(){
   ["ms-current","ms-next"].forEach(id => {
     const dd = document.getElementById(id+"-dd");
@@ -586,7 +561,6 @@ function setDropdown(msId, values){
   renderDisplay(msId);
 }
 
-// ─── MAILS / JIRA ─────────────────────────────────────────
 function onCurrentMembersChanged(){
   const members = selected["ms-current"];
   if(!members.length){
@@ -658,7 +632,6 @@ function toggleSSDropdown(ssId){
 }
 function selectSSOption(ssId, name){
   ssSelected[ssId] = name;
-  // Do not auto-assign the other field — user must choose manually
   document.querySelectorAll(".ss-dropdown").forEach(d => d.classList.remove("open"));
   renderSSDisplay("ss-mails", false); renderSSDisplay("ss-jira", false);
   buildSSDropdown("ss-mails"); buildSSDropdown("ss-jira");
@@ -671,7 +644,6 @@ function setSSValues(mailsVal, jiraVal){
   if(!disabled && !solo){ buildSSDropdown("ss-mails"); buildSSDropdown("ss-jira"); }
 }
 
-// ─── TICKET MANAGEMENT ───────────────────────────────────
 const catColorMap = { showstopper:"#E24B4A", high:"#BA7517", escalated:"#7C3AED", longpending:"#888780" };
 
 function addTicket(cat, data={}){
@@ -729,17 +701,12 @@ function renderCatBody(cat){
   });
 }
 
-/* Live-update the tooltip text and empty-state as the user types */
 function syncActionTooltip(inputEl){
   const wrap = inputEl.closest(".f-action-wrap");
   const tt = wrap.querySelector(".action-tooltip");
   const val = inputEl.value.trim();
-  if(val){
-    wrap.classList.remove("empty");
-    tt.innerHTML = `<div class="tt-label">Next Action</div>${esc(val)}`;
-  } else {
-    wrap.classList.add("empty");
-  }
+  if(val){ wrap.classList.remove("empty"); tt.innerHTML = `<div class="tt-label">Next Action</div>${esc(val)}`; }
+  else { wrap.classList.add("empty"); }
 }
 
 function handleTicketIdInput(inputEl){
@@ -793,7 +760,6 @@ function updateStats(){
   document.getElementById("statCompleted").textContent = all.length - pend;
 }
 
-// ─── SHIFT LOAD / SAVE ───────────────────────────────────
 function onShiftChange(){ updateImportBtn(); loadShift(); }
 
 function loadShift(){
@@ -809,8 +775,9 @@ function loadShift(){
   document.getElementById("logEmpty").style.display = "";
   document.getElementById("logContent").style.display = "none";
   document.getElementById("btnFullLog").style.display = "none";
+  document.getElementById("btnSubmitAdmin").style.display = "none";
+  document.getElementById("adminSubmitStatus").style.display = "none";
 
-  // If no saved data for this shift, check previous shift's "Next Members" to pre-fill current
   if(!raw){
     const prev = prevShift(getShift());
     const prevRaw = localStorage.getItem(shiftKey(getDate(), prev));
@@ -869,9 +836,87 @@ function submitHandover(){
   saveShift(log); currentLog = log;
   showSummary(log);
   showToast("Shift submitted successfully!");
+  // Show Submit to Admin button
+  document.getElementById("btnSubmitAdmin").style.display = "flex";
+  document.getElementById("adminSubmitStatus").style.display = "none";
 }
 
-// ─── COMPACT SUMMARY ─────────────────────────────────────
+// ── SUBMIT TO ADMIN ───────────────────────────────────────
+async function submitToAdmin() {
+  if (!currentLog) { showToast("Please submit the handover first.", "warn"); return; }
+  const log = currentLog;
+  const all = Object.values(log.tickets).flat();
+  const pending   = all.filter(t => t.status === "Pending").length;
+  const completed = all.length - pending;
+
+  // Build ticket ID lists per category
+  const catSummary = {};
+  CATS.forEach(cat => {
+    const tix = log.tickets[cat.key] || [];
+    catSummary[cat.key + 'Count']  = tix.length;
+    catSummary[cat.key + 'Ids']    = tix.map(t => t.ticketId || '(no id)').join(', ');
+    catSummary[cat.key + 'Pending']= tix.filter(t => t.status === 'Pending').length;
+  });
+
+  const btn = document.getElementById("btnSubmitAdmin");
+  const statusEl = document.getElementById("adminSubmitStatus");
+  btn.disabled = true;
+  statusEl.className = "admin-submit-status loading";
+  statusEl.textContent = "⏳ Submitting to admin...";
+
+  try {
+    const params = new URLSearchParams({
+      action:           'saveHandover',
+      date:             log.date,
+      shift:            log.shift,
+      currentMembers:   log.currentMembers.join(', '),
+      nextMembers:      log.nextMembers.join(', '),
+      mailsHandledBy:   log.mailsHandledBy || '',
+      jiraHandledBy:    log.jiraHandledBy  || '',
+      totalTickets:     all.length,
+      pendingTickets:   pending,
+      completedTickets: completed,
+      // Per-category counts & IDs
+      showstopperCount:   catSummary.showstopperCount,
+      showstopperPending: catSummary.showstopperPending,
+      showstopperIds:     catSummary.showstopperIds,
+      highCount:          catSummary.highCount,
+      highPending:        catSummary.highPending,
+      highIds:            catSummary.highIds,
+      escalatedCount:     catSummary.escalatedCount,
+      escalatedPending:   catSummary.escalatedPending,
+      escalatedIds:       catSummary.escalatedIds,
+      longpendingCount:   catSummary.longpendingCount,
+      longpendingPending: catSummary.longpendingPending,
+      longpendingIds:     catSummary.longpendingIds,
+      // Info boxes
+      infoBox1: (log.infoBoxes && log.infoBoxes[0]) || '',
+      infoBox2: (log.infoBoxes && log.infoBoxes[1]) || '',
+      infoBox3: (log.infoBoxes && log.infoBoxes[2]) || '',
+      infoBox4: (log.infoBoxes && log.infoBoxes[3]) || '',
+      submittedAt: log.submittedAt
+    });
+
+    const res  = await fetch(API_URL + '?' + params.toString());
+    const data = await res.json();
+
+    if (data.success) {
+      statusEl.className = "admin-submit-status success";
+      statusEl.textContent = "✅ Successfully submitted to admin!";
+      btn.textContent = "✅ Submitted to Admin";
+      btn.disabled = true;
+      showToast("Handover submitted to admin!", "success");
+    } else {
+      throw new Error(data.error || 'Unknown error');
+    }
+  } catch(err) {
+    statusEl.className = "admin-submit-status error";
+    statusEl.textContent = "⚠ Failed to submit. Please try again.";
+    btn.disabled = false;
+    showToast("Failed to submit to admin.", "error");
+  }
+}
+
 function showSummary(log){
   document.getElementById("logEmpty").style.display = "none";
   document.getElementById("logContent").style.display = "block";
@@ -912,7 +957,6 @@ function showSummary(log){
   });
 }
 
-// ─── FULL SCREEN LOG ─────────────────────────────────────
 function mailHandover(){
   const log = currentLog; if(!log) return;
   const all = Object.values(log.tickets).flat();
@@ -1100,7 +1144,6 @@ ${catHTML}${infoHTML}
   const win = window.open("","_blank"); win.document.write(html); win.document.close();
 }
 
-// ─── IMPORT PENDING ───────────────────────────────────────
 function updateImportBtn(){ document.getElementById("importBtn").textContent = "Import Pending from "+prevShift(getShift()); }
 function importPending(){
   const prev = prevShift(getShift());
@@ -1115,7 +1158,6 @@ function importPending(){
   } catch(e){ showToast("Failed to import","error"); }
 }
 
-// ─── SAVED SHIFTS ─────────────────────────────────────────
 function renderSaved(){
   const list = document.getElementById("savedList"); list.innerHTML="";
   const keys = Object.keys(localStorage).filter(k=>k.startsWith("shift:")).sort().slice(-15);
@@ -1128,7 +1170,6 @@ function renderSaved(){
   });
 }
 
-// ─── EXPORT XLSX ──────────────────────────────────────────
 function exportCSV(){
   const wb = XLSX.utils.book_new(); const ws = {}; let r = 0;
   function setCell(row, col, value, style){ const addr = XLSX.utils.encode_cell({r:row, c:col}); ws[addr] = { v:value, t:typeof value==='number'?'n':'s', s:style||{} }; }
