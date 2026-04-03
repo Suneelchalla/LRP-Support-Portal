@@ -5,6 +5,40 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>LRP Admin Dashboard</title>
 <style>
+    <!-- ══ AGENT TRACKER TAB ══ -->
+    <div class="tab-panel" id="panel-tracker">
+      <div class="page-title">AGENT TRACKER</div>
+      <div class="page-sub">Ticket performance summary per agent from Support Ticket Logger</div>
+
+      <!-- Filter bar -->
+      <div style="display:flex;gap:12px;margin-bottom:20px;align-items:center;flex-wrap:wrap;">
+        <input type="date" id="tracker-date-from" style="background:rgba(2,15,30,.7);border:1px solid rgba(0,120,180,.35);border-radius:4px;padding:8px 12px;font-size:13px;color:#a8e8ff;outline:none;font-family:'Courier New',monospace;"/>
+        <span style="color:rgba(0,200,255,.5);font-size:12px;">to</span>
+        <input type="date" id="tracker-date-to" style="background:rgba(2,15,30,.7);border:1px solid rgba(0,120,180,.35);border-radius:4px;padding:8px 12px;font-size:13px;color:#a8e8ff;outline:none;font-family:'Courier New',monospace;"/>
+        <button onclick="applyTrackerFilter()" style="padding:8px 18px;background:rgba(0,180,255,.15);border:1px solid rgba(0,180,255,.4);border-radius:4px;color:#a8e8ff;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;">🔍 Filter</button>
+        <button onclick="loadTracker()" style="padding:8px 18px;background:rgba(100,100,100,.15);border:1px solid rgba(100,100,100,.3);border-radius:4px;color:#aaa;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;">↺ Reset</button>
+        <span style="font-size:11px;color:rgba(0,200,255,.5);letter-spacing:1px;" id="tracker-filter-label"></span>
+      </div>
+
+      <!-- Agent summary cards -->
+      <div class="section-title">📊 Per-Agent Summary</div>
+      <div id="tracker-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:28px;">
+        <div class="loading">⏳ LOADING TRACKER DATA...</div>
+      </div>
+
+      <!-- Ticket breakdown table -->
+      <div class="section-title" style="margin-top:4px;">
+        📋 Ticket Breakdown
+        <span style="font-size:11px;color:rgba(168,216,234,.5);margin-left:8px;" id="tracker-breakdown-label"></span>
+      </div>
+      <div class="table-wrap">
+        <div class="search-bar">
+          <input type="text" id="trackerSearchInput" placeholder="🔍  Filter by agent, ticket ID, component..." oninput="filterTrackerTable()"/>
+        </div>
+        <div id="trackerTableContainer"><div class="loading" style="color:#888;">Select an agent card above to view their tickets, or see all below.</div></div>
+      </div>
+    </div>
+
   *{margin:0;padding:0;box-sizing:border-box;}
   body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#020f1e;color:#e0f4ff;min-height:100vh;}
   .topbar{background:rgba(4,28,53,.95);border-bottom:1px solid rgba(0,180,255,.2);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px);}
@@ -106,7 +140,22 @@
   .form-msg.success{background:rgba(20,160,80,.15);border-left:2px solid #00ff88;color:#88ffcc;}
   .form-msg.loading{background:rgba(0,100,180,.15);border-left:2px solid #00c8ff;color:#a8e8ff;}
 
-  /* CRED TABLE */
+  /* AGENT TRACKER CARDS */
+  .agent-card{background:rgba(4,28,53,.88);border:1px solid rgba(0,180,255,.2);border-radius:8px;padding:20px;cursor:pointer;transition:all .3s;position:relative;}
+  .agent-card:hover,.agent-card.selected{border-color:rgba(0,200,255,.6);box-shadow:0 0 20px rgba(0,180,255,.1);transform:translateY(-2px);}
+  .agent-card.selected{border-color:#00c8ff;background:rgba(0,60,100,.3);}
+  .agent-card-name{font-family:'Courier New',monospace;font-size:14px;font-weight:900;color:#e0f4ff;letter-spacing:2px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+  .agent-card-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .agent-stat{text-align:center;background:rgba(2,15,30,.5);border-radius:6px;padding:10px 6px;}
+  .agent-stat-val{font-size:20px;font-weight:800;margin-bottom:2px;}
+  .agent-stat-lbl{font-size:9px;color:rgba(168,216,234,.5);letter-spacing:1px;text-transform:uppercase;}
+  .agent-card-footer{margin-top:12px;padding-top:10px;border-top:1px solid rgba(0,180,255,.1);font-size:10px;color:rgba(0,200,255,.5);letter-spacing:1px;display:flex;justify-content:space-between;}
+  .tracker-td-agent{font-family:'Courier New',monospace;font-size:11px;color:rgba(0,200,255,.7);}
+  .tracker-td-id{font-weight:700;color:#e0f4ff;}
+  .tracker-td-dur{font-family:'Courier New',monospace;font-weight:700;color:#00ff88;}
+  .tracker-td-comp{font-size:10px;font-weight:700;color:#c080ff;background:rgba(120,60,180,.15);border:1px solid rgba(160,80,220,.3);border-radius:12px;padding:2px 8px;display:inline-block;}
+  .tracker-td-rmk{font-size:11px;color:#a8d8ea;max-width:200px;word-break:break-word;}
+  .no-data-msg{text-align:center;padding:50px 20px;color:rgba(0,200,255,.4);font-size:14px;letter-spacing:2px;}
   .env-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;}
   .env-prod{background:rgba(255,60,60,.15);border:1px solid rgba(255,60,60,.4);color:#ff8888;}
   .env-uat{background:rgba(255,160,0,.15);border:1px solid rgba(255,160,0,.4);color:#ffa040;}
@@ -155,6 +204,7 @@
     <div class="admin-tabs">
       <button class="admin-tab active" id="atab-agents" onclick="switchTab('agents')">🧑‍✈️ AGENTS</button>
       <button class="admin-tab" id="atab-creds" onclick="switchTab('creds')">🔐 CLIENT CREDENTIALS</button>
+      <button class="admin-tab" id="atab-tracker" onclick="switchTab('tracker')">📊 AGENT TRACKER</button>
     </div>
 
     <!-- ══ AGENTS TAB ══ -->
@@ -278,7 +328,7 @@
 </div>
 
 <script>
-  const API_URL    = 'https://script.google.com/macros/s/AKfycbyUw6Hp9Cwr6HhNadw_oLWks1lPeJQGSJJbYhERCn78ERpr0ATaXDvgvWU4zFAFGBuKYg/exec';
+  const API_URL    = 'https://script.google.com/macros/s/AKfycbyaAvjKXkKP2RWSAKP0rzjj0zAG4bycmnth4gu_Le9K4IAye6BESS68puZ41Y_M_9B0sA/exec';
   const ADMIN_USER = 'admin';
   const ADMIN_PASS = 'admin@lrp';
 
@@ -316,11 +366,12 @@
 
   function switchTab(tab) {
     currentTab = tab;
-    ['agents','creds'].forEach(t => {
+    ['agents','creds','tracker'].forEach(t => {
       document.getElementById('atab-' + t).classList.toggle('active', t === tab);
       document.getElementById('panel-' + t).classList.toggle('active', t === tab);
     });
-    if (tab === 'creds') loadCreds();
+    if (tab === 'creds')    loadCreds();
+    if (tab === 'tracker')  loadTracker();
     document.getElementById('lastRefreshed').textContent = '';
   }
 
@@ -524,6 +575,150 @@
       if (data.success) { showToast(`🗑 Agent "${username}" deleted.`); setTimeout(loadUsers, 800); }
       else { btn.textContent = '🗑 Delete'; btn.disabled = false; showToast('⚠ Delete failed.', false); }
     } catch { btn.textContent = '🗑 Delete'; btn.disabled = false; showToast('⚠ Connection error.', false); }
+  }
+
+  /* ══════════════════════════════
+     AGENT TRACKER
+  ══════════════════════════════ */
+  let allLogs = [], filteredLogs = [], selectedAgent = null;
+
+  async function loadTracker() {
+    document.getElementById('tracker-date-from').value = '';
+    document.getElementById('tracker-date-to').value   = '';
+    document.getElementById('tracker-filter-label').textContent = '';
+    selectedAgent = null;
+    document.getElementById('tracker-cards').innerHTML = '<div class="loading">⏳ LOADING TRACKER DATA...</div>';
+    document.getElementById('trackerTableContainer').innerHTML = '<div class="loading" style="color:#888;">Loading...</div>';
+    try {
+      const res  = await fetch(API_URL + '?action=getTicketLogs&t=' + Date.now());
+      const data = await res.json();
+      if (data.success) {
+        allLogs = data.logs || [];
+        filteredLogs = [...allLogs];
+        renderTrackerCards(filteredLogs);
+        renderTrackerTable(filteredLogs);
+        document.getElementById('lastRefreshed').textContent = 'Last refreshed: ' + new Date().toLocaleTimeString();
+      } else {
+        document.getElementById('tracker-cards').innerHTML = '<div class="error-msg">⚠ Failed to load tracker data.</div>';
+      }
+    } catch {
+      document.getElementById('tracker-cards').innerHTML = '<div class="error-msg">⚠ Connection error.</div>';
+    }
+  }
+
+  function applyTrackerFilter() {
+    const from = document.getElementById('tracker-date-from').value;
+    const to   = document.getElementById('tracker-date-to').value;
+    if (!from && !to) { filteredLogs = [...allLogs]; document.getElementById('tracker-filter-label').textContent = ''; }
+    else {
+      filteredLogs = allLogs.filter(l => {
+        if (!l.dateKey) return true;
+        if (from && l.dateKey < from) return false;
+        if (to   && l.dateKey > to)   return false;
+        return true;
+      });
+      document.getElementById('tracker-filter-label').textContent =
+        'Showing: ' + (from || '…') + ' → ' + (to || '…') + ' · ' + filteredLogs.length + ' tickets';
+    }
+    selectedAgent = null;
+    renderTrackerCards(filteredLogs);
+    renderTrackerTable(filteredLogs);
+  }
+
+  function renderTrackerCards(logs) {
+    const container = document.getElementById('tracker-cards');
+    if (!logs.length) {
+      container.innerHTML = '<div class="no-data-msg">📭 No ticket data found.<br><span style="font-size:12px;">Agents need to complete tickets in the Ticket Logger first.</span></div>';
+      return;
+    }
+    // Group by agent
+    const agentMap = {};
+    logs.forEach(l => {
+      const a = l.agentName || 'Unknown';
+      if (!agentMap[a]) agentMap[a] = { tickets:[], totalSecs:0 };
+      agentMap[a].tickets.push(l);
+      agentMap[a].totalSecs += Number(l.durationSecs) || 0;
+    });
+    container.innerHTML = '';
+    Object.entries(agentMap).sort((a,b) => b[1].tickets.length - a[1].tickets.length).forEach(([name, data]) => {
+      const count    = data.tickets.length;
+      const avgSecs  = count > 0 ? Math.round(data.totalSecs / count) : 0;
+      const lastDate = data.tickets[data.tickets.length-1]?.date || '—';
+      const lastShift= data.tickets[data.tickets.length-1]?.shiftId || '—';
+      // Most used component
+      const compCount = {};
+      data.tickets.forEach(t => { if (t.component) compCount[t.component] = (compCount[t.component]||0)+1; });
+      const topComp = Object.entries(compCount).sort((a,b)=>b[1]-a[1])[0];
+
+      const card = document.createElement('div');
+      card.className = 'agent-card' + (selectedAgent === name ? ' selected' : '');
+      card.innerHTML = `
+        <div class="agent-card-name">👤 ${name}</div>
+        <div class="agent-card-stats">
+          <div class="agent-stat"><div class="agent-stat-val blue">${count}</div><div class="agent-stat-lbl">Tickets</div></div>
+          <div class="agent-stat"><div class="agent-stat-val green" style="font-size:15px;">${formatDur(avgSecs)}</div><div class="agent-stat-lbl">Avg Time</div></div>
+          <div class="agent-stat"><div class="agent-stat-val orange" style="font-size:15px;">${formatDur(data.totalSecs)}</div><div class="agent-stat-lbl">Total Time</div></div>
+          <div class="agent-stat"><div class="agent-stat-val" style="font-size:13px;color:#c080ff;">${topComp ? topComp[0] : '—'}</div><div class="agent-stat-lbl">Top Component</div></div>
+        </div>
+        <div class="agent-card-footer">
+          <span>Last active: ${lastDate}</span>
+          <span>Shift: ${lastShift}</span>
+        </div>`;
+      card.addEventListener('click', () => {
+        selectedAgent = selectedAgent === name ? null : name;
+        renderTrackerCards(filteredLogs);
+        const toShow = selectedAgent ? filteredLogs.filter(l => l.agentName === selectedAgent) : filteredLogs;
+        document.getElementById('tracker-breakdown-label').textContent = selectedAgent ? '— ' + selectedAgent : '';
+        document.getElementById('trackerSearchInput').value = '';
+        renderTrackerTable(toShow);
+      });
+      container.appendChild(card);
+    });
+  }
+
+  function formatDur(secs) {
+    const h = Math.floor(secs/3600), m = Math.floor((secs%3600)/60), s = secs%60;
+    return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  }
+
+  function renderTrackerTable(logs) {
+    const container = document.getElementById('trackerTableContainer');
+    if (!logs.length) {
+      container.innerHTML = '<div class="no-data-msg">No tickets to display.</div>';
+      return;
+    }
+    const rows = [...logs].reverse().map((l, i) => `
+      <tr>
+        <td style="color:rgba(0,200,255,.4);font-size:11px;">${i+1}</td>
+        <td class="tracker-td-agent">👤 ${l.agentName||'—'}</td>
+        <td class="tracker-td-id">${l.ticketId||'—'}</td>
+        <td class="tracker-td-dur">${l.duration||'—'}</td>
+        <td style="font-size:11px;color:#a8d8ea;">${l.date||'—'} <span style="color:rgba(168,216,234,.4);">${l.time||''}</span></td>
+        <td><span style="background:rgba(0,100,180,.15);border:1px solid rgba(0,180,255,.2);border-radius:3px;padding:2px 8px;font-size:10px;color:rgba(0,200,255,.7);">${l.shiftId||'—'}</span></td>
+        <td>${l.component ? '<span class="tracker-td-comp">'+l.component+'</span>' : '—'}</td>
+        <td class="tracker-td-rmk">${l.description||'—'}</td>
+        <td class="tracker-td-rmk">${l.remarks||'—'}</td>
+      </tr>`).join('');
+    container.innerHTML = `
+      <table>
+        <thead><tr>
+          <th>#</th><th>Agent</th><th>Ticket ID</th><th>Duration</th>
+          <th>Date / Time</th><th>Shift</th><th>Component</th><th>Description</th><th>Remarks</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+  }
+
+  function filterTrackerTable() {
+    const q = document.getElementById('trackerSearchInput').value.toLowerCase();
+    const base = selectedAgent ? filteredLogs.filter(l => l.agentName === selectedAgent) : filteredLogs;
+    const result = q ? base.filter(l =>
+      (l.agentName||'').toLowerCase().includes(q) ||
+      (l.ticketId||'').toLowerCase().includes(q)  ||
+      (l.component||'').toLowerCase().includes(q) ||
+      (l.shiftId||'').toLowerCase().includes(q)
+    ) : base;
+    renderTrackerTable(result);
   }
 
   /* ══════════════════════════════
