@@ -21,7 +21,6 @@
     .header{padding:20px 22px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,#eff6ff,#ffffff);}
     .header h1,.header h2{margin:0 0 8px;font-size:22px;}
     .header p{margin:0;color:var(--muted);font-size:14px;line-height:1.5;}
-
     .active-tickets-header{padding:12px 16px 0;border-bottom:1px solid var(--border);background:#f8fafc;}
     .active-tickets-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
     .active-tickets-label .add-ticket-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;transition:background .15s;}
@@ -37,7 +36,6 @@
     .ticket-tab .tab-timer{font-family:monospace;font-size:10px;opacity:.85;}
     .ticket-tab .tab-paused-icon{font-size:10px;opacity:.75;}
     .no-tickets-hint{font-size:12px;color:#b0b8c8;font-style:italic;padding:4px 2px 8px;}
-
     .checklist-wrap{padding:14px 18px 8px;overflow:auto;flex:1;}
     .jira-input-group{margin-bottom:12px;}
     .jira-input-group label{display:block;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
@@ -99,8 +97,6 @@
     .ss-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(13,148,136,.45);}
     .eos-btn{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:12px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;box-shadow:0 4px 14px rgba(124,58,237,.35);transition:transform .15s,box-shadow .15s;}
     .eos-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(124,58,237,.45);}
-
-    /* ══ Ticket Log Panel ══ */
     .ticket-log-panel{width:280px;min-width:280px;border-left:1px solid var(--border);background:#f8fafc;display:flex;flex-direction:column;overflow:hidden;}
     .ticket-log-panel-header{padding:16px 14px 10px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,#eff6ff,#f8fafc);}
     .ticket-log-header{display:flex;justify-content:space-between;align-items:center;}
@@ -158,7 +154,11 @@
     .tie-save:hover{background:#1e40af;}
     .tie-cancel{background:#f1f5f9;color:var(--text);border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:700;cursor:pointer;transition:background .15s;}
     .tie-cancel:hover{background:#e2e8f0;}
-
+    /* sync indicator */
+    .sync-toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1f2937;color:#fff;border-radius:12px;padding:9px 18px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:10px;box-shadow:0 6px 20px rgba(15,23,42,.2);opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:9998;white-space:nowrap;}
+    .sync-toast.visible{opacity:1;}
+    .sync-toast.success{background:#15803d;}
+    .sync-toast.error{background:#dc2626;}
     #undoToast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#1f2937;color:#fff;border-radius:14px;padding:11px 20px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:14px;box-shadow:0 8px 28px rgba(15,23,42,.22);opacity:0;pointer-events:none;transition:opacity .2s ease;z-index:9997;white-space:nowrap;}
     #undoToast.visible{opacity:1;pointer-events:auto;}
     #undoToast button{background:#fbbf24;color:#1f2937;border:none;border-radius:8px;padding:5px 13px;font-size:12px;font-weight:700;cursor:pointer;}
@@ -216,7 +216,6 @@
     .eos-stat-val{font-size:22px;font-weight:800;color:var(--accent);line-height:1;}
     .eos-stat-val.green{color:var(--success);}
     .eos-stat-val.orange{color:#d97706;}
-    /* ── Longest Ticket card ── */
     .eos-longest-wrap{padding:14px 24px 0;flex-shrink:0;}
     .eos-longest-card{display:flex;align-items:center;gap:14px;background:#fff7ed;border:1.5px solid #fed7aa;border-radius:14px;padding:13px 16px;}
     .eos-longest-icon{font-size:26px;flex-shrink:0;}
@@ -239,7 +238,6 @@
     .td-dur{font-family:monospace;font-weight:700;color:var(--success);}
     .td-remarks{color:#6b7280;font-size:12px;max-width:120px;word-break:break-word;}
     .td-comp{font-size:11px;font-weight:700;color:#5b21b6;}
-    /* highlight longest row */
     .td-longest{background:#fff7ed !important;}
     .eos-modal-footer{padding:14px 24px;border-top:1px solid var(--border);display:flex;gap:10px;flex-shrink:0;background:#fcfdff;}
     .eos-export-btn{flex:1;background:linear-gradient(135deg,#15803d,#16a34a);color:#fff;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .15s;}
@@ -284,6 +282,9 @@
 </head>
 <body>
 
+<!-- ══ Sync Toast ══ -->
+<div class="sync-toast" id="syncToast"></div>
+
 <!-- ══ Username Modal ══ -->
 <div class="modal-overlay" id="usernameModal">
   <div class="modal-box">
@@ -298,10 +299,7 @@
 <!-- ══ Start Shift Modal ══ -->
 <div class="modal-overlay" id="ssOverlay">
   <div class="ss-modal">
-    <div class="ss-modal-header">
-      <h2>🟢 Start Your Shift</h2>
-      <p>Select your shift to unlock the ticket checklist.</p>
-    </div>
+    <div class="ss-modal-header"><h2>🟢 Start Your Shift</h2><p>Select your shift to unlock the ticket checklist.</p></div>
     <div class="ss-modal-body">
       <div class="field-label">Choose your shift</div>
       <div class="shift-cards" id="shiftCards"></div>
@@ -320,15 +318,11 @@
       </div>
     </div>
     <div class="eos-shift-info" id="eosShiftInfo"></div>
-
-    <!-- 3 stat cards: Tickets Today · Avg Time · Longest Ticket -->
     <div class="eos-stats">
       <div class="eos-stat"><div class="eos-stat-val" id="statCount">0</div><div class="eos-stat-label">Tickets Today</div></div>
       <div class="eos-stat"><div class="eos-stat-val green" id="statAvg">00:00:00</div><div class="eos-stat-label">Avg Time / Ticket</div></div>
       <div class="eos-stat"><div class="eos-stat-val orange" id="statTotal">00:00:00</div><div class="eos-stat-label">Total Time Worked</div></div>
     </div>
-
-    <!-- Longest Ticket highlight card -->
     <div class="eos-longest-wrap">
       <div class="eos-longest-card" id="eosLongestCard">
         <div class="eos-longest-icon">🐢</div>
@@ -340,7 +334,6 @@
         <div class="eos-longest-dur" id="eosLongestDur">—</div>
       </div>
     </div>
-
     <div class="eos-table-wrap">
       <div class="eos-table-title">📋 Tickets Logged Today</div>
       <div id="eosTableContainer"></div>
@@ -355,10 +348,7 @@
 <!-- ══ Ticket Details Modal ══ -->
 <div class="td-overlay" id="tdOverlay">
   <div class="td-modal">
-    <div class="td-modal-header">
-      <h2>📋 Ticket Details</h2>
-      <p id="tdModalSubtitle">All checklist items complete! Fill in the details before saving.</p>
-    </div>
+    <div class="td-modal-header"><h2>📋 Ticket Details</h2><p id="tdModalSubtitle">All checklist items complete! Fill in the details before saving.</p></div>
     <div class="td-modal-body">
       <div class="td-field">
         <label class="td-field-label">Component <span class="req">*</span></label>
@@ -386,11 +376,7 @@
 
 <div class="app">
   <aside class="panel sidebar">
-    <div class="header">
-      <h2>Checklist</h2>
-      <p>Work on multiple tickets simultaneously. Each tab tracks its own timer and checklist state.</p>
-    </div>
-
+    <div class="header"><h2>Checklist</h2><p>Work on multiple tickets simultaneously. Each tab tracks its own timer and checklist state.</p></div>
     <div class="active-tickets-header">
       <div class="active-tickets-label">
         <span>🎯 Currently Working On</span>
@@ -400,7 +386,6 @@
         <span class="no-tickets-hint" id="noTicketsHint">No active tickets. Click "+ New Ticket" to begin.</span>
       </div>
     </div>
-
     <div class="checklist-wrap">
       <div class="shift-lock-banner" id="shiftLockBanner">
         <div class="slb-icon">🔒</div>
@@ -409,17 +394,12 @@
       </div>
       <div class="jira-input-group">
         <label for="jiraIdInput">Jira Ticket ID</label>
-        <div class="jira-input-row">
-          <input type="text" id="jiraIdInput" placeholder="e.g. PROJ-1234" maxlength="20" autocomplete="off"/>
-        </div>
+        <div class="jira-input-row"><input type="text" id="jiraIdInput" placeholder="e.g. PROJ-1234" maxlength="20" autocomplete="off"/></div>
       </div>
       <div class="progress-card">
         <div class="progress-top"><span>Completion</span><span class="progress-value" id="progressText">0 / 10</span></div>
         <div class="bar"><div class="bar-fill" id="barFill"></div></div>
-        <div class="timer-card">
-          <span class="timer-label">Ticket Timer</span>
-          <span class="timer-value" id="timerText">00:00:00</span>
-        </div>
+        <div class="timer-card"><span class="timer-label">Ticket Timer</span><span class="timer-value" id="timerText">00:00:00</span></div>
         <div class="completed-banner" id="completedBanner">✅ All items complete! Filling details…</div>
       </div>
       <div class="checklist-locked-hint" id="checklistLockedHint">⚠️ Enter a Jira ID and click Start to enable the checklist.</div>
@@ -439,10 +419,7 @@
   <main class="panel playbook">
     <div class="header" id="playbookHeader">
       <div class="playbook-header-row">
-        <div class="playbook-header-text">
-          <h1 id="playbookTitle">Support Desk Playbook</h1>
-          <p>Use this playbook whenever a JIRA ticket is in <strong>Acknowledgement</strong> status.</p>
-        </div>
+        <div class="playbook-header-text"><h1 id="playbookTitle">Support Desk Playbook</h1><p>Use this playbook whenever a JIRA ticket is in <strong>Acknowledgement</strong> status.</p></div>
         <div class="header-btns">
           <div class="shift-status-badge" id="shiftStatusBadge"><span class="shift-status-dot"></span><span id="shiftStatusText">D1 Active</span></div>
           <button class="ss-btn" id="ssBtn">🟢 Start Shift</button>
@@ -477,18 +454,11 @@
           </ul>
         </div>
       </div>
-
-      <!-- ══ Ticket Log Panel ══ -->
       <div class="ticket-log-panel">
         <div class="ticket-log-panel-header">
-          <div class="ticket-log-header">
-            <span class="ticket-log-title">🎫 Ticket Log</span>
-            <button class="ticket-log-clear" id="clearLogBtn">Clear All</button>
-          </div>
+          <div class="ticket-log-header"><span class="ticket-log-title">🎫 Ticket Log</span><button class="ticket-log-clear" id="clearLogBtn">Clear All</button></div>
           <div class="ticket-log-count" id="ticketLogCount">0 tickets</div>
-          <div class="export-row">
-            <button class="export-btn" onclick="exportLog()">⬇ Export CSV</button>
-          </div>
+          <div class="export-row"><button class="export-btn" onclick="exportLog()">⬇ Export CSV</button></div>
         </div>
         <div class="ticket-log-search-wrap">
           <div class="ticket-log-search">
@@ -506,6 +476,9 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
+// ── CONFIG ──────────────────────────────────────────────────
+const API_URL = 'https://script.google.com/macros/s/AKfycbyaAvjKXkKP2RWSAKP0rzjj0zAG4bycmnth4gu_Le9K4IAye6BESS68puZ41Y_M_9B0sA/exec';
+
 const SHIFTS=[
   {id:'D1',label:'D1 — Morning',  time:'6:00 AM – 3:00 PM',  hours:9,type:'day',  badge:'badge-day',  emoji:'🌅'},
   {id:'D2',label:'D2 — Afternoon',time:'12:30 PM – 9:30 PM', hours:9,type:'eve',  badge:'badge-eve',  emoji:'🌇'},
@@ -527,9 +500,46 @@ const CHECKLIST_ITEMS=[
   'Take next action or escalate as required'
 ];
 
-let activeTickets=[];
-let currentTicketIdx=-1;
+// ── SYNC TO GOOGLE SHEETS ────────────────────────────────────
+let syncToast = document.getElementById('syncToast');
+let syncTimer = null;
 
+function showSyncToast(msg, type='') {
+  syncToast.textContent = msg;
+  syncToast.className = 'sync-toast visible ' + type;
+  if (syncTimer) clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => { syncToast.className = 'sync-toast'; }, 3500);
+}
+
+async function pushTicketToSheet(entry) {
+  try {
+    showSyncToast('⏳ Saving to cloud…');
+    const params = new URLSearchParams({
+      action:       'saveTicketLog',
+      agentName:    entry.agentName   || '',
+      ticketId:     entry.id          || '',
+      duration:     entry.duration    || '',
+      durationSecs: entry.durationSecs|| 0,
+      date:         entry.date        || '',
+      time:         entry.time        || '',
+      dateKey:      entry.dateKey     || '',
+      shiftId:      entry.shiftId     || '',
+      shiftLabel:   entry.shiftLabel  || '',
+      component:    entry.component   || '',
+      description:  entry.description || '',
+      remarks:      entry.remarks     || ''
+    });
+    const res  = await fetch(API_URL + '?' + params.toString());
+    const data = await res.json();
+    if (data.success) showSyncToast('✅ Saved to cloud!', 'success');
+    else              showSyncToast('⚠ Cloud save failed', 'error');
+  } catch(e) {
+    showSyncToast('⚠ No connection — saved locally only', 'error');
+  }
+}
+
+// ── ACTIVE TICKETS STATE ─────────────────────────────────────
+let activeTickets = [], currentTicketIdx = -1;
 function genTabId(){return 'tab_'+Date.now()+'_'+Math.floor(Math.random()*1000);}
 function getActiveTicket(){if(currentTicketIdx<0||currentTicketIdx>=activeTickets.length)return null;return activeTickets[currentTicketIdx];}
 function addNewActiveTicket(jiraId){const t={id:genTabId(),jiraId:(jiraId||'').trim().toUpperCase(),elapsed:0,running:false,paused:false,timerInterval:null,checks:CHECKLIST_ITEMS.map(()=>false),allDoneTriggered:false};activeTickets.push(t);return t;}
@@ -601,7 +611,6 @@ function showUndoToast(){undoToast.classList.add('visible');if(undoTimer)clearTi
 function hideUndoToast(){undoToast.classList.remove('visible');if(undoTimer){clearTimeout(undoTimer);undoTimer=null;}}
 undoBtn.addEventListener('click',()=>{if(!undoEntry){hideUndoToast();return;}const log=loadLog();log.splice(Math.min(undoIndex,log.length),0,undoEntry);saveLog(log);undoEntry=null;undoIndex=-1;hideUndoToast();renderLog(ticketSearchInput.value);});
 function deleteTicket(idx){const log=loadLog();if(idx<0||idx>=log.length)return;undoEntry={...log[idx]};undoIndex=idx;log.splice(idx,1);saveLog(log);renderLog(ticketSearchInput.value);showUndoToast();}
-
 function saveInlineEdit(idx,desc,rmk){const log=loadLog();if(idx<0||idx>=log.length)return;log[idx].description=desc;log[idx].remarks=rmk;saveLog(log);renderLog(ticketSearchInput.value);}
 
 function renderLog(query){
@@ -653,7 +662,34 @@ function renderLog(query){
 ticketSearchInput.addEventListener('input',()=>{const q=ticketSearchInput.value;ticketSearchClear.classList.toggle('visible',q.length>0);renderLog(q);});
 ticketSearchClear.addEventListener('click',()=>{ticketSearchInput.value='';ticketSearchClear.classList.remove('visible');ticketSearchResults.innerHTML='';renderLog('');ticketSearchInput.focus();});
 
-function logTicket(jiraId,durSecs,component,description,remarks){const shift=getActiveShift();const log=loadLog();log.push({id:jiraId.trim().toUpperCase()||'(no ID)',duration:formatCounter(durSecs),durationSecs:durSecs,date:nowDateString(),time:nowTimeString(),dateKey:todayKey(),component:(component||''),description:(description||'').trim(),remarks:(remarks||'').trim(),shiftId:shift?shift.id:'',shiftLabel:shift?shift.label:''});saveLog(log);ticketSearchInput.value='';ticketSearchClear.classList.remove('visible');ticketSearchResults.innerHTML='';renderLog('');}
+// ── LOG TICKET (local + push to sheet) ──────────────────────
+function logTicket(jiraId, durSecs, component, description, remarks) {
+  const shift = getActiveShift();
+  const entry = {
+    agentName:   getUsername(),
+    id:          jiraId.trim().toUpperCase() || '(no ID)',
+    duration:    formatCounter(durSecs),
+    durationSecs:durSecs,
+    date:        nowDateString(),
+    time:        nowTimeString(),
+    dateKey:     todayKey(),
+    component:   component  || '',
+    description: (description || '').trim(),
+    remarks:     (remarks    || '').trim(),
+    shiftId:     shift ? shift.id    : '',
+    shiftLabel:  shift ? shift.label : ''
+  };
+  // Save locally
+  const log = loadLog();
+  log.push(entry);
+  saveLog(log);
+  ticketSearchInput.value = '';
+  ticketSearchClear.classList.remove('visible');
+  ticketSearchResults.innerHTML = '';
+  renderLog('');
+  // Push to Google Sheet (non-blocking)
+  pushTicketToSheet(entry);
+}
 
 function renderTabs(){
   ticketTabs.innerHTML='';
@@ -672,7 +708,6 @@ function renderTabs(){
 
 function switchToTicket(idx){currentTicketIdx=idx;const t=getActiveTicket();if(!t)return;jiraIdInput.value=t.jiraId;jiraIdInput.disabled=(t.running||t.paused)||!getActiveShift();timerText.textContent=formatCounter(t.elapsed);timerText.classList.toggle('running',t.running);renderTabs();renderChecklist();updateStartStopBtns();}
 function closeTicketTab(idx){const t=activeTickets[idx];if(t&&(t.running||t.paused)){if(!confirm(`Ticket "${t.jiraId||'New Ticket'}" is still active. Close it anyway? (It will NOT be logged.)`))return;stopTicketTimer(t);}removeActiveTicket(idx);renderTabs();if(currentTicketIdx>=0&&activeTickets.length>0)switchToTicket(currentTicketIdx);else{renderChecklist();updateStartStopBtns();}}
-
 addTicketBtn.addEventListener('click',()=>{if(!getActiveShift()){openSSModal();return;}addNewActiveTicket('');currentTicketIdx=activeTickets.length-1;renderTabs();switchToTicket(currentTicketIdx);jiraIdInput.focus();});
 
 function renderChecklist(){
@@ -722,18 +757,23 @@ resetBtn.addEventListener('click',()=>{const t=getActiveTicket();if(!t)return;if
 jiraIdInput.addEventListener('keydown',e=>{if(e.key==='Enter'){const t=getActiveTicket();if(!t||!t.running)startBtn.click();}});
 jiraIdInput.addEventListener('input',()=>{const t=getActiveTicket();if(t&&!t.running)t.jiraId=jiraIdInput.value.trim().toUpperCase();});
 
-let selectedComponent='';
-let tdTargetIdx=-1;
+let selectedComponent='',tdTargetIdx=-1;
 function buildCompGrid(){const grid=document.getElementById('compGrid');grid.innerHTML='';selectedComponent='';COMPONENTS.forEach(c=>{const chip=document.createElement('div');chip.className='comp-chip';chip.textContent=c;chip.addEventListener('click',()=>{document.querySelectorAll('.comp-chip').forEach(ch=>ch.classList.remove('selected'));chip.classList.add('selected');selectedComponent=c;document.getElementById('compError').classList.remove('visible');});grid.appendChild(chip);});}
 function openTDModal(ticketIdx){tdTargetIdx=ticketIdx;const t=activeTickets[ticketIdx];buildCompGrid();document.getElementById('tdDescription').value='';document.getElementById('tdRemarks').value='';document.getElementById('compError').classList.remove('visible');document.getElementById('tdModalSubtitle').textContent=`Ticket: ${t?t.jiraId||'(no ID)':''}  ·  Time: ${t?formatCounter(t.elapsed):''}`;document.getElementById('tdOverlay').classList.add('open');}
 function closeTDModal(){document.getElementById('tdOverlay').classList.remove('open');tdTargetIdx=-1;}
 document.getElementById('tdCancel').addEventListener('click',closeTDModal);
 document.getElementById('tdOverlay').addEventListener('click',e=>{if(e.target===document.getElementById('tdOverlay'))closeTDModal();});
+
+// ── SAVE TICKET (triggers cloud push) ───────────────────────
 document.getElementById('tdSave').addEventListener('click',()=>{
   if(!selectedComponent){document.getElementById('compError').classList.add('visible');return;}
-  const description=document.getElementById('tdDescription').value;const remarks=document.getElementById('tdRemarks').value;const t=activeTickets[tdTargetIdx];if(!t)return;
-  logTicket(t.jiraId||'(no ID)',t.elapsed,selectedComponent,description,remarks);stopTicketTimer(t);removeActiveTicket(tdTargetIdx);closeTDModal();renderTabs();
-  if(activeTickets.length>0)switchToTicket(currentTicketIdx);else{timerText.textContent=formatCounter(0);timerText.classList.remove('running');jiraIdInput.value='';renderChecklist();updateStartStopBtns();}
+  const description=document.getElementById('tdDescription').value;
+  const remarks=document.getElementById('tdRemarks').value;
+  const t=activeTickets[tdTargetIdx];if(!t)return;
+  logTicket(t.jiraId||'(no ID)', t.elapsed, selectedComponent, description, remarks);
+  stopTicketTimer(t);removeActiveTicket(tdTargetIdx);closeTDModal();renderTabs();
+  if(activeTickets.length>0)switchToTicket(currentTicketIdx);
+  else{timerText.textContent=formatCounter(0);timerText.classList.remove('running');jiraIdInput.value='';renderChecklist();updateStartStopBtns();}
 });
 
 function exportLog(){const log=loadLog();if(!log.length){alert('No tickets to export yet.');return;}const user=getUsername()||'agent';const filename=`ticket_log_${slugify(user)}_${new Date().toISOString().slice(0,10)}.csv`;const headers=['Ticket ID','Duration','Date','Time','Shift','Component','Description','Remarks'];const rows=log.map(e=>[e.id,e.duration,e.date,e.time,e.shiftLabel||'',e.component||'',(e.description||'').replace(/"/g,'""'),(e.remarks||'').replace(/"/g,'""')].map(v=>`"${v}"`).join(','));const csv=[headers.join(','),...rows].join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(url),1000);}
@@ -744,52 +784,25 @@ function parseDurSecs(e){if(e.durationSecs!==undefined)return e.durationSecs;con
 function getTodayTickets(){const tk=todayKey();return loadLog().filter(e=>e.dateKey===tk||e.date===nowDateString());}
 
 function openEOS(){
-  const shift=getActiveShift();
-  const today=getTodayTickets();const count=today.length;
-  const totalSecs=today.reduce((a,e)=>a+parseDurSecs(e),0);
-  const avgSecs=count>0?Math.round(totalSecs/count):0;
-
-  // Longest ticket
-  let longestEntry=null,longestSecs=0;
-  today.forEach(e=>{const s=parseDurSecs(e);if(s>longestSecs){longestSecs=s;longestEntry=e;}});
-
-  document.getElementById('statCount').textContent=count;
-  document.getElementById('statAvg').textContent=formatCounter(avgSecs);
-  document.getElementById('statTotal').textContent=formatCounter(totalSecs);
+  const shift=getActiveShift();const today=getTodayTickets();const count=today.length;
+  const totalSecs=today.reduce((a,e)=>a+parseDurSecs(e),0);const avgSecs=count>0?Math.round(totalSecs/count):0;
+  let longestEntry=null,longestSecs=0;today.forEach(e=>{const s=parseDurSecs(e);if(s>longestSecs){longestSecs=s;longestEntry=e;}});
+  document.getElementById('statCount').textContent=count;document.getElementById('statAvg').textContent=formatCounter(avgSecs);document.getElementById('statTotal').textContent=formatCounter(totalSecs);
   document.getElementById('eosSubtitle').textContent=`${nowDateString()} · ${getUsername()||'Agent'}`;
-
-  // Longest ticket card
-  if(longestEntry){
-    document.getElementById('eosLongestId').textContent=longestEntry.id;
-    document.getElementById('eosLongestMeta').textContent=`${longestEntry.component||'No component'} · Logged at ${longestEntry.time}`;
-    document.getElementById('eosLongestDur').textContent=formatCounter(longestSecs);
-  } else {
-    document.getElementById('eosLongestId').textContent='—';
-    document.getElementById('eosLongestMeta').textContent='No tickets logged yet';
-    document.getElementById('eosLongestDur').textContent='—';
-  }
-
+  if(longestEntry){document.getElementById('eosLongestId').textContent=longestEntry.id;document.getElementById('eosLongestMeta').textContent=`${longestEntry.component||'No component'} · Logged at ${longestEntry.time}`;document.getElementById('eosLongestDur').textContent=formatCounter(longestSecs);}
+  else{document.getElementById('eosLongestId').textContent='—';document.getElementById('eosLongestMeta').textContent='No tickets logged yet';document.getElementById('eosLongestDur').textContent='—';}
   const infoEl=document.getElementById('eosShiftInfo');
   if(shift){infoEl.innerHTML=`<span class="eos-shift-label">Active Shift</span><span class="eos-shift-pill">${shift.emoji} ${shift.label}</span><span class="eos-shift-label" style="margin-left:6px">⏱ ${shift.time}</span>`;infoEl.style.display='flex';}
   else{infoEl.innerHTML=`<span class="eos-shift-label" style="color:#b45309">⚠️ No shift selected for this session.</span>`;infoEl.style.display='flex';}
-
   const container=document.getElementById('eosTableContainer');
   if(count===0){container.innerHTML='<div class="eos-empty">No tickets logged today yet.</div>';}
-  else{
-    // find longest idx for row highlight
-    const rows=today.map((e,i)=>{
-      const isLongest=longestEntry&&e===longestEntry;
-      return `<tr class="${isLongest?'td-longest':''}"><td>${i+1}</td><td class="td-id">${escapeHtml(e.id)}</td><td class="td-dur">${escapeHtml(e.duration)}</td><td>${escapeHtml(e.time)}</td><td>${escapeHtml(e.shiftId||'—')}</td><td class="td-comp">${escapeHtml(e.component||'—')}</td><td class="td-remarks">${escapeHtml(e.remarks||'—')}</td>${isLongest?'<td title="Longest ticket">🐢</td>':'<td></td>'}</tr>`;
-    }).join('');
-    container.innerHTML=`<table><thead><tr><th>#</th><th>Ticket ID</th><th>Duration</th><th>Logged At</th><th>Shift</th><th>Component</th><th>Remarks</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
-  }
+  else{const rows=today.map((e,i)=>{const isLongest=longestEntry&&e===longestEntry;return `<tr class="${isLongest?'td-longest':''}"><td>${i+1}</td><td class="td-id">${escapeHtml(e.id)}</td><td class="td-dur">${escapeHtml(e.duration)}</td><td>${escapeHtml(e.time)}</td><td>${escapeHtml(e.shiftId||'—')}</td><td class="td-comp">${escapeHtml(e.component||'—')}</td><td class="td-remarks">${escapeHtml(e.remarks||'—')}</td>${isLongest?'<td title="Longest ticket">🐢</td>':'<td></td>'}</tr>`;}).join('');container.innerHTML=`<table><thead><tr><th>#</th><th>Ticket ID</th><th>Duration</th><th>Logged At</th><th>Shift</th><th>Component</th><th>Remarks</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;}
   document.getElementById('eosOverlay').classList.add('open');
 }
 document.getElementById('eosBtn').addEventListener('click',openEOS);
 document.getElementById('eosClose').addEventListener('click',()=>document.getElementById('eosOverlay').classList.remove('open'));
 document.getElementById('eosDismiss').addEventListener('click',()=>document.getElementById('eosOverlay').classList.remove('open'));
 document.getElementById('eosOverlay').addEventListener('click',e=>{if(e.target===document.getElementById('eosOverlay'))document.getElementById('eosOverlay').classList.remove('open');});
-
 document.getElementById('eosExportBtn').addEventListener('click',()=>{
   const shift=getActiveShift();const today=getTodayTickets();const user=getUsername()||'Agent';const count=today.length;
   const totalSecs=today.reduce((a,e)=>a+parseDurSecs(e),0);const avgSecs=count>0?Math.round(totalSecs/count):0;
