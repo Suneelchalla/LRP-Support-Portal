@@ -112,6 +112,10 @@
   .env-uat{background:rgba(255,160,0,.15);border:1px solid rgba(255,160,0,.4);color:#ffa040;}
   .env-dev{background:rgba(0,180,80,.15);border:1px solid rgba(0,180,80,.4);color:#00ff88;}
   .env-staging{background:rgba(100,100,255,.15);border:1px solid rgba(100,100,255,.4);color:#aaaaff;}
+  .env-train{background:rgba(0,180,200,.15);border:1px solid rgba(0,180,200,.4);color:#00d4f0;}
+  .env-train2{background:rgba(0,140,180,.15);border:1px solid rgba(0,140,180,.4);color:#00b0d8;}
+  .env-ecom{background:rgba(180,80,180,.15);border:1px solid rgba(180,80,180,.4);color:#e080e0;}
+  .env-testing{background:rgba(180,180,0,.15);border:1px solid rgba(180,180,0,.4);color:#d4d400;}
   .env-default{background:rgba(100,100,100,.15);border:1px solid rgba(100,100,100,.35);color:#aaa;}
   .pw-toggle-sm{background:none;border:none;color:rgba(0,180,255,.6);cursor:pointer;font-size:13px;padding:0 4px;}
 </style>
@@ -232,6 +236,10 @@
               <option value="UAT">UAT</option>
               <option value="Staging">Staging</option>
               <option value="Development">Development</option>
+              <option value="Train">Train</option>
+              <option value="Train 2">Train 2</option>
+              <option value="Ecom">Ecom</option>
+              <option value="Testing">Testing</option>
             </select>
           </div>
           <div class="form-field">
@@ -270,7 +278,7 @@
 </div>
 
 <script>
-  const API_URL    = 'https://script.google.com/macros/s/AKfycby9zm9hsp-iC3GJq2qj-MHJoQtDBG0F1Eb-gZkaEvQfXaZvtKTVdzFIREdQYxyNPSqeEA/exec';
+  const API_URL    = 'https://script.google.com/macros/s/AKfycbyrQIneC1_vk5VvcwZfmoZweZupICMm_3nnF1cPUUOPIjZbbY4y3sK1MGsWxjCwgo2Bzg/exec';
   const ADMIN_USER = 'admin';
   const ADMIN_PASS = 'admin@lrp';
 
@@ -540,10 +548,14 @@
 
   function envClass(e) {
     const v = (e||'').toLowerCase();
-    if (v.includes('prod'))  return 'env-prod';
-    if (v.includes('uat'))   return 'env-uat';
-    if (v.includes('dev'))   return 'env-dev';
-    if (v.includes('stag'))  return 'env-staging';
+    if (v === 'production')  return 'env-prod';
+    if (v === 'uat')         return 'env-uat';
+    if (v === 'development') return 'env-dev';
+    if (v === 'staging')     return 'env-staging';
+    if (v === 'train 2')     return 'env-train2';
+    if (v === 'train')       return 'env-train';
+    if (v === 'ecom')        return 'env-ecom';
+    if (v === 'testing')     return 'env-testing';
     return 'env-default';
   }
 
