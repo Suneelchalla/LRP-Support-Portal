@@ -156,7 +156,7 @@
 </div>
 
 <script>
-  const API_URL = 'https://script.google.com/macros/s/AKfycby9zm9hsp-iC3GJq2qj-MHJoQtDBG0F1Eb-gZkaEvQfXaZvtKTVdzFIREdQYxyNPSqeEA/exec';
+  const API_URL = 'https://script.google.com/macros/s/AKfycbyrQIneC1_vk5VvcwZfmoZweZupICMm_3nnF1cPUUOPIjZbbY4y3sK1MGsWxjCwgo2Bzg/exec';
 
   function showMsg(id, text, type) {
     const el = document.getElementById(id);
@@ -373,10 +373,15 @@
           .cr-table-wrap{background:rgba(4,28,53,.85);border:1px solid rgba(0,180,255,.2);border-radius:6px;overflow:hidden;}
           .cr-table{width:100%;border-collapse:collapse;}
           .cr-table thead tr{background:rgba(0,60,100,.5);}
-          .cr-table th{padding:12px 14px;text-align:left;font-size:10px;font-weight:700;color:rgba(0,200,255,.8);text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid rgba(0,180,255,.2);}
-          .cr-table td{padding:12px 14px;font-size:13px;border-bottom:1px solid rgba(0,180,255,.07);color:#a8d8ea;vertical-align:middle;}
-          .cr-table tr:last-child td{border-bottom:none;}
+          .cr-table th{padding:12px 14px;text-align:left;font-size:10px;font-weight:700;color:rgba(0,200,255,.8);text-transform:uppercase;letter-spacing:1px;border:1px solid rgba(0,180,255,.25);}
+          .cr-table td{padding:12px 14px;font-size:13px;border:1px solid rgba(0,180,255,.15);color:#a8d8ea;vertical-align:middle;word-break:break-word;}
           .cr-table tr:hover td{background:rgba(0,60,100,.25);}
+          .cr-table th:first-child, .cr-table td:first-child{min-width:140px;}
+          .cr-table th:nth-child(2), .cr-table td:nth-child(2){min-width:220px;}
+          .cr-table th:nth-child(3), .cr-table td:nth-child(3){min-width:120px;text-align:center;}
+          .cr-table th:nth-child(4), .cr-table td:nth-child(4){min-width:140px;}
+          .cr-table th:nth-child(5), .cr-table td:nth-child(5){min-width:200px;}
+          .cr-table-wrap{overflow-x:auto;}
           .cr-client{font-weight:700;color:#e0f4ff;font-size:14px;}
           .cr-url a{color:#00c8ff;text-decoration:none;font-family:'Share Tech Mono',monospace;font-size:11px;}
           .cr-url a:hover{text-decoration:underline;}
@@ -385,6 +390,10 @@
           .env-uat{background:rgba(255,160,0,.15);border:1px solid rgba(255,160,0,.4);color:#ffa040;}
           .env-dev{background:rgba(0,180,80,.15);border:1px solid rgba(0,180,80,.4);color:#00ff88;}
           .env-staging{background:rgba(100,100,255,.15);border:1px solid rgba(100,100,255,.4);color:#aaaaff;}
+          .env-train{background:rgba(0,180,200,.15);border:1px solid rgba(0,180,200,.4);color:#00d4f0;}
+          .env-train2{background:rgba(0,140,180,.15);border:1px solid rgba(0,140,180,.4);color:#00b0d8;}
+          .env-ecom{background:rgba(180,80,180,.15);border:1px solid rgba(180,80,180,.4);color:#e080e0;}
+          .env-testing{background:rgba(180,180,0,.15);border:1px solid rgba(180,180,0,.4);color:#d4d400;}
           .env-default{background:rgba(100,100,100,.15);border:1px solid rgba(100,100,100,.4);color:#aaa;}
           .cr-uid{font-family:'Share Tech Mono',monospace;font-size:12px;color:#a8e8ff;}
           .pw-wrap{display:flex;align-items:center;gap:8px;}
@@ -461,10 +470,14 @@
         cnt.textContent = total ? list.length + ' of ' + total + ' clients' : list.length + ' clients';
         const envClass = e => {
           const v = (e||'').toLowerCase();
-          if (v.includes('prod')) return 'env-prod';
-          if (v.includes('uat'))  return 'env-uat';
-          if (v.includes('dev'))  return 'env-dev';
-          if (v.includes('stag')) return 'env-staging';
+          if (v === 'production')  return 'env-prod';
+          if (v === 'uat')         return 'env-uat';
+          if (v === 'development') return 'env-dev';
+          if (v === 'staging')     return 'env-staging';
+          if (v === 'train 2')     return 'env-train2';
+          if (v === 'train')       return 'env-train';
+          if (v === 'ecom')        return 'env-ecom';
+          if (v === 'testing')     return 'env-testing';
           return 'env-default';
         };
         const rows = list.map((c, i) => `
