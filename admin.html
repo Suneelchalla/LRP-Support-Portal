@@ -183,8 +183,61 @@
     <input type="password" id="adm-pass" placeholder="Admin password"/>
     <button onclick="adminLogin()">⚓ ENTER COMMAND</button>
     <div class="login-err" id="adm-err">⚠ Invalid admin credentials.</div>
-  </div>
-</div>
+    <!-- ══ SHIFT HANDOVER MONITOR TAB ══ -->
+    <div class="tab-panel" id="panel-handover">
+      <div class="page-title">SHIFT HANDOVER MONITOR</div>
+      <div class="page-sub">All shift handovers submitted by agents</div>
+
+      <!-- Filter bar -->
+      <div style="display:flex;gap:12px;margin-bottom:20px;align-items:center;flex-wrap:wrap;">
+        <div style="display:flex;flex-direction:column;gap:3px;">
+          <span style="font-size:10px;color:rgba(0,180,255,.6);letter-spacing:1px;">FROM DATE</span>
+          <input type="date" id="ho-date-from" style="background:rgba(2,15,30,.7);border:1px solid rgba(0,120,180,.35);border-radius:4px;padding:8px 12px;font-size:13px;color:#a8e8ff;outline:none;font-family:'Courier New',monospace;"/>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px;">
+          <span style="font-size:10px;color:rgba(0,180,255,.6);letter-spacing:1px;">TO DATE</span>
+          <input type="date" id="ho-date-to" style="background:rgba(2,15,30,.7);border:1px solid rgba(0,120,180,.35);border-radius:4px;padding:8px 12px;font-size:13px;color:#a8e8ff;outline:none;font-family:'Courier New',monospace;"/>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px;">
+          <span style="font-size:10px;color:rgba(0,180,255,.6);letter-spacing:1px;">SHIFT</span>
+          <select id="ho-shift-filter" style="background:rgba(2,15,30,.7);border:1px solid rgba(0,120,180,.35);border-radius:4px;padding:8px 12px;font-size:13px;color:#a8e8ff;outline:none;font-family:'Courier New',monospace;">
+            <option value="">All Shifts</option>
+            <option>D1</option><option>D2</option><option>D3</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-end;padding-bottom:0;">
+          <button onclick="applyHandoverFilter()" style="padding:9px 18px;background:rgba(0,180,255,.15);border:1px solid rgba(0,180,255,.4);border-radius:4px;color:#a8e8ff;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;">🔍 Filter</button>
+          <button onclick="loadHandovers()" style="padding:9px 18px;background:rgba(100,100,100,.15);border:1px solid rgba(100,100,100,.3);border-radius:4px;color:#aaa;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;">↺ Reset</button>
+        </div>
+        <span style="font-size:11px;color:rgba(0,200,255,.5);letter-spacing:1px;align-self:flex-end;" id="ho-filter-label"></span>
+      </div>
+
+      <!-- Stats row -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;" id="ho-stats-row">
+        <div class="stat-card"><div class="stat-num blue" id="ho-s-total">—</div><div class="stat-lbl">Total Submissions</div></div>
+        <div class="stat-card"><div class="stat-num red" id="ho-s-pending">—</div><div class="stat-lbl">Total Pending</div></div>
+        <div class="stat-card"><div class="stat-num green" id="ho-s-completed">—</div><div class="stat-lbl">Total Completed</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:#ff8888;" id="ho-s-showstopper">—</div><div class="stat-lbl">Showstoppers</div></div>
+      </div>
+
+      <!-- Handover table -->
+      <div class="section-title">📋 Handover Submissions <span style="font-size:11px;color:rgba(168,216,234,.4);margin-left:8px;" id="ho-count-label"></span></div>
+      <div class="table-wrap">
+        <div class="search-bar">
+          <input type="text" id="hoSearchInput" placeholder="🔍  Search by date, shift, or member name..." oninput="filterHandoverTable()"/>
+        </div>
+        <div id="hoTableContainer"><div class="loading">⏳ LOADING HANDOVER DATA...</div></div>
+      </div>
+
+      <!-- Detail modal -->
+      <div id="hoDetailOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;">
+        <div id="hoDetailBox" style="background:#041c35;border:1px solid rgba(0,180,255,.3);border-radius:10px;width:100%;max-width:720px;max-height:88vh;overflow-y:auto;padding:28px 32px;position:relative;">
+          <button onclick="closeHoDetail()" style="position:absolute;top:14px;right:16px;background:rgba(255,80,60,.2);border:1px solid rgba(255,80,60,.4);border-radius:6px;color:#ff9977;cursor:pointer;font-size:13px;font-weight:700;padding:5px 12px;">✕ Close</button>
+          <div id="hoDetailContent"></div>
+        </div>
+      </div>
+    </div>
+
 
 <!-- Dashboard -->
 <div id="dashboard" style="display:none;">
@@ -205,6 +258,7 @@
       <button class="admin-tab active" id="atab-agents" onclick="switchTab('agents')">🧑‍✈️ AGENTS</button>
       <button class="admin-tab" id="atab-creds" onclick="switchTab('creds')">🔐 CLIENT CREDENTIALS</button>
       <button class="admin-tab" id="atab-tracker" onclick="switchTab('tracker')">📊 AGENT TRACKER</button>
+      <button class="admin-tab" id="atab-handover" onclick="switchTab('handover')">📂 SHIFT HANDOVER MONITOR</button>
     </div>
 
     <!-- ══ AGENTS TAB ══ -->
@@ -328,7 +382,7 @@
 </div>
 
 <script>
-  const API_URL    = 'https://script.google.com/macros/s/AKfycbyaAvjKXkKP2RWSAKP0rzjj0zAG4bycmnth4gu_Le9K4IAye6BESS68puZ41Y_M_9B0sA/exec';
+  const API_URL    = 'https://script.google.com/macros/s/AKfycbx4Yt6dXiMOpztGU7ujn1TiJZUxfpTDCzSZ07rDd-EewnS8D0h4adFV6VP_3IzomL1H_w/exec';
   const ADMIN_USER = 'admin';
   const ADMIN_PASS = 'admin@lrp';
 
@@ -366,12 +420,13 @@
 
   function switchTab(tab) {
     currentTab = tab;
-    ['agents','creds','tracker'].forEach(t => {
+    ['agents','creds','tracker','handover'].forEach(t => {
       document.getElementById('atab-' + t).classList.toggle('active', t === tab);
       document.getElementById('panel-' + t).classList.toggle('active', t === tab);
     });
     if (tab === 'creds')    loadCreds();
     if (tab === 'tracker')  loadTracker();
+    if (tab === 'handover') loadHandovers();
     document.getElementById('lastRefreshed').textContent = '';
   }
 
@@ -719,6 +774,189 @@
       (l.shiftId||'').toLowerCase().includes(q)
     ) : base;
     renderTrackerTable(result);
+  }
+
+  /* ══════════════════════════════
+     SHIFT HANDOVER MONITOR
+  ══════════════════════════════ */
+  let allHandovers = [], filteredHandovers = [];
+
+  async function loadHandovers() {
+    document.getElementById('ho-date-from').value = '';
+    document.getElementById('ho-date-to').value   = '';
+    document.getElementById('ho-shift-filter').value = '';
+    document.getElementById('ho-filter-label').textContent = '';
+    document.getElementById('hoTableContainer').innerHTML = '<div class="loading">⏳ LOADING HANDOVER DATA...</div>';
+    try {
+      const res  = await fetch(API_URL + '?action=getHandovers&t=' + Date.now());
+      const data = await res.json();
+      if (data.success) {
+        allHandovers = data.handovers || [];
+        filteredHandovers = [...allHandovers];
+        renderHandoverStats(filteredHandovers);
+        renderHandoverTable(filteredHandovers);
+        document.getElementById('lastRefreshed').textContent = 'Last refreshed: ' + new Date().toLocaleTimeString();
+      } else {
+        document.getElementById('hoTableContainer').innerHTML = '<div class="error-msg">⚠ Failed to load data.</div>';
+      }
+    } catch {
+      document.getElementById('hoTableContainer').innerHTML = '<div class="error-msg">⚠ Connection error.</div>';
+    }
+  }
+
+  function applyHandoverFilter() {
+    const from  = document.getElementById('ho-date-from').value;
+    const to    = document.getElementById('ho-date-to').value;
+    const shift = document.getElementById('ho-shift-filter').value;
+    filteredHandovers = allHandovers.filter(h => {
+      if (from  && h.date < from)  return false;
+      if (to    && h.date > to)    return false;
+      if (shift && h.shift !== shift) return false;
+      return true;
+    });
+    const parts = [];
+    if (from || to) parts.push((from||'…') + ' → ' + (to||'…'));
+    if (shift) parts.push('Shift: ' + shift);
+    document.getElementById('ho-filter-label').textContent = parts.length ? parts.join(' · ') + ' · ' + filteredHandovers.length + ' records' : '';
+    renderHandoverStats(filteredHandovers);
+    renderHandoverTable(filteredHandovers);
+  }
+
+  function renderHandoverStats(list) {
+    const totalSub  = list.length;
+    const totalPend = list.reduce((a,h) => a + (h.pendingTickets||0), 0);
+    const totalComp = list.reduce((a,h) => a + (h.completedTickets||0), 0);
+    const totalSS   = list.reduce((a,h) => a + (h.showstopperCount||0), 0);
+    document.getElementById('ho-s-total').textContent      = totalSub;
+    document.getElementById('ho-s-pending').textContent    = totalPend;
+    document.getElementById('ho-s-completed').textContent  = totalComp;
+    document.getElementById('ho-s-showstopper').textContent= totalSS;
+  }
+
+  function renderHandoverTable(list) {
+    document.getElementById('ho-count-label').textContent = list.length + ' records';
+    if (!list.length) {
+      document.getElementById('hoTableContainer').innerHTML = '<div class="no-data-msg">📭 No handover submissions found.</div>';
+      return;
+    }
+    const rows = [...list].reverse().map((h, i) => {
+      const shiftBadge = {D1:'badge-ops',D2:'badge-log',D3:'badge-cred'}[h.shift] || 'badge-ops';
+      const submittedAt = h.submittedAt ? new Date(h.submittedAt).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '—';
+      return `<tr>
+        <td style="color:rgba(0,200,255,.4);font-size:11px;">${i+1}</td>
+        <td style="font-family:'Courier New',monospace;font-weight:700;color:#e0f4ff;">${h.date||'—'}</td>
+        <td><span class="env-badge ${shiftBadge==='badge-ops'?'env-dev':shiftBadge==='badge-log'?'env-uat':'env-staging'}">${h.shift||'—'}</span></td>
+        <td style="font-size:12px;color:#a8d8ea;max-width:180px;">${h.currentMembers||'—'}</td>
+        <td style="font-size:12px;color:#a8d8ea;max-width:180px;">${h.nextMembers||'—'}</td>
+        <td style="text-align:center;"><span style="font-size:16px;font-weight:800;color:#00c8ff;">${h.totalTickets||0}</span></td>
+        <td style="text-align:center;"><span style="font-size:14px;font-weight:700;color:#ff4444;">${h.pendingTickets||0}</span></td>
+        <td style="text-align:center;"><span style="font-size:14px;font-weight:700;color:#00ff88;">${h.completedTickets||0}</span></td>
+        <td style="text-align:center;">${h.showstopperCount > 0 ? '<span style="background:rgba(255,60,60,.2);border:1px solid rgba(255,60,60,.4);border-radius:12px;padding:2px 8px;font-size:11px;font-weight:700;color:#ff8888;">🔴 '+h.showstopperCount+'</span>' : '<span style="color:rgba(168,216,234,.3);font-size:12px;">—</span>'}</td>
+        <td style="font-size:11px;color:rgba(168,216,234,.5);">${submittedAt}</td>
+        <td><button onclick="openHoDetail(${list.length-1-i})" style="background:rgba(0,100,180,.2);border:1px solid rgba(0,180,255,.3);border-radius:4px;color:#a8e8ff;cursor:pointer;font-size:11px;font-weight:700;padding:4px 10px;transition:all .2s;" onmouseover="this.style.background='rgba(0,100,180,.4)'" onmouseout="this.style.background='rgba(0,100,180,.2)'">👁 View</button></td>
+      </tr>`;
+    }).join('');
+    document.getElementById('hoTableContainer').innerHTML = `
+      <table>
+        <thead><tr>
+          <th>#</th><th>Date</th><th>Shift</th><th>Current Members</th><th>Next Members</th>
+          <th style="text-align:center;">Total</th><th style="text-align:center;">Pending</th>
+          <th style="text-align:center;">Done</th><th style="text-align:center;">Showstopper</th>
+          <th>Submitted At</th><th>Detail</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+  }
+
+  function filterHandoverTable() {
+    const q = document.getElementById('hoSearchInput').value.toLowerCase();
+    const result = q ? filteredHandovers.filter(h =>
+      (h.date||'').includes(q) ||
+      (h.shift||'').toLowerCase().includes(q) ||
+      (h.currentMembers||'').toLowerCase().includes(q) ||
+      (h.nextMembers||'').toLowerCase().includes(q) ||
+      (h.mailsHandledBy||'').toLowerCase().includes(q) ||
+      (h.jiraHandledBy||'').toLowerCase().includes(q)
+    ) : filteredHandovers;
+    renderHandoverTable(result);
+  }
+
+  function openHoDetail(idx) {
+    const h = [...filteredHandovers].reverse()[idx];
+    if (!h) return;
+    const submittedAt = h.submittedAt ? new Date(h.submittedAt).toLocaleString() : '—';
+    const catRow = (label, color, count, pending, ids) => `
+      <div style="background:rgba(2,15,30,.5);border:1px solid rgba(0,180,255,.1);border-radius:6px;padding:12px 14px;margin-bottom:8px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <span style="font-size:12px;font-weight:700;color:${color};">${label}</span>
+          <div style="display:flex;gap:8px;">
+            <span style="font-size:11px;background:rgba(${color==='#ff8888'?'255,80,80':'200,100,255'},.15);border-radius:10px;padding:2px 8px;color:${color};">${count} total</span>
+            ${pending > 0 ? `<span style="font-size:11px;background:rgba(255,60,60,.15);border-radius:10px;padding:2px 8px;color:#ff8888;">${pending} pending</span>` : ''}
+          </div>
+        </div>
+        ${ids ? `<div style="font-family:'Courier New',monospace;font-size:11px;color:rgba(0,200,255,.7);line-height:1.8;">${ids}</div>` : '<div style="font-size:11px;color:rgba(168,216,234,.3);">No tickets</div>'}
+      </div>`;
+
+    const infoBoxes = [h.infoBox1, h.infoBox2, h.infoBox3, h.infoBox4].filter(b => b && b.trim());
+    const infoHtml = infoBoxes.length ? `
+      <div style="margin-top:16px;">
+        <div style="font-size:11px;font-weight:700;color:rgba(0,200,255,.7);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">📢 Important Information</div>
+        ${infoBoxes.map(b => `<div style="background:rgba(255,160,0,.08);border:1px solid rgba(255,160,0,.2);border-radius:6px;padding:10px 12px;font-size:12px;color:#a8d8ea;line-height:1.6;margin-bottom:8px;white-space:pre-wrap;">${b}</div>`).join('')}
+      </div>` : '';
+
+    document.getElementById('hoDetailContent').innerHTML = `
+      <div style="font-family:'Courier New',monospace;font-size:18px;font-weight:900;color:#e0f4ff;letter-spacing:3px;margin-bottom:4px;">
+        ${h.date} — ${h.shift}
+      </div>
+      <div style="font-size:11px;color:rgba(0,200,255,.5);letter-spacing:1px;margin-bottom:20px;">Submitted: ${submittedAt}</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+        <div style="background:rgba(2,15,30,.5);border:1px solid rgba(0,180,255,.15);border-radius:6px;padding:12px;">
+          <div style="font-size:10px;color:rgba(0,200,255,.5);letter-spacing:1px;margin-bottom:5px;">CURRENT SHIFT</div>
+          <div style="font-size:13px;color:#e0f4ff;line-height:1.7;">${h.currentMembers||'—'}</div>
+        </div>
+        <div style="background:rgba(2,15,30,.5);border:1px solid rgba(0,180,255,.15);border-radius:6px;padding:12px;">
+          <div style="font-size:10px;color:rgba(0,200,255,.5);letter-spacing:1px;margin-bottom:5px;">NEXT SHIFT</div>
+          <div style="font-size:13px;color:#e0f4ff;line-height:1.7;">${h.nextMembers||'—'}</div>
+        </div>
+        <div style="background:rgba(2,15,30,.5);border:1px solid rgba(0,180,255,.15);border-radius:6px;padding:10px 12px;">
+          <div style="font-size:10px;color:rgba(0,200,255,.5);letter-spacing:1px;margin-bottom:4px;">MAILS HANDLED BY</div>
+          <div style="font-size:13px;color:#a8e8ff;">${h.mailsHandledBy||'—'}</div>
+        </div>
+        <div style="background:rgba(2,15,30,.5);border:1px solid rgba(0,180,255,.15);border-radius:6px;padding:10px 12px;">
+          <div style="font-size:10px;color:rgba(0,200,255,.5);letter-spacing:1px;margin-bottom:4px;">JIRA HANDLED BY</div>
+          <div style="font-size:13px;color:#a8e8ff;">${h.jiraHandledBy||'—'}</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;">
+        <div style="background:rgba(0,100,180,.15);border:1px solid rgba(0,180,255,.2);border-radius:6px;padding:12px;text-align:center;">
+          <div style="font-size:28px;font-weight:800;color:#00c8ff;">${h.totalTickets||0}</div>
+          <div style="font-size:10px;color:rgba(0,200,255,.5);letter-spacing:1px;">TOTAL</div>
+        </div>
+        <div style="background:rgba(255,60,60,.1);border:1px solid rgba(255,60,60,.2);border-radius:6px;padding:12px;text-align:center;">
+          <div style="font-size:28px;font-weight:800;color:#ff4444;">${h.pendingTickets||0}</div>
+          <div style="font-size:10px;color:rgba(255,80,80,.6);letter-spacing:1px;">PENDING</div>
+        </div>
+        <div style="background:rgba(0,180,80,.1);border:1px solid rgba(0,180,80,.2);border-radius:6px;padding:12px;text-align:center;">
+          <div style="font-size:28px;font-weight:800;color:#00ff88;">${h.completedTickets||0}</div>
+          <div style="font-size:10px;color:rgba(0,200,100,.5);letter-spacing:1px;">COMPLETED</div>
+        </div>
+      </div>
+
+      <div style="font-size:11px;font-weight:700;color:rgba(0,200,255,.7);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">📋 Ticket Breakdown</div>
+      ${catRow('🔴 Showstopper',      '#ff8888', h.showstopperCount,   h.showstopperPending,   h.showstopperIds)}
+      ${catRow('🟠 High Priority',    '#ffa040', h.highCount,          h.highPending,          h.highIds)}
+      ${catRow('🟣 Customer Escalated','#c080ff', h.escalatedCount,    h.escalatedPending,     h.escalatedIds)}
+      ${catRow('⚫ Long Pending',      '#aaaaaa', h.longpendingCount,  h.longpendingPending,   h.longpendingIds)}
+      ${infoHtml}`;
+
+    const overlay = document.getElementById('hoDetailOverlay');
+    overlay.style.display = 'flex';
+  }
+
+  function closeHoDetail() {
+    document.getElementById('hoDetailOverlay').style.display = 'none';
   }
 
   /* ══════════════════════════════
