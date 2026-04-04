@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>LRP Admin Dashboard</title>
 <style>
+/* ── LIGHT BLUE COLOR SCALE ──
+   Old faint:  #7aaac8  →  replaced with #3a7aaa (much more visible)
+   Old mid:    #5a89b0  →  replaced with #2a6090 (deeper)
+   Placeholders: #a0bcd8 → #4a8ab5
+*/
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#eef5fc;color:#1a3a5c;min-height:100vh;}
 
@@ -50,7 +55,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .login-box{position:relative;z-index:2;background:rgba(255,255,255,.92);border:1px solid rgba(255,255,255,.7);border-radius:16px;padding:36px 32px 32px;width:360px;text-align:center;backdrop-filter:blur(14px);box-shadow:0 12px 40px rgba(10,60,120,.2);}
 .login-logo{width:56px;height:56px;background:linear-gradient(135deg,#1a7db5,#0a3d78);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px;}
 .login-box h2{font-size:18px;font-weight:700;color:#0a3d78;letter-spacing:2px;margin-bottom:4px;}
-.login-box p{font-size:11px;color:#5a89b0;letter-spacing:1px;margin-bottom:22px;}
+.login-box p{font-size:11px;color:#2a6090;letter-spacing:1px;margin-bottom:22px;}
 .login-box input{width:100%;background:#f0f7ff;border:1.5px solid #b8d4ee;border-radius:8px;padding:11px 14px;font-size:13px;color:#1a3a5c;outline:none;margin-bottom:10px;}
 .login-box input:focus{border-color:#1a7db5;background:#fff;}
 .login-box button{width:100%;padding:12px;background:linear-gradient(135deg,#1a7db5,#0a3d78);border:none;border-radius:8px;font-size:13px;font-weight:700;letter-spacing:2px;color:#fff;cursor:pointer;transition:opacity .2s;text-transform:uppercase;}
@@ -63,7 +68,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .brand{display:flex;align-items:center;gap:12px;}
 .brand-icon{width:40px;height:40px;background:linear-gradient(135deg,#1a7db5,#0a3d78);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;}
 .brand h1{font-size:14px;font-weight:800;color:#0a3d78;letter-spacing:3px;}
-.brand-sub{font-size:10px;color:#5a89b0;letter-spacing:2px;margin-top:2px;}
+.brand-sub{font-size:10px;color:#2a6090;letter-spacing:2px;margin-top:2px;}
 .topbar-right{display:flex;align-items:center;gap:10px;}
 .refresh-btn{padding:7px 16px;background:#eef5fc;border:1.5px solid #b8d4ee;border-radius:6px;color:#1a5a90;cursor:pointer;font-size:12px;font-weight:600;letter-spacing:1px;transition:all .2s;}
 .refresh-btn:hover{background:#d0e8f8;border-color:#1a7db5;}
@@ -73,22 +78,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 /* ── MAIN ── */
 .main{padding:24px 28px;}
 .admin-tabs{display:flex;gap:0;margin-bottom:24px;border-bottom:2px solid #c8dff0;flex-wrap:wrap;background:#fff;border-radius:10px 10px 0 0;padding:0 8px;box-shadow:0 1px 4px rgba(26,90,160,.04);}
-.admin-tab{padding:12px 20px;background:none;border:none;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#7aaac8;cursor:pointer;position:relative;transition:color .2s;white-space:nowrap;}
+.admin-tab{padding:12px 20px;background:none;border:none;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#3a7aaa;cursor:pointer;position:relative;transition:color .2s;white-space:nowrap;}
 .admin-tab.active{color:#1a7db5;}
 .admin-tab.active::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:2.5px;background:#1a7db5;border-radius:2px;}
 .tab-panel{display:none;} .tab-panel.active{display:block;}
 .page-title{font-size:22px;font-weight:800;color:#0a3d78;letter-spacing:2px;margin-bottom:4px;}
-.page-sub{font-size:13px;color:#5a89b0;margin-bottom:22px;}
+.page-sub{font-size:13px;color:#2a6090;margin-bottom:22px;}
 .section-title{font-size:12px;font-weight:700;color:#1a7db5;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
-.loading{text-align:center;padding:40px;color:#5a89b0;font-size:14px;letter-spacing:1px;}
+.loading{text-align:center;padding:40px;color:#2a6090;font-size:14px;letter-spacing:1px;}
 .error-msg{text-align:center;padding:40px;color:#c0392b;font-size:14px;}
-.no-data-msg{text-align:center;padding:50px 20px;color:#7aaac8;font-size:14px;}
+.no-data-msg{text-align:center;padding:50px 20px;color:#3a7aaa;font-size:14px;}
 
 /* ── STAT CARDS ── */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
 .stat-card{background:#fff;border:1.5px solid #c8dff0;border-radius:10px;padding:18px;text-align:center;box-shadow:0 2px 8px rgba(26,90,160,.05);}
 .stat-num{font-size:30px;font-weight:800;margin-bottom:4px;}
-.stat-lbl{font-size:11px;color:#7aaac8;letter-spacing:1px;text-transform:uppercase;}
+.stat-lbl{font-size:11px;color:#3a7aaa;letter-spacing:1px;text-transform:uppercase;font-weight:600;}
 .blue{color:#1a7db5;}.green{color:#1a8c5c;}.orange{color:#d07020;}.red{color:#c0392b;}
 
 /* ── TABLES ── */
@@ -96,7 +101,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .search-bar{padding:12px 16px;border-bottom:1px solid #ddeeff;display:flex;align-items:center;gap:10px;background:#f4f9ff;}
 .search-bar input{flex:1;background:#fff;border:1.5px solid #b8d4ee;border-radius:6px;padding:7px 12px;font-size:13px;color:#1a3a5c;outline:none;}
 .search-bar input:focus{border-color:#1a7db5;}
-.search-bar input::placeholder{color:#a0bcd8;}
+.search-bar input::placeholder{color:#4a8ab5;}
 table{width:100%;border-collapse:collapse;}
 thead tr{background:#eef5fc;}
 th{padding:11px 14px;text-align:left;font-size:11px;font-weight:700;color:#1a7db5;text-transform:uppercase;letter-spacing:1px;border-bottom:1.5px solid #c8dff0;}
@@ -142,7 +147,7 @@ tr:last-child td{border-bottom:none;}
 .form-field label{display:block;font-size:10px;font-weight:700;letter-spacing:1.5px;color:#1a7db5;text-transform:uppercase;margin-bottom:4px;}
 .form-field input,.form-field select{width:100%;background:#f4f9ff;border:1.5px solid #b8d4ee;border-radius:6px;padding:8px 12px;font-size:13px;color:#1a3a5c;outline:none;transition:border-color .2s;}
 .form-field input:focus,.form-field select:focus{border-color:#1a7db5;background:#fff;}
-.form-field input::placeholder{color:#a0bcd8;}
+.form-field input::placeholder{color:#4a8ab5;}
 .form-field select option{background:#fff;color:#1a3a5c;}
 .form-actions{display:flex;gap:10px;align-items:center;}
 .btn-green{padding:9px 22px;background:linear-gradient(135deg,#1a8c5c,#138048);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;transition:opacity .2s;}
@@ -170,8 +175,8 @@ tr:last-child td{border-bottom:none;}
 .agent-card-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .agent-stat{text-align:center;background:#f4f9ff;border-radius:6px;padding:8px 6px;}
 .agent-stat-val{font-size:19px;font-weight:800;margin-bottom:2px;}
-.agent-stat-lbl{font-size:9px;color:#7aaac8;letter-spacing:1px;text-transform:uppercase;}
-.agent-card-footer{margin-top:10px;padding-top:8px;border-top:1px solid #ddeeff;font-size:10px;color:#7aaac8;display:flex;justify-content:space-between;}
+.agent-stat-lbl{font-size:9px;color:#3a7aaa;letter-spacing:1px;text-transform:uppercase;font-weight:600;}
+.agent-card-footer{margin-top:10px;padding-top:8px;border-top:1px solid #ddeeff;font-size:10px;color:#3a7aaa;display:flex;justify-content:space-between;font-weight:600;}
 .pw-toggle-sm{background:none;border:none;color:#1a7db5;cursor:pointer;font-size:13px;padding:0 4px;}
 
 /* ── HANDOVER OVERLAY ── */
@@ -188,7 +193,7 @@ tr:last-child td{border-bottom:none;}
 .planner-tbl th.col-name{text-align:left;min-width:160px;position:sticky;left:0;z-index:3;background:#ddeeff;}
 .planner-tbl td{padding:7px 8px;text-align:center;border:1px solid #ddeeff;color:#2a4a6a;vertical-align:middle;}
 .planner-tbl td.col-name{text-align:left;font-size:13px;font-weight:700;color:#0a3d78;position:sticky;left:0;background:#f4f9ff;border-right:1.5px solid #b8d4ee;white-space:nowrap;}
-.planner-tbl td.col-primary{text-align:left;font-size:11px;color:#5a89b0;}
+.planner-tbl td.col-primary{text-align:left;font-size:11px;color:#2a6090;}
 .planner-tbl tr:hover td{background:#eef5fc;}
 .planner-tbl tr:hover td.col-name{background:#d0e8f8;}
 .shift-pill{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.5px;min-width:44px;}
@@ -253,7 +258,6 @@ tr:last-child td{border-bottom:none;}
     <p>LRP SUPPORT PORTAL</p>
     <input type="text" id="adm-user" placeholder="Admin username" autocomplete="off"/>
     <input type="password" id="adm-pass" placeholder="Admin password"/>
-    <!-- ✅ No credentials here — verified server-side via Script Properties -->
     <button id="adm-btn" onclick="adminLogin()">⚓ Sign In</button>
     <div class="login-err" id="adm-err">⚠ Invalid admin credentials.</div>
   </div>
@@ -267,7 +271,7 @@ tr:last-child td{border-bottom:none;}
       <div><h1>LRP SUPPORT PORTAL</h1><div class="brand-sub">ADMIN COMMAND CENTER</div></div>
     </div>
     <div class="topbar-right">
-      <span style="font-size:11px;color:#7aaac8;letter-spacing:1px;" id="lastRefreshed"></span>
+      <span style="font-size:11px;color:#3a7aaa;letter-spacing:1px;font-weight:600;" id="lastRefreshed"></span>
       <button class="refresh-btn" onclick="refreshCurrent()">↻ Refresh</button>
       <button class="logout-btn" onclick="adminLogout()">⎋ Sign Out</button>
     </div>
@@ -300,7 +304,7 @@ tr:last-child td{border-bottom:none;}
           <div class="form-field"><label>Email *</label><input type="email" id="ag-email" placeholder="agent@example.com"/></div>
           <div class="form-field"><label>Team *</label><input type="text" id="ag-team" placeholder="e.g. LRP Support"/></div>
           <div class="form-field"><label>Username *</label><input type="text" id="ag-username" placeholder="e.g. john.smith" autocomplete="off"/></div>
-          <div class="form-field"><label>Password * <span style="font-size:9px;color:#7aaac8;font-weight:400;">(agent must change on first login)</span></label><input type="text" id="ag-password" placeholder="Set a temporary password"/></div>
+          <div class="form-field"><label>Password * <span style="font-size:9px;color:#3a7aaa;font-weight:600;">(agent must change on first login)</span></label><input type="text" id="ag-password" placeholder="Set a temporary password"/></div>
         </div>
         <div class="form-actions">
           <button class="btn-green" id="ag-submit-btn" onclick="submitAgent()">💾 Create Agent Login</button>
@@ -312,7 +316,7 @@ tr:last-child td{border-bottom:none;}
       <div class="table-wrap">
         <div class="search-bar">
           <input type="text" id="searchInput" placeholder="🔍  Search by name, email, or team..." oninput="filterTable()"/>
-          <span style="font-size:11px;color:#7aaac8;" id="filterCount"></span>
+          <span style="font-size:11px;color:#3a7aaa;font-weight:600;" id="filterCount"></span>
         </div>
         <div id="tableContainer"><div class="loading">⏳ LOADING AGENT DATA...</div></div>
       </div>
@@ -345,7 +349,7 @@ tr:last-child td{border-bottom:none;}
           <span class="form-msg" id="cred-msg"></span>
         </div>
       </div>
-      <div class="section-title">🗂 All Client Credentials <span style="font-size:11px;color:#7aaac8;margin-left:8px;" id="cred-count"></span></div>
+      <div class="section-title">🗂 All Client Credentials <span style="font-size:11px;color:#3a7aaa;margin-left:8px;font-weight:600;" id="cred-count"></span></div>
       <div class="table-wrap">
         <div class="search-bar">
           <input type="text" id="credSearchInput" placeholder="🔍  Search by client name..." oninput="filterCredTable()"/>
@@ -360,20 +364,20 @@ tr:last-child td{border-bottom:none;}
       <div class="page-sub">Ticket performance summary per agent from Support Ticket Logger</div>
       <div style="display:flex;gap:12px;margin-bottom:18px;align-items:center;flex-wrap:wrap;">
         <input type="date" id="tracker-date-from" style="background:#f4f9ff;border:1.5px solid #b8d4ee;border-radius:6px;padding:7px 12px;font-size:13px;color:#1a3a5c;outline:none;"/>
-        <span style="color:#7aaac8;font-size:12px;">to</span>
+        <span style="color:#3a7aaa;font-size:12px;font-weight:600;">to</span>
         <input type="date" id="tracker-date-to" style="background:#f4f9ff;border:1.5px solid #b8d4ee;border-radius:6px;padding:7px 12px;font-size:13px;color:#1a3a5c;outline:none;"/>
         <button onclick="applyTrackerFilter()" style="padding:7px 16px;background:#1a7db5;border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:12px;font-weight:700;">🔍 Filter</button>
         <button onclick="loadTracker()" style="padding:7px 16px;background:#eef0f5;border:1.5px solid #c0cce0;border-radius:6px;color:#5a6a80;cursor:pointer;font-size:12px;font-weight:700;">↺ Reset</button>
-        <span style="font-size:11px;color:#7aaac8;" id="tracker-filter-label"></span>
+        <span style="font-size:11px;color:#3a7aaa;font-weight:600;" id="tracker-filter-label"></span>
       </div>
       <div class="section-title">📊 Per-Agent Summary</div>
       <div id="tracker-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:24px;"><div class="loading">⏳ LOADING...</div></div>
-      <div class="section-title">📋 Ticket Breakdown <span style="font-size:11px;color:#7aaac8;margin-left:8px;" id="tracker-breakdown-label"></span></div>
+      <div class="section-title">📋 Ticket Breakdown <span style="font-size:11px;color:#3a7aaa;margin-left:8px;font-weight:600;" id="tracker-breakdown-label"></span></div>
       <div class="table-wrap">
         <div class="search-bar">
           <input type="text" id="trackerSearchInput" placeholder="🔍  Filter by agent, ticket ID, component..." oninput="filterTrackerTable()"/>
         </div>
-        <div id="trackerTableContainer"><div class="loading" style="color:#7aaac8;">Select an agent card to filter, or see all tickets below.</div></div>
+        <div id="trackerTableContainer"><div class="loading" style="color:#3a7aaa;">Select an agent card to filter, or see all tickets below.</div></div>
       </div>
     </div>
 
@@ -400,7 +404,7 @@ tr:last-child td{border-bottom:none;}
           <button onclick="applyHandoverFilter()" style="padding:9px 16px;background:#1a7db5;border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:12px;font-weight:700;">🔍 Filter</button>
           <button onclick="loadHandovers()" style="padding:9px 16px;background:#eef0f5;border:1.5px solid #c0cce0;border-radius:6px;color:#5a6a80;cursor:pointer;font-size:12px;font-weight:700;">↺ Reset</button>
         </div>
-        <span style="font-size:11px;color:#7aaac8;" id="ho-filter-label"></span>
+        <span style="font-size:11px;color:#3a7aaa;font-weight:600;" id="ho-filter-label"></span>
       </div>
       <div class="stats-row">
         <div class="stat-card"><div class="stat-num blue" id="ho-s-total">—</div><div class="stat-lbl">Total Submissions</div></div>
@@ -408,7 +412,7 @@ tr:last-child td{border-bottom:none;}
         <div class="stat-card"><div class="stat-num green" id="ho-s-completed">—</div><div class="stat-lbl">Total Completed</div></div>
         <div class="stat-card"><div class="stat-num" style="color:#c0392b;" id="ho-s-showstopper">—</div><div class="stat-lbl">Showstoppers</div></div>
       </div>
-      <div class="section-title">📋 Handover Submissions <span style="font-size:11px;color:#7aaac8;margin-left:8px;" id="ho-count-label"></span></div>
+      <div class="section-title">📋 Handover Submissions <span style="font-size:11px;color:#3a7aaa;margin-left:8px;font-weight:600;" id="ho-count-label"></span></div>
       <div class="table-wrap">
         <div class="search-bar">
           <input type="text" id="hoSearchInput" placeholder="🔍  Search by date, shift, or member name..." oninput="filterHandoverTable()"/>
@@ -435,15 +439,15 @@ tr:last-child td{border-bottom:none;}
           <button class="planner-filter-btn"        data-shift="W/OFF" onclick="setPlannerFilter(this)">W/OFF</button>
         </div>
         <div style="margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-          <span style="font-size:11px;color:#7aaac8;" id="planner-today-label"></span>
-          <span style="font-size:11px;color:#1a8c5c;" id="planner-saved-label"></span>
+          <span style="font-size:11px;color:#3a7aaa;font-weight:600;" id="planner-today-label"></span>
+          <span style="font-size:11px;color:#1a8c5c;font-weight:600;" id="planner-saved-label"></span>
           <button onclick="publishPlanner()" id="planner-publish-btn"
             style="padding:10px 22px;background:linear-gradient(135deg,#1a8c5c,#138048);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:13px;font-weight:700;letter-spacing:1px;">
             📤 Submit to Agents
           </button>
         </div>
       </div>
-      <div style="font-size:11px;color:#7aaac8;margin-bottom:10px;">
+      <div style="font-size:11px;color:#3a7aaa;font-weight:600;margin-bottom:10px;">
         ✏️ Click any shift cell to edit &nbsp;|&nbsp; Unsaved changes shown until you click <strong style="color:#1a8c5c;">Submit to Agents</strong>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;" id="planner-legend"></div>
@@ -474,39 +478,26 @@ tr:last-child td{border-bottom:none;}
 </div>
 
 <script>
-// ── CONFIG ──────────────────────────────────────────────────────────────────
 const API_URL = 'https://script.google.com/macros/s/AKfycbzAZLBRc6I7iG3xBQ0BH496JqtKyGKaJH5gF9epdnmv5gxZ4bKbglvjnZrObFm5JeUZEw/exec';
-// ✅ NO credentials stored here — authentication is handled server-side via Script Properties
 
-let adminToken = null; // session token returned by the backend after successful login
+let adminToken = null;
 let allUsers=[],allCreds=[],allLogs=[],filteredLogs=[],allHandovers=[],filteredHandovers=[];
 let selectedAgent=null,currentTab='agents';
 
-// ── STARTUP: restore session from sessionStorage ─────────────────────────────
 window.addEventListener('load', () => {
   const savedToken = sessionStorage.getItem('admin_token');
-  if (savedToken) {
-    // Verify the token is still valid on the server
-    verifyToken(savedToken);
-  }
+  if (savedToken) verifyToken(savedToken);
 });
 
 async function verifyToken(token) {
   try {
     const res = await fetch(API_URL + '?action=verifyAdminToken&token=' + encodeURIComponent(token));
     const data = await res.json();
-    if (data.valid) {
-      adminToken = token;
-      showDashboard();
-    } else {
-      sessionStorage.removeItem('admin_token');
-    }
-  } catch {
-    sessionStorage.removeItem('admin_token');
-  }
+    if (data.valid) { adminToken = token; showDashboard(); }
+    else sessionStorage.removeItem('admin_token');
+  } catch { sessionStorage.removeItem('admin_token'); }
 }
 
-// ── LOGIN: credentials sent to backend, never compared in JS ─────────────────
 async function adminLogin() {
   const u = document.getElementById('adm-user').value.trim();
   const p = document.getElementById('adm-pass').value;
@@ -514,14 +505,13 @@ async function adminLogin() {
   const btn = document.getElementById('adm-btn');
   err.style.display = 'none';
   if (!u || !p) { err.textContent = '⚠ Please enter username and password.'; err.style.display = 'block'; return; }
-  btn.disabled = true;
-  btn.textContent = '⏳ Signing in...';
+  btn.disabled = true; btn.textContent = '⏳ Signing in...';
   try {
     const res = await fetch(API_URL + '?' + new URLSearchParams({ action: 'adminLogin', username: u, password: p }));
     const data = await res.json();
     if (data.success && data.token) {
       adminToken = data.token;
-      sessionStorage.setItem('admin_token', adminToken); // store token, NOT credentials
+      sessionStorage.setItem('admin_token', adminToken);
       showDashboard();
     } else if (data.error === 'ADMIN_NOT_CONFIGURED') {
       err.textContent = '⚠ Admin not configured. Set ADMIN_USER and ADMIN_PASS in Script Properties.';
@@ -530,25 +520,20 @@ async function adminLogin() {
       err.textContent = '⚠ Invalid admin credentials.';
       err.style.display = 'block';
     }
-  } catch {
-    err.textContent = '⚠ Connection error. Try again.';
-    err.style.display = 'block';
-  }
-  btn.disabled = false;
-  btn.textContent = '⚓ Sign In';
+  } catch { err.textContent = '⚠ Connection error. Try again.'; err.style.display = 'block'; }
+  btn.disabled = false; btn.textContent = '⚓ Sign In';
 }
 
 function showDashboard() {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('dashboard').style.display = 'block';
-  document.getElementById('adm-pass').value = ''; // clear password field immediately
+  document.getElementById('adm-pass').value = '';
   loadUsers();
 }
 
 function adminLogout() {
   if (!confirm('Are you sure you want to sign out?')) return;
-  adminToken = null;
-  sessionStorage.removeItem('admin_token');
+  adminToken = null; sessionStorage.removeItem('admin_token');
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('dashboard').style.display = 'none';
   document.getElementById('adm-user').value = '';
@@ -560,17 +545,14 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') adminLogin();
 });
 
-// ── UI HELPERS ───────────────────────────────────────────────────────────────
 function switchTab(tab) {
   currentTab = tab;
   ['agents','creds','tracker','handover','planner'].forEach(t => {
     document.getElementById('atab-'+t).classList.toggle('active', t===tab);
     document.getElementById('panel-'+t).classList.toggle('active', t===tab);
   });
-  if (tab==='creds') loadCreds();
-  if (tab==='tracker') loadTracker();
-  if (tab==='handover') loadHandovers();
-  if (tab==='planner') loadPlanner();
+  if (tab==='creds') loadCreds(); if (tab==='tracker') loadTracker();
+  if (tab==='handover') loadHandovers(); if (tab==='planner') loadPlanner();
   document.getElementById('lastRefreshed').textContent = '';
 }
 function refreshCurrent() {
@@ -585,8 +567,7 @@ function showToast(msg, success=true) {
   t.textContent = msg;
   t.style.borderColor = success ? '#6cd4a0' : '#f0aaaa';
   t.style.color = success ? '#1a7050' : '#a02020';
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+  t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000);
 }
 function showFormMsg(id, text, type) {
   const el = document.getElementById(id);
@@ -616,7 +597,7 @@ function envClass(e) {
   if(v==='ecom')return 'env-ecom';if(v==='testing')return 'env-testing';return 'env-default';
 }
 
-// ── AGENTS ───────────────────────────────────────────────────────────────────
+// ── AGENTS ────────────────────────────────────────────────────────────────────
 async function loadUsers() {
   document.getElementById('tableContainer').innerHTML='<div class="loading">⏳ FETCHING AGENT DATA...</div>';
   try {
@@ -636,18 +617,18 @@ function updateStats(users) {
   document.getElementById('s-inactive').textContent=never;
 }
 function renderTable(users) {
-  if (!users.length) { document.getElementById('tableContainer').innerHTML='<div class="loading" style="color:#7aaac8;">No agents found.</div>'; document.getElementById('filterCount').textContent=''; return; }
+  if (!users.length) { document.getElementById('tableContainer').innerHTML='<div class="loading" style="color:#3a7aaa;">No agents found.</div>'; document.getElementById('filterCount').textContent=''; return; }
   document.getElementById('filterCount').textContent=users.length+' agents';
   const rows=users.map((u,i)=>{
     const st=getStatus(u.lastLogin);
     const defBadge=u.isDefault?'<span style="background:#fff8d8;border:1px solid #e8d040;border-radius:3px;padding:2px 7px;font-size:10px;font-weight:700;color:#705010;margin-left:6px;">TEMP PW</span>':'';
-    return '<tr><td style="color:#7aaac8;font-size:12px;">'+(i+1)+'</td>'+
+    return '<tr><td style="color:#3a7aaa;font-size:12px;font-weight:600;">'+(i+1)+'</td>'+
       '<td style="font-weight:700;color:#0a3d78;">👤 '+u.username+defBadge+'</td>'+
       '<td>'+(u.email||'—')+'</td>'+
       '<td><span style="background:#eef5fc;border:1px solid #a8cce8;border-radius:4px;padding:2px 8px;font-size:11px;color:#1a5a90;">⚓ '+(u.team||'—')+'</span></td>'+
       '<td><span class="badge '+st.cls+'">'+st.label+'</span></td>'+
-      '<td style="font-size:11px;color:#7aaac8;">'+formatDate(u.lastLogin)+'</td>'+
-      '<td style="font-size:11px;color:#7aaac8;">'+formatDate(u.registeredAt)+'</td>'+
+      '<td style="font-size:11px;color:#3a7aaa;font-weight:600;">'+formatDate(u.lastLogin)+'</td>'+
+      '<td style="font-size:11px;color:#3a7aaa;font-weight:600;">'+formatDate(u.registeredAt)+'</td>'+
       '<td><button class="edit-btn" onclick="editAgent('+i+')">✏ Edit</button>'+
       '<button class="reset-btn" id="rbtn_'+i+'" onclick="resetPassword(\''+u.username+'\','+i+')">🔑 Reset PW</button>'+
       '<button class="delete-btn" id="dbtn_'+i+'" onclick="deleteUser(\''+u.username+'\','+i+')">🗑 Delete</button></td></tr>';
@@ -718,7 +699,7 @@ async function deleteUser(username,idx) {
   } catch { btn.textContent='🗑 Delete'; btn.disabled=false; showToast('⚠ Connection error.',false); }
 }
 
-// ── CREDENTIALS ──────────────────────────────────────────────────────────────
+// ── CREDENTIALS ───────────────────────────────────────────────────────────────
 async function loadCreds() {
   document.getElementById('credTableContainer').innerHTML='<div class="loading">⏳ LOADING CREDENTIALS...</div>';
   try {
@@ -730,9 +711,9 @@ async function loadCreds() {
 }
 function renderCredTable(list) {
   document.getElementById('cred-count').textContent=list.length+' records';
-  if (!list.length) { document.getElementById('credTableContainer').innerHTML='<div class="loading" style="color:#7aaac8;">No credentials yet.</div>'; return; }
+  if (!list.length) { document.getElementById('credTableContainer').innerHTML='<div class="loading" style="color:#3a7aaa;">No credentials yet.</div>'; return; }
   const rows=list.map((c,i)=>'<tr>'+
-    '<td style="color:#7aaac8;font-size:12px;">'+(i+1)+'</td>'+
+    '<td style="color:#3a7aaa;font-size:12px;font-weight:600;">'+(i+1)+'</td>'+
     '<td style="font-weight:700;color:#0a3d78;">🏢 '+(c.clientName||'—')+'</td>'+
     '<td style="font-size:11px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+(c.appUrl?'<a href="'+c.appUrl+'" target="_blank" style="color:#1a7db5;text-decoration:none;">🔗 '+c.appUrl+'</a>':'—')+'</td>'+
     '<td><span class="env-badge '+envClass(c.environment)+'">'+(c.environment||'—')+'</span></td>'+
@@ -794,12 +775,12 @@ async function deleteCred(credId,i) {
   } catch { btn.textContent='🗑 Delete'; btn.disabled=false; showToast('⚠ Connection error.',false); }
 }
 
-// ── TRACKER ──────────────────────────────────────────────────────────────────
+// ── TRACKER ───────────────────────────────────────────────────────────────────
 async function loadTracker() {
   document.getElementById('tracker-date-from').value=''; document.getElementById('tracker-date-to').value='';
   document.getElementById('tracker-filter-label').textContent=''; selectedAgent=null;
   document.getElementById('tracker-cards').innerHTML='<div class="loading">⏳ LOADING TRACKER DATA...</div>';
-  document.getElementById('trackerTableContainer').innerHTML='<div class="loading" style="color:#7aaac8;">Loading...</div>';
+  document.getElementById('trackerTableContainer').innerHTML='<div class="loading" style="color:#3a7aaa;">Loading...</div>';
   try {
     const res=await fetch(API_URL+'?action=getTicketLogs&t='+Date.now());
     const data=await res.json();
@@ -848,11 +829,11 @@ function renderTrackerTable(logs) {
   const container=document.getElementById('trackerTableContainer');
   if (!logs.length) { container.innerHTML='<div class="no-data-msg">No tickets to display.</div>'; return; }
   const rows=[...logs].reverse().map((l,i)=>'<tr>'+
-    '<td style="color:#7aaac8;font-size:11px;">'+(i+1)+'</td>'+
+    '<td style="color:#3a7aaa;font-size:11px;font-weight:600;">'+(i+1)+'</td>'+
     '<td style="font-size:11px;color:#1a5a90;">👤 '+(l.agentName||'—')+'</td>'+
     '<td style="font-weight:700;color:#0a3d78;">'+(l.ticketId||'—')+'</td>'+
     '<td style="font-weight:700;color:#1a8c5c;">'+(l.duration||'—')+'</td>'+
-    '<td style="font-size:11px;color:#2a4a6a;">'+(l.date||'—')+' <span style="color:#7aaac8;">'+(l.time||'')+'</span></td>'+
+    '<td style="font-size:11px;color:#2a4a6a;">'+(l.date||'—')+' <span style="color:#3a7aaa;font-weight:600;">'+(l.time||'')+'</span></td>'+
     '<td><span style="background:#eef5fc;border:1px solid #a8cce8;border-radius:3px;padding:2px 8px;font-size:10px;color:#1a5a90;">'+(l.shiftId||'—')+'</span></td>'+
     '<td>'+(l.component?'<span style="font-size:10px;font-weight:700;color:#6030a0;background:#f0e8ff;border:1px solid #c0a0e0;border-radius:12px;padding:2px 8px;">'+l.component+'</span>':'—')+'</td>'+
     '<td style="font-size:11px;color:#2a4a6a;max-width:200px;word-break:break-word;">'+(l.description||'—')+'</td>'+
@@ -866,7 +847,7 @@ function filterTrackerTable() {
   renderTrackerTable(q?base.filter(l=>(l.agentName||'').toLowerCase().includes(q)||(l.ticketId||'').toLowerCase().includes(q)||(l.component||'').toLowerCase().includes(q)||(l.shiftId||'').toLowerCase().includes(q)):base);
 }
 
-// ── HANDOVER ─────────────────────────────────────────────────────────────────
+// ── HANDOVER ──────────────────────────────────────────────────────────────────
 async function loadHandovers() {
   document.getElementById('ho-date-from').value=''; document.getElementById('ho-date-to').value='';
   document.getElementById('ho-shift-filter').value=''; document.getElementById('ho-filter-label').textContent='';
@@ -898,7 +879,7 @@ function renderHandoverTable(list) {
     const submittedAt=h.submittedAt?new Date(h.submittedAt).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'—';
     const sc={D1:'env-dev',D2:'env-uat',D3:'env-staging'}[h.shift]||'env-default';
     return '<tr>'+
-      '<td style="color:#7aaac8;font-size:11px;">'+(i+1)+'</td>'+
+      '<td style="color:#3a7aaa;font-size:11px;font-weight:600;">'+(i+1)+'</td>'+
       '<td style="font-weight:700;color:#0a3d78;">'+(h.date||'—')+'</td>'+
       '<td><span class="env-badge '+sc+'">'+(h.shift||'—')+'</span></td>'+
       '<td style="font-size:12px;color:#2a4a6a;max-width:180px;">'+(h.currentMembers||'—')+'</td>'+
@@ -906,8 +887,8 @@ function renderHandoverTable(list) {
       '<td style="text-align:center;"><span style="font-size:16px;font-weight:800;color:#1a7db5;">'+(h.totalTickets||0)+'</span></td>'+
       '<td style="text-align:center;"><span style="font-size:14px;font-weight:700;color:#c0392b;">'+(h.pendingTickets||0)+'</span></td>'+
       '<td style="text-align:center;"><span style="font-size:14px;font-weight:700;color:#1a8c5c;">'+(h.completedTickets||0)+'</span></td>'+
-      '<td style="text-align:center;">'+(h.showstopperCount>0?'<span style="background:#fde8e8;border:1px solid #f0aaaa;border-radius:12px;padding:2px 8px;font-size:11px;font-weight:700;color:#a02020;">🔴 '+h.showstopperCount+'</span>':'<span style="color:#c0d8e8;font-size:12px;">—</span>')+'</td>'+
-      '<td style="font-size:11px;color:#7aaac8;">'+submittedAt+'</td>'+
+      '<td style="text-align:center;">'+(h.showstopperCount>0?'<span style="background:#fde8e8;border:1px solid #f0aaaa;border-radius:12px;padding:2px 8px;font-size:11px;font-weight:700;color:#a02020;">🔴 '+h.showstopperCount+'</span>':'<span style="color:#3a7aaa;font-size:12px;font-weight:600;">—</span>')+'</td>'+
+      '<td style="font-size:11px;color:#3a7aaa;font-weight:600;">'+submittedAt+'</td>'+
       '<td><button class="view-btn" onclick="openHoDetail('+(list.length-1-i)+')">👁 View</button></td></tr>';
   }).join('');
   document.getElementById('hoTableContainer').innerHTML='<table><thead><tr><th>#</th><th>Date</th><th>Shift</th><th>Current Members</th><th>Next Members</th><th style="text-align:center;">Total</th><th style="text-align:center;">Pending</th><th style="text-align:center;">Done</th><th style="text-align:center;">Showstopper</th><th>Submitted At</th><th>Detail</th></tr></thead><tbody>'+rows+'</tbody></table>';
@@ -924,19 +905,19 @@ function openHoDetail(idx) {
     '<span style="font-size:12px;font-weight:700;color:'+color+';">'+label+'</span>'+
     '<div style="display:flex;gap:8px;"><span style="font-size:11px;border-radius:10px;padding:2px 8px;color:'+color+';background:rgba(0,0,0,.05);">'+count+' total</span>'+
     (pending>0?'<span style="font-size:11px;background:#fde8e8;border-radius:10px;padding:2px 8px;color:#a02020;">'+pending+' pending</span>':'')+
-    '</div></div>'+(ids?'<div style="font-size:11px;color:#1a5a90;line-height:1.8;">'+ids+'</div>':'<div style="font-size:11px;color:#a0bcd8;">No tickets</div>')+'</div>';
+    '</div></div>'+(ids?'<div style="font-size:11px;color:#1a5a90;line-height:1.8;">'+ids+'</div>':'<div style="font-size:11px;color:#3a7aaa;">No tickets</div>')+'</div>';
   const infoBoxes=[h.infoBox1,h.infoBox2,h.infoBox3,h.infoBox4].filter(b=>b&&b.trim());
   const infoHtml=infoBoxes.length?'<div style="margin-top:16px;"><div style="font-size:11px;font-weight:700;color:#1a7db5;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">📢 Important Information</div>'+infoBoxes.map(b=>'<div style="background:#fffbec;border:1px solid #f0d840;border-radius:6px;padding:10px 12px;font-size:12px;color:#2a4a6a;line-height:1.6;margin-bottom:8px;white-space:pre-wrap;">'+b+'</div>').join('')+'</div>':'';
   document.getElementById('hoDetailContent').innerHTML=
     '<div style="font-size:20px;font-weight:800;color:#0a3d78;letter-spacing:2px;margin-bottom:4px;">'+h.date+' — '+h.shift+'</div>'+
-    '<div style="font-size:11px;color:#7aaac8;margin-bottom:20px;">Submitted: '+submittedAt+'</div>'+
+    '<div style="font-size:11px;color:#3a7aaa;font-weight:600;margin-bottom:20px;">Submitted: '+submittedAt+'</div>'+
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">'+
     '<div style="background:#f4f9ff;border:1px solid #c8dff0;border-radius:8px;padding:12px;"><div style="font-size:10px;color:#1a7db5;letter-spacing:1px;font-weight:700;margin-bottom:5px;">CURRENT SHIFT</div><div style="font-size:13px;color:#0a3d78;line-height:1.7;">'+(h.currentMembers||'—')+'</div></div>'+
     '<div style="background:#f4f9ff;border:1px solid #c8dff0;border-radius:8px;padding:12px;"><div style="font-size:10px;color:#1a7db5;letter-spacing:1px;font-weight:700;margin-bottom:5px;">NEXT SHIFT</div><div style="font-size:13px;color:#0a3d78;line-height:1.7;">'+(h.nextMembers||'—')+'</div></div>'+
     '<div style="background:#f4f9ff;border:1px solid #c8dff0;border-radius:8px;padding:10px 12px;"><div style="font-size:10px;color:#1a7db5;letter-spacing:1px;font-weight:700;margin-bottom:4px;">MAILS HANDLED BY</div><div style="font-size:13px;color:#1a5a90;">'+(h.mailsHandledBy||'—')+'</div></div>'+
     '<div style="background:#f4f9ff;border:1px solid #c8dff0;border-radius:8px;padding:10px 12px;"><div style="font-size:10px;color:#1a7db5;letter-spacing:1px;font-weight:700;margin-bottom:4px;">JIRA HANDLED BY</div><div style="font-size:13px;color:#1a5a90;">'+(h.jiraHandledBy||'—')+'</div></div></div>'+
     '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;">'+
-    '<div style="background:#eef5fc;border:1.5px solid #c8dff0;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#1a7db5;">'+(h.totalTickets||0)+'</div><div style="font-size:10px;color:#7aaac8;letter-spacing:1px;">TOTAL</div></div>'+
+    '<div style="background:#eef5fc;border:1.5px solid #c8dff0;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#1a7db5;">'+(h.totalTickets||0)+'</div><div style="font-size:10px;color:#3a7aaa;letter-spacing:1px;font-weight:600;">TOTAL</div></div>'+
     '<div style="background:#fde8e8;border:1.5px solid #f0aaaa;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#c0392b;">'+(h.pendingTickets||0)+'</div><div style="font-size:10px;color:#c0392b;letter-spacing:1px;opacity:.7;">PENDING</div></div>'+
     '<div style="background:#d4f5e4;border:1.5px solid #6cd4a0;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#1a7050;">'+(h.completedTickets||0)+'</div><div style="font-size:10px;color:#1a7050;letter-spacing:1px;opacity:.7;">COMPLETED</div></div></div>'+
     '<div style="font-size:11px;font-weight:700;color:#1a7db5;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">📋 Ticket Breakdown</div>'+
@@ -1048,21 +1029,21 @@ function renderPlanner() {
   const lbl=document.getElementById('planner-today-label');
   if(ti>=0)lbl.textContent='Today: '+PLANNER_DATES[ti]+' ('+PLANNER_DAYS[ti]+')';else lbl.textContent='';
   document.getElementById('planner-legend').innerHTML=SHIFT_LEGEND.map(l=>
-    '<span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#5a89b0;">'+
+    '<span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#2a6090;font-weight:600;">'+
     '<span class="shift-pill '+l.cls+'">'+l.key+'</span>'+l.label+'</span>').join('');
   let team=PLANNER_TEAM;
   if(search)team=team.filter(m=>m.name.toLowerCase().includes(search)||m.primary.toLowerCase().includes(search)||m.id.toLowerCase().includes(search));
   if(plannerShiftFilter!=='ALL')team=team.filter(m=>m.shifts.some(s=>s.trim().toUpperCase()===plannerShiftFilter.toUpperCase()));
-  if(!team.length){document.getElementById('planner-table-container').innerHTML='<div style="padding:40px;text-align:center;color:#7aaac8;font-size:14px;">No team members found.</div>';return;}
+  if(!team.length){document.getElementById('planner-table-container').innerHTML='<div style="padding:40px;text-align:center;color:#3a7aaa;font-size:14px;">No team members found.</div>';return;}
   let hdr='<tr><th class="col-name" rowspan="2">Name</th><th style="text-align:left;min-width:120px;background:#eef5fc;border:1px solid #c8dff0;padding:8px 10px;font-size:10px;font-weight:700;color:#1a7db5;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;position:sticky;top:0;z-index:2;" rowspan="2">Primary Role</th>';
   PLANNER_DATES.forEach((d,i)=>{
     const isT=i===ti,isW=PLANNER_DAYS[i]==='Sat'||PLANNER_DAYS[i]==='Sun',p=d.split('-');
-    hdr+='<th style="padding:8px 10px;text-align:center;font-size:10px;font-weight:700;white-space:nowrap;border:1px solid #c8dff0;background:'+(isT?'#d8eeff':'#eef5fc')+';color:'+(isT?'#1a7db5':isW?'#a0bcd8':'#1a7db5')+';">'+p[0]+'/'+p[1]+'</th>';
+    hdr+='<th style="padding:8px 10px;text-align:center;font-size:10px;font-weight:700;white-space:nowrap;border:1px solid #c8dff0;background:'+(isT?'#d8eeff':'#eef5fc')+';color:'+(isT?'#1a7db5':isW?'#3a7aaa':'#1a7db5')+';">'+p[0]+'/'+p[1]+'</th>';
   });
   hdr+='</tr><tr>';
   PLANNER_DAYS.forEach((d,i)=>{
     const isT=i===ti,isW=d==='Sat'||d==='Sun';
-    hdr+='<th style="font-size:9px;padding:8px 10px;text-align:center;font-weight:700;white-space:nowrap;border:1px solid #c8dff0;background:'+(isT?'#d8eeff':'#eef5fc')+';color:'+(isT?'#1a7db5':isW?'#a0bcd8':'#1a7db5')+';">'+d+'</th>';
+    hdr+='<th style="font-size:9px;padding:8px 10px;text-align:center;font-weight:700;white-space:nowrap;border:1px solid #c8dff0;background:'+(isT?'#d8eeff':'#eef5fc')+';color:'+(isT?'#1a7db5':isW?'#3a7aaa':'#1a7db5')+';">'+d+'</th>';
   });
   hdr+='</tr>';
   const bodyRows=team.map(m=>{
@@ -1072,7 +1053,7 @@ function renderPlanner() {
       cells+='<td class="'+(isT?'col-today':'')+'" style="cursor:pointer;" title="Click to edit" onclick="openPlannerEditor('+ri+','+i+',\''+s+'\',this)">'+
         '<span class="shift-pill '+pill+(isT?' sp-TODAY':'')+'"'+(hl?' style="box-shadow:0 0 6px rgba(26,125,181,.3);"':'')+'>'+s+'</span></td>';
     });
-    return '<tr><td class="col-name"><div>'+m.name+'</div><div style="font-size:10px;color:#7aaac8;margin-top:2px;">'+m.id+'</div></td><td class="col-primary">'+m.primary+'</td>'+cells+'</tr>';
+    return '<tr><td class="col-name"><div>'+m.name+'</div><div style="font-size:10px;color:#3a7aaa;margin-top:2px;font-weight:600;">'+m.id+'</div></td><td class="col-primary">'+m.primary+'</td>'+cells+'</tr>';
   }).join('');
   document.getElementById('planner-table-container').innerHTML='<table class="planner-tbl"><thead>'+hdr+'</thead><tbody>'+bodyRows+'</tbody></table>';
 }
