@@ -12,8 +12,38 @@
   /* ── OCEAN LOGIN SCENE ── */
   .scene{position:fixed;inset:0;overflow:hidden;}
   .ocean-bg{position:absolute;inset:0;background:linear-gradient(180deg,#b8e0f7 0%,#7ec8e3 35%,#1a7db5 60%,#1056a0 80%,#0a3d78 100%);}
-  .sky-sun{position:absolute;top:48px;left:50%;transform:translateX(-50%);width:72px;height:72px;background:radial-gradient(circle,#fff9c4 30%,#ffe57f 60%,rgba(255,220,80,0) 100%);border-radius:50%;animation:sunPulse 4s ease-in-out infinite;}
-  @keyframes sunPulse{0%,100%{opacity:.9;transform:translateX(-50%) scale(1);}50%{opacity:1;transform:translateX(-50%) scale(1.06);}}
+  .sky-sun{position:absolute;top:40px;right:120px;width:72px;height:72px;border-radius:50%;cursor:pointer;z-index:10;transition:all .8s cubic-bezier(.4,0,.2,1);}
+  .sky-sun.sun-mode{background:radial-gradient(circle,#fff9c4 30%,#ffe57f 60%,rgba(255,220,80,0) 100%);box-shadow:0 0 40px 10px rgba(255,220,80,.3);animation:sunPulse 4s ease-in-out infinite;}
+  .sky-sun.moon-mode{background:radial-gradient(circle at 35% 35%,#e8e8ff 30%,#b0b8d8 70%,rgba(150,160,200,0) 100%);box-shadow:0 0 30px 8px rgba(150,160,255,.25);animation:moonPulse 4s ease-in-out infinite;}
+  @keyframes sunPulse{0%,100%{opacity:.9;transform:scale(1);}50%{opacity:1;transform:scale(1.06);}}
+  @keyframes moonPulse{0%,100%{opacity:.85;transform:scale(1);}50%{opacity:1;transform:scale(1.04);}}
+
+  /* ── DARK MODE ── */
+  .scene .ocean-bg{transition:background 1s ease;}
+  .scene .ocean-bg.dark{background:linear-gradient(180deg,#080c1a 0%,#0d1530 25%,#0a1a3d 55%,#060e24 80%,#020810 100%);}
+  .stars{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 1.2s ease;}
+  .ocean-bg.dark .stars{opacity:1;}
+  .star{position:absolute;background:#fff;border-radius:50%;animation:twinkle linear infinite;}
+  @keyframes twinkle{0%,100%{opacity:.2;}50%{opacity:1;}}
+  .cloud{transition:opacity .8s;}
+  .ocean-bg.dark .cloud{opacity:.06;}
+  .wave1,.wave2,.wave3{transition:background .8s;}
+  .ocean-bg.dark .wave1{background:rgba(100,140,255,.18);}
+  .ocean-bg.dark .wave2{background:rgba(80,120,220,.12);}
+  .ocean-bg.dark .wave3{background:rgba(60,100,200,.07);}
+
+  /* panel dark mode */
+  .panel{transition:background .8s,border-color .8s,box-shadow .8s;}
+  .panel.dark{background:rgba(10,18,40,.92);border:1px solid rgba(80,120,255,.3);box-shadow:0 12px 40px rgba(0,0,80,.6);}
+  .panel.dark .brand-text h1{color:#a0c4ff;}
+  .panel.dark .brand-text p{color:#5070a0;}
+  .panel.dark .form-group label{color:#6090d0;}
+  .panel.dark .form-group input{background:#0d1a35;border-color:#2a3d6a;color:#c0d8ff;}
+  .panel.dark .form-group input::placeholder{color:#3a5080;}
+  .panel.dark .form-group input:focus{border-color:#4a80e8;background:#101e3a;}
+  .panel.dark .btn-primary{background:linear-gradient(135deg,#2a5aaa,#1a3a7a);}
+  .panel.dark .access-note{color:#4a7ab0;}
+  .panel.dark .divider{background:linear-gradient(90deg,transparent,#2a4a80,transparent);}
   .clouds{position:absolute;top:40px;width:100%;pointer-events:none;}
   .cloud{position:absolute;background:rgba(255,255,255,.82);border-radius:50px;animation:cloudDrift linear infinite;}
   .cloud::before,.cloud::after{content:'';position:absolute;background:rgba(255,255,255,.82);border-radius:50%;}
@@ -77,8 +107,9 @@
 
 <!-- OCEAN SCENE -->
 <div class="scene">
-  <div class="ocean-bg">
-    <div class="sky-sun"></div>
+  <div class="ocean-bg" id="loginOceanBg">
+    <div class="stars" id="loginStars"></div>
+    <div class="sky-sun sun-mode" id="loginSun" onclick="toggleLoginDark()" title="Toggle dark mode"></div>
     <div class="clouds">
       <div class="cloud cloud1"></div>
       <div class="cloud cloud2"></div>
@@ -667,6 +698,38 @@ function showDashboard(username, team) {
         document.getElementById('ap-updated-lbl').textContent = '(offline — showing default)';
       });
   };
+}
+
+// ── SUN / MOON DARK MODE TOGGLE (Login page) ─────────────────────────────────
+let loginDark = false;
+
+(function createLoginStars() {
+  const container = document.getElementById('loginStars');
+  if (!container) return;
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.5 + 0.8;
+    s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*70}%;left:${Math.random()*100}%;animation-duration:${2+Math.random()*3}s;animation-delay:${Math.random()*4}s;`;
+    container.appendChild(s);
+  }
+})();
+
+function toggleLoginDark() {
+  loginDark = !loginDark;
+  const sun   = document.getElementById('loginSun');
+  const bg    = document.getElementById('loginOceanBg');
+  const panel = document.querySelector('.panel');
+  if (!sun || !bg) return;
+  if (loginDark) {
+    sun.classList.replace('sun-mode', 'moon-mode');
+    bg.classList.add('dark');
+    if (panel) panel.classList.add('dark');
+  } else {
+    sun.classList.replace('moon-mode', 'sun-mode');
+    bg.classList.remove('dark');
+    if (panel) panel.classList.remove('dark');
+  }
 }
 
 document.addEventListener('keydown', function (e) { if (e.key === 'Enter') handleLogin(); });
