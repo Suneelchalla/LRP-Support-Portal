@@ -124,22 +124,50 @@
   .ticket-line input, .ticket-line select { flex: 1; min-width: 0; font-size: 12px; padding: 5px 7px; }
   .ticket-line .f-id     { flex: 0.7; }
   .ticket-line .f-client { flex: 0.8; }
-  .ticket-line .f-desc   { flex: 1.6; }
   .ticket-line .f-status { flex: 0.7; }
   .ticket-line .f-assign { flex: 0.8; }
-  .ticket-line .f-action { flex: 1.2; }
   .ticket-line .f-date   { flex: 0.8; }
   .ticket-line .f-age    { flex: 0 0 50px; text-align: center; font-size: 11px; font-weight: 700; border-radius: 5px; padding: 5px 4px; border: none; background: #FAEEDA; color: #854F0B; pointer-events: none; }
   .btn-remove { background: none; border: none; color: #E24B4A; font-size: 17px; cursor: pointer; line-height: 1; padding: 0 2px; flex-shrink: 0; }
   .btn-remove:hover { color: #a32d2d; }
 
-  .f-action-wrap { flex: 1.2; position: relative; min-width: 0; }
-  .f-action-wrap input { width: 100%; }
-  .action-tooltip { display: none; position: absolute; bottom: calc(100% + 6px); left: 0; z-index: 300; background: #1e293b; color: #f1f5f9; font-size: 12px; line-height: 1.5; padding: 8px 12px; border-radius: 8px; white-space: pre-wrap; word-break: break-word; max-width: 320px; min-width: 140px; box-shadow: 0 6px 20px rgba(0,0,0,.22); pointer-events: none; }
-  .action-tooltip::after { content: ''; position: absolute; top: 100%; left: 14px; border: 6px solid transparent; border-top-color: #1e293b; }
-  .action-tooltip .tt-label { font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
-  .f-action-wrap:hover .action-tooltip, .f-action-wrap input:focus + .action-tooltip { display: block; }
-  .f-action-wrap.empty .action-tooltip { display: none !important; }
+  /* ── Shared tooltip field wrap ── */
+  .f-tooltip-wrap { position: relative; min-width: 0; }
+  .f-tooltip-wrap input { width: 100%; }
+  .f-tooltip-wrap.f-desc  { flex: 1.6; }
+  .f-tooltip-wrap.f-action { flex: 1.2; }
+
+  .field-tooltip {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 0;
+    z-index: 300;
+    background: #1e293b;
+    color: #f1f5f9;
+    font-size: 12px;
+    line-height: 1.5;
+    padding: 8px 12px;
+    border-radius: 8px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-width: 320px;
+    min-width: 140px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.22);
+    pointer-events: none;
+  }
+  .field-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 14px;
+    border: 6px solid transparent;
+    border-top-color: #1e293b;
+  }
+  .field-tooltip .tt-label { font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+  .f-tooltip-wrap:hover .field-tooltip,
+  .f-tooltip-wrap input:focus + .field-tooltip { display: block; }
+  .f-tooltip-wrap.empty .field-tooltip { display: none !important; }
 
   /* ── Submit to Admin button ── */
   .btn-submit-admin {
@@ -344,10 +372,8 @@
       </div>
     </div>
 
-    <!-- Submit Handover locally -->
     <button class="btn-submit" onclick="submitHandover()" style="margin-top:14px;">✔ Submit Handover</button>
 
-    <!-- Submit to Admin (only visible after local submit) -->
     <button class="btn-submit-admin" id="btnSubmitAdmin" onclick="submitToAdmin()" style="display:none;">
       📤 Submit to Admin
     </button>
@@ -418,7 +444,6 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ── API ──────────────────────────────────────────────────────
 const API_URL = 'https://script.google.com/macros/s/AKfycbx4Yt6dXiMOpztGU7ujn1TiJZUxfpTDCzSZ07rDd-EewnS8D0h4adFV6VP_3IzomL1H_w/exec';
 
 const CLIENT_MAP = {
@@ -663,6 +688,7 @@ function renderCatBody(cat){
   document.getElementById("count-"+cat).textContent = tickets[cat].length;
   tickets[cat].forEach(t => {
     const age = calcAge(t.createdDate);
+    const hasDesc   = !!(t.desc && t.desc.trim());
     const hasAction = !!(t.nextAction && t.nextAction.trim());
     const row = document.createElement("div");
     row.className = "ticket-row"; row.style.borderLeftColor = color;
@@ -676,19 +702,30 @@ function renderCatBody(cat){
           data-id="${t._id}" data-cat="${cat}" data-auto-filled="${resolveClient(t.ticketId)===t.client&&t.client?'true':'false'}"
           style="${resolveClient(t.ticketId)&&resolveClient(t.ticketId)===t.client?'background:#f0fdf4;color:#065f46;font-weight:600;':''}"
           onchange="updateTicket('${cat}','${t._id}','client',this.value)" />
-        <input class="f-desc" value="${esc(t.desc)}" placeholder="Description" onchange="updateTicket('${cat}','${t._id}','desc',this.value)" />
+
+        <div class="f-tooltip-wrap f-desc${hasDesc?'':' empty'}" data-cat="${cat}" data-tid="${t._id}">
+          <input value="${esc(t.desc)}" placeholder="Description"
+            oninput="syncTooltip(this,'Description')"
+            onchange="updateTicket('${cat}','${t._id}','desc',this.value)" />
+          <div class="field-tooltip">
+            <div class="tt-label">Description</div>${esc(t.desc)||''}
+          </div>
+        </div>
+
         <select class="f-assign" onchange="updateTicket('${cat}','${t._id}','assignedTo',this.value)">
           <option value="">Assigned To</option>
           ${["Exports","Operations","Cost","Imports","PNC","EMS","VSS","NFR","E com","CMR","EDI","Finance","MIS","Feeder Ops","HelpDesk"].map(team=>`<option${t.assignedTo===team?" selected":""}>${team}</option>`).join("")}
         </select>
-        <div class="f-action-wrap${hasAction?'':' empty'}" data-cat="${cat}" data-tid="${t._id}">
-          <input class="f-action" value="${esc(t.nextAction)}" placeholder="Next Action"
-            oninput="syncActionTooltip(this)"
+
+        <div class="f-tooltip-wrap f-action${hasAction?'':' empty'}" data-cat="${cat}" data-tid="${t._id}">
+          <input value="${esc(t.nextAction)}" placeholder="Next Action"
+            oninput="syncTooltip(this,'Next Action')"
             onchange="updateTicket('${cat}','${t._id}','nextAction',this.value)" />
-          <div class="action-tooltip">
+          <div class="field-tooltip">
             <div class="tt-label">Next Action</div>${esc(t.nextAction)||''}
           </div>
         </div>
+
         <input class="f-date" type="date" value="${esc(t.createdDate)}" title="Created Date" onchange="updateTicket('${cat}','${t._id}','createdDate',this.value)" />
         <div class="f-age" title="Ticket Age">${age||"—"}</div>
         <select class="f-status" onchange="updateTicket('${cat}','${t._id}','status',this.value)" style="color:${t.status==='Completed'?'#065f46':'#a32d2d'}">
@@ -701,11 +738,12 @@ function renderCatBody(cat){
   });
 }
 
-function syncActionTooltip(inputEl){
-  const wrap = inputEl.closest(".f-action-wrap");
-  const tt = wrap.querySelector(".action-tooltip");
+/* Shared tooltip sync for both Description and Next Action */
+function syncTooltip(inputEl, label){
+  const wrap = inputEl.closest(".f-tooltip-wrap");
+  const tt = wrap.querySelector(".field-tooltip");
   const val = inputEl.value.trim();
-  if(val){ wrap.classList.remove("empty"); tt.innerHTML = `<div class="tt-label">Next Action</div>${esc(val)}`; }
+  if(val){ wrap.classList.remove("empty"); tt.innerHTML = `<div class="tt-label">${label}</div>${esc(val)}`; }
   else { wrap.classList.add("empty"); }
 }
 
@@ -836,20 +874,16 @@ function submitHandover(){
   saveShift(log); currentLog = log;
   showSummary(log);
   showToast("Shift submitted successfully!");
-  // Show Submit to Admin button
   document.getElementById("btnSubmitAdmin").style.display = "flex";
   document.getElementById("adminSubmitStatus").style.display = "none";
 }
 
-// ── SUBMIT TO ADMIN ───────────────────────────────────────
 async function submitToAdmin() {
   if (!currentLog) { showToast("Please submit the handover first.", "warn"); return; }
   const log = currentLog;
   const all = Object.values(log.tickets).flat();
   const pending   = all.filter(t => t.status === "Pending").length;
   const completed = all.length - pending;
-
-  // Build ticket ID lists per category
   const catSummary = {};
   CATS.forEach(cat => {
     const tix = log.tickets[cat.key] || [];
@@ -857,58 +891,34 @@ async function submitToAdmin() {
     catSummary[cat.key + 'Ids']    = tix.map(t => t.ticketId || '(no id)').join(', ');
     catSummary[cat.key + 'Pending']= tix.filter(t => t.status === 'Pending').length;
   });
-
   const btn = document.getElementById("btnSubmitAdmin");
   const statusEl = document.getElementById("adminSubmitStatus");
   btn.disabled = true;
   statusEl.className = "admin-submit-status loading";
   statusEl.textContent = "⏳ Submitting to admin...";
-
   try {
     const params = new URLSearchParams({
-      action:           'saveHandover',
-      date:             log.date,
-      shift:            log.shift,
-      currentMembers:   log.currentMembers.join(', '),
-      nextMembers:      log.nextMembers.join(', '),
-      mailsHandledBy:   log.mailsHandledBy || '',
-      jiraHandledBy:    log.jiraHandledBy  || '',
-      totalTickets:     all.length,
-      pendingTickets:   pending,
-      completedTickets: completed,
-      // Per-category counts & IDs
-      showstopperCount:   catSummary.showstopperCount,
-      showstopperPending: catSummary.showstopperPending,
-      showstopperIds:     catSummary.showstopperIds,
-      highCount:          catSummary.highCount,
-      highPending:        catSummary.highPending,
-      highIds:            catSummary.highIds,
-      escalatedCount:     catSummary.escalatedCount,
-      escalatedPending:   catSummary.escalatedPending,
-      escalatedIds:       catSummary.escalatedIds,
-      longpendingCount:   catSummary.longpendingCount,
-      longpendingPending: catSummary.longpendingPending,
-      longpendingIds:     catSummary.longpendingIds,
-      // Info boxes
-      infoBox1: (log.infoBoxes && log.infoBoxes[0]) || '',
-      infoBox2: (log.infoBoxes && log.infoBoxes[1]) || '',
-      infoBox3: (log.infoBoxes && log.infoBoxes[2]) || '',
-      infoBox4: (log.infoBoxes && log.infoBoxes[3]) || '',
-      submittedAt: log.submittedAt
+      action:'saveHandover', date:log.date, shift:log.shift,
+      currentMembers:log.currentMembers.join(', '), nextMembers:log.nextMembers.join(', '),
+      mailsHandledBy:log.mailsHandledBy||'', jiraHandledBy:log.jiraHandledBy||'',
+      totalTickets:all.length, pendingTickets:pending, completedTickets:completed,
+      showstopperCount:catSummary.showstopperCount, showstopperPending:catSummary.showstopperPending, showstopperIds:catSummary.showstopperIds,
+      highCount:catSummary.highCount, highPending:catSummary.highPending, highIds:catSummary.highIds,
+      escalatedCount:catSummary.escalatedCount, escalatedPending:catSummary.escalatedPending, escalatedIds:catSummary.escalatedIds,
+      longpendingCount:catSummary.longpendingCount, longpendingPending:catSummary.longpendingPending, longpendingIds:catSummary.longpendingIds,
+      infoBox1:(log.infoBoxes&&log.infoBoxes[0])||'', infoBox2:(log.infoBoxes&&log.infoBoxes[1])||'',
+      infoBox3:(log.infoBoxes&&log.infoBoxes[2])||'', infoBox4:(log.infoBoxes&&log.infoBoxes[3])||'',
+      submittedAt:log.submittedAt
     });
-
     const res  = await fetch(API_URL + '?' + params.toString());
     const data = await res.json();
-
     if (data.success) {
       statusEl.className = "admin-submit-status success";
       statusEl.textContent = "✅ Successfully submitted to admin!";
       btn.textContent = "✅ Submitted to Admin";
       btn.disabled = true;
       showToast("Handover submitted to admin!", "success");
-    } else {
-      throw new Error(data.error || 'Unknown error');
-    }
+    } else { throw new Error(data.error || 'Unknown error'); }
   } catch(err) {
     statusEl.className = "admin-submit-status error";
     statusEl.textContent = "⚠ Failed to submit. Please try again.";
