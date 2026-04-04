@@ -54,14 +54,14 @@
   .panel{background:rgba(255,255,255,.93);border:1px solid rgba(255,255,255,.7);border-radius:16px;padding:32px;backdrop-filter:blur(14px);box-shadow:0 12px 40px rgba(10,60,120,.2);text-align:center;}
   .login-logo{width:52px;height:52px;background:linear-gradient(135deg,#1a7db5,#0a3d78);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 12px;}
   .brand-text h1{font-size:17px;font-weight:800;color:#0a3d78;letter-spacing:2px;margin-bottom:3px;}
-  .brand-text p{font-size:11px;color:#5a89b0;letter-spacing:1px;margin-bottom:22px;}
+  .brand-text p{font-size:11px;color:#2a6090;letter-spacing:1px;margin-bottom:22px;font-weight:600;}
   .divider{height:1px;background:linear-gradient(90deg,transparent,#c8dff0,transparent);margin:0 0 20px;}
   .form-group{margin-bottom:13px;text-align:left;}
   .form-group label{display:block;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#1a7db5;margin-bottom:5px;}
   .input-wrap{position:relative;display:flex;align-items:center;}
   .input-icon{position:absolute;left:11px;font-size:14px;opacity:.6;z-index:1;}
   .form-group input{width:100%;background:#f0f7ff;border:1.5px solid #b8d4ee;border-radius:8px;padding:10px 12px 10px 36px;font-size:13px;color:#1a3a5c;outline:none;transition:border-color .3s;}
-  .form-group input::placeholder{color:#a0bcd8;}
+  .form-group input::placeholder{color:#4a8ab5;}
   .form-group input:focus{border-color:#1a7db5;background:#fff;}
   .btn-primary{width:100%;margin-top:6px;padding:12px;background:linear-gradient(135deg,#1a7db5,#0a3d78);border:none;border-radius:8px;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fff;cursor:pointer;transition:opacity .2s;}
   .btn-primary:hover{opacity:.88;}
@@ -70,12 +70,12 @@
   .msg.error{background:#fde8e8;border-left:3px solid #e04040;color:#a02020;}
   .msg.success{background:#d4f5e4;border-left:3px solid #30b870;color:#1a7050;}
   .msg.loading{background:#e4f0ff;border-left:3px solid #1a7db5;color:#1a5a90;}
-  .access-note{text-align:center;margin-top:16px;font-size:11px;color:#7aaac8;letter-spacing:1px;line-height:1.6;}
+  .access-note{text-align:center;margin-top:16px;font-size:11px;color:#3a7aaa;letter-spacing:1px;line-height:1.6;font-weight:600;}
 </style>
 </head>
 <body>
 
-<!-- OCEAN SCENE (login background) -->
+<!-- OCEAN SCENE -->
 <div class="scene">
   <div class="ocean-bg">
     <div class="sky-sun"></div>
@@ -277,11 +277,11 @@ function showDashboard(username, team) {
     '.db-brand h1{font-size:14px;font-weight:800;color:#0a3d78;letter-spacing:3px;white-space:nowrap;}' +
     '.db-user-info{display:flex;flex-direction:column;align-items:center;}' +
     '.db-user-info .name{font-size:13px;font-weight:800;color:#0a3d78;letter-spacing:2px;}' +
-    '.db-user-info .team-lbl{font-size:11px;color:#5a89b0;}' +
+    '.db-user-info .team-lbl{font-size:11px;color:#2a6090;font-weight:600;}' +
     '.db-logout{font-size:12px;font-weight:700;letter-spacing:1.5px;padding:7px 16px;background:#fff0f0;border:1.5px solid #f0b8b8;border-radius:6px;color:#c0392b;cursor:pointer;transition:all .2s;text-transform:uppercase;}' +
     '.db-logout:hover{background:#fad4d4;}' +
 
-    /* cards body — vertically centers the card row */
+    /* cards body */
     '.db-body{position:relative;z-index:5;flex:1;display:flex;align-items:center;justify-content:center;padding:20px 28px;min-height:0;overflow:hidden;}' +
     '.db-cards-row{display:flex;align-items:stretch;justify-content:center;gap:0;width:100%;max-width:1200px;}' +
 
@@ -292,7 +292,7 @@ function showDashboard(username, team) {
     '.db-card:hover{transform:translateY(-6px);border-color:#1a7db5;box-shadow:0 14px 36px rgba(26,125,181,.18);}' +
     '.db-card-icon{font-size:42px;margin-bottom:14px;display:block;line-height:1;}' +
     '.db-card-title{font-size:14px;font-weight:800;color:#0a3d78;letter-spacing:1.5px;margin-bottom:10px;line-height:1.5;display:flex;align-items:flex-start;}' +
-    '.db-card-desc{font-size:12px;color:#5a89b0;line-height:1.7;margin-bottom:18px;flex:1;}' +
+    '.db-card-desc{font-size:12px;color:#2a6090;line-height:1.7;margin-bottom:18px;flex:1;font-weight:500;}' +
     '.db-card-btn{display:block;width:100%;padding:11px;text-align:center;background:linear-gradient(135deg,#1a7db5,#0a3d78);border:none;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:2px;color:#fff;transition:opacity .2s;margin-top:auto;}' +
     '.db-card:hover .db-card-btn{opacity:.88;}' +
     '.db-divider{width:1px;align-self:stretch;background:linear-gradient(180deg,transparent,#c8dff0,transparent);flex-shrink:0;margin:12px 10px;}' +
@@ -336,9 +336,9 @@ function showDashboard(username, team) {
     '.cr-search-wrap{position:relative;flex:1;}' +
     '.cr-search{width:100%;background:#fff;border:1.5px solid #b8d4ee;border-radius:6px;padding:10px 16px 10px 40px;font-size:13px;color:#1a3a5c;outline:none;}' +
     '.cr-search:focus{border-color:#1a7db5;}' +
-    '.cr-search::placeholder{color:#a0bcd8;}' +
+    '.cr-search::placeholder{color:#4a8ab5;}' +
     '.cr-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:15px;pointer-events:none;}' +
-    '.cr-count{font-size:11px;color:#7aaac8;letter-spacing:1px;white-space:nowrap;}' +
+    '.cr-count{font-size:11px;color:#3a7aaa;letter-spacing:1px;white-space:nowrap;font-weight:600;}' +
     '.cr-table-wrap{background:#fff;border:1.5px solid #c8dff0;border-radius:10px;overflow-x:auto;box-shadow:0 2px 8px rgba(26,90,160,.05);}' +
     '.cr-table{width:100%;border-collapse:collapse;}' +
     '.cr-table thead tr{background:#eef5fc;}' +
@@ -366,8 +366,8 @@ function showDashboard(username, team) {
     '.cr-copy{background:#d4f5e4;border:1.5px solid #6cd4a0;border-radius:4px;padding:3px 8px;font-size:10px;font-weight:700;color:#1a7050;cursor:pointer;white-space:nowrap;}' +
     '.cr-copy:hover{background:#b0ecd4;}' +
     '.cr-copy.copied{background:#b0ecd4;border-color:#30b870;color:#1a7050;}' +
-    '.cr-loading{text-align:center;padding:60px 20px;color:#7aaac8;font-size:14px;letter-spacing:1px;}' +
-    '.cr-empty{text-align:center;padding:60px 20px;color:#a0bcd8;font-size:14px;}' +
+    '.cr-loading{text-align:center;padding:60px 20px;color:#3a7aaa;font-size:14px;letter-spacing:1px;font-weight:600;}' +
+    '.cr-empty{text-align:center;padding:60px 20px;color:#3a7aaa;font-size:14px;font-weight:600;}' +
     '</style>' +
 
     '<div class="db-bg"></div>' +
@@ -421,7 +421,7 @@ function showDashboard(username, team) {
       '<div class="db-card-btn">OPEN MODULE &rarr;</div>' +
     '</div>' +
 
-    '</div></div>' + /* close db-cards-row and db-body */
+    '</div></div>' +
 
     /* ── QUOTE BAR ── */
     '<div class="quote-bar">' +
@@ -451,7 +451,7 @@ function showDashboard(username, team) {
       '<div style="display:flex;align-items:center;gap:12px;">' +
       '<div style="width:34px;height:34px;background:linear-gradient(135deg,#1a7db5,#0a3d78);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;">&#x1F6A2;</div>' +
       '<div><div style="font-size:13px;font-weight:800;color:#0a3d78;letter-spacing:2px;">LRP SUPPORT PORTAL</div>' +
-      '<div style="font-size:10px;color:#5a89b0;letter-spacing:1px;">' + label + '</div></div></div><div></div>' +
+      '<div style="font-size:10px;color:#2a6090;letter-spacing:1px;font-weight:600;">' + label + '</div></div></div><div></div>' +
       '<div style="display:flex;gap:10px;">' +
       '<button id="ov-back" style="font-size:12px;font-weight:700;letter-spacing:1.5px;padding:7px 16px;background:#eef5fc;border:1.5px solid #b8d4ee;border-radius:6px;color:#1a5a90;cursor:pointer;text-transform:uppercase;">\u2190 Back</button>' +
       '<button id="ov-so" style="font-size:12px;font-weight:700;letter-spacing:1.5px;padding:7px 16px;background:#fff0f0;border:1.5px solid #f0b8b8;border-radius:6px;color:#c0392b;cursor:pointer;text-transform:uppercase;">\u238B Sign Out</button></div>';
@@ -460,7 +460,7 @@ function showDashboard(username, team) {
     return bar;
   }
 
-  /* ── openTool (Handover / Ticket Logger) ── */
+  /* ── openTool ── */
   window.openTool = function (tool) {
     const files = { handover: 'Shift_Handover_V5.html', playbook: 'Support Ticket Logger_V7.html' };
     const lbl = tool === 'handover' ? '&#x1F4CB; Shift Handover Logger' : '&#x23F1;&#xFE0F; Support Ticket Time Logger';
@@ -598,20 +598,20 @@ function showDashboard(username, team) {
       '<div style="position:relative;"><span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:14px;">🔍</span>' +
       '<input id="ap-search" type="text" placeholder="Search name..." style="background:#fff;border:1.5px solid #b8d4ee;border-radius:6px;padding:8px 12px 8px 34px;font-size:13px;color:#1a3a5c;outline:none;width:220px;"/></div>' +
       '<span id="ap-today-lbl" style="font-size:12px;color:#1a7db5;font-weight:700;white-space:nowrap;"></span>' +
-      '<span id="ap-updated-lbl" style="font-size:11px;color:#1a8c5c;white-space:nowrap;"></span></div>' +
+      '<span id="ap-updated-lbl" style="font-size:11px;color:#1a8c5c;font-weight:600;white-space:nowrap;"></span></div>' +
       '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;" id="ap-legend"></div>' +
       '<div style="overflow-x:auto;border:1.5px solid #c8dff0;border-radius:10px;background:#fff;box-shadow:0 2px 8px rgba(26,90,160,.05);">' +
-      '<div id="ap-table" style="min-width:1100px;"><div style="padding:40px;text-align:center;color:#7aaac8;font-size:14px;">⏳ Loading shift planner...</div></div>' +
+      '<div id="ap-table" style="min-width:1100px;"><div style="padding:40px;text-align:center;color:#3a7aaa;font-size:14px;font-weight:600;">⏳ Loading shift planner...</div></div>' +
       '</div>';
     ov.appendChild(body);
     document.body.appendChild(ov);
 
     document.getElementById('ap-legend').innerHTML = LGND.map(l =>
-      '<span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#5a89b0;">' +
+      '<span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#2a6090;font-weight:600;">' +
       '<span class="sp-pill ' + l.cls + '">' + l.key + '</span>' + l.label + '</span>').join('');
 
     function buildTable(team) {
-      if (!team || !team.length) { document.getElementById('ap-table').innerHTML = '<div style="padding:40px;text-align:center;color:#a0bcd8;">No data available.</div>'; return; }
+      if (!team || !team.length) { document.getElementById('ap-table').innerHTML = '<div style="padding:40px;text-align:center;color:#3a7aaa;">No data available.</div>'; return; }
       const ti = getTi();
       if (ti >= 0) document.getElementById('ap-today-lbl').textContent = 'Today: ' + PDATES[ti] + ' (' + PDAYS[ti] + ')';
       const sq = (document.getElementById('ap-search').value || '').toLowerCase();
@@ -619,12 +619,12 @@ function showDashboard(username, team) {
       let hdr = '<tr><th class="ap-col-name" rowspan="2">Name</th>';
       PDATES.forEach(function (d, i) {
         const isT = i === ti, isW = PDAYS[i] === 'Sat' || PDAYS[i] === 'Sun', p = d.split('-');
-        hdr += '<th style="padding:7px 9px;text-align:center;font-size:10px;font-weight:700;white-space:nowrap;border:1px solid #c8dff0;background:' + (isT ? '#d8eeff' : '#eef5fc') + ';color:' + (isT ? '#1a7db5' : isW ? '#a0bcd8' : '#1a7db5') + ';">' + p[0] + '/' + p[1] + '</th>';
+        hdr += '<th style="padding:7px 9px;text-align:center;font-size:10px;font-weight:700;white-space:nowrap;border:1px solid #c8dff0;background:' + (isT ? '#d8eeff' : '#eef5fc') + ';color:' + (isT ? '#1a7db5' : isW ? '#3a7aaa' : '#1a7db5') + ';">' + p[0] + '/' + p[1] + '</th>';
       });
       hdr += '</tr><tr>';
       PDAYS.forEach(function (d, i) {
         const isT = i === ti, isW = d === 'Sat' || d === 'Sun';
-        hdr += '<th style="font-size:9px;padding:7px 9px;text-align:center;font-weight:700;white-space:nowrap;border:1px solid #c8dff0;background:' + (isT ? '#d8eeff' : '#eef5fc') + ';color:' + (isT ? '#1a7db5' : isW ? '#a0bcd8' : '#1a7db5') + ';">' + d + '</th>';
+        hdr += '<th style="font-size:9px;padding:7px 9px;text-align:center;font-weight:700;white-space:nowrap;border:1px solid #c8dff0;background:' + (isT ? '#d8eeff' : '#eef5fc') + ';color:' + (isT ? '#1a7db5' : isW ? '#3a7aaa' : '#1a7db5') + ';">' + d + '</th>';
       });
       hdr += '</tr>';
       const rows = filtered.map(function (m) {
@@ -636,7 +636,7 @@ function showDashboard(username, team) {
         });
         return '<tr>' +
           '<td class="ap-col-name"><div>' + m.name + '</div>' +
-          '<div style="font-size:10px;color:#7aaac8;margin-top:1px;">' + m.id + '</div></td>' +
+          '<div style="font-size:10px;color:#3a7aaa;margin-top:1px;font-weight:600;">' + m.id + '</div></td>' +
           cells + '</tr>';
       }).join('');
       document.getElementById('ap-table').innerHTML =
