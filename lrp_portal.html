@@ -286,20 +286,21 @@ function showDashboard(username, team) {
     '.db-logout:hover{background:#fad4d4;}' +
 
     /* cards area */
-    '.db-body{position:relative;z-index:5;flex:1;display:flex;align-items:center;justify-content:center;gap:0;padding:28px 32px 0;min-height:0;}' +
+    '.db-body{position:relative;z-index:5;flex:1;display:flex;align-items:center;justify-content:center;padding:20px 28px;min-height:0;overflow:hidden;}' +
+    '.db-cards-row{display:flex;align-items:stretch;justify-content:center;gap:0;width:100%;max-width:1200px;}' +
 
     /* card */
-    '.db-card{flex:1;max-width:300px;min-width:0;background:#fff;border:1.5px solid #c8dff0;border-radius:14px;padding:32px 26px 26px;cursor:pointer;' +
+    '.db-card{flex:1;max-width:280px;min-width:0;background:#fff;border:1.5px solid #c8dff0;border-radius:14px;padding:28px 22px 22px;cursor:pointer;' +
     'transition:transform .3s,border-color .3s,box-shadow .3s;' +
-    'box-shadow:0 4px 20px rgba(26,90,160,.10);position:relative;display:flex;flex-direction:column;align-self:stretch;}' +
-    '.db-card:hover{transform:translateY(-8px);border-color:#1a7db5;box-shadow:0 16px 40px rgba(26,125,181,.18);}' +
-    '.db-card-icon{font-size:46px;margin-bottom:16px;display:block;line-height:1;}' +
-    '.db-card-title{font-size:15px;font-weight:800;color:#0a3d78;letter-spacing:1.5px;margin-bottom:12px;line-height:1.5;min-height:40px;display:flex;align-items:flex-start;}' +
-    '.db-card-desc{font-size:13px;color:#5a89b0;line-height:1.7;margin-bottom:20px;flex:1;}' +
-    '.db-card-btn{display:block;width:100%;padding:12px;text-align:center;background:linear-gradient(135deg,#1a7db5,#0a3d78);border:none;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:2px;color:#fff;transition:opacity .2s;margin-top:auto;}' +
+    'box-shadow:0 4px 20px rgba(26,90,160,.10);position:relative;display:flex;flex-direction:column;}' +
+    '.db-card:hover{transform:translateY(-6px);border-color:#1a7db5;box-shadow:0 14px 36px rgba(26,125,181,.18);}' +
+    '.db-card-icon{font-size:42px;margin-bottom:14px;display:block;line-height:1;}' +
+    '.db-card-title{font-size:14px;font-weight:800;color:#0a3d78;letter-spacing:1.5px;margin-bottom:10px;line-height:1.5;display:flex;align-items:flex-start;}' +
+    '.db-card-desc{font-size:12px;color:#5a89b0;line-height:1.7;margin-bottom:18px;flex:1;}' +
+    '.db-card-btn{display:block;width:100%;padding:11px;text-align:center;background:linear-gradient(135deg,#1a7db5,#0a3d78);border:none;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:2px;color:#fff;transition:opacity .2s;margin-top:auto;}' +
     '.db-card:hover .db-card-btn{opacity:.88;}' +
-    '.db-divider{width:1px;min-height:200px;align-self:center;background:linear-gradient(180deg,transparent,#c8dff0,transparent);flex-shrink:0;margin:0 10px;}' +
-    '.db-card-badge{position:absolute;top:14px;right:14px;font-size:9px;font-weight:700;letter-spacing:1px;padding:3px 9px;border-radius:10px;}' +
+    '.db-divider{width:1px;align-self:stretch;background:linear-gradient(180deg,transparent,#c8dff0,transparent);flex-shrink:0;margin:12px 10px;}' +
+    '.db-card-badge{position:absolute;top:12px;right:12px;font-size:9px;font-weight:700;letter-spacing:1px;padding:3px 9px;border-radius:10px;}' +
     '.badge-ops{background:#d4f5e4;border:1px solid #6cd4a0;color:#1a7050;}' +
     '.badge-log{background:#fff3d8;border:1px solid #f5c840;color:#8a6010;}' +
     '.badge-cred{background:#f0e8ff;border:1px solid #c0a0e0;color:#6030a0;}' +
@@ -345,7 +346,7 @@ function showDashboard(username, team) {
     '<button class="db-logout" onclick="signOut()">&#x238B; SIGN OUT</button>' +
     '</div>' +
 
-    '<div class="db-body">' +
+    '<div class="db-body"><div class="db-cards-row">' +
     '<div class="db-card" onclick="openTool(\'handover\')">' +
       '<span class="db-card-badge badge-ops">OPERATIONS</span>' +
       '<span class="db-card-icon">&#x1F4CB;</span>' +
@@ -377,9 +378,7 @@ function showDashboard(username, team) {
       '<div class="db-card-desc">View your team shift schedule. Today\'s date is highlighted automatically.</div>' +
       '<div class="db-card-btn">OPEN MODULE &rarr;</div>' +
     '</div>' +
-    '</div>' +
-
-    '<div class="quote-bar">' +
+    '</div></div>' + +
     '<span class="quote-label">Quote of the Day</span>' +
     '<span class="quote-mark">&#x275D;</span>' +
     '<span class="quote-text" id="db-quote-text"></span>' +
