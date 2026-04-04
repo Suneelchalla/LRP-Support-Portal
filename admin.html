@@ -7,8 +7,6 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#020f1e;color:#e0f4ff;min-height:100vh;}
-
-/* TOPBAR */
 .topbar{background:rgba(4,28,53,.95);border-bottom:1px solid rgba(0,180,255,.2);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px);}
 .brand{display:flex;align-items:center;gap:12px;}
 .brand-icon{width:40px;height:40px;background:linear-gradient(135deg,#c0441a,#e8610a);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:20px;}
@@ -19,8 +17,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .refresh-btn:hover{background:rgba(0,180,255,.3);color:#fff;}
 .logout-btn{padding:8px 16px;background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);border-radius:4px;color:#ff9977;cursor:pointer;font-size:12px;font-weight:600;letter-spacing:1px;transition:all .3s;}
 .logout-btn:hover{background:rgba(180,40,20,.55);color:#fff;}
-
-/* LOGIN */
 .login-screen{position:fixed;inset:0;background:#020f1e;display:flex;align-items:center;justify-content:center;z-index:999;}
 .login-box{background:rgba(4,28,53,.95);border:1px solid rgba(0,180,255,.3);border-radius:8px;padding:40px;width:340px;text-align:center;}
 .login-box h2{font-family:'Courier New',monospace;font-size:16px;letter-spacing:3px;color:#e0f4ff;margin-bottom:6px;}
@@ -30,34 +26,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .login-box button{width:100%;padding:12px;background:linear-gradient(135deg,#0a4a7a,#0d6fa8);border:1px solid rgba(0,200,255,.4);border-radius:4px;font-size:13px;font-weight:700;letter-spacing:2px;color:#a8f0ff;cursor:pointer;transition:all .3s;text-transform:uppercase;}
 .login-box button:hover{background:linear-gradient(135deg,#0d6fa8,#14a0d0);color:#fff;}
 .login-err{color:#ff9999;font-size:12px;margin-top:8px;display:none;}
-
-/* MAIN */
 .main{padding:24px 28px;}
-
-/* TABS */
 .admin-tabs{display:flex;gap:0;margin-bottom:28px;border-bottom:1px solid rgba(0,180,255,.2);flex-wrap:wrap;}
 .admin-tab{padding:12px 22px;background:none;border:none;font-family:'Courier New',monospace;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(0,180,255,.45);cursor:pointer;position:relative;transition:color .3s;white-space:nowrap;}
 .admin-tab.active{color:#00c8ff;}
 .admin-tab.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#00c8ff,transparent);}
 .tab-panel{display:none;}
 .tab-panel.active{display:block;}
-
-/* COMMON */
 .page-title{font-family:'Courier New',monospace;font-size:22px;font-weight:900;color:#e0f4ff;letter-spacing:4px;margin-bottom:4px;}
 .page-sub{font-size:13px;color:rgba(0,200,255,.6);letter-spacing:1px;margin-bottom:24px;}
 .section-title{font-size:13px;font-weight:700;color:rgba(0,200,255,.8);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
 .loading{text-align:center;padding:40px;color:rgba(0,200,255,.6);font-size:14px;letter-spacing:2px;}
 .error-msg{text-align:center;padding:40px;color:#ff9999;font-size:14px;}
 .no-data-msg{text-align:center;padding:50px 20px;color:rgba(0,200,255,.4);font-size:14px;letter-spacing:2px;}
-
-/* STATS */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
 .stat-card{background:rgba(4,28,53,.88);border:1px solid rgba(0,180,255,.2);border-radius:8px;padding:20px;text-align:center;}
 .stat-num{font-size:32px;font-weight:800;margin-bottom:4px;}
 .stat-lbl{font-size:11px;color:rgba(168,216,234,.6);letter-spacing:1px;text-transform:uppercase;}
 .blue{color:#00c8ff;}.green{color:#00ff88;}.orange{color:#ffa040;}.red{color:#ff4444;}
-
-/* TABLE */
 .table-wrap{background:rgba(4,28,53,.88);border:1px solid rgba(0,180,255,.2);border-radius:8px;overflow:hidden;margin-bottom:28px;}
 .search-bar{padding:14px 18px;border-bottom:1px solid rgba(0,180,255,.15);display:flex;align-items:center;gap:12px;}
 .search-bar input{flex:1;background:rgba(2,15,30,.7);border:1px solid rgba(0,120,180,.35);border-radius:4px;padding:8px 12px;font-size:13px;color:#a8e8ff;outline:none;font-family:'Courier New',monospace;}
@@ -69,8 +55,6 @@ th{padding:12px 16px;text-align:left;font-size:11px;font-weight:700;color:rgba(0
 td{padding:12px 16px;font-size:13px;border-bottom:1px solid rgba(0,180,255,.08);color:#a8d8ea;vertical-align:middle;}
 tr:hover td{background:rgba(0,60,100,.3);}
 tr:last-child td{border-bottom:none;}
-
-/* BADGES */
 .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;}
 .badge-online{background:rgba(0,255,136,.15);border:1px solid rgba(0,255,136,.4);color:#00ff88;}
 .badge-recent{background:rgba(255,160,64,.15);border:1px solid rgba(255,160,64,.4);color:#ffa040;}
@@ -85,8 +69,6 @@ tr:last-child td{border-bottom:none;}
 .env-ecom{background:rgba(180,80,180,.15);border:1px solid rgba(180,80,180,.4);color:#e080e0;}
 .env-testing{background:rgba(180,180,0,.15);border:1px solid rgba(180,180,0,.4);color:#d4d400;}
 .env-default{background:rgba(100,100,100,.15);border:1px solid rgba(100,100,100,.35);color:#aaa;}
-
-/* BUTTONS */
 .reset-btn{background:rgba(255,160,0,.15);border:1px solid rgba(255,160,0,.4);border-radius:4px;color:#ffa040;cursor:pointer;font-size:11px;font-weight:700;padding:4px 10px;transition:all .3s;white-space:nowrap;}
 .reset-btn:hover{background:rgba(255,160,0,.35);color:#fff;}
 .reset-btn.done{background:rgba(0,255,136,.15);border-color:rgba(0,255,136,.4);color:#00ff88;}
@@ -96,8 +78,6 @@ tr:last-child td{border-bottom:none;}
 .edit-btn:hover{background:rgba(0,120,220,.35);color:#fff;}
 .view-btn{background:rgba(0,100,180,.2);border:1px solid rgba(0,180,255,.3);border-radius:4px;color:#a8e8ff;cursor:pointer;font-size:11px;font-weight:700;padding:4px 10px;transition:all .2s;white-space:nowrap;}
 .view-btn:hover{background:rgba(0,100,180,.4);color:#fff;}
-
-/* FORM PANELS */
 .form-panel{background:rgba(4,28,53,.88);border-radius:8px;padding:24px;margin-bottom:28px;}
 .form-panel.green-border{border:1px solid rgba(0,180,80,.3);}
 .form-panel.purple-border{border:1px solid rgba(120,60,200,.3);}
@@ -123,12 +103,8 @@ tr:last-child td{border-bottom:none;}
 .form-msg.error{background:rgba(180,40,40,.2);border-left:2px solid #ff4444;color:#ff9999;}
 .form-msg.success{background:rgba(20,160,80,.15);border-left:2px solid #00ff88;color:#88ffcc;}
 .form-msg.loading{background:rgba(0,100,180,.15);border-left:2px solid #00c8ff;color:#a8e8ff;}
-
-/* TOAST */
 .toast{position:fixed;bottom:24px;right:24px;background:#1a3a5c;border:1px solid rgba(0,180,255,.4);border-radius:8px;padding:12px 20px;font-size:13px;color:#a8e8ff;box-shadow:0 8px 24px rgba(0,0,0,.4);opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;}
 .toast.show{opacity:1;}
-
-/* AGENT TRACKER */
 .agent-card{background:rgba(4,28,53,.88);border:1px solid rgba(0,180,255,.2);border-radius:8px;padding:20px;cursor:pointer;transition:all .3s;}
 .agent-card:hover,.agent-card.selected{border-color:rgba(0,200,255,.6);box-shadow:0 0 20px rgba(0,180,255,.1);transform:translateY(-2px);}
 .agent-card.selected{border-color:#00c8ff;background:rgba(0,60,100,.3);}
@@ -139,15 +115,36 @@ tr:last-child td{border-bottom:none;}
 .agent-stat-lbl{font-size:9px;color:rgba(168,216,234,.5);letter-spacing:1px;text-transform:uppercase;}
 .agent-card-footer{margin-top:12px;padding-top:10px;border-top:1px solid rgba(0,180,255,.1);font-size:10px;color:rgba(0,200,255,.5);letter-spacing:1px;display:flex;justify-content:space-between;}
 .pw-toggle-sm{background:none;border:none;color:rgba(0,180,255,.6);cursor:pointer;font-size:13px;padding:0 4px;}
-
-/* HANDOVER DETAIL MODAL */
 .ho-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;align-items:center;justify-content:center;padding:20px;}
 .ho-overlay.open{display:flex;}
 .ho-box{background:#041c35;border:1px solid rgba(0,180,255,.3);border-radius:10px;width:100%;max-width:720px;max-height:88vh;overflow-y:auto;padding:28px 32px;position:relative;}
+/* SHIFT PLANNER */
+.planner-filter-btn{padding:5px 14px;font-size:11px;font-weight:700;letter-spacing:1px;background:rgba(0,100,180,.15);border:1px solid rgba(0,180,255,.3);border-radius:4px;color:#a8e8ff;cursor:pointer;transition:all .2s;}
+.planner-filter-btn:hover{background:rgba(0,100,180,.35);}
+.planner-filter-btn.active{background:rgba(0,180,255,.3);border-color:#00c8ff;color:#fff;}
+.planner-tbl{width:100%;border-collapse:collapse;font-size:12px;}
+.planner-tbl th{padding:8px 10px;text-align:center;font-size:10px;font-weight:700;color:rgba(0,200,255,.8);text-transform:uppercase;letter-spacing:1px;background:rgba(0,40,80,.6);border:1px solid rgba(0,180,255,.15);white-space:nowrap;position:sticky;top:0;z-index:2;}
+.planner-tbl th.col-name{text-align:left;min-width:160px;position:sticky;left:0;z-index:3;background:rgba(0,40,80,.8);}
+.planner-tbl td{padding:7px 8px;text-align:center;border:1px solid rgba(0,180,255,.08);color:#a8d8ea;vertical-align:middle;font-family:'Courier New',monospace;}
+.planner-tbl td.col-name{text-align:left;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;font-weight:700;color:#e0f4ff;position:sticky;left:0;background:rgba(4,20,40,.95);border-right:1px solid rgba(0,180,255,.25);white-space:nowrap;}
+.planner-tbl td.col-primary{text-align:left;font-size:11px;color:rgba(168,216,234,.6);}
+.planner-tbl tr:hover td{background:rgba(0,60,100,.25);}
+.planner-tbl tr:hover td.col-name{background:rgba(0,60,100,.6);}
+.shift-pill{display:inline-block;padding:2px 7px;border-radius:3px;font-size:10px;font-weight:700;letter-spacing:.5px;min-width:44px;}
+.sp-D1{background:rgba(0,180,255,.18);border:1px solid rgba(0,180,255,.4);color:#a8e8ff;}
+.sp-D2{background:rgba(0,120,220,.18);border:1px solid rgba(0,120,220,.4);color:#88ccff;}
+.sp-D3{background:rgba(100,60,220,.18);border:1px solid rgba(100,60,220,.4);color:#c0a0ff;}
+.sp-D4{background:rgba(0,160,120,.18);border:1px solid rgba(0,160,120,.4);color:#80e8cc;}
+.sp-D5{background:rgba(0,200,100,.18);border:1px solid rgba(0,200,100,.4);color:#80ffb0;}
+.sp-N{background:rgba(30,30,100,.35);border:1px solid rgba(80,80,200,.4);color:#aaaaff;}
+.sp-WOFF{background:rgba(60,60,60,.25);border:1px solid rgba(100,100,100,.3);color:#888;}
+.sp-HOL{background:rgba(255,180,0,.15);border:1px solid rgba(255,180,0,.4);color:#ffd080;}
+.sp-COMP{background:rgba(180,80,0,.15);border:1px solid rgba(255,120,40,.4);color:#ffaa70;}
+.sp-TODAY{outline:2px solid #00c8ff!important;outline-offset:-2px;}
+.col-today{background:rgba(0,180,255,.06)!important;}
 </style>
 </head>
 <body>
-
 <div class="toast" id="toast"></div>
 
 <!-- LOGIN -->
@@ -168,10 +165,7 @@ tr:last-child td{border-bottom:none;}
   <div class="topbar">
     <div class="brand">
       <div class="brand-icon">🚢</div>
-      <div>
-        <h1>LRP SUPPORT PORTAL</h1>
-        <div class="brand-sub">ADMIN COMMAND CENTER</div>
-      </div>
+      <div><h1>LRP SUPPORT PORTAL</h1><div class="brand-sub">ADMIN COMMAND CENTER</div></div>
     </div>
     <div class="topbar-right">
       <span style="font-size:11px;color:rgba(0,200,255,.6);letter-spacing:1px;" id="lastRefreshed"></span>
@@ -186,20 +180,19 @@ tr:last-child td{border-bottom:none;}
       <button class="admin-tab"        id="atab-creds"    onclick="switchTab('creds')">🔐 CLIENT CREDENTIALS</button>
       <button class="admin-tab"        id="atab-tracker"  onclick="switchTab('tracker')">📊 AGENT TRACKER</button>
       <button class="admin-tab"        id="atab-handover" onclick="switchTab('handover')">📂 SHIFT HANDOVER</button>
+      <button class="admin-tab"        id="atab-planner"  onclick="switchTab('planner')">📅 SHIFT PLANNER</button>
     </div>
 
-    <!-- ══ AGENTS ══ -->
+    <!-- AGENTS -->
     <div class="tab-panel active" id="panel-agents">
       <div class="page-title">AGENT MANAGEMENT</div>
       <div class="page-sub">Create agent logins and monitor activity</div>
-
       <div class="stats-row">
         <div class="stat-card"><div class="stat-num blue"   id="s-total">—</div><div class="stat-lbl">Total Agents</div></div>
         <div class="stat-card"><div class="stat-num green"  id="s-online">—</div><div class="stat-lbl">Active Today</div></div>
         <div class="stat-card"><div class="stat-num orange" id="s-recent">—</div><div class="stat-lbl">This Week</div></div>
         <div class="stat-card"><div class="stat-num red"    id="s-inactive">—</div><div class="stat-lbl">Never Logged In</div></div>
       </div>
-
       <div class="form-panel green-border">
         <div class="form-panel-title green" id="agentFormTitle">➕ Create New Agent Login</div>
         <input type="hidden" id="edit-agent-original-username"/>
@@ -216,7 +209,6 @@ tr:last-child td{border-bottom:none;}
           <span class="form-msg" id="ag-msg"></span>
         </div>
       </div>
-
       <div class="section-title">🧑‍✈️ Registered Agents</div>
       <div class="table-wrap">
         <div class="search-bar">
@@ -227,11 +219,10 @@ tr:last-child td{border-bottom:none;}
       </div>
     </div>
 
-    <!-- ══ CLIENT CREDENTIALS ══ -->
+    <!-- CREDENTIALS -->
     <div class="tab-panel" id="panel-creds">
       <div class="page-title">CLIENT CREDENTIALS</div>
       <div class="page-sub">Manage client login credentials visible to all agents</div>
-
       <div class="form-panel purple-border">
         <div class="form-panel-title purple" id="credFormTitle">➕ Add New Client Credential</div>
         <input type="hidden" id="edit-cred-id"/>
@@ -256,7 +247,6 @@ tr:last-child td{border-bottom:none;}
           <span class="form-msg" id="cred-msg"></span>
         </div>
       </div>
-
       <div class="section-title">🗂 All Client Credentials <span style="font-size:11px;color:rgba(168,216,234,.5);margin-left:8px;" id="cred-count"></span></div>
       <div class="table-wrap">
         <div class="search-bar">
@@ -266,11 +256,10 @@ tr:last-child td{border-bottom:none;}
       </div>
     </div>
 
-    <!-- ══ AGENT TRACKER ══ -->
+    <!-- TRACKER -->
     <div class="tab-panel" id="panel-tracker">
       <div class="page-title">AGENT TRACKER</div>
       <div class="page-sub">Ticket performance summary per agent from Support Ticket Logger</div>
-
       <div style="display:flex;gap:12px;margin-bottom:20px;align-items:center;flex-wrap:wrap;">
         <input type="date" id="tracker-date-from" style="background:rgba(2,15,30,.7);border:1px solid rgba(0,120,180,.35);border-radius:4px;padding:8px 12px;font-size:13px;color:#a8e8ff;outline:none;font-family:'Courier New',monospace;"/>
         <span style="color:rgba(0,200,255,.5);font-size:12px;">to</span>
@@ -279,10 +268,8 @@ tr:last-child td{border-bottom:none;}
         <button onclick="loadTracker()" style="padding:8px 18px;background:rgba(100,100,100,.15);border:1px solid rgba(100,100,100,.3);border-radius:4px;color:#aaa;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;">↺ Reset</button>
         <span style="font-size:11px;color:rgba(0,200,255,.5);letter-spacing:1px;" id="tracker-filter-label"></span>
       </div>
-
       <div class="section-title">📊 Per-Agent Summary</div>
       <div id="tracker-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:28px;"><div class="loading">⏳ LOADING...</div></div>
-
       <div class="section-title">📋 Ticket Breakdown <span style="font-size:11px;color:rgba(168,216,234,.5);margin-left:8px;" id="tracker-breakdown-label"></span></div>
       <div class="table-wrap">
         <div class="search-bar">
@@ -292,11 +279,10 @@ tr:last-child td{border-bottom:none;}
       </div>
     </div>
 
-    <!-- ══ SHIFT HANDOVER MONITOR ══ -->
+    <!-- HANDOVER -->
     <div class="tab-panel" id="panel-handover">
       <div class="page-title">SHIFT HANDOVER MONITOR</div>
       <div class="page-sub">All shift handovers submitted by agents</div>
-
       <div style="display:flex;gap:12px;margin-bottom:20px;align-items:center;flex-wrap:wrap;">
         <div style="display:flex;flex-direction:column;gap:3px;">
           <span style="font-size:10px;color:rgba(0,180,255,.6);letter-spacing:1px;">FROM DATE</span>
@@ -309,8 +295,7 @@ tr:last-child td{border-bottom:none;}
         <div style="display:flex;flex-direction:column;gap:3px;">
           <span style="font-size:10px;color:rgba(0,180,255,.6);letter-spacing:1px;">SHIFT</span>
           <select id="ho-shift-filter" style="background:rgba(2,15,30,.7);border:1px solid rgba(0,120,180,.35);border-radius:4px;padding:8px 12px;font-size:13px;color:#a8e8ff;outline:none;font-family:'Courier New',monospace;">
-            <option value="">All Shifts</option>
-            <option>D1</option><option>D2</option><option>D3</option>
+            <option value="">All Shifts</option><option>D1</option><option>D2</option><option>D3</option>
           </select>
         </div>
         <div style="display:flex;gap:8px;align-items:flex-end;">
@@ -319,14 +304,12 @@ tr:last-child td{border-bottom:none;}
         </div>
         <span style="font-size:11px;color:rgba(0,200,255,.5);letter-spacing:1px;" id="ho-filter-label"></span>
       </div>
-
       <div class="stats-row">
         <div class="stat-card"><div class="stat-num blue"  id="ho-s-total">—</div><div class="stat-lbl">Total Submissions</div></div>
         <div class="stat-card"><div class="stat-num red"   id="ho-s-pending">—</div><div class="stat-lbl">Total Pending</div></div>
         <div class="stat-card"><div class="stat-num green" id="ho-s-completed">—</div><div class="stat-lbl">Total Completed</div></div>
         <div class="stat-card"><div class="stat-num" style="color:#ff8888;" id="ho-s-showstopper">—</div><div class="stat-lbl">Showstoppers</div></div>
       </div>
-
       <div class="section-title">📋 Handover Submissions <span style="font-size:11px;color:rgba(168,216,234,.4);margin-left:8px;" id="ho-count-label"></span></div>
       <div class="table-wrap">
         <div class="search-bar">
@@ -336,8 +319,60 @@ tr:last-child td{border-bottom:none;}
       </div>
     </div>
 
-  </div><!-- /main -->
-</div><!-- /dashboard -->
+    <!-- SHIFT PLANNER -->
+    <div class="tab-panel" id="panel-planner">
+      <div class="page-title">SHIFT PLANNER</div>
+      <div class="page-sub">Edit shift cells below, then click <strong style="color:#88ffcc;">Submit to Agents</strong> to publish</div>
+
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
+        <input type="text" id="planner-search" placeholder="🔍  Search by name or role..."
+          style="background:rgba(2,15,30,.7);border:1px solid rgba(0,120,180,.35);border-radius:4px;padding:8px 12px;font-size:13px;color:#a8e8ff;outline:none;font-family:'Courier New',monospace;width:240px;"
+          oninput="renderPlanner()"/>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button class="planner-filter-btn active" data-shift="ALL"   onclick="setPlannerFilter(this)">All</button>
+          <button class="planner-filter-btn"        data-shift="D1"    onclick="setPlannerFilter(this)">D1</button>
+          <button class="planner-filter-btn"        data-shift="D2"    onclick="setPlannerFilter(this)">D2</button>
+          <button class="planner-filter-btn"        data-shift="D4"    onclick="setPlannerFilter(this)">D4</button>
+          <button class="planner-filter-btn"        data-shift="D5"    onclick="setPlannerFilter(this)">D5</button>
+          <button class="planner-filter-btn"        data-shift="N"     onclick="setPlannerFilter(this)">Night</button>
+          <button class="planner-filter-btn"        data-shift="W/OFF" onclick="setPlannerFilter(this)">W/OFF</button>
+        </div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <span style="font-size:11px;color:rgba(0,200,255,.5);" id="planner-today-label"></span>
+          <span style="font-size:11px;color:rgba(0,255,136,.6);" id="planner-saved-label"></span>
+          <button onclick="publishPlanner()" id="planner-publish-btn"
+            style="padding:10px 22px;background:linear-gradient(135deg,#0a5a2a,#0d8a3a);border:1px solid rgba(0,200,80,.4);border-radius:4px;color:#88ffcc;cursor:pointer;font-size:13px;font-weight:700;letter-spacing:1px;transition:all .3s;">
+            📤 Submit to Agents
+          </button>
+        </div>
+      </div>
+
+      <div style="font-size:11px;color:rgba(168,216,234,.4);margin-bottom:10px;">
+        ✏️ Click any shift cell to edit &nbsp;|&nbsp; Unsaved changes are shown until you click <strong style="color:#88ffcc;">Submit to Agents</strong>
+      </div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;" id="planner-legend"></div>
+
+      <div style="overflow-x:auto;border:1px solid rgba(0,180,255,.2);border-radius:8px;">
+        <div id="planner-table-container" style="min-width:1200px;"><div class="loading">⏳ LOADING...</div></div>
+      </div>
+
+      <!-- Inline cell editor popup -->
+      <div id="planner-cell-editor" style="display:none;position:fixed;z-index:9999;background:#041c35;border:1px solid rgba(0,180,255,.4);border-radius:8px;padding:14px 16px;box-shadow:0 8px 32px rgba(0,0,0,.6);min-width:200px;">
+        <div style="font-size:10px;color:rgba(0,200,255,.7);letter-spacing:1px;margin-bottom:8px;font-weight:700;" id="pce-label">EDIT SHIFT</div>
+        <select id="pce-select" style="width:100%;background:rgba(2,15,30,.8);border:1px solid rgba(0,120,180,.4);border-radius:4px;padding:8px 10px;font-size:13px;color:#a8e8ff;outline:none;font-family:'Courier New',monospace;margin-bottom:10px;">
+          <option>D1</option><option>D2</option><option>D3</option><option>D4</option><option>D5</option>
+          <option>N</option><option>W/OFF</option><option>Holiday</option><option>Compff</option>
+        </select>
+        <div style="display:flex;gap:8px;">
+          <button onclick="applyPlannerCellEdit()" style="flex:1;padding:7px;background:linear-gradient(135deg,#0a4a7a,#0d6fa8);border:1px solid rgba(0,200,255,.4);border-radius:4px;color:#a8f0ff;cursor:pointer;font-size:12px;font-weight:700;">✓ Apply</button>
+          <button onclick="closePlannerEditor()" style="padding:7px 12px;background:rgba(100,100,100,.2);border:1px solid rgba(100,100,100,.3);border-radius:4px;color:#aaa;cursor:pointer;font-size:12px;">✕</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
 
 <!-- HANDOVER DETAIL MODAL -->
 <div class="ho-overlay" id="hoDetailOverlay">
@@ -350,12 +385,11 @@ tr:last-child td{border-bottom:none;}
 <script>
 const API_URL    = 'https://script.google.com/macros/s/AKfycbx4Yt6dXiMOpztGU7ujn1TiJZUxfpTDCzSZ07rDd-EewnS8D0h4adFV6VP_3IzomL1H_w/exec';
 const ADMIN_USER = 'admin';
-const ADMIN_PASS = 'Admin@support';
+const ADMIN_PASS = 'admin@lrp';
+let allUsers=[],allCreds=[],allLogs=[],filteredLogs=[],allHandovers=[],filteredHandovers=[];
+let selectedAgent=null,currentTab='agents';
 
-let allUsers=[], allCreds=[], allLogs=[], filteredLogs=[], allHandovers=[], filteredHandovers=[];
-let selectedAgent=null, currentTab='agents';
-
-/* ── LOGIN ── */
+/* LOGIN */
 window.addEventListener('load',()=>{
   if(sessionStorage.getItem('admin_logged_in')==='true'){
     document.getElementById('loginScreen').style.display='none';
@@ -371,9 +405,7 @@ function adminLogin(){
     document.getElementById('loginScreen').style.display='none';
     document.getElementById('dashboard').style.display='block';
     loadUsers();
-  } else {
-    document.getElementById('adm-err').style.display='block';
-  }
+  } else { document.getElementById('adm-err').style.display='block'; }
 }
 function adminLogout(){
   if(!confirm('Are you sure you want to sign out?')) return;
@@ -387,26 +419,28 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Enter'&&document.getElementById('loginScreen').style.display!=='none') adminLogin();
 });
 
-/* ── TABS ── */
+/* TABS */
 function switchTab(tab){
   currentTab=tab;
-  ['agents','creds','tracker','handover'].forEach(t=>{
+  ['agents','creds','tracker','handover','planner'].forEach(t=>{
     document.getElementById('atab-'+t).classList.toggle('active',t===tab);
     document.getElementById('panel-'+t).classList.toggle('active',t===tab);
   });
   if(tab==='creds')    loadCreds();
   if(tab==='tracker')  loadTracker();
   if(tab==='handover') loadHandovers();
+  if(tab==='planner')  loadPlanner();
   document.getElementById('lastRefreshed').textContent='';
 }
 function refreshCurrent(){
-  if(currentTab==='agents')   loadUsers();
+  if(currentTab==='agents')        loadUsers();
   else if(currentTab==='creds')    loadCreds();
   else if(currentTab==='tracker')  loadTracker();
   else if(currentTab==='handover') loadHandovers();
+  else if(currentTab==='planner')  loadPlanner();
 }
 
-/* ── UTILS ── */
+/* UTILS */
 function showToast(msg,success=true){
   const t=document.getElementById('toast');
   t.textContent=msg;
@@ -417,14 +451,13 @@ function showToast(msg,success=true){
 }
 function showFormMsg(id,text,type){
   const el=document.getElementById(id);
-  el.textContent=text; el.className='form-msg '+type; el.style.display='inline-block';
+  el.textContent=text;el.className='form-msg '+type;el.style.display='inline-block';
   if(type!=='loading') setTimeout(()=>{el.style.display='none';},3000);
 }
 function formatDate(iso){
   if(!iso) return '—';
   const d=new Date(iso);
-  return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+' '+
-         d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
 }
 function formatDur(secs){
   const h=Math.floor(secs/3600),m=Math.floor((secs%3600)/60),s=secs%60;
@@ -439,36 +472,22 @@ function getStatus(lastLogin){
 }
 function envClass(e){
   const v=(e||'').toLowerCase();
-  if(v==='production')  return 'env-prod';
-  if(v==='uat')         return 'env-uat';
-  if(v==='development') return 'env-dev';
-  if(v==='staging')     return 'env-staging';
-  if(v==='train 2')     return 'env-train2';
-  if(v==='train')       return 'env-train';
-  if(v==='ecom')        return 'env-ecom';
-  if(v==='testing')     return 'env-testing';
+  if(v==='production') return 'env-prod'; if(v==='uat') return 'env-uat';
+  if(v==='development') return 'env-dev'; if(v==='staging') return 'env-staging';
+  if(v==='train 2') return 'env-train2'; if(v==='train') return 'env-train';
+  if(v==='ecom') return 'env-ecom'; if(v==='testing') return 'env-testing';
   return 'env-default';
 }
 
-/* ══════════════════════════════
-   AGENTS
-══════════════════════════════ */
+/* AGENTS */
 async function loadUsers(){
   document.getElementById('tableContainer').innerHTML='<div class="loading">⏳ FETCHING AGENT DATA...</div>';
   try{
     const res=await fetch(API_URL+'?action=getUsers&t='+Date.now());
     const data=await res.json();
-    if(data.success){
-      allUsers=data.users||[];
-      updateStats(allUsers);
-      renderTable(allUsers);
-      document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();
-    } else {
-      document.getElementById('tableContainer').innerHTML='<div class="error-msg">⚠ Failed to load data.</div>';
-    }
-  } catch(err){
-    document.getElementById('tableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';
-  }
+    if(data.success){allUsers=data.users||[];updateStats(allUsers);renderTable(allUsers);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}
+    else document.getElementById('tableContainer').innerHTML='<div class="error-msg">⚠ Failed to load data.</div>';
+  }catch{document.getElementById('tableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}
 }
 function updateStats(users){
   const today=users.filter(u=>u.lastLogin&&(new Date()-new Date(u.lastLogin))/3600000<24).length;
@@ -480,71 +499,53 @@ function updateStats(users){
   document.getElementById('s-inactive').textContent=never;
 }
 function renderTable(users){
-  if(!users.length){
-    document.getElementById('tableContainer').innerHTML='<div class="loading" style="color:#888;">No agents found.</div>';
-    document.getElementById('filterCount').textContent=''; return;
-  }
+  if(!users.length){document.getElementById('tableContainer').innerHTML='<div class="loading" style="color:#888;">No agents found.</div>';document.getElementById('filterCount').textContent='';return;}
   document.getElementById('filterCount').textContent=users.length+' agents';
   const rows=users.map((u,i)=>{
     const st=getStatus(u.lastLogin);
-    const defBadge=u.isDefault?`<span style="background:rgba(255,160,0,.15);border:1px solid rgba(255,160,0,.4);border-radius:3px;padding:2px 7px;font-size:10px;font-weight:700;color:#ffa040;margin-left:6px;">TEMP PW</span>`:'';
-    return `<tr>
-      <td style="color:rgba(0,200,255,.5);font-size:12px;">${i+1}</td>
-      <td style="font-weight:700;color:#e0f4ff;">👤 ${u.username}${defBadge}</td>
-      <td>${u.email||'—'}</td>
-      <td><span style="background:rgba(0,100,180,.2);border:1px solid rgba(0,180,255,.2);border-radius:3px;padding:2px 8px;font-size:11px;color:rgba(0,200,255,.8);">⚓ ${u.team||'—'}</span></td>
-      <td><span class="badge ${st.cls}">${st.label}</span></td>
-      <td style="font-size:11px;color:rgba(168,216,234,.5);">${formatDate(u.lastLogin)}</td>
-      <td style="font-size:11px;color:rgba(168,216,234,.5);">${formatDate(u.registeredAt)}</td>
-      <td>
-        <button class="edit-btn" onclick="editAgent(${i})">✏ Edit</button>
-        <button class="reset-btn" id="rbtn_${i}" onclick="resetPassword('${u.username}',${i})">🔑 Reset PW</button>
-        <button class="delete-btn" id="dbtn_${i}" onclick="deleteUser('${u.username}',${i})">🗑 Delete</button>
-      </td>
-    </tr>`;
+    const defBadge=u.isDefault?'<span style="background:rgba(255,160,0,.15);border:1px solid rgba(255,160,0,.4);border-radius:3px;padding:2px 7px;font-size:10px;font-weight:700;color:#ffa040;margin-left:6px;">TEMP PW</span>':'';
+    return '<tr><td style="color:rgba(0,200,255,.5);font-size:12px;">'+(i+1)+'</td>'+
+      '<td style="font-weight:700;color:#e0f4ff;">👤 '+u.username+defBadge+'</td>'+
+      '<td>'+(u.email||'—')+'</td>'+
+      '<td><span style="background:rgba(0,100,180,.2);border:1px solid rgba(0,180,255,.2);border-radius:3px;padding:2px 8px;font-size:11px;color:rgba(0,200,255,.8);">⚓ '+(u.team||'—')+'</span></td>'+
+      '<td><span class="badge '+st.cls+'">'+st.label+'</span></td>'+
+      '<td style="font-size:11px;color:rgba(168,216,234,.5);">'+formatDate(u.lastLogin)+'</td>'+
+      '<td style="font-size:11px;color:rgba(168,216,234,.5);">'+formatDate(u.registeredAt)+'</td>'+
+      '<td><button class="edit-btn" onclick="editAgent('+i+')">✏ Edit</button>'+
+      '<button class="reset-btn" id="rbtn_'+i+'" onclick="resetPassword(\''+u.username+'\','+i+')">🔑 Reset PW</button>'+
+      '<button class="delete-btn" id="dbtn_'+i+'" onclick="deleteUser(\''+u.username+'\','+i+')">🗑 Delete</button></td></tr>';
   }).join('');
-  document.getElementById('tableContainer').innerHTML=`
-    <table><thead><tr>
-      <th>#</th><th>Username</th><th>Email</th><th>Team</th>
-      <th>Status</th><th>Last Login</th><th>Created</th><th>Actions</th>
-    </tr></thead><tbody>${rows}</tbody></table>`;
+  document.getElementById('tableContainer').innerHTML='<table><thead><tr><th>#</th><th>Username</th><th>Email</th><th>Team</th><th>Status</th><th>Last Login</th><th>Created</th><th>Actions</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
 function filterTable(){
   const q=document.getElementById('searchInput').value.toLowerCase();
   const f=allUsers.filter(u=>(u.username||'').toLowerCase().includes(q)||(u.email||'').toLowerCase().includes(q)||(u.team||'').toLowerCase().includes(q));
-  renderTable(f);
-  document.getElementById('filterCount').textContent=f.length+' of '+allUsers.length+' agents';
+  renderTable(f);document.getElementById('filterCount').textContent=f.length+' of '+allUsers.length+' agents';
 }
 async function submitAgent(){
   const orig=document.getElementById('edit-agent-original-username').value;
-  const name=document.getElementById('ag-name').value.trim();
-  const email=document.getElementById('ag-email').value.trim();
-  const team=document.getElementById('ag-team').value.trim();
-  const username=document.getElementById('ag-username').value.trim();
+  const name=document.getElementById('ag-name').value.trim(),email=document.getElementById('ag-email').value.trim();
+  const team=document.getElementById('ag-team').value.trim(),username=document.getElementById('ag-username').value.trim();
   const password=document.getElementById('ag-password').value.trim();
   if(!name||!email||!team||!username||!password){showFormMsg('ag-msg','⚠ All fields are required.','error');return;}
   if(password.length<6){showFormMsg('ag-msg','⚠ Password must be ≥ 6 characters.','error');return;}
-  const btn=document.getElementById('ag-submit-btn');
-  btn.disabled=true; showFormMsg('ag-msg','⏳ Saving...','loading');
+  const btn=document.getElementById('ag-submit-btn');btn.disabled=true;showFormMsg('ag-msg','⏳ Saving...','loading');
   const vesselId=orig?'':'VID-'+Math.random().toString(36).toUpperCase().slice(2,8);
   const action=orig?'updateAgent':'register';
-  const params=new URLSearchParams({action,username,email,team,password,vesselId,originalUsername:orig||username});
   try{
-    const res=await fetch(API_URL+'?'+params.toString());
+    const res=await fetch(API_URL+'?'+new URLSearchParams({action,username,email,team,password,vesselId,originalUsername:orig||username}));
     const data=await res.json();
     if(data.success){showFormMsg('ag-msg',orig?'✅ Agent updated!':'✅ Agent login created!','success');clearAgentForm();setTimeout(loadUsers,800);}
-    else if(data.error==='USERNAME_EXISTS'){showFormMsg('ag-msg','⚠ Username already taken.','error');}
-    else{showFormMsg('ag-msg','⚠ Failed. Try again.','error');}
-  } catch{showFormMsg('ag-msg','⚠ Connection error.','error');}
+    else if(data.error==='USERNAME_EXISTS')showFormMsg('ag-msg','⚠ Username already taken.','error');
+    else showFormMsg('ag-msg','⚠ Failed. Try again.','error');
+  }catch{showFormMsg('ag-msg','⚠ Connection error.','error');}
   btn.disabled=false;
 }
 function editAgent(i){
   const u=allUsers[i];
   document.getElementById('edit-agent-original-username').value=u.username;
-  document.getElementById('ag-name').value=u.username;
-  document.getElementById('ag-email').value=u.email||'';
-  document.getElementById('ag-team').value=u.team||'';
-  document.getElementById('ag-username').value=u.username;
+  document.getElementById('ag-name').value=u.username;document.getElementById('ag-email').value=u.email||'';
+  document.getElementById('ag-team').value=u.team||'';document.getElementById('ag-username').value=u.username;
   document.getElementById('ag-password').value='';
   document.getElementById('agentFormTitle').textContent='✏ Edit Agent: '+u.username;
   document.getElementById('ag-submit-btn').textContent='💾 Update Agent';
@@ -556,70 +557,54 @@ function clearAgentForm(){
   ['edit-agent-original-username','ag-name','ag-email','ag-team','ag-username','ag-password'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('agentFormTitle').textContent='➕ Create New Agent Login';
   document.getElementById('ag-submit-btn').textContent='💾 Create Agent Login';
-  document.getElementById('ag-cancel-btn').style.display='none';
-  document.getElementById('ag-msg').style.display='none';
+  document.getElementById('ag-cancel-btn').style.display='none';document.getElementById('ag-msg').style.display='none';
 }
 async function resetPassword(username,idx){
-  if(!confirm(`Reset password for "${username}" to a temporary password?`)) return;
-  const btn=document.getElementById('rbtn_'+idx);
-  btn.textContent='⏳...'; btn.disabled=true;
+  if(!confirm('Reset password for "'+username+'" to a temporary password?')) return;
+  const btn=document.getElementById('rbtn_'+idx);btn.textContent='⏳...';btn.disabled=true;
   try{
     const res=await fetch(API_URL+'?'+new URLSearchParams({action:'resetPassword',username}));
     const data=await res.json();
-    if(data.success){btn.textContent='✅ Done';btn.classList.add('done');showToast(`✅ Password reset for ${username}. Temp: LRP@1234`);setTimeout(loadUsers,2000);}
+    if(data.success){btn.textContent='✅ Done';btn.classList.add('done');showToast('✅ Password reset for '+username+'. Temp: LRP@1234');setTimeout(loadUsers,2000);}
     else{btn.textContent='🔑 Reset PW';btn.disabled=false;showToast('⚠ Reset failed.',false);}
-  } catch{btn.textContent='🔑 Reset PW';btn.disabled=false;showToast('⚠ Connection error.',false);}
+  }catch{btn.textContent='🔑 Reset PW';btn.disabled=false;showToast('⚠ Connection error.',false);}
 }
 async function deleteUser(username,idx){
-  if(!confirm(`⚠ Permanently delete agent "${username}"?\n\nThis cannot be undone!`)) return;
-  const btn=document.getElementById('dbtn_'+idx);
-  btn.textContent='⏳...'; btn.disabled=true;
+  if(!confirm('⚠ Permanently delete agent "'+username+'"?\n\nThis cannot be undone!')) return;
+  const btn=document.getElementById('dbtn_'+idx);btn.textContent='⏳...';btn.disabled=true;
   try{
     const res=await fetch(API_URL+'?'+new URLSearchParams({action:'deleteUser',username}));
     const data=await res.json();
-    if(data.success){showToast(`🗑 Agent "${username}" deleted.`);setTimeout(loadUsers,800);}
+    if(data.success){showToast('🗑 Agent "'+username+'" deleted.');setTimeout(loadUsers,800);}
     else{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Delete failed.',false);}
-  } catch{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Connection error.',false);}
+  }catch{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Connection error.',false);}
 }
 
-/* ══════════════════════════════
-   CREDENTIALS
-══════════════════════════════ */
+/* CREDENTIALS */
 async function loadCreds(){
   document.getElementById('credTableContainer').innerHTML='<div class="loading">⏳ LOADING CREDENTIALS...</div>';
   try{
     const res=await fetch(API_URL+'?action=getCredentials&t='+Date.now());
     const data=await res.json();
     if(data.success){allCreds=data.credentials||[];renderCredTable(allCreds);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}
-    else{document.getElementById('credTableContainer').innerHTML='<div class="error-msg">⚠ Failed to load credentials.</div>';}
-  } catch{document.getElementById('credTableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}
+    else document.getElementById('credTableContainer').innerHTML='<div class="error-msg">⚠ Failed to load credentials.</div>';
+  }catch{document.getElementById('credTableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}
 }
 function renderCredTable(list){
   document.getElementById('cred-count').textContent=list.length+' records';
-  if(!list.length){document.getElementById('credTableContainer').innerHTML='<div class="loading" style="color:#888;">No credentials yet. Use the form above to add one.</div>';return;}
-  const rows=list.map((c,i)=>`
-    <tr>
-      <td style="color:rgba(0,200,255,.5);font-size:12px;">${i+1}</td>
-      <td style="font-weight:700;color:#e0f4ff;">🏢 ${c.clientName||'—'}</td>
-      <td style="font-family:'Courier New',monospace;font-size:11px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-        ${c.appUrl?`<a href="${c.appUrl}" target="_blank" style="color:#00c8ff;text-decoration:none;">🔗 ${c.appUrl}</a>`:'—'}
-      </td>
-      <td><span class="env-badge ${envClass(c.environment)}">${c.environment||'—'}</span></td>
-      <td style="font-family:'Courier New',monospace;font-size:12px;">${c.userId||'—'}</td>
-      <td>
-        <span id="adm-pw-${i}" style="font-family:'Courier New',monospace;font-size:12px;">••••••••</span>
-        <button class="pw-toggle-sm" onclick="admTogglePw(${i},'${encodeURIComponent(c.password||'')}')">👁</button>
-      </td>
-      <td>
-        <button class="edit-btn" onclick="editCred(${i})">✏ Edit</button>
-        <button class="delete-btn" id="cdel-${i}" onclick="deleteCred('${c.id}',${i})">🗑 Delete</button>
-      </td>
-    </tr>`).join('');
-  document.getElementById('credTableContainer').innerHTML=`
-    <table><thead><tr>
-      <th>#</th><th>Client Name</th><th>App URL</th>
-      <th>Environment</th><th>User ID</th><th>Password</th><th>Actions</th>
-    </tr></thead><tbody>${rows}</tbody></table>`;
+  if(!list.length){document.getElementById('credTableContainer').innerHTML='<div class="loading" style="color:#888;">No credentials yet.</div>';return;}
+  const rows=list.map((c,i)=>'<tr>'+
+    '<td style="color:rgba(0,200,255,.5);font-size:12px;">'+(i+1)+'</td>'+
+    '<td style="font-weight:700;color:#e0f4ff;">🏢 '+(c.clientName||'—')+'</td>'+
+    '<td style="font-family:\'Courier New\',monospace;font-size:11px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+(c.appUrl?'<a href="'+c.appUrl+'" target="_blank" style="color:#00c8ff;text-decoration:none;">🔗 '+c.appUrl+'</a>':'—')+'</td>'+
+    '<td><span class="env-badge '+envClass(c.environment)+'">'+(c.environment||'—')+'</span></td>'+
+    '<td style="font-family:\'Courier New\',monospace;font-size:12px;">'+(c.userId||'—')+'</td>'+
+    '<td><span id="adm-pw-'+i+'" style="font-family:\'Courier New\',monospace;font-size:12px;">••••••••</span>'+
+    '<button class="pw-toggle-sm" onclick="admTogglePw('+i+',\''+encodeURIComponent(c.password||'')+'\')">👁</button></td>'+
+    '<td><button class="edit-btn" onclick="editCred('+i+')">✏ Edit</button>'+
+    '<button class="delete-btn" id="cdel-'+i+'" onclick="deleteCred(\''+c.id+'\','+i+')">🗑 Delete</button></td></tr>'
+  ).join('');
+  document.getElementById('credTableContainer').innerHTML='<table><thead><tr><th>#</th><th>Client Name</th><th>App URL</th><th>Environment</th><th>User ID</th><th>Password</th><th>Actions</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
 function filterCredTable(){
   const q=document.getElementById('credSearchInput').value.toLowerCase();
@@ -631,31 +616,24 @@ function admTogglePw(i,encoded){
 }
 async function submitCredential(){
   const id=document.getElementById('edit-cred-id').value;
-  const client=document.getElementById('cred-client').value.trim();
-  const env=document.getElementById('cred-env').value;
-  const url=document.getElementById('cred-url').value.trim();
-  const userid=document.getElementById('cred-userid').value.trim();
+  const client=document.getElementById('cred-client').value.trim(),env=document.getElementById('cred-env').value;
+  const url=document.getElementById('cred-url').value.trim(),userid=document.getElementById('cred-userid').value.trim();
   const pass=document.getElementById('cred-pass').value.trim();
   if(!client||!env||!userid||!pass){showFormMsg('cred-msg','⚠ Fill all required fields.','error');return;}
-  const btn=document.getElementById('cred-submit-btn');
-  btn.disabled=true; showFormMsg('cred-msg','⏳ Saving...','loading');
-  const action=id?'updateCredential':'addCredential';
+  const btn=document.getElementById('cred-submit-btn');btn.disabled=true;showFormMsg('cred-msg','⏳ Saving...','loading');
   try{
-    const res=await fetch(API_URL+'?'+new URLSearchParams({action,id,clientName:client,environment:env,appUrl:url,userId:userid,password:pass}));
+    const res=await fetch(API_URL+'?'+new URLSearchParams({action:id?'updateCredential':'addCredential',id,clientName:client,environment:env,appUrl:url,userId:userid,password:pass}));
     const data=await res.json();
     if(data.success){showFormMsg('cred-msg',id?'✅ Updated!':'✅ Added!','success');clearCredForm();loadCreds();}
-    else{showFormMsg('cred-msg','⚠ Save failed.','error');}
-  } catch{showFormMsg('cred-msg','⚠ Connection error.','error');}
+    else showFormMsg('cred-msg','⚠ Save failed.','error');
+  }catch{showFormMsg('cred-msg','⚠ Connection error.','error');}
   btn.disabled=false;
 }
 function editCred(i){
   const c=allCreds[i];
-  document.getElementById('edit-cred-id').value=c.id||'';
-  document.getElementById('cred-client').value=c.clientName||'';
-  document.getElementById('cred-env').value=c.environment||'';
-  document.getElementById('cred-url').value=c.appUrl||'';
-  document.getElementById('cred-userid').value=c.userId||'';
-  document.getElementById('cred-pass').value=c.password||'';
+  document.getElementById('edit-cred-id').value=c.id||'';document.getElementById('cred-client').value=c.clientName||'';
+  document.getElementById('cred-env').value=c.environment||'';document.getElementById('cred-url').value=c.appUrl||'';
+  document.getElementById('cred-userid').value=c.userId||'';document.getElementById('cred-pass').value=c.password||'';
   document.getElementById('credFormTitle').textContent='✏ Edit: '+c.clientName;
   document.getElementById('cred-cancel-btn').style.display='inline-block';
   document.getElementById('credFormTitle').scrollIntoView({behavior:'smooth'});
@@ -663,89 +641,67 @@ function editCred(i){
 function cancelCredEdit(){clearCredForm();}
 function clearCredForm(){
   ['edit-cred-id','cred-client','cred-url','cred-userid','cred-pass'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('cred-env').value='';
-  document.getElementById('credFormTitle').textContent='➕ Add New Client Credential';
-  document.getElementById('cred-cancel-btn').style.display='none';
-  document.getElementById('cred-msg').style.display='none';
+  document.getElementById('cred-env').value='';document.getElementById('credFormTitle').textContent='➕ Add New Client Credential';
+  document.getElementById('cred-cancel-btn').style.display='none';document.getElementById('cred-msg').style.display='none';
 }
 async function deleteCred(credId,i){
   const name=allCreds[i]?.clientName||credId;
-  if(!confirm(`⚠ Delete credential for "${name}"?\n\nThis cannot be undone!`)) return;
-  const btn=document.getElementById('cdel-'+i);
-  btn.textContent='⏳...'; btn.disabled=true;
+  if(!confirm('⚠ Delete credential for "'+name+'"?\n\nThis cannot be undone!')) return;
+  const btn=document.getElementById('cdel-'+i);btn.textContent='⏳...';btn.disabled=true;
   try{
     const res=await fetch(API_URL+'?'+new URLSearchParams({action:'deleteCredential',id:credId}));
     const data=await res.json();
-    if(data.success){showToast(`🗑 "${name}" deleted.`);loadCreds();}
+    if(data.success){showToast('🗑 "'+name+'" deleted.');loadCreds();}
     else{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Delete failed.',false);}
-  } catch{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Connection error.',false);}
+  }catch{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Connection error.',false);}
 }
 
-/* ══════════════════════════════
-   AGENT TRACKER
-══════════════════════════════ */
+/* TRACKER */
 async function loadTracker(){
-  document.getElementById('tracker-date-from').value='';
-  document.getElementById('tracker-date-to').value='';
-  document.getElementById('tracker-filter-label').textContent='';
-  selectedAgent=null;
+  document.getElementById('tracker-date-from').value='';document.getElementById('tracker-date-to').value='';
+  document.getElementById('tracker-filter-label').textContent='';selectedAgent=null;
   document.getElementById('tracker-cards').innerHTML='<div class="loading">⏳ LOADING TRACKER DATA...</div>';
   document.getElementById('trackerTableContainer').innerHTML='<div class="loading" style="color:#888;">Loading...</div>';
   try{
     const res=await fetch(API_URL+'?action=getTicketLogs&t='+Date.now());
     const data=await res.json();
-    if(data.success){
-      allLogs=data.logs||[];filteredLogs=[...allLogs];
-      renderTrackerCards(filteredLogs);renderTrackerTable(filteredLogs);
-      document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();
-    } else {
-      document.getElementById('tracker-cards').innerHTML='<div class="error-msg">⚠ Failed to load tracker data.</div>';
-    }
-  } catch{document.getElementById('tracker-cards').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}
+    if(data.success){allLogs=data.logs||[];filteredLogs=[...allLogs];renderTrackerCards(filteredLogs);renderTrackerTable(filteredLogs);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}
+    else document.getElementById('tracker-cards').innerHTML='<div class="error-msg">⚠ Failed to load tracker data.</div>';
+  }catch{document.getElementById('tracker-cards').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}
 }
 function applyTrackerFilter(){
-  const from=document.getElementById('tracker-date-from').value;
-  const to=document.getElementById('tracker-date-to').value;
+  const from=document.getElementById('tracker-date-from').value,to=document.getElementById('tracker-date-to').value;
   if(!from&&!to){filteredLogs=[...allLogs];document.getElementById('tracker-filter-label').textContent='';}
   else{
-    filteredLogs=allLogs.filter(l=>{
-      if(!l.dateKey) return true;
-      if(from&&l.dateKey<from) return false;
-      if(to&&l.dateKey>to) return false;
-      return true;
-    });
+    filteredLogs=allLogs.filter(l=>{if(!l.dateKey)return true;if(from&&l.dateKey<from)return false;if(to&&l.dateKey>to)return false;return true;});
     document.getElementById('tracker-filter-label').textContent='Showing: '+(from||'…')+' → '+(to||'…')+' · '+filteredLogs.length+' tickets';
   }
   selectedAgent=null;renderTrackerCards(filteredLogs);renderTrackerTable(filteredLogs);
 }
 function renderTrackerCards(logs){
   const container=document.getElementById('tracker-cards');
-  if(!logs.length){container.innerHTML='<div class="no-data-msg">📭 No ticket data found.<br><span style="font-size:12px;">Agents need to complete tickets in the Ticket Logger first.</span></div>';return;}
+  if(!logs.length){container.innerHTML='<div class="no-data-msg">📭 No ticket data found.</div>';return;}
   const agentMap={};
   logs.forEach(l=>{const a=l.agentName||'Unknown';if(!agentMap[a])agentMap[a]={tickets:[],totalSecs:0};agentMap[a].tickets.push(l);agentMap[a].totalSecs+=Number(l.durationSecs)||0;});
   container.innerHTML='';
   Object.entries(agentMap).sort((a,b)=>b[1].tickets.length-a[1].tickets.length).forEach(([name,data])=>{
     const count=data.tickets.length,avgSecs=count>0?Math.round(data.totalSecs/count):0;
-    const lastDate=data.tickets[data.tickets.length-1]?.date||'—';
-    const lastShift=data.tickets[data.tickets.length-1]?.shiftId||'—';
+    const lastDate=data.tickets[data.tickets.length-1]?.date||'—',lastShift=data.tickets[data.tickets.length-1]?.shiftId||'—';
     const compCount={};data.tickets.forEach(t=>{if(t.component)compCount[t.component]=(compCount[t.component]||0)+1;});
     const topComp=Object.entries(compCount).sort((a,b)=>b[1]-a[1])[0];
     const card=document.createElement('div');card.className='agent-card'+(selectedAgent===name?' selected':'');
-    card.innerHTML=`<div class="agent-card-name">👤 ${name}</div>
-      <div class="agent-card-stats">
-        <div class="agent-stat"><div class="agent-stat-val blue">${count}</div><div class="agent-stat-lbl">Tickets</div></div>
-        <div class="agent-stat"><div class="agent-stat-val green" style="font-size:15px;">${formatDur(avgSecs)}</div><div class="agent-stat-lbl">Avg Time</div></div>
-        <div class="agent-stat"><div class="agent-stat-val orange" style="font-size:15px;">${formatDur(data.totalSecs)}</div><div class="agent-stat-lbl">Total Time</div></div>
-        <div class="agent-stat"><div class="agent-stat-val" style="font-size:13px;color:#c080ff;">${topComp?topComp[0]:'—'}</div><div class="agent-stat-lbl">Top Component</div></div>
-      </div>
-      <div class="agent-card-footer"><span>Last active: ${lastDate}</span><span>Shift: ${lastShift}</span></div>`;
+    card.innerHTML='<div class="agent-card-name">👤 '+name+'</div>'+
+      '<div class="agent-card-stats">'+
+      '<div class="agent-stat"><div class="agent-stat-val blue">'+count+'</div><div class="agent-stat-lbl">Tickets</div></div>'+
+      '<div class="agent-stat"><div class="agent-stat-val green" style="font-size:15px;">'+formatDur(avgSecs)+'</div><div class="agent-stat-lbl">Avg Time</div></div>'+
+      '<div class="agent-stat"><div class="agent-stat-val orange" style="font-size:15px;">'+formatDur(data.totalSecs)+'</div><div class="agent-stat-lbl">Total Time</div></div>'+
+      '<div class="agent-stat"><div class="agent-stat-val" style="font-size:13px;color:#c080ff;">'+(topComp?topComp[0]:'—')+'</div><div class="agent-stat-lbl">Top Component</div></div></div>'+
+      '<div class="agent-card-footer"><span>Last active: '+lastDate+'</span><span>Shift: '+lastShift+'</span></div>';
     card.addEventListener('click',()=>{
-      selectedAgent=selectedAgent===name?null:name;
-      renderTrackerCards(filteredLogs);
+      selectedAgent=selectedAgent===name?null:name;renderTrackerCards(filteredLogs);
       const toShow=selectedAgent?filteredLogs.filter(l=>l.agentName===selectedAgent):filteredLogs;
       document.getElementById('tracker-breakdown-label').textContent=selectedAgent?'— '+selectedAgent:'';
-      document.getElementById('trackerSearchInput').value='';
-      renderTrackerTable(toShow);
+      document.getElementById('trackerSearchInput').value='';renderTrackerTable(toShow);
     });
     container.appendChild(card);
   });
@@ -753,64 +709,41 @@ function renderTrackerCards(logs){
 function renderTrackerTable(logs){
   const container=document.getElementById('trackerTableContainer');
   if(!logs.length){container.innerHTML='<div class="no-data-msg">No tickets to display.</div>';return;}
-  const rows=[...logs].reverse().map((l,i)=>`
-    <tr>
-      <td style="color:rgba(0,200,255,.4);font-size:11px;">${i+1}</td>
-      <td style="font-family:'Courier New',monospace;font-size:11px;color:rgba(0,200,255,.7);">👤 ${l.agentName||'—'}</td>
-      <td style="font-weight:700;color:#e0f4ff;">${l.ticketId||'—'}</td>
-      <td style="font-family:'Courier New',monospace;font-weight:700;color:#00ff88;">${l.duration||'—'}</td>
-      <td style="font-size:11px;color:#a8d8ea;">${l.date||'—'} <span style="color:rgba(168,216,234,.4);">${l.time||''}</span></td>
-      <td><span style="background:rgba(0,100,180,.15);border:1px solid rgba(0,180,255,.2);border-radius:3px;padding:2px 8px;font-size:10px;color:rgba(0,200,255,.7);">${l.shiftId||'—'}</span></td>
-      <td>${l.component?`<span style="font-size:10px;font-weight:700;color:#c080ff;background:rgba(120,60,180,.15);border:1px solid rgba(160,80,220,.3);border-radius:12px;padding:2px 8px;">${l.component}</span>`:'—'}</td>
-      <td style="font-size:11px;color:#a8d8ea;max-width:200px;word-break:break-word;">${l.description||'—'}</td>
-      <td style="font-size:11px;color:#a8d8ea;max-width:200px;word-break:break-word;">${l.remarks||'—'}</td>
-    </tr>`).join('');
-  container.innerHTML=`<table><thead><tr>
-    <th>#</th><th>Agent</th><th>Ticket ID</th><th>Duration</th>
-    <th>Date / Time</th><th>Shift</th><th>Component</th><th>Description</th><th>Remarks</th>
-  </tr></thead><tbody>${rows}</tbody></table>`;
+  const rows=[...logs].reverse().map((l,i)=>'<tr>'+
+    '<td style="color:rgba(0,200,255,.4);font-size:11px;">'+(i+1)+'</td>'+
+    '<td style="font-family:\'Courier New\',monospace;font-size:11px;color:rgba(0,200,255,.7);">👤 '+(l.agentName||'—')+'</td>'+
+    '<td style="font-weight:700;color:#e0f4ff;">'+(l.ticketId||'—')+'</td>'+
+    '<td style="font-family:\'Courier New\',monospace;font-weight:700;color:#00ff88;">'+(l.duration||'—')+'</td>'+
+    '<td style="font-size:11px;color:#a8d8ea;">'+(l.date||'—')+' <span style="color:rgba(168,216,234,.4);">'+(l.time||'')+'</span></td>'+
+    '<td><span style="background:rgba(0,100,180,.15);border:1px solid rgba(0,180,255,.2);border-radius:3px;padding:2px 8px;font-size:10px;color:rgba(0,200,255,.7);">'+(l.shiftId||'—')+'</span></td>'+
+    '<td>'+(l.component?'<span style="font-size:10px;font-weight:700;color:#c080ff;background:rgba(120,60,180,.15);border:1px solid rgba(160,80,220,.3);border-radius:12px;padding:2px 8px;">'+l.component+'</span>':'—')+'</td>'+
+    '<td style="font-size:11px;color:#a8d8ea;max-width:200px;word-break:break-word;">'+(l.description||'—')+'</td>'+
+    '<td style="font-size:11px;color:#a8d8ea;max-width:200px;word-break:break-word;">'+(l.remarks||'—')+'</td></tr>'
+  ).join('');
+  container.innerHTML='<table><thead><tr><th>#</th><th>Agent</th><th>Ticket ID</th><th>Duration</th><th>Date / Time</th><th>Shift</th><th>Component</th><th>Description</th><th>Remarks</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
 function filterTrackerTable(){
   const q=document.getElementById('trackerSearchInput').value.toLowerCase();
   const base=selectedAgent?filteredLogs.filter(l=>l.agentName===selectedAgent):filteredLogs;
-  const result=q?base.filter(l=>(l.agentName||'').toLowerCase().includes(q)||(l.ticketId||'').toLowerCase().includes(q)||(l.component||'').toLowerCase().includes(q)||(l.shiftId||'').toLowerCase().includes(q)):base;
-  renderTrackerTable(result);
+  renderTrackerTable(q?base.filter(l=>(l.agentName||'').toLowerCase().includes(q)||(l.ticketId||'').toLowerCase().includes(q)||(l.component||'').toLowerCase().includes(q)||(l.shiftId||'').toLowerCase().includes(q)):base);
 }
 
-/* ══════════════════════════════
-   SHIFT HANDOVER MONITOR
-══════════════════════════════ */
+/* HANDOVER */
 async function loadHandovers(){
-  document.getElementById('ho-date-from').value='';
-  document.getElementById('ho-date-to').value='';
-  document.getElementById('ho-shift-filter').value='';
-  document.getElementById('ho-filter-label').textContent='';
+  document.getElementById('ho-date-from').value='';document.getElementById('ho-date-to').value='';
+  document.getElementById('ho-shift-filter').value='';document.getElementById('ho-filter-label').textContent='';
   document.getElementById('hoTableContainer').innerHTML='<div class="loading">⏳ LOADING HANDOVER DATA...</div>';
   try{
     const res=await fetch(API_URL+'?action=getHandovers&t='+Date.now());
     const data=await res.json();
-    if(data.success){
-      allHandovers=data.handovers||[];filteredHandovers=[...allHandovers];
-      renderHandoverStats(filteredHandovers);renderHandoverTable(filteredHandovers);
-      document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();
-    } else {
-      document.getElementById('hoTableContainer').innerHTML='<div class="error-msg">⚠ Failed to load data.</div>';
-    }
-  } catch{document.getElementById('hoTableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}
+    if(data.success){allHandovers=data.handovers||[];filteredHandovers=[...allHandovers];renderHandoverStats(filteredHandovers);renderHandoverTable(filteredHandovers);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}
+    else document.getElementById('hoTableContainer').innerHTML='<div class="error-msg">⚠ Failed to load data.</div>';
+  }catch{document.getElementById('hoTableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}
 }
 function applyHandoverFilter(){
-  const from=document.getElementById('ho-date-from').value;
-  const to=document.getElementById('ho-date-to').value;
-  const shift=document.getElementById('ho-shift-filter').value;
-  filteredHandovers=allHandovers.filter(h=>{
-    if(from&&h.date<from) return false;
-    if(to&&h.date>to) return false;
-    if(shift&&h.shift!==shift) return false;
-    return true;
-  });
-  const parts=[];
-  if(from||to) parts.push((from||'…')+' → '+(to||'…'));
-  if(shift) parts.push('Shift: '+shift);
+  const from=document.getElementById('ho-date-from').value,to=document.getElementById('ho-date-to').value,shift=document.getElementById('ho-shift-filter').value;
+  filteredHandovers=allHandovers.filter(h=>{if(from&&h.date<from)return false;if(to&&h.date>to)return false;if(shift&&h.shift!==shift)return false;return true;});
+  const parts=[];if(from||to)parts.push((from||'…')+' → '+(to||'…'));if(shift)parts.push('Shift: '+shift);
   document.getElementById('ho-filter-label').textContent=parts.length?parts.join(' · ')+' · '+filteredHandovers.length+' records':'';
   renderHandoverStats(filteredHandovers);renderHandoverTable(filteredHandovers);
 }
@@ -825,72 +758,214 @@ function renderHandoverTable(list){
   if(!list.length){document.getElementById('hoTableContainer').innerHTML='<div class="no-data-msg">📭 No handover submissions found.</div>';return;}
   const rows=[...list].reverse().map((h,i)=>{
     const submittedAt=h.submittedAt?new Date(h.submittedAt).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'—';
-    const shiftColor={D1:'env-dev',D2:'env-uat',D3:'env-staging'}[h.shift]||'env-default';
-    return `<tr>
-      <td style="color:rgba(0,200,255,.4);font-size:11px;">${i+1}</td>
-      <td style="font-family:'Courier New',monospace;font-weight:700;color:#e0f4ff;">${h.date||'—'}</td>
-      <td><span class="env-badge ${shiftColor}">${h.shift||'—'}</span></td>
-      <td style="font-size:12px;color:#a8d8ea;max-width:180px;">${h.currentMembers||'—'}</td>
-      <td style="font-size:12px;color:#a8d8ea;max-width:180px;">${h.nextMembers||'—'}</td>
-      <td style="text-align:center;"><span style="font-size:16px;font-weight:800;color:#00c8ff;">${h.totalTickets||0}</span></td>
-      <td style="text-align:center;"><span style="font-size:14px;font-weight:700;color:#ff4444;">${h.pendingTickets||0}</span></td>
-      <td style="text-align:center;"><span style="font-size:14px;font-weight:700;color:#00ff88;">${h.completedTickets||0}</span></td>
-      <td style="text-align:center;">${(h.showstopperCount||0)>0?`<span style="background:rgba(255,60,60,.2);border:1px solid rgba(255,60,60,.4);border-radius:12px;padding:2px 8px;font-size:11px;font-weight:700;color:#ff8888;">🔴 ${h.showstopperCount}</span>`:'<span style="color:rgba(168,216,234,.3);font-size:12px;">—</span>'}</td>
-      <td style="font-size:11px;color:rgba(168,216,234,.5);">${submittedAt}</td>
-      <td><button class="view-btn" onclick="openHoDetail(${list.length-1-i})">👁 View</button></td>
-    </tr>`;
+    const sc={D1:'env-dev',D2:'env-uat',D3:'env-staging'}[h.shift]||'env-default';
+    return '<tr>'+
+      '<td style="color:rgba(0,200,255,.4);font-size:11px;">'+(i+1)+'</td>'+
+      '<td style="font-family:\'Courier New\',monospace;font-weight:700;color:#e0f4ff;">'+(h.date||'—')+'</td>'+
+      '<td><span class="env-badge '+sc+'">'+(h.shift||'—')+'</span></td>'+
+      '<td style="font-size:12px;color:#a8d8ea;max-width:180px;">'+(h.currentMembers||'—')+'</td>'+
+      '<td style="font-size:12px;color:#a8d8ea;max-width:180px;">'+(h.nextMembers||'—')+'</td>'+
+      '<td style="text-align:center;"><span style="font-size:16px;font-weight:800;color:#00c8ff;">'+(h.totalTickets||0)+'</span></td>'+
+      '<td style="text-align:center;"><span style="font-size:14px;font-weight:700;color:#ff4444;">'+(h.pendingTickets||0)+'</span></td>'+
+      '<td style="text-align:center;"><span style="font-size:14px;font-weight:700;color:#00ff88;">'+(h.completedTickets||0)+'</span></td>'+
+      '<td style="text-align:center;">'+(h.showstopperCount>0?'<span style="background:rgba(255,60,60,.2);border:1px solid rgba(255,60,60,.4);border-radius:12px;padding:2px 8px;font-size:11px;font-weight:700;color:#ff8888;">🔴 '+h.showstopperCount+'</span>':'<span style="color:rgba(168,216,234,.3);font-size:12px;">—</span>')+'</td>'+
+      '<td style="font-size:11px;color:rgba(168,216,234,.5);">'+submittedAt+'</td>'+
+      '<td><button class="view-btn" onclick="openHoDetail('+(list.length-1-i)+')">👁 View</button></td></tr>';
   }).join('');
-  document.getElementById('hoTableContainer').innerHTML=`<table><thead><tr>
-    <th>#</th><th>Date</th><th>Shift</th><th>Current Members</th><th>Next Members</th>
-    <th style="text-align:center;">Total</th><th style="text-align:center;">Pending</th>
-    <th style="text-align:center;">Done</th><th style="text-align:center;">Showstopper</th>
-    <th>Submitted At</th><th>Detail</th>
-  </tr></thead><tbody>${rows}</tbody></table>`;
+  document.getElementById('hoTableContainer').innerHTML='<table><thead><tr><th>#</th><th>Date</th><th>Shift</th><th>Current Members</th><th>Next Members</th><th style="text-align:center;">Total</th><th style="text-align:center;">Pending</th><th style="text-align:center;">Done</th><th style="text-align:center;">Showstopper</th><th>Submitted At</th><th>Detail</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
 function filterHandoverTable(){
   const q=document.getElementById('hoSearchInput').value.toLowerCase();
-  const result=q?filteredHandovers.filter(h=>(h.date||'').includes(q)||(h.shift||'').toLowerCase().includes(q)||(h.currentMembers||'').toLowerCase().includes(q)||(h.nextMembers||'').toLowerCase().includes(q)):filteredHandovers;
-  renderHandoverTable(result);
+  renderHandoverTable(q?filteredHandovers.filter(h=>(h.date||'').includes(q)||(h.shift||'').toLowerCase().includes(q)||(h.currentMembers||'').toLowerCase().includes(q)||(h.nextMembers||'').toLowerCase().includes(q)):filteredHandovers);
 }
 function openHoDetail(idx){
-  const h=[...filteredHandovers].reverse()[idx];if(!h) return;
+  const h=[...filteredHandovers].reverse()[idx];if(!h)return;
   const submittedAt=h.submittedAt?new Date(h.submittedAt).toLocaleString():'—';
-  const catRow=(label,color,count,pending,ids)=>`
-    <div style="background:rgba(2,15,30,.5);border:1px solid rgba(0,180,255,.1);border-radius:6px;padding:12px 14px;margin-bottom:8px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-        <span style="font-size:12px;font-weight:700;color:${color};">${label}</span>
-        <div style="display:flex;gap:8px;">
-          <span style="font-size:11px;border-radius:10px;padding:2px 8px;color:${color};background:rgba(100,100,100,.15);">${count} total</span>
-          ${pending>0?`<span style="font-size:11px;background:rgba(255,60,60,.15);border-radius:10px;padding:2px 8px;color:#ff8888;">${pending} pending</span>`:''}
-        </div>
-      </div>
-      ${ids?`<div style="font-family:'Courier New',monospace;font-size:11px;color:rgba(0,200,255,.7);line-height:1.8;">${ids}</div>`:'<div style="font-size:11px;color:rgba(168,216,234,.3);">No tickets</div>'}
-    </div>`;
+  const catRow=(label,color,count,pending,ids)=>'<div style="background:rgba(2,15,30,.5);border:1px solid rgba(0,180,255,.1);border-radius:6px;padding:12px 14px;margin-bottom:8px;">'+
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">'+
+    '<span style="font-size:12px;font-weight:700;color:'+color+';">'+label+'</span>'+
+    '<div style="display:flex;gap:8px;"><span style="font-size:11px;border-radius:10px;padding:2px 8px;color:'+color+';background:rgba(100,100,100,.15);">'+count+' total</span>'+
+    (pending>0?'<span style="font-size:11px;background:rgba(255,60,60,.15);border-radius:10px;padding:2px 8px;color:#ff8888;">'+pending+' pending</span>':'')+
+    '</div></div>'+(ids?'<div style="font-family:\'Courier New\',monospace;font-size:11px;color:rgba(0,200,255,.7);line-height:1.8;">'+ids+'</div>':'<div style="font-size:11px;color:rgba(168,216,234,.3);">No tickets</div>')+'</div>';
   const infoBoxes=[h.infoBox1,h.infoBox2,h.infoBox3,h.infoBox4].filter(b=>b&&b.trim());
-  const infoHtml=infoBoxes.length?`<div style="margin-top:16px;"><div style="font-size:11px;font-weight:700;color:rgba(0,200,255,.7);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">📢 Important Information</div>${infoBoxes.map(b=>`<div style="background:rgba(255,160,0,.08);border:1px solid rgba(255,160,0,.2);border-radius:6px;padding:10px 12px;font-size:12px;color:#a8d8ea;line-height:1.6;margin-bottom:8px;white-space:pre-wrap;">${b}</div>`).join('')}</div>`:'';
-  document.getElementById('hoDetailContent').innerHTML=`
-    <div style="font-family:'Courier New',monospace;font-size:18px;font-weight:900;color:#e0f4ff;letter-spacing:3px;margin-bottom:4px;">${h.date} — ${h.shift}</div>
-    <div style="font-size:11px;color:rgba(0,200,255,.5);letter-spacing:1px;margin-bottom:20px;">Submitted: ${submittedAt}</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
-      <div style="background:rgba(2,15,30,.5);border:1px solid rgba(0,180,255,.15);border-radius:6px;padding:12px;"><div style="font-size:10px;color:rgba(0,200,255,.5);letter-spacing:1px;margin-bottom:5px;">CURRENT SHIFT</div><div style="font-size:13px;color:#e0f4ff;line-height:1.7;">${h.currentMembers||'—'}</div></div>
-      <div style="background:rgba(2,15,30,.5);border:1px solid rgba(0,180,255,.15);border-radius:6px;padding:12px;"><div style="font-size:10px;color:rgba(0,200,255,.5);letter-spacing:1px;margin-bottom:5px;">NEXT SHIFT</div><div style="font-size:13px;color:#e0f4ff;line-height:1.7;">${h.nextMembers||'—'}</div></div>
-      <div style="background:rgba(2,15,30,.5);border:1px solid rgba(0,180,255,.15);border-radius:6px;padding:10px 12px;"><div style="font-size:10px;color:rgba(0,200,255,.5);letter-spacing:1px;margin-bottom:4px;">MAILS HANDLED BY</div><div style="font-size:13px;color:#a8e8ff;">${h.mailsHandledBy||'—'}</div></div>
-      <div style="background:rgba(2,15,30,.5);border:1px solid rgba(0,180,255,.15);border-radius:6px;padding:10px 12px;"><div style="font-size:10px;color:rgba(0,200,255,.5);letter-spacing:1px;margin-bottom:4px;">JIRA HANDLED BY</div><div style="font-size:13px;color:#a8e8ff;">${h.jiraHandledBy||'—'}</div></div>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;">
-      <div style="background:rgba(0,100,180,.15);border:1px solid rgba(0,180,255,.2);border-radius:6px;padding:12px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#00c8ff;">${h.totalTickets||0}</div><div style="font-size:10px;color:rgba(0,200,255,.5);letter-spacing:1px;">TOTAL</div></div>
-      <div style="background:rgba(255,60,60,.1);border:1px solid rgba(255,60,60,.2);border-radius:6px;padding:12px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#ff4444;">${h.pendingTickets||0}</div><div style="font-size:10px;color:rgba(255,80,80,.6);letter-spacing:1px;">PENDING</div></div>
-      <div style="background:rgba(0,180,80,.1);border:1px solid rgba(0,180,80,.2);border-radius:6px;padding:12px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#00ff88;">${h.completedTickets||0}</div><div style="font-size:10px;color:rgba(0,200,100,.5);letter-spacing:1px;">COMPLETED</div></div>
-    </div>
-    <div style="font-size:11px;font-weight:700;color:rgba(0,200,255,.7);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">📋 Ticket Breakdown</div>
-    ${catRow('🔴 Showstopper','#ff8888',h.showstopperCount||0,h.showstopperPending||0,h.showstopperIds||'')}
-    ${catRow('🟠 High Priority','#ffa040',h.highCount||0,h.highPending||0,h.highIds||'')}
-    ${catRow('🟣 Customer Escalated','#c080ff',h.escalatedCount||0,h.escalatedPending||0,h.escalatedIds||'')}
-    ${catRow('⚫ Long Pending','#aaaaaa',h.longpendingCount||0,h.longpendingPending||0,h.longpendingIds||'')}
-    ${infoHtml}`;
+  const infoHtml=infoBoxes.length?'<div style="margin-top:16px;"><div style="font-size:11px;font-weight:700;color:rgba(0,200,255,.7);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">📢 Important Information</div>'+infoBoxes.map(b=>'<div style="background:rgba(255,160,0,.08);border:1px solid rgba(255,160,0,.2);border-radius:6px;padding:10px 12px;font-size:12px;color:#a8d8ea;line-height:1.6;margin-bottom:8px;white-space:pre-wrap;">'+b+'</div>').join('')+'</div>':'';
+  document.getElementById('hoDetailContent').innerHTML=
+    '<div style="font-family:\'Courier New\',monospace;font-size:18px;font-weight:900;color:#e0f4ff;letter-spacing:3px;margin-bottom:4px;">'+h.date+' — '+h.shift+'</div>'+
+    '<div style="font-size:11px;color:rgba(0,200,255,.5);letter-spacing:1px;margin-bottom:20px;">Submitted: '+submittedAt+'</div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">'+
+    '<div style="background:rgba(2,15,30,.5);border:1px solid rgba(0,180,255,.15);border-radius:6px;padding:12px;"><div style="font-size:10px;color:rgba(0,200,255,.5);letter-spacing:1px;margin-bottom:5px;">CURRENT SHIFT</div><div style="font-size:13px;color:#e0f4ff;line-height:1.7;">'+(h.currentMembers||'—')+'</div></div>'+
+    '<div style="background:rgba(2,15,30,.5);border:1px solid rgba(0,180,255,.15);border-radius:6px;padding:12px;"><div style="font-size:10px;color:rgba(0,200,255,.5);letter-spacing:1px;margin-bottom:5px;">NEXT SHIFT</div><div style="font-size:13px;color:#e0f4ff;line-height:1.7;">'+(h.nextMembers||'—')+'</div></div>'+
+    '<div style="background:rgba(2,15,30,.5);border:1px solid rgba(0,180,255,.15);border-radius:6px;padding:10px 12px;"><div style="font-size:10px;color:rgba(0,200,255,.5);letter-spacing:1px;margin-bottom:4px;">MAILS HANDLED BY</div><div style="font-size:13px;color:#a8e8ff;">'+(h.mailsHandledBy||'—')+'</div></div>'+
+    '<div style="background:rgba(2,15,30,.5);border:1px solid rgba(0,180,255,.15);border-radius:6px;padding:10px 12px;"><div style="font-size:10px;color:rgba(0,200,255,.5);letter-spacing:1px;margin-bottom:4px;">JIRA HANDLED BY</div><div style="font-size:13px;color:#a8e8ff;">'+(h.jiraHandledBy||'—')+'</div></div></div>'+
+    '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;">'+
+    '<div style="background:rgba(0,100,180,.15);border:1px solid rgba(0,180,255,.2);border-radius:6px;padding:12px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#00c8ff;">'+(h.totalTickets||0)+'</div><div style="font-size:10px;color:rgba(0,200,255,.5);letter-spacing:1px;">TOTAL</div></div>'+
+    '<div style="background:rgba(255,60,60,.1);border:1px solid rgba(255,60,60,.2);border-radius:6px;padding:12px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#ff4444;">'+(h.pendingTickets||0)+'</div><div style="font-size:10px;color:rgba(255,80,80,.6);letter-spacing:1px;">PENDING</div></div>'+
+    '<div style="background:rgba(0,180,80,.1);border:1px solid rgba(0,180,80,.2);border-radius:6px;padding:12px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#00ff88;">'+(h.completedTickets||0)+'</div><div style="font-size:10px;color:rgba(0,200,100,.5);letter-spacing:1px;">COMPLETED</div></div></div>'+
+    '<div style="font-size:11px;font-weight:700;color:rgba(0,200,255,.7);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">📋 Ticket Breakdown</div>'+
+    catRow('🔴 Showstopper','#ff8888',h.showstopperCount||0,h.showstopperPending||0,h.showstopperIds||'')+
+    catRow('🟠 High Priority','#ffa040',h.highCount||0,h.highPending||0,h.highIds||'')+
+    catRow('🟣 Customer Escalated','#c080ff',h.escalatedCount||0,h.escalatedPending||0,h.escalatedIds||'')+
+    catRow('⚫ Long Pending','#aaaaaa',h.longpendingCount||0,h.longpendingPending||0,h.longpendingIds||'')+infoHtml;
   document.getElementById('hoDetailOverlay').classList.add('open');
 }
 function closeHoDetail(){document.getElementById('hoDetailOverlay').classList.remove('open');}
+
+/* ══════════════════════════════
+   SHIFT PLANNER
+══════════════════════════════ */
+const PLANNER_DATES=['30-03-2026','31-03-2026','01-04-2026','02-04-2026','03-04-2026','04-04-2026','05-04-2026','06-04-2026','07-04-2026','08-04-2026','09-04-2026','10-04-2026','11-04-2026','12-04-2026','13-04-2026','14-04-2026','15-04-2026','16-04-2026','17-04-2026','18-04-2026','19-04-2026','20-04-2026','21-04-2026','22-04-2026','23-04-2026','24-04-2026','25-04-2026','26-04-2026','27-04-2026','28-04-2026','29-04-2026','30-04-2026','01-05-2026','02-05-2026','03-05-2026'];
+const PLANNER_DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const PLANNER_DEFAULT=[
+  {sl:1,id:'SM1658',name:'Vignesh Maharajan',     group:'G2',primary:'Customer Service',shifts:['D5','D5','D5','D5','Holiday','W/OFF','W/OFF','D5','D5','D5','D5','D5','W/OFF','W/OFF','D5','Holiday','D5','D5','D5','W/OFF','W/OFF','D5','D5','D5','D5','D5','W/OFF','W/OFF','D5','D5','D5','D5','D5','W/OFF','W/OFF']},
+  {sl:2,id:'SM2045',name:'Akash Nagarathinam',    group:'G3',primary:'EMS/EDI',          shifts:['D2','D2','D2','D2','D2','W/OFF','W/OFF','Compff','D1','D1','D1','D1','W/OFF','W/OFF','D1','Holiday','D1','D1','D1','W/OFF','W/OFF','D2','D2','D2','D2','D2','W/OFF','W/OFF','D2','D2','D2','D2','D2','W/OFF','W/OFF']},
+  {sl:3,id:'SM1638',name:'Challa Venkat Suneel',  group:'G1',primary:'Operations',       shifts:['D4','D4','D4','D4','Holiday','W/OFF','W/OFF','D4','D4','D4','D4','D4','W/OFF','W/OFF','D4','Holiday','D4','D4','D4','W/OFF','W/OFF','D4','D4','D4','D4','D4','W/OFF','W/OFF','D4','D4','D4','D4','D4','W/OFF','W/OFF']},
+  {sl:4,id:'SM2197',name:'Vinoth Bhoopathy',      group:'G1',primary:'Operations',       shifts:['D1','D1','D1','D1','Holiday','W/OFF','W/OFF','D2','D2','D2','D2','D2','W/OFF','W/OFF','D2','Holiday','D2','D2','D2','W/OFF','W/OFF','D1','D1','D1','W/OFF','D1','D1','D1','W/OFF','D1','D1','D1','D1','W/OFF','W/OFF']},
+  {sl:5,id:'SM2335',name:'Vignesh Rajapandi',     group:'G2',primary:'Operations',       shifts:['D4','D4','D4','D4','Holiday','W/OFF','W/OFF','D4','D4','D4','D4','D4','W/OFF','W/OFF','D4','Holiday','D4','D4','D4','W/OFF','W/OFF','D4','D4','D4','D4','D4','W/OFF','W/OFF','D4','D4','D4','D4','D4','W/OFF','W/OFF']},
+  {sl:6,id:'SM2145',name:'Rene Claret A',         group:'G2',primary:'Customer Service', shifts:['D2','D2','W/OFF','W/OFF','Holiday','D2','D2','W/OFF','N','N','N','N','W/OFF','W/OFF','D1','D1','D1','D1','D1','W/OFF','W/OFF','Compff','N','N','N','N','N','W/OFF','D2','D2','D2','D2','D2','W/OFF','W/OFF']},
+  {sl:7,id:'SM2333',name:'Kulasekar Baskar',      group:'G1',primary:'Operations',       shifts:['N','N','W/OFF','W/OFF','Holiday','N','N','N','W/OFF','D2','D2','W/OFF','D2','D2','D2','D2','D2','W/OFF','W/OFF','D1','D1','Compff','W/OFF','D1','D1','W/OFF','W/OFF','N','N','N','N','N','W/OFF','D1','D1']},
+  {sl:8,id:'SM2332',name:'Seenivasan Lakshmipathy',group:'G2',primary:'Customer Service',shifts:['D1','D1','W/OFF','W/OFF','D1','D1','D1','D1','D1','Compff','W/OFF','W/OFF','N','N','N','N','N','W/OFF','W/OFF','D2','D2','Compff','W/OFF','D2','D2','D2','W/OFF','W/OFF','D1','D1','D1','W/OFF','N','N','N']},
+  {sl:9,id:'SM2331',name:'Vinothraj Vijayakumar', group:'G2',primary:'Customer Service', shifts:['N','N','N','N','N','W/OFF','W/OFF','D2','D2','Compff','W/OFF','D1','D1','D1','W/OFF','Holiday','W/OFF','N','N','N','N','N','W/OFF','D2','D2','W/OFF','D2','D2','D2','D2','W/OFF','W/OFF','D2','D2','D2']}
+];
+const SHIFT_LEGEND=[
+  {key:'D1',label:'D1 — Morning',  cls:'sp-D1'},{key:'D2',label:'D2 — Afternoon',cls:'sp-D2'},
+  {key:'D4',label:'D4 — Day',      cls:'sp-D4'},{key:'D5',label:'D5 — Evening',  cls:'sp-D5'},
+  {key:'N', label:'Night',         cls:'sp-N'}, {key:'W/OFF',label:'Week Off',   cls:'sp-WOFF'},
+  {key:'Holiday',label:'Holiday',  cls:'sp-HOL'},{key:'Compff',label:'Comp Off', cls:'sp-COMP'}
+];
+let plannerShiftFilter='ALL';
+let PLANNER_TEAM=JSON.parse(JSON.stringify(PLANNER_DEFAULT));
+let plannerDirty=false;
+let pceTarget=null;
+
+async function loadPlanner(){
+  document.getElementById('planner-table-container').innerHTML='<div class="loading">⏳ LOADING PLANNER...</div>';
+  try{
+    const res=await fetch(API_URL+'?action=getPlanner&t='+Date.now());
+    const data=await res.json();
+    if(data.success&&data.planner&&Array.isArray(data.planner)&&data.planner.length){
+      PLANNER_TEAM=data.planner;
+      if(data.updatedAt){
+        const d=new Date(data.updatedAt);
+        document.getElementById('planner-saved-label').textContent='✅ Last published: '+d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      }
+    } else {
+      PLANNER_TEAM=JSON.parse(JSON.stringify(PLANNER_DEFAULT));
+    }
+  }catch{PLANNER_TEAM=JSON.parse(JSON.stringify(PLANNER_DEFAULT));}
+  plannerDirty=false;
+  resetPublishBtn();
+  renderPlanner();
+}
+
+function resetPublishBtn(){
+  const btn=document.getElementById('planner-publish-btn');
+  btn.textContent='📤 Submit to Agents';
+  btn.style.background='linear-gradient(135deg,#0a5a2a,#0d8a3a)';
+  btn.style.borderColor='rgba(0,200,80,.4)';
+  btn.disabled=false;
+}
+
+async function publishPlanner(){
+  const btn=document.getElementById('planner-publish-btn');
+  btn.disabled=true;btn.textContent='⏳ Submitting...';
+  try{
+    const res=await fetch(API_URL+'?'+new URLSearchParams({action:'savePlanner',payload:JSON.stringify(PLANNER_TEAM)}));
+    const data=await res.json();
+    if(data.success){
+      plannerDirty=false;
+      const now=new Date();
+      document.getElementById('planner-saved-label').textContent='✅ Published: '+now.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+' '+now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      showToast('📤 Shift planner submitted to agents successfully!');
+      resetPublishBtn();
+    } else {
+      showToast('⚠ Submit failed. Try again.',false);
+      btn.textContent='📤 Submit to Agents';btn.disabled=false;
+    }
+  }catch{
+    showToast('⚠ Connection error.',false);
+    btn.textContent='📤 Submit to Agents';btn.disabled=false;
+  }
+}
+
+function getPlannerTodayIndex(){
+  const d=new Date(),pad=n=>String(n).padStart(2,'0');
+  return PLANNER_DATES.indexOf(pad(d.getDate())+'-'+pad(d.getMonth()+1)+'-'+d.getFullYear());
+}
+function shiftPillClass(s){
+  const v=(s||'').trim().toUpperCase();
+  if(v==='D1')return 'sp-D1';if(v==='D2')return 'sp-D2';if(v==='D3')return 'sp-D3';
+  if(v==='D4')return 'sp-D4';if(v==='D5')return 'sp-D5';if(v==='N')return 'sp-N';
+  if(v==='W/OFF')return 'sp-WOFF';if(v==='HOLIDAY')return 'sp-HOL';if(v==='COMPFF')return 'sp-COMP';
+  return 'sp-WOFF';
+}
+function setPlannerFilter(btn){
+  plannerShiftFilter=btn.dataset.shift;
+  document.querySelectorAll('.planner-filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');renderPlanner();
+}
+function openPlannerEditor(memberIdx,dateIdx,currentVal,cellEl){
+  pceTarget={memberIdx,dateIdx};
+  document.getElementById('pce-select').value=currentVal||'W/OFF';
+  document.getElementById('pce-label').textContent=PLANNER_TEAM[memberIdx].name+' — '+PLANNER_DATES[dateIdx];
+  const editor=document.getElementById('planner-cell-editor');
+  editor.style.display='block';
+  const rect=cellEl.getBoundingClientRect();
+  let top=rect.bottom+window.scrollY+4,left=rect.left+window.scrollX;
+  if(left+210>window.innerWidth)left=window.innerWidth-220;
+  editor.style.top=top+'px';editor.style.left=left+'px';
+}
+function closePlannerEditor(){
+  document.getElementById('planner-cell-editor').style.display='none';pceTarget=null;
+}
+function applyPlannerCellEdit(){
+  if(!pceTarget)return;
+  PLANNER_TEAM[pceTarget.memberIdx].shifts[pceTarget.dateIdx]=document.getElementById('pce-select').value;
+  plannerDirty=true;
+  const btn=document.getElementById('planner-publish-btn');
+  btn.textContent='📤 Submit to Agents *';
+  btn.style.background='linear-gradient(135deg,#7a3a0a,#c06010)';
+  btn.style.borderColor='rgba(255,160,0,.5)';
+  closePlannerEditor();renderPlanner();
+}
+document.addEventListener('click',function(e){
+  const ed=document.getElementById('planner-cell-editor');
+  if(ed&&ed.style.display!=='none'&&!ed.contains(e.target)&&!e.target.closest('td'))closePlannerEditor();
+});
+function renderPlanner(){
+  const ti=getPlannerTodayIndex();
+  const search=(document.getElementById('planner-search')?.value||'').toLowerCase();
+  const lbl=document.getElementById('planner-today-label');
+  if(ti>=0)lbl.textContent='Today: '+PLANNER_DATES[ti]+' ('+PLANNER_DAYS[ti]+')';else lbl.textContent='';
+  document.getElementById('planner-legend').innerHTML=SHIFT_LEGEND.map(l=>
+    '<span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:rgba(168,216,234,.7);">'+
+    '<span class="shift-pill '+l.cls+'">'+l.key+'</span>'+l.label+'</span>').join('');
+  let team=PLANNER_TEAM;
+  if(search)team=team.filter(m=>m.name.toLowerCase().includes(search)||m.primary.toLowerCase().includes(search)||m.id.toLowerCase().includes(search));
+  if(plannerShiftFilter!=='ALL')team=team.filter(m=>m.shifts.some(s=>s.trim().toUpperCase()===plannerShiftFilter.toUpperCase()));
+  if(!team.length){document.getElementById('planner-table-container').innerHTML='<div style="padding:40px;text-align:center;color:rgba(0,200,255,.4);font-size:14px;letter-spacing:2px;">No team members found.</div>';return;}
+  let hdr='<tr><th class="col-name" rowspan="2">Name</th><th style="text-align:left;min-width:120px;background:rgba(0,40,80,.6);border:1px solid rgba(0,180,255,.15);padding:8px 10px;font-size:10px;font-weight:700;color:rgba(0,200,255,.8);text-transform:uppercase;letter-spacing:1px;white-space:nowrap;position:sticky;top:0;z-index:2;" rowspan="2">Primary Role</th>';
+  PLANNER_DATES.forEach((d,i)=>{
+    const isT=i===ti,isW=PLANNER_DAYS[i]==='Sat'||PLANNER_DAYS[i]==='Sun';
+    const p=d.split('-');
+    hdr+='<th style="padding:8px 10px;text-align:center;font-size:10px;font-weight:700;white-space:nowrap;border:1px solid rgba(0,180,255,.15);background:'+(isT?'rgba(0,180,255,.15)':'rgba(0,40,80,.6)')+';color:'+(isT?'#00c8ff':isW?'rgba(168,216,234,.4)':'rgba(0,200,255,.8)')+';">'+p[0]+'/'+p[1]+'</th>';
+  });
+  hdr+='</tr><tr>';
+  PLANNER_DAYS.forEach((d,i)=>{
+    const isT=i===ti,isW=d==='Sat'||d==='Sun';
+    hdr+='<th style="font-size:9px;padding:8px 10px;text-align:center;font-weight:700;white-space:nowrap;border:1px solid rgba(0,180,255,.15);background:'+(isT?'rgba(0,180,255,.15)':'rgba(0,40,80,.6)')+';color:'+(isT?'#00c8ff':isW?'rgba(168,216,234,.3)':'rgba(0,200,255,.8)')+';">'+d+'</th>';
+  });
+  hdr+='</tr>';
+  const bodyRows=team.map(m=>{
+    const ri=PLANNER_TEAM.indexOf(m);let cells='';
+    m.shifts.forEach((s,i)=>{
+      const isT=i===ti,pill=shiftPillClass(s),hl=plannerShiftFilter!=='ALL'&&s.trim().toUpperCase()===plannerShiftFilter.toUpperCase();
+      cells+='<td class="'+(isT?'col-today':'')+'" style="cursor:pointer;" title="Click to edit" onclick="openPlannerEditor('+ri+','+i+',\''+s+'\',this)">'+
+        '<span class="shift-pill '+pill+(isT?' sp-TODAY':'')+'"'+(hl?' style="box-shadow:0 0 6px rgba(0,200,255,.5);"':'')+'>'+s+'</span></td>';
+    });
+    return '<tr><td class="col-name"><div>'+m.name+'</div><div style="font-size:10px;color:rgba(0,200,255,.5);font-family:\'Courier New\',monospace;margin-top:2px;">'+m.id+'</div></td><td class="col-primary">'+m.primary+'</td>'+cells+'</tr>';
+  }).join('');
+  document.getElementById('planner-table-container').innerHTML='<table class="planner-tbl"><thead>'+hdr+'</thead><tbody>'+bodyRows+'</tbody></table>';
+}
 
 setInterval(()=>{if(document.getElementById('dashboard').style.display!=='none'&&currentTab==='agents')loadUsers();},60000);
 </script>
