@@ -31,7 +31,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .wave2{bottom:44%;background:rgba(255,255,255,.14);border-radius:50% 50% 0 0/30px 30px 0 0;animation:waveDrift 9s ease-in-out infinite reverse;}
 .wave3{bottom:40%;background:rgba(255,255,255,.08);border-radius:50% 50% 0 0/20px 20px 0 0;animation:waveDrift 11s ease-in-out infinite;}
 @keyframes waveDrift{0%,100%{transform:translateX(0);}50%{transform:translateX(5%);}}
-/* Boat */
 .boat{position:absolute;bottom:46.5%;left:50%;transform:translateX(-50%);animation:boatBob 3.5s ease-in-out infinite;}
 @keyframes boatBob{0%,100%{transform:translateX(-50%) translateY(0) rotate(-1deg);}50%{transform:translateX(-50%) translateY(-6px) rotate(1.5deg);}}
 .boat-hull{width:160px;height:30px;background:linear-gradient(180deg,#e8a020,#c07010);border-radius:0 0 50% 50% / 0 0 20px 20px;position:relative;left:0;box-shadow:0 4px 12px rgba(0,0,0,.25);}
@@ -41,16 +40,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .boat-cabin-window2{width:12px;height:10px;background:#7ec8e3;border-radius:2px;position:absolute;top:6px;right:8px;}
 .boat-mast{width:3px;height:60px;background:#8b5e3c;position:absolute;top:-94px;left:78px;}
 .boat-flag{width:20px;height:12px;background:#e03030;clip-path:polygon(0 0,100% 20%,0 100%);position:absolute;top:-94px;left:81px;}
-/* Containers on deck */
 .containers{position:absolute;top:-52px;left:8px;display:flex;gap:2px;}
 .cbox{width:22px;height:18px;border-radius:2px;border:1.5px solid rgba(0,0,0,.15);}
 .cb1{background:#e53935;}.cb2{background:#1e88e5;}.cb3{background:#43a047;}.cb4{background:#fb8c00;}.cb5{background:#8e24aa;}
-/* Seagulls */
 .seagulls{position:absolute;top:90px;left:0;width:100%;pointer-events:none;}
 .sg{position:absolute;animation:sgFly linear infinite;}
 .sg svg{width:28px;height:14px;}
 @keyframes sgFly{from{left:-40px;}to{left:110%;}}
-/* Login box */
 .login-box{position:relative;z-index:2;background:rgba(255,255,255,.92);border:1px solid rgba(255,255,255,.7);border-radius:16px;padding:36px 32px 32px;width:360px;text-align:center;backdrop-filter:blur(14px);box-shadow:0 12px 40px rgba(10,60,120,.2);}
 .login-logo{width:56px;height:56px;background:linear-gradient(135deg,#1a7db5,#0a3d78);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px;}
 .login-box h2{font-size:18px;font-weight:700;color:#0a3d78;letter-spacing:2px;margin-bottom:4px;}
@@ -59,6 +55,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .login-box input:focus{border-color:#1a7db5;background:#fff;}
 .login-box button{width:100%;padding:12px;background:linear-gradient(135deg,#1a7db5,#0a3d78);border:none;border-radius:8px;font-size:13px;font-weight:700;letter-spacing:2px;color:#fff;cursor:pointer;transition:opacity .2s;text-transform:uppercase;}
 .login-box button:hover{opacity:.88;}
+.login-box button:disabled{opacity:.6;cursor:not-allowed;}
 .login-err{color:#c0392b;font-size:12px;margin-top:8px;display:none;}
 
 /* ── TOPBAR ── */
@@ -165,7 +162,7 @@ tr:last-child td{border-bottom:none;}
 .toast{position:fixed;bottom:24px;right:24px;background:#fff;border:1.5px solid #b8d4ee;border-radius:10px;padding:12px 20px;font-size:13px;color:#1a3a5c;box-shadow:0 8px 24px rgba(26,90,160,.12);opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;}
 .toast.show{opacity:1;}
 
-/* ── AGENT CARDS (tracker) ── */
+/* ── AGENT CARDS ── */
 .agent-card{background:#fff;border:1.5px solid #c8dff0;border-radius:10px;padding:18px;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(26,90,160,.04);}
 .agent-card:hover,.agent-card.selected{border-color:#1a7db5;box-shadow:0 4px 16px rgba(26,125,181,.12);transform:translateY(-2px);}
 .agent-card.selected{border-color:#1a7db5;background:#eef5fc;}
@@ -242,11 +239,8 @@ tr:last-child td{border-bottom:none;}
           <div class="boat-cabin-window2"></div>
         </div>
         <div class="containers">
-          <div class="cbox cb1"></div>
-          <div class="cbox cb2"></div>
-          <div class="cbox cb3"></div>
-          <div class="cbox cb4"></div>
-          <div class="cbox cb5"></div>
+          <div class="cbox cb1"></div><div class="cbox cb2"></div><div class="cbox cb3"></div>
+          <div class="cbox cb4"></div><div class="cbox cb5"></div>
         </div>
         <div class="boat-deck"></div>
         <div class="boat-hull"></div>
@@ -259,7 +253,8 @@ tr:last-child td{border-bottom:none;}
     <p>LRP SUPPORT PORTAL</p>
     <input type="text" id="adm-user" placeholder="Admin username" autocomplete="off"/>
     <input type="password" id="adm-pass" placeholder="Admin password"/>
-    <button onclick="adminLogin()">⚓ Sign In</button>
+    <!-- ✅ No credentials here — verified server-side via Script Properties -->
+    <button id="adm-btn" onclick="adminLogin()">⚓ Sign In</button>
     <div class="login-err" id="adm-err">⚠ Invalid admin credentials.</div>
   </div>
 </div>
@@ -479,97 +474,169 @@ tr:last-child td{border-bottom:none;}
 </div>
 
 <script>
-const API_URL='https://script.google.com/macros/s/AKfycbzZjd-JaDNMwPx9X6eg1OCvCJFrhXRdIcle31JFmrNYu_qkviVXeZz5V4g4Wq6Re_ND_A/exec';
-const ADMIN_USER='admin',ADMIN_PASS='Admin@support';
+// ── CONFIG ──────────────────────────────────────────────────────────────────
+const API_URL = 'https://script.google.com/macros/s/AKfycbzZjd-JaDNMwPx9X6eg1OCvCJFrhXRdIcle31JFmrNYu_qkviVXeZz5V4g4Wq6Re_ND_A/exec';
+// ✅ NO credentials stored here — authentication is handled server-side via Script Properties
+
+let adminToken = null; // session token returned by the backend after successful login
 let allUsers=[],allCreds=[],allLogs=[],filteredLogs=[],allHandovers=[],filteredHandovers=[];
 let selectedAgent=null,currentTab='agents';
 
-window.addEventListener('load',()=>{
-  if(sessionStorage.getItem('admin_logged_in')==='true'){
-    document.getElementById('loginScreen').style.display='none';
-    document.getElementById('dashboard').style.display='block';
-    loadUsers();
+// ── STARTUP: restore session from sessionStorage ─────────────────────────────
+window.addEventListener('load', () => {
+  const savedToken = sessionStorage.getItem('admin_token');
+  if (savedToken) {
+    // Verify the token is still valid on the server
+    verifyToken(savedToken);
   }
 });
-function adminLogin(){
-  const u=document.getElementById('adm-user').value.trim();
-  const p=document.getElementById('adm-pass').value;
-  if(u===ADMIN_USER&&p===ADMIN_PASS){
-    sessionStorage.setItem('admin_logged_in','true');
-    document.getElementById('loginScreen').style.display='none';
-    document.getElementById('dashboard').style.display='block';
-    loadUsers();
-  }else{document.getElementById('adm-err').style.display='block';}
+
+async function verifyToken(token) {
+  try {
+    const res = await fetch(API_URL + '?action=verifyAdminToken&token=' + encodeURIComponent(token));
+    const data = await res.json();
+    if (data.valid) {
+      adminToken = token;
+      showDashboard();
+    } else {
+      sessionStorage.removeItem('admin_token');
+    }
+  } catch {
+    sessionStorage.removeItem('admin_token');
+  }
 }
-function adminLogout(){
-  if(!confirm('Are you sure you want to sign out?'))return;
-  sessionStorage.removeItem('admin_logged_in');
-  document.getElementById('loginScreen').style.display='flex';
-  document.getElementById('dashboard').style.display='none';
-  document.getElementById('adm-user').value='';document.getElementById('adm-pass').value='';
+
+// ── LOGIN: credentials sent to backend, never compared in JS ─────────────────
+async function adminLogin() {
+  const u = document.getElementById('adm-user').value.trim();
+  const p = document.getElementById('adm-pass').value;
+  const err = document.getElementById('adm-err');
+  const btn = document.getElementById('adm-btn');
+  err.style.display = 'none';
+  if (!u || !p) { err.textContent = '⚠ Please enter username and password.'; err.style.display = 'block'; return; }
+  btn.disabled = true;
+  btn.textContent = '⏳ Signing in...';
+  try {
+    const res = await fetch(API_URL + '?' + new URLSearchParams({ action: 'adminLogin', username: u, password: p }));
+    const data = await res.json();
+    if (data.success && data.token) {
+      adminToken = data.token;
+      sessionStorage.setItem('admin_token', adminToken); // store token, NOT credentials
+      showDashboard();
+    } else if (data.error === 'ADMIN_NOT_CONFIGURED') {
+      err.textContent = '⚠ Admin not configured. Set ADMIN_USER and ADMIN_PASS in Script Properties.';
+      err.style.display = 'block';
+    } else {
+      err.textContent = '⚠ Invalid admin credentials.';
+      err.style.display = 'block';
+    }
+  } catch {
+    err.textContent = '⚠ Connection error. Try again.';
+    err.style.display = 'block';
+  }
+  btn.disabled = false;
+  btn.textContent = '⚓ Sign In';
 }
-document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('loginScreen').style.display!=='none')adminLogin();});
-function switchTab(tab){
-  currentTab=tab;
-  ['agents','creds','tracker','handover','planner'].forEach(t=>{
-    document.getElementById('atab-'+t).classList.toggle('active',t===tab);
-    document.getElementById('panel-'+t).classList.toggle('active',t===tab);
+
+function showDashboard() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  document.getElementById('adm-pass').value = ''; // clear password field immediately
+  loadUsers();
+}
+
+function adminLogout() {
+  if (!confirm('Are you sure you want to sign out?')) return;
+  adminToken = null;
+  sessionStorage.removeItem('admin_token');
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('adm-user').value = '';
+  document.getElementById('adm-pass').value = '';
+  document.getElementById('adm-err').style.display = 'none';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') adminLogin();
+});
+
+// ── UI HELPERS ───────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  currentTab = tab;
+  ['agents','creds','tracker','handover','planner'].forEach(t => {
+    document.getElementById('atab-'+t).classList.toggle('active', t===tab);
+    document.getElementById('panel-'+t).classList.toggle('active', t===tab);
   });
-  if(tab==='creds')loadCreds();if(tab==='tracker')loadTracker();
-  if(tab==='handover')loadHandovers();if(tab==='planner')loadPlanner();
-  document.getElementById('lastRefreshed').textContent='';
+  if (tab==='creds') loadCreds();
+  if (tab==='tracker') loadTracker();
+  if (tab==='handover') loadHandovers();
+  if (tab==='planner') loadPlanner();
+  document.getElementById('lastRefreshed').textContent = '';
 }
-function refreshCurrent(){
-  if(currentTab==='agents')loadUsers();else if(currentTab==='creds')loadCreds();
-  else if(currentTab==='tracker')loadTracker();else if(currentTab==='handover')loadHandovers();
-  else if(currentTab==='planner')loadPlanner();
+function refreshCurrent() {
+  if (currentTab==='agents') loadUsers();
+  else if (currentTab==='creds') loadCreds();
+  else if (currentTab==='tracker') loadTracker();
+  else if (currentTab==='handover') loadHandovers();
+  else if (currentTab==='planner') loadPlanner();
 }
-function showToast(msg,success=true){
-  const t=document.getElementById('toast');t.textContent=msg;
-  t.style.borderColor=success?'#6cd4a0':'#f0aaaa';t.style.color=success?'#1a7050':'#a02020';
-  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);
+function showToast(msg, success=true) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.borderColor = success ? '#6cd4a0' : '#f0aaaa';
+  t.style.color = success ? '#1a7050' : '#a02020';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
 }
-function showFormMsg(id,text,type){
-  const el=document.getElementById(id);el.textContent=text;el.className='form-msg '+type;el.style.display='inline-block';
-  if(type!=='loading')setTimeout(()=>{el.style.display='none';},3000);
+function showFormMsg(id, text, type) {
+  const el = document.getElementById(id);
+  el.textContent = text; el.className = 'form-msg '+type; el.style.display = 'inline-block';
+  if (type !== 'loading') setTimeout(() => { el.style.display = 'none'; }, 3000);
 }
-function formatDate(iso){
-  if(!iso)return '—';const d=new Date(iso);
+function formatDate(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
   return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
 }
-function formatDur(secs){const h=Math.floor(secs/3600),m=Math.floor((secs%3600)/60),s=secs%60;return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
-function getStatus(lastLogin){
-  if(!lastLogin)return{label:'NEVER',cls:'badge-offline'};
-  const diff=(new Date()-new Date(lastLogin))/3600000;
-  if(diff<24)return{label:'TODAY',cls:'badge-online'};if(diff<168)return{label:'THIS WEEK',cls:'badge-recent'};
-  return{label:'INACTIVE',cls:'badge-offline'};
+function formatDur(secs) {
+  const h=Math.floor(secs/3600),m=Math.floor((secs%3600)/60),s=secs%60;
+  return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
 }
-function envClass(e){
+function getStatus(lastLogin) {
+  if (!lastLogin) return {label:'NEVER',cls:'badge-offline'};
+  const diff = (new Date()-new Date(lastLogin))/3600000;
+  if (diff<24) return {label:'TODAY',cls:'badge-online'};
+  if (diff<168) return {label:'THIS WEEK',cls:'badge-recent'};
+  return {label:'INACTIVE',cls:'badge-offline'};
+}
+function envClass(e) {
   const v=(e||'').toLowerCase();
   if(v==='production')return 'env-prod';if(v==='uat')return 'env-uat';if(v==='development')return 'env-dev';
   if(v==='staging')return 'env-staging';if(v==='train 2')return 'env-train2';if(v==='train')return 'env-train';
   if(v==='ecom')return 'env-ecom';if(v==='testing')return 'env-testing';return 'env-default';
 }
 
-/* AGENTS */
-async function loadUsers(){
+// ── AGENTS ───────────────────────────────────────────────────────────────────
+async function loadUsers() {
   document.getElementById('tableContainer').innerHTML='<div class="loading">⏳ FETCHING AGENT DATA...</div>';
-  try{
-    const res=await fetch(API_URL+'?action=getUsers&t='+Date.now());
-    const data=await res.json();
-    if(data.success){allUsers=data.users||[];updateStats(allUsers);renderTable(allUsers);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}
+  try {
+    const res = await fetch(API_URL+'?action=getUsers&t='+Date.now());
+    const data = await res.json();
+    if (data.success) { allUsers=data.users||[]; updateStats(allUsers); renderTable(allUsers); document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString(); }
     else document.getElementById('tableContainer').innerHTML='<div class="error-msg">⚠ Failed to load data.</div>';
-  }catch{document.getElementById('tableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}
+  } catch { document.getElementById('tableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>'; }
 }
-function updateStats(users){
+function updateStats(users) {
   const today=users.filter(u=>u.lastLogin&&(new Date()-new Date(u.lastLogin))/3600000<24).length;
   const week=users.filter(u=>{if(!u.lastLogin)return false;const h=(new Date()-new Date(u.lastLogin))/3600000;return h>=24&&h<168;}).length;
   const never=users.filter(u=>!u.lastLogin).length;
-  document.getElementById('s-total').textContent=users.length;document.getElementById('s-online').textContent=today;
-  document.getElementById('s-recent').textContent=week;document.getElementById('s-inactive').textContent=never;
+  document.getElementById('s-total').textContent=users.length;
+  document.getElementById('s-online').textContent=today;
+  document.getElementById('s-recent').textContent=week;
+  document.getElementById('s-inactive').textContent=never;
 }
-function renderTable(users){
-  if(!users.length){document.getElementById('tableContainer').innerHTML='<div class="loading" style="color:#7aaac8;">No agents found.</div>';document.getElementById('filterCount').textContent='';return;}
+function renderTable(users) {
+  if (!users.length) { document.getElementById('tableContainer').innerHTML='<div class="loading" style="color:#7aaac8;">No agents found.</div>'; document.getElementById('filterCount').textContent=''; return; }
   document.getElementById('filterCount').textContent=users.length+' agents';
   const rows=users.map((u,i)=>{
     const st=getStatus(u.lastLogin);
@@ -587,82 +654,83 @@ function renderTable(users){
   }).join('');
   document.getElementById('tableContainer').innerHTML='<table><thead><tr><th>#</th><th>Username</th><th>Email</th><th>Team</th><th>Status</th><th>Last Login</th><th>Created</th><th>Actions</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
-function filterTable(){
+function filterTable() {
   const q=document.getElementById('searchInput').value.toLowerCase();
   const f=allUsers.filter(u=>(u.username||'').toLowerCase().includes(q)||(u.email||'').toLowerCase().includes(q)||(u.team||'').toLowerCase().includes(q));
-  renderTable(f);document.getElementById('filterCount').textContent=f.length+' of '+allUsers.length+' agents';
+  renderTable(f); document.getElementById('filterCount').textContent=f.length+' of '+allUsers.length+' agents';
 }
-async function submitAgent(){
+async function submitAgent() {
   const orig=document.getElementById('edit-agent-original-username').value;
   const name=document.getElementById('ag-name').value.trim(),email=document.getElementById('ag-email').value.trim();
   const team=document.getElementById('ag-team').value.trim(),username=document.getElementById('ag-username').value.trim();
   const password=document.getElementById('ag-password').value.trim();
-  if(!name||!email||!team||!username||!password){showFormMsg('ag-msg','⚠ All fields are required.','error');return;}
-  if(password.length<6){showFormMsg('ag-msg','⚠ Password must be ≥ 6 characters.','error');return;}
-  const btn=document.getElementById('ag-submit-btn');btn.disabled=true;showFormMsg('ag-msg','⏳ Saving...','loading');
+  if (!name||!email||!team||!username||!password) { showFormMsg('ag-msg','⚠ All fields are required.','error'); return; }
+  if (password.length<6) { showFormMsg('ag-msg','⚠ Password must be ≥ 6 characters.','error'); return; }
+  const btn=document.getElementById('ag-submit-btn'); btn.disabled=true; showFormMsg('ag-msg','⏳ Saving...','loading');
   const vesselId=orig?'':'VID-'+Math.random().toString(36).toUpperCase().slice(2,8);
   const action=orig?'updateAgent':'register';
-  try{
+  try {
     const res=await fetch(API_URL+'?'+new URLSearchParams({action,username,email,team,password,vesselId,originalUsername:orig||username}));
     const data=await res.json();
-    if(data.success){showFormMsg('ag-msg',orig?'✅ Agent updated!':'✅ Agent login created!','success');clearAgentForm();setTimeout(loadUsers,800);}
-    else if(data.error==='USERNAME_EXISTS')showFormMsg('ag-msg','⚠ Username already taken.','error');
+    if (data.success) { showFormMsg('ag-msg',orig?'✅ Agent updated!':'✅ Agent login created!','success'); clearAgentForm(); setTimeout(loadUsers,800); }
+    else if (data.error==='USERNAME_EXISTS') showFormMsg('ag-msg','⚠ Username already taken.','error');
     else showFormMsg('ag-msg','⚠ Failed. Try again.','error');
-  }catch{showFormMsg('ag-msg','⚠ Connection error.','error');}
+  } catch { showFormMsg('ag-msg','⚠ Connection error.','error'); }
   btn.disabled=false;
 }
-function editAgent(i){
+function editAgent(i) {
   const u=allUsers[i];
   document.getElementById('edit-agent-original-username').value=u.username;
-  document.getElementById('ag-name').value=u.username;document.getElementById('ag-email').value=u.email||'';
-  document.getElementById('ag-team').value=u.team||'';document.getElementById('ag-username').value=u.username;
+  document.getElementById('ag-name').value=u.username; document.getElementById('ag-email').value=u.email||'';
+  document.getElementById('ag-team').value=u.team||''; document.getElementById('ag-username').value=u.username;
   document.getElementById('ag-password').value='';
   document.getElementById('agentFormTitle').textContent='✏ Edit Agent: '+u.username;
   document.getElementById('ag-submit-btn').textContent='💾 Update Agent';
   document.getElementById('ag-cancel-btn').style.display='inline-block';
   document.getElementById('agentFormTitle').scrollIntoView({behavior:'smooth'});
 }
-function cancelAgentEdit(){clearAgentForm();}
-function clearAgentForm(){
+function cancelAgentEdit() { clearAgentForm(); }
+function clearAgentForm() {
   ['edit-agent-original-username','ag-name','ag-email','ag-team','ag-username','ag-password'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('agentFormTitle').textContent='➕ Create New Agent Login';
   document.getElementById('ag-submit-btn').textContent='💾 Create Agent Login';
-  document.getElementById('ag-cancel-btn').style.display='none';document.getElementById('ag-msg').style.display='none';
+  document.getElementById('ag-cancel-btn').style.display='none';
+  document.getElementById('ag-msg').style.display='none';
 }
-async function resetPassword(username,idx){
-  if(!confirm('Reset password for "'+username+'" to a temporary password?'))return;
-  const btn=document.getElementById('rbtn_'+idx);btn.textContent='⏳...';btn.disabled=true;
-  try{
+async function resetPassword(username,idx) {
+  if (!confirm('Reset password for "'+username+'" to a temporary password?')) return;
+  const btn=document.getElementById('rbtn_'+idx); btn.textContent='⏳...'; btn.disabled=true;
+  try {
     const res=await fetch(API_URL+'?'+new URLSearchParams({action:'resetPassword',username}));
     const data=await res.json();
-    if(data.success){btn.textContent='✅ Done';btn.classList.add('done');showToast('✅ Password reset for '+username+'. Temp: LRP@1234');setTimeout(loadUsers,2000);}
-    else{btn.textContent='🔑 Reset PW';btn.disabled=false;showToast('⚠ Reset failed.',false);}
-  }catch{btn.textContent='🔑 Reset PW';btn.disabled=false;showToast('⚠ Connection error.',false);}
+    if (data.success) { btn.textContent='✅ Done'; btn.classList.add('done'); showToast('✅ Password reset for '+username+'. Temp: LRP@1234'); setTimeout(loadUsers,2000); }
+    else { btn.textContent='🔑 Reset PW'; btn.disabled=false; showToast('⚠ Reset failed.',false); }
+  } catch { btn.textContent='🔑 Reset PW'; btn.disabled=false; showToast('⚠ Connection error.',false); }
 }
-async function deleteUser(username,idx){
-  if(!confirm('⚠ Permanently delete agent "'+username+'"?\n\nThis cannot be undone!'))return;
-  const btn=document.getElementById('dbtn_'+idx);btn.textContent='⏳...';btn.disabled=true;
-  try{
+async function deleteUser(username,idx) {
+  if (!confirm('⚠ Permanently delete agent "'+username+'"?\n\nThis cannot be undone!')) return;
+  const btn=document.getElementById('dbtn_'+idx); btn.textContent='⏳...'; btn.disabled=true;
+  try {
     const res=await fetch(API_URL+'?'+new URLSearchParams({action:'deleteUser',username}));
     const data=await res.json();
-    if(data.success){showToast('🗑 Agent "'+username+'" deleted.');setTimeout(loadUsers,800);}
-    else{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Delete failed.',false);}
-  }catch{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Connection error.',false);}
+    if (data.success) { showToast('🗑 Agent "'+username+'" deleted.'); setTimeout(loadUsers,800); }
+    else { btn.textContent='🗑 Delete'; btn.disabled=false; showToast('⚠ Delete failed.',false); }
+  } catch { btn.textContent='🗑 Delete'; btn.disabled=false; showToast('⚠ Connection error.',false); }
 }
 
-/* CREDENTIALS */
-async function loadCreds(){
+// ── CREDENTIALS ──────────────────────────────────────────────────────────────
+async function loadCreds() {
   document.getElementById('credTableContainer').innerHTML='<div class="loading">⏳ LOADING CREDENTIALS...</div>';
-  try{
+  try {
     const res=await fetch(API_URL+'?action=getCredentials&t='+Date.now());
     const data=await res.json();
-    if(data.success){allCreds=data.credentials||[];renderCredTable(allCreds);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}
+    if (data.success) { allCreds=data.credentials||[]; renderCredTable(allCreds); document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString(); }
     else document.getElementById('credTableContainer').innerHTML='<div class="error-msg">⚠ Failed to load credentials.</div>';
-  }catch{document.getElementById('credTableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}
+  } catch { document.getElementById('credTableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>'; }
 }
-function renderCredTable(list){
+function renderCredTable(list) {
   document.getElementById('cred-count').textContent=list.length+' records';
-  if(!list.length){document.getElementById('credTableContainer').innerHTML='<div class="loading" style="color:#7aaac8;">No credentials yet.</div>';return;}
+  if (!list.length) { document.getElementById('credTableContainer').innerHTML='<div class="loading" style="color:#7aaac8;">No credentials yet.</div>'; return; }
   const rows=list.map((c,i)=>'<tr>'+
     '<td style="color:#7aaac8;font-size:12px;">'+(i+1)+'</td>'+
     '<td style="font-weight:700;color:#0a3d78;">🏢 '+(c.clientName||'—')+'</td>'+
@@ -676,81 +744,81 @@ function renderCredTable(list){
   ).join('');
   document.getElementById('credTableContainer').innerHTML='<table><thead><tr><th>#</th><th>Client Name</th><th>App URL</th><th>Environment</th><th>User ID</th><th>Password</th><th>Actions</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
-function filterCredTable(){
+function filterCredTable() {
   const q=document.getElementById('credSearchInput').value.toLowerCase();
   renderCredTable(allCreds.filter(c=>(c.clientName||'').toLowerCase().includes(q)));
 }
-function admTogglePw(i,encoded){
+function admTogglePw(i,encoded) {
   const el=document.getElementById('adm-pw-'+i);
   el.textContent=el.textContent==='••••••••'?decodeURIComponent(encoded):'••••••••';
 }
-async function submitCredential(){
+async function submitCredential() {
   const id=document.getElementById('edit-cred-id').value;
   const client=document.getElementById('cred-client').value.trim(),env=document.getElementById('cred-env').value;
   const url=document.getElementById('cred-url').value.trim(),userid=document.getElementById('cred-userid').value.trim();
   const pass=document.getElementById('cred-pass').value.trim();
-  if(!client||!env||!userid||!pass){showFormMsg('cred-msg','⚠ Fill all required fields.','error');return;}
-  const btn=document.getElementById('cred-submit-btn');btn.disabled=true;showFormMsg('cred-msg','⏳ Saving...','loading');
-  try{
+  if (!client||!env||!userid||!pass) { showFormMsg('cred-msg','⚠ Fill all required fields.','error'); return; }
+  const btn=document.getElementById('cred-submit-btn'); btn.disabled=true; showFormMsg('cred-msg','⏳ Saving...','loading');
+  try {
     const res=await fetch(API_URL+'?'+new URLSearchParams({action:id?'updateCredential':'addCredential',id,clientName:client,environment:env,appUrl:url,userId:userid,password:pass}));
     const data=await res.json();
-    if(data.success){showFormMsg('cred-msg',id?'✅ Updated!':'✅ Added!','success');clearCredForm();loadCreds();}
+    if (data.success) { showFormMsg('cred-msg',id?'✅ Updated!':'✅ Added!','success'); clearCredForm(); loadCreds(); }
     else showFormMsg('cred-msg','⚠ Save failed.','error');
-  }catch{showFormMsg('cred-msg','⚠ Connection error.','error');}
+  } catch { showFormMsg('cred-msg','⚠ Connection error.','error'); }
   btn.disabled=false;
 }
-function editCred(i){
+function editCred(i) {
   const c=allCreds[i];
-  document.getElementById('edit-cred-id').value=c.id||'';document.getElementById('cred-client').value=c.clientName||'';
-  document.getElementById('cred-env').value=c.environment||'';document.getElementById('cred-url').value=c.appUrl||'';
-  document.getElementById('cred-userid').value=c.userId||'';document.getElementById('cred-pass').value=c.password||'';
+  document.getElementById('edit-cred-id').value=c.id||''; document.getElementById('cred-client').value=c.clientName||'';
+  document.getElementById('cred-env').value=c.environment||''; document.getElementById('cred-url').value=c.appUrl||'';
+  document.getElementById('cred-userid').value=c.userId||''; document.getElementById('cred-pass').value=c.password||'';
   document.getElementById('credFormTitle').textContent='✏ Edit: '+c.clientName;
   document.getElementById('cred-cancel-btn').style.display='inline-block';
   document.getElementById('credFormTitle').scrollIntoView({behavior:'smooth'});
 }
-function cancelCredEdit(){clearCredForm();}
-function clearCredForm(){
+function cancelCredEdit() { clearCredForm(); }
+function clearCredForm() {
   ['edit-cred-id','cred-client','cred-url','cred-userid','cred-pass'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('cred-env').value='';document.getElementById('credFormTitle').textContent='➕ Add New Client Credential';
-  document.getElementById('cred-cancel-btn').style.display='none';document.getElementById('cred-msg').style.display='none';
+  document.getElementById('cred-env').value=''; document.getElementById('credFormTitle').textContent='➕ Add New Client Credential';
+  document.getElementById('cred-cancel-btn').style.display='none'; document.getElementById('cred-msg').style.display='none';
 }
-async function deleteCred(credId,i){
+async function deleteCred(credId,i) {
   const name=allCreds[i]?.clientName||credId;
-  if(!confirm('⚠ Delete credential for "'+name+'"?\n\nThis cannot be undone!'))return;
-  const btn=document.getElementById('cdel-'+i);btn.textContent='⏳...';btn.disabled=true;
-  try{
+  if (!confirm('⚠ Delete credential for "'+name+'"?\n\nThis cannot be undone!')) return;
+  const btn=document.getElementById('cdel-'+i); btn.textContent='⏳...'; btn.disabled=true;
+  try {
     const res=await fetch(API_URL+'?'+new URLSearchParams({action:'deleteCredential',id:credId}));
     const data=await res.json();
-    if(data.success){showToast('🗑 "'+name+'" deleted.');loadCreds();}
-    else{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Delete failed.',false);}
-  }catch{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Connection error.',false);}
+    if (data.success) { showToast('🗑 "'+name+'" deleted.'); loadCreds(); }
+    else { btn.textContent='🗑 Delete'; btn.disabled=false; showToast('⚠ Delete failed.',false); }
+  } catch { btn.textContent='🗑 Delete'; btn.disabled=false; showToast('⚠ Connection error.',false); }
 }
 
-/* TRACKER */
-async function loadTracker(){
-  document.getElementById('tracker-date-from').value='';document.getElementById('tracker-date-to').value='';
-  document.getElementById('tracker-filter-label').textContent='';selectedAgent=null;
+// ── TRACKER ──────────────────────────────────────────────────────────────────
+async function loadTracker() {
+  document.getElementById('tracker-date-from').value=''; document.getElementById('tracker-date-to').value='';
+  document.getElementById('tracker-filter-label').textContent=''; selectedAgent=null;
   document.getElementById('tracker-cards').innerHTML='<div class="loading">⏳ LOADING TRACKER DATA...</div>';
   document.getElementById('trackerTableContainer').innerHTML='<div class="loading" style="color:#7aaac8;">Loading...</div>';
-  try{
+  try {
     const res=await fetch(API_URL+'?action=getTicketLogs&t='+Date.now());
     const data=await res.json();
-    if(data.success){allLogs=data.logs||[];filteredLogs=[...allLogs];renderTrackerCards(filteredLogs);renderTrackerTable(filteredLogs);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}
+    if (data.success) { allLogs=data.logs||[]; filteredLogs=[...allLogs]; renderTrackerCards(filteredLogs); renderTrackerTable(filteredLogs); document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString(); }
     else document.getElementById('tracker-cards').innerHTML='<div class="error-msg">⚠ Failed to load tracker data.</div>';
-  }catch{document.getElementById('tracker-cards').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}
+  } catch { document.getElementById('tracker-cards').innerHTML='<div class="error-msg">⚠ Connection error.</div>'; }
 }
-function applyTrackerFilter(){
+function applyTrackerFilter() {
   const from=document.getElementById('tracker-date-from').value,to=document.getElementById('tracker-date-to').value;
-  if(!from&&!to){filteredLogs=[...allLogs];document.getElementById('tracker-filter-label').textContent='';}
-  else{
+  if (!from&&!to) { filteredLogs=[...allLogs]; document.getElementById('tracker-filter-label').textContent=''; }
+  else {
     filteredLogs=allLogs.filter(l=>{if(!l.dateKey)return true;if(from&&l.dateKey<from)return false;if(to&&l.dateKey>to)return false;return true;});
     document.getElementById('tracker-filter-label').textContent='Showing: '+(from||'…')+' → '+(to||'…')+' · '+filteredLogs.length+' tickets';
   }
-  selectedAgent=null;renderTrackerCards(filteredLogs);renderTrackerTable(filteredLogs);
+  selectedAgent=null; renderTrackerCards(filteredLogs); renderTrackerTable(filteredLogs);
 }
-function renderTrackerCards(logs){
+function renderTrackerCards(logs) {
   const container=document.getElementById('tracker-cards');
-  if(!logs.length){container.innerHTML='<div class="no-data-msg">📭 No ticket data found.</div>';return;}
+  if (!logs.length) { container.innerHTML='<div class="no-data-msg">📭 No ticket data found.</div>'; return; }
   const agentMap={};
   logs.forEach(l=>{const a=l.agentName||'Unknown';if(!agentMap[a])agentMap[a]={tickets:[],totalSecs:0};agentMap[a].tickets.push(l);agentMap[a].totalSecs+=Number(l.durationSecs)||0;});
   container.innerHTML='';
@@ -759,7 +827,7 @@ function renderTrackerCards(logs){
     const lastDate=data.tickets[data.tickets.length-1]?.date||'—',lastShift=data.tickets[data.tickets.length-1]?.shiftId||'—';
     const compCount={};data.tickets.forEach(t=>{if(t.component)compCount[t.component]=(compCount[t.component]||0)+1;});
     const topComp=Object.entries(compCount).sort((a,b)=>b[1]-a[1])[0];
-    const card=document.createElement('div');card.className='agent-card'+(selectedAgent===name?' selected':'');
+    const card=document.createElement('div'); card.className='agent-card'+(selectedAgent===name?' selected':'');
     card.innerHTML='<div class="agent-card-name">👤 '+name+'</div>'+
       '<div class="agent-card-stats">'+
       '<div class="agent-stat"><div class="agent-stat-val blue">'+count+'</div><div class="agent-stat-lbl">Tickets</div></div>'+
@@ -768,17 +836,17 @@ function renderTrackerCards(logs){
       '<div class="agent-stat"><div class="agent-stat-val" style="font-size:13px;color:#6030a0;">'+(topComp?topComp[0]:'—')+'</div><div class="agent-stat-lbl">Top Component</div></div></div>'+
       '<div class="agent-card-footer"><span>Last active: '+lastDate+'</span><span>Shift: '+lastShift+'</span></div>';
     card.addEventListener('click',()=>{
-      selectedAgent=selectedAgent===name?null:name;renderTrackerCards(filteredLogs);
+      selectedAgent=selectedAgent===name?null:name; renderTrackerCards(filteredLogs);
       const toShow=selectedAgent?filteredLogs.filter(l=>l.agentName===selectedAgent):filteredLogs;
       document.getElementById('tracker-breakdown-label').textContent=selectedAgent?'— '+selectedAgent:'';
-      document.getElementById('trackerSearchInput').value='';renderTrackerTable(toShow);
+      document.getElementById('trackerSearchInput').value=''; renderTrackerTable(toShow);
     });
     container.appendChild(card);
   });
 }
-function renderTrackerTable(logs){
+function renderTrackerTable(logs) {
   const container=document.getElementById('trackerTableContainer');
-  if(!logs.length){container.innerHTML='<div class="no-data-msg">No tickets to display.</div>';return;}
+  if (!logs.length) { container.innerHTML='<div class="no-data-msg">No tickets to display.</div>'; return; }
   const rows=[...logs].reverse().map((l,i)=>'<tr>'+
     '<td style="color:#7aaac8;font-size:11px;">'+(i+1)+'</td>'+
     '<td style="font-size:11px;color:#1a5a90;">👤 '+(l.agentName||'—')+'</td>'+
@@ -792,40 +860,40 @@ function renderTrackerTable(logs){
   ).join('');
   container.innerHTML='<table><thead><tr><th>#</th><th>Agent</th><th>Ticket ID</th><th>Duration</th><th>Date / Time</th><th>Shift</th><th>Component</th><th>Description</th><th>Remarks</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
-function filterTrackerTable(){
+function filterTrackerTable() {
   const q=document.getElementById('trackerSearchInput').value.toLowerCase();
   const base=selectedAgent?filteredLogs.filter(l=>l.agentName===selectedAgent):filteredLogs;
   renderTrackerTable(q?base.filter(l=>(l.agentName||'').toLowerCase().includes(q)||(l.ticketId||'').toLowerCase().includes(q)||(l.component||'').toLowerCase().includes(q)||(l.shiftId||'').toLowerCase().includes(q)):base);
 }
 
-/* HANDOVER */
-async function loadHandovers(){
-  document.getElementById('ho-date-from').value='';document.getElementById('ho-date-to').value='';
-  document.getElementById('ho-shift-filter').value='';document.getElementById('ho-filter-label').textContent='';
+// ── HANDOVER ─────────────────────────────────────────────────────────────────
+async function loadHandovers() {
+  document.getElementById('ho-date-from').value=''; document.getElementById('ho-date-to').value='';
+  document.getElementById('ho-shift-filter').value=''; document.getElementById('ho-filter-label').textContent='';
   document.getElementById('hoTableContainer').innerHTML='<div class="loading">⏳ LOADING HANDOVER DATA...</div>';
-  try{
+  try {
     const res=await fetch(API_URL+'?action=getHandovers&t='+Date.now());
     const data=await res.json();
-    if(data.success){allHandovers=data.handovers||[];filteredHandovers=[...allHandovers];renderHandoverStats(filteredHandovers);renderHandoverTable(filteredHandovers);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}
+    if (data.success) { allHandovers=data.handovers||[]; filteredHandovers=[...allHandovers]; renderHandoverStats(filteredHandovers); renderHandoverTable(filteredHandovers); document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString(); }
     else document.getElementById('hoTableContainer').innerHTML='<div class="error-msg">⚠ Failed to load data.</div>';
-  }catch{document.getElementById('hoTableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}
+  } catch { document.getElementById('hoTableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>'; }
 }
-function applyHandoverFilter(){
+function applyHandoverFilter() {
   const from=document.getElementById('ho-date-from').value,to=document.getElementById('ho-date-to').value,shift=document.getElementById('ho-shift-filter').value;
   filteredHandovers=allHandovers.filter(h=>{if(from&&h.date<from)return false;if(to&&h.date>to)return false;if(shift&&h.shift!==shift)return false;return true;});
   const parts=[];if(from||to)parts.push((from||'…')+' → '+(to||'…'));if(shift)parts.push('Shift: '+shift);
   document.getElementById('ho-filter-label').textContent=parts.length?parts.join(' · ')+' · '+filteredHandovers.length+' records':'';
-  renderHandoverStats(filteredHandovers);renderHandoverTable(filteredHandovers);
+  renderHandoverStats(filteredHandovers); renderHandoverTable(filteredHandovers);
 }
-function renderHandoverStats(list){
+function renderHandoverStats(list) {
   document.getElementById('ho-s-total').textContent=list.length;
   document.getElementById('ho-s-pending').textContent=list.reduce((a,h)=>a+(h.pendingTickets||0),0);
   document.getElementById('ho-s-completed').textContent=list.reduce((a,h)=>a+(h.completedTickets||0),0);
   document.getElementById('ho-s-showstopper').textContent=list.reduce((a,h)=>a+(h.showstopperCount||0),0);
 }
-function renderHandoverTable(list){
+function renderHandoverTable(list) {
   document.getElementById('ho-count-label').textContent=list.length+' records';
-  if(!list.length){document.getElementById('hoTableContainer').innerHTML='<div class="no-data-msg">📭 No handover submissions found.</div>';return;}
+  if (!list.length) { document.getElementById('hoTableContainer').innerHTML='<div class="no-data-msg">📭 No handover submissions found.</div>'; return; }
   const rows=[...list].reverse().map((h,i)=>{
     const submittedAt=h.submittedAt?new Date(h.submittedAt).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'—';
     const sc={D1:'env-dev',D2:'env-uat',D3:'env-staging'}[h.shift]||'env-default';
@@ -844,12 +912,12 @@ function renderHandoverTable(list){
   }).join('');
   document.getElementById('hoTableContainer').innerHTML='<table><thead><tr><th>#</th><th>Date</th><th>Shift</th><th>Current Members</th><th>Next Members</th><th style="text-align:center;">Total</th><th style="text-align:center;">Pending</th><th style="text-align:center;">Done</th><th style="text-align:center;">Showstopper</th><th>Submitted At</th><th>Detail</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
-function filterHandoverTable(){
+function filterHandoverTable() {
   const q=document.getElementById('hoSearchInput').value.toLowerCase();
   renderHandoverTable(q?filteredHandovers.filter(h=>(h.date||'').includes(q)||(h.shift||'').toLowerCase().includes(q)||(h.currentMembers||'').toLowerCase().includes(q)||(h.nextMembers||'').toLowerCase().includes(q)):filteredHandovers);
 }
-function openHoDetail(idx){
-  const h=[...filteredHandovers].reverse()[idx];if(!h)return;
+function openHoDetail(idx) {
+  const h=[...filteredHandovers].reverse()[idx]; if(!h) return;
   const submittedAt=h.submittedAt?new Date(h.submittedAt).toLocaleString():'—';
   const catRow=(label,color,bg,border,count,pending,ids)=>'<div style="background:'+bg+';border:1px solid '+border+';border-radius:8px;padding:12px 14px;margin-bottom:8px;">'+
     '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">'+
@@ -878,9 +946,9 @@ function openHoDetail(idx){
     catRow('⚫ Long Pending','#404040','#f0f0f0','#c0c0c0',h.longpendingCount||0,h.longpendingPending||0,h.longpendingIds||'')+infoHtml;
   document.getElementById('hoDetailOverlay').classList.add('open');
 }
-function closeHoDetail(){document.getElementById('hoDetailOverlay').classList.remove('open');}
+function closeHoDetail() { document.getElementById('hoDetailOverlay').classList.remove('open'); }
 
-/* SHIFT PLANNER */
+// ── SHIFT PLANNER ─────────────────────────────────────────────────────────────
 const PLANNER_DATES=['30-03-2026','31-03-2026','01-04-2026','02-04-2026','03-04-2026','04-04-2026','05-04-2026','06-04-2026','07-04-2026','08-04-2026','09-04-2026','10-04-2026','11-04-2026','12-04-2026','13-04-2026','14-04-2026','15-04-2026','16-04-2026','17-04-2026','18-04-2026','19-04-2026','20-04-2026','21-04-2026','22-04-2026','23-04-2026','24-04-2026','25-04-2026','26-04-2026','27-04-2026','28-04-2026','29-04-2026','30-04-2026','01-05-2026','02-05-2026','03-05-2026'];
 const PLANNER_DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const PLANNER_DEFAULT=[
@@ -904,77 +972,77 @@ let plannerShiftFilter='ALL';
 let PLANNER_TEAM=JSON.parse(JSON.stringify(PLANNER_DEFAULT));
 let plannerDirty=false,pceTarget=null;
 
-async function loadPlanner(){
+async function loadPlanner() {
   document.getElementById('planner-table-container').innerHTML='<div class="loading">⏳ LOADING PLANNER...</div>';
-  try{
+  try {
     const res=await fetch(API_URL+'?action=getPlanner&t='+Date.now());
     const data=await res.json();
-    if(data.success&&data.planner&&Array.isArray(data.planner)&&data.planner.length){
+    if (data.success&&data.planner&&Array.isArray(data.planner)&&data.planner.length) {
       PLANNER_TEAM=data.planner;
-      if(data.updatedAt){const d=new Date(data.updatedAt);document.getElementById('planner-saved-label').textContent='✅ Last published: '+d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}
-    }else{PLANNER_TEAM=JSON.parse(JSON.stringify(PLANNER_DEFAULT));}
-  }catch{PLANNER_TEAM=JSON.parse(JSON.stringify(PLANNER_DEFAULT));}
-  plannerDirty=false;resetPublishBtn();renderPlanner();
+      if (data.updatedAt) { const d=new Date(data.updatedAt); document.getElementById('planner-saved-label').textContent='✅ Last published: '+d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}); }
+    } else { PLANNER_TEAM=JSON.parse(JSON.stringify(PLANNER_DEFAULT)); }
+  } catch { PLANNER_TEAM=JSON.parse(JSON.stringify(PLANNER_DEFAULT)); }
+  plannerDirty=false; resetPublishBtn(); renderPlanner();
 }
-function resetPublishBtn(){
+function resetPublishBtn() {
   const btn=document.getElementById('planner-publish-btn');
   btn.textContent='📤 Submit to Agents';
   btn.style.background='linear-gradient(135deg,#1a8c5c,#138048)';
   btn.disabled=false;
 }
-async function publishPlanner(){
-  const btn=document.getElementById('planner-publish-btn');btn.disabled=true;btn.textContent='⏳ Submitting...';
-  try{
+async function publishPlanner() {
+  const btn=document.getElementById('planner-publish-btn'); btn.disabled=true; btn.textContent='⏳ Submitting...';
+  try {
     const res=await fetch(API_URL+'?'+new URLSearchParams({action:'savePlanner',payload:JSON.stringify(PLANNER_TEAM)}));
     const data=await res.json();
-    if(data.success){
-      plannerDirty=false;const now=new Date();
+    if (data.success) {
+      plannerDirty=false; const now=new Date();
       document.getElementById('planner-saved-label').textContent='✅ Published: '+now.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+' '+now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-      showToast('📤 Shift planner submitted to agents successfully!');resetPublishBtn();
-    }else{showToast('⚠ Submit failed. Try again.',false);btn.textContent='📤 Submit to Agents';btn.disabled=false;}
-  }catch{showToast('⚠ Connection error.',false);btn.textContent='📤 Submit to Agents';btn.disabled=false;}
+      showToast('📤 Shift planner submitted to agents successfully!'); resetPublishBtn();
+    } else { showToast('⚠ Submit failed. Try again.',false); btn.textContent='📤 Submit to Agents'; btn.disabled=false; }
+  } catch { showToast('⚠ Connection error.',false); btn.textContent='📤 Submit to Agents'; btn.disabled=false; }
 }
-function getPlannerTodayIndex(){
+function getPlannerTodayIndex() {
   const d=new Date(),pad=n=>String(n).padStart(2,'0');
   return PLANNER_DATES.indexOf(pad(d.getDate())+'-'+pad(d.getMonth()+1)+'-'+d.getFullYear());
 }
-function shiftPillClass(s){
+function shiftPillClass(s) {
   const v=(s||'').trim().toUpperCase();
   if(v==='D1')return 'sp-D1';if(v==='D2')return 'sp-D2';if(v==='D3')return 'sp-D3';
   if(v==='D4')return 'sp-D4';if(v==='D5')return 'sp-D5';if(v==='N')return 'sp-N';
   if(v==='W/OFF')return 'sp-WOFF';if(v==='HOLIDAY')return 'sp-HOL';if(v==='COMPFF')return 'sp-COMP';
   return 'sp-WOFF';
 }
-function setPlannerFilter(btn){
+function setPlannerFilter(btn) {
   plannerShiftFilter=btn.dataset.shift;
   document.querySelectorAll('.planner-filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');renderPlanner();
+  btn.classList.add('active'); renderPlanner();
 }
-function openPlannerEditor(memberIdx,dateIdx,currentVal,cellEl){
+function openPlannerEditor(memberIdx,dateIdx,currentVal,cellEl) {
   pceTarget={memberIdx,dateIdx};
   document.getElementById('pce-select').value=currentVal||'W/OFF';
   document.getElementById('pce-label').textContent=PLANNER_TEAM[memberIdx].name+' — '+PLANNER_DATES[dateIdx];
-  const editor=document.getElementById('planner-cell-editor');editor.style.display='block';
+  const editor=document.getElementById('planner-cell-editor'); editor.style.display='block';
   const rect=cellEl.getBoundingClientRect();
   let top=rect.bottom+window.scrollY+4,left=rect.left+window.scrollX;
   if(left+210>window.innerWidth)left=window.innerWidth-220;
-  editor.style.top=top+'px';editor.style.left=left+'px';
+  editor.style.top=top+'px'; editor.style.left=left+'px';
 }
-function closePlannerEditor(){document.getElementById('planner-cell-editor').style.display='none';pceTarget=null;}
-function applyPlannerCellEdit(){
-  if(!pceTarget)return;
+function closePlannerEditor() { document.getElementById('planner-cell-editor').style.display='none'; pceTarget=null; }
+function applyPlannerCellEdit() {
+  if (!pceTarget) return;
   PLANNER_TEAM[pceTarget.memberIdx].shifts[pceTarget.dateIdx]=document.getElementById('pce-select').value;
   plannerDirty=true;
   const btn=document.getElementById('planner-publish-btn');
   btn.textContent='📤 Submit to Agents *';
   btn.style.background='linear-gradient(135deg,#c07010,#a05008)';
-  closePlannerEditor();renderPlanner();
+  closePlannerEditor(); renderPlanner();
 }
-document.addEventListener('click',function(e){
+document.addEventListener('click', function(e) {
   const ed=document.getElementById('planner-cell-editor');
   if(ed&&ed.style.display!=='none'&&!ed.contains(e.target)&&!e.target.closest('td'))closePlannerEditor();
 });
-function renderPlanner(){
+function renderPlanner() {
   const ti=getPlannerTodayIndex();
   const search=(document.getElementById('planner-search')?.value||'').toLowerCase();
   const lbl=document.getElementById('planner-today-label');
@@ -1008,6 +1076,7 @@ function renderPlanner(){
   }).join('');
   document.getElementById('planner-table-container').innerHTML='<table class="planner-tbl"><thead>'+hdr+'</thead><tbody>'+bodyRows+'</tbody></table>';
 }
+
 setInterval(()=>{if(document.getElementById('dashboard').style.display!=='none'&&currentTab==='agents')loadUsers();},60000);
 </script>
 </body>
