@@ -120,6 +120,16 @@
         <line x1="345" y1="0" x2="345" y2="16" stroke="#5a6a7a" stroke-width="2"/>
       </svg>
     </div>
+
+    <!-- ✦ QUOTE OF THE DAY — fixed bottom bar ✦ -->
+    <div class="quote-widget">
+      <div class="quote-inner">
+        <div class="quote-mark">❝</div>
+        <span class="quote-label">QUOTE OF THE DAY</span>
+        <span class="quote-text">${q.text}</span>
+        <span class="quote-author">— ${q.author}</span>
+      </div>
+    </div>
   </div>
   <div class="ocean">
     <div class="wave-layer wave1"><svg viewBox="0 0 1200 200" preserveAspectRatio="none"><path d="M0,100 C150,40 300,160 450,100 C600,40 750,160 900,100 C1050,40 1150,120 1200,100 L1200,200 L0,200 Z" fill="#0a3558" opacity=".9"/></svg></div>
@@ -317,26 +327,25 @@
 
       /* ── Quote Widget ── */
       .quote-widget{
-        position:relative;z-index:5;
-        width:100%;padding:10px 28px;
-        background:rgba(2,18,38,.85);
-        border-bottom:1px solid rgba(0,180,255,.15);
+        position:fixed;bottom:0;left:0;right:0;z-index:10;
+        padding:10px 28px;
+        background:rgba(2,18,38,.92);
+        border-top:1px solid rgba(0,180,255,.2);
         backdrop-filter:blur(10px);
       }
       .quote-inner{
-        display:flex;align-items:center;gap:16px;
-        max-width:1200px;margin:0 auto;
+        display:flex;align-items:center;gap:12px;
+        max-width:1400px;margin:0 auto;
         animation:quoteFadeIn .9s ease forwards;
         opacity:0;
       }
-      @keyframes quoteFadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
-      .quote-mark{font-size:28px;color:#1e88e5;opacity:.35;line-height:1;flex-shrink:0;font-family:Georgia,serif;}
-      .quote-content{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+      @keyframes quoteFadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+      .quote-mark{font-size:24px;color:#1e88e5;opacity:.4;line-height:1;flex-shrink:0;font-family:Georgia,serif;}
       .quote-label{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:#00e5ff;opacity:.6;white-space:nowrap;flex-shrink:0;}
-      .quote-text{font-size:13px;color:#e0f4ff;font-style:italic;font-family:Georgia,serif;line-height:1.5;}
+      .quote-text{font-size:13px;color:#e0f4ff;font-style:italic;font-family:Georgia,serif;line-height:1.4;flex:1;}
       .quote-author{font-family:'Share Tech Mono',monospace;font-size:11px;color:#00e5ff;white-space:nowrap;flex-shrink:0;}
 
-      .db-body{position:relative;z-index:5;display:flex;align-items:center;justify-content:center;height:calc(100vh - 73px - 52px);gap:24px;padding:16px 20px;flex-wrap:wrap;}
+      .db-body{position:relative;z-index:5;display:flex;align-items:center;justify-content:center;height:calc(100vh - 73px);gap:24px;padding:16px 20px 70px;flex-wrap:wrap;}
       .db-card{width:280px;background:rgba(4,28,53,.88);border:1px solid rgba(0,180,255,.25);border-radius:4px;padding:30px 26px;cursor:pointer;transition:all .35s;backdrop-filter:blur(18px);box-shadow:0 20px 60px rgba(0,0,0,.6);position:relative;}
       .db-card:hover{transform:translateY(-8px);border-color:rgba(0,200,255,.6);box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 40px rgba(0,180,255,.15);}
       .db-card-icon{font-size:44px;margin-bottom:16px;display:block;}
@@ -361,18 +370,6 @@
       <div class="db-topbar-right">
         <div class="db-user-info"><div class="name">${username.toUpperCase()}</div><div class="team-lbl">⚓ ${team}</div></div>
         <button class="db-logout" onclick="location.reload()">⎋ SIGN OUT</button>
-      </div>
-    </div>
-
-    <!-- ✦ QUOTE OF THE SESSION ✦ -->
-    <div class="quote-widget">
-      <div class="quote-inner">
-        <div class="quote-mark">❝</div>
-        <div class="quote-content">
-          <span class="quote-label">QUOTE OF THE DAY</span>
-          <span class="quote-text">${q.text}</span>
-          <span class="quote-author">— ${q.author}</span>
-        </div>
       </div>
     </div>
 
