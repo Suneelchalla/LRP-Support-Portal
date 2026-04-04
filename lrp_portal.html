@@ -258,6 +258,8 @@ function showDashboard(username,team){
     '.db-wave svg{width:100%;height:100%;}'+
     '.wv1{animation:wv 8s linear infinite;opacity:.9;}.wv2{animation:wv 12s linear infinite reverse;opacity:.5;bottom:8px;}'+
     '@keyframes wv{0%{transform:translateX(0)}100%{transform:translateX(25%)}}'+
+
+    /* ── Topbar ── */
     '.db-topbar{position:relative;z-index:10;display:grid;grid-template-columns:auto 1fr auto;align-items:center;padding:10px 24px;background:rgba(4,28,53,.92);border-bottom:1px solid rgba(0,180,255,.2);backdrop-filter:blur(12px);gap:16px;flex-shrink:0;}'+
     '.db-brand{display:flex;align-items:center;gap:10px;}'+
     '.db-brand-icon{width:36px;height:36px;background:linear-gradient(135deg,#c0441a,#e8610a);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}'+
@@ -267,25 +269,37 @@ function showDashboard(username,team){
     '.db-user-info .team-lbl{font-size:11px;color:rgba(0,200,255,.6);}'+
     '.db-logout{font-family:\'Rajdhani\',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);border-radius:3px;color:#ff9977;cursor:pointer;transition:all .3s;text-transform:uppercase;}'+
     '.db-logout:hover{background:rgba(180,40,20,.55);color:#fff;}'+
-    '.db-body{position:relative;z-index:5;flex:1;display:flex;align-items:center;justify-content:center;gap:16px;padding:16px 20px 0;min-height:0;flex-wrap:wrap;}'+
-    '.db-card{flex:1;max-width:240px;min-width:155px;background:rgba(4,28,53,.88);border:1px solid rgba(0,180,255,.25);border-radius:4px;padding:20px 16px;cursor:pointer;transition:all .35s;backdrop-filter:blur(18px);box-shadow:0 20px 60px rgba(0,0,0,.6);position:relative;display:flex;flex-direction:column;}'+
+
+    /* ── Cards body — key fix: stretch so all cards equal height, no wrap ── */
+    '.db-body{position:relative;z-index:5;flex:1;display:flex;align-items:stretch;justify-content:center;gap:0;padding:20px 24px 0;min-height:0;}'+
+
+    /* ── Card — key fix: all same flex-basis, title has min-height to prevent height diff ── */
+    '.db-card{flex:1;max-width:260px;min-width:0;background:rgba(4,28,53,.88);border:1px solid rgba(0,180,255,.25);border-radius:4px;padding:22px 18px;cursor:pointer;'+
+    'transition:transform .35s,border-color .35s,box-shadow .35s;'+
+    'backdrop-filter:blur(18px);box-shadow:0 20px 60px rgba(0,0,0,.6);position:relative;display:flex;flex-direction:column;align-self:center;}'+
     '.db-card:hover{transform:translateY(-6px);border-color:rgba(0,200,255,.6);box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 40px rgba(0,180,255,.15);}'+
-    '.db-card-icon{font-size:30px;margin-bottom:10px;display:block;}'+
-    '.db-card-title{font-family:\'Orbitron\',sans-serif;font-size:10px;font-weight:900;color:#e0f4ff;letter-spacing:2px;margin-bottom:8px;line-height:1.4;}'+
-    '.db-card-desc{font-size:11px;color:rgba(168,216,234,.7);line-height:1.6;margin-bottom:14px;flex:1;}'+
-    '.db-card-btn{display:block;width:100%;padding:8px;text-align:center;background:linear-gradient(135deg,#0a4a7a,#0d6fa8);border:1px solid rgba(0,200,255,.4);border-radius:3px;font-family:\'Orbitron\',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;color:#a8f0ff;transition:all .3s;}'+
+    '.db-card-icon{font-size:32px;margin-bottom:12px;display:block;line-height:1;}'+
+    /* min-height ensures all titles occupy same vertical space even if one wraps */
+    '.db-card-title{font-family:\'Orbitron\',sans-serif;font-size:10px;font-weight:900;color:#e0f4ff;letter-spacing:2px;margin-bottom:10px;line-height:1.5;min-height:32px;display:flex;align-items:flex-start;}'+
+    '.db-card-desc{font-size:11px;color:rgba(168,216,234,.7);line-height:1.6;margin-bottom:16px;flex:1;}'+
+    '.db-card-btn{display:block;width:100%;padding:9px;text-align:center;background:linear-gradient(135deg,#0a4a7a,#0d6fa8);border:1px solid rgba(0,200,255,.4);border-radius:3px;font-family:\'Orbitron\',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;color:#a8f0ff;transition:all .3s;margin-top:auto;}'+
     '.db-card:hover .db-card-btn{background:linear-gradient(135deg,#0d6fa8,#14a0d0);color:#fff;}'+
-    '.db-divider{width:1px;height:130px;background:linear-gradient(180deg,transparent,rgba(0,180,255,.4),transparent);flex-shrink:0;}'+
+
+    '.db-divider{width:1px;min-height:160px;align-self:center;background:linear-gradient(180deg,transparent,rgba(0,180,255,.4),transparent);flex-shrink:0;margin:0 8px;}'+
     '.db-card-badge{position:absolute;top:10px;right:10px;font-family:\'Share Tech Mono\',monospace;font-size:9px;letter-spacing:1px;padding:2px 7px;border-radius:2px;}'+
     '.badge-ops{background:rgba(0,180,80,.15);border:1px solid rgba(0,180,80,.4);color:#00ff88;}'+
     '.badge-log{background:rgba(180,100,0,.15);border:1px solid rgba(180,100,0,.4);color:#ffa040;}'+
     '.badge-cred{background:rgba(120,60,180,.2);border:1px solid rgba(160,80,220,.4);color:#c080ff;}'+
     '.badge-plan{background:rgba(0,160,200,.15);border:1px solid rgba(0,200,255,.4);color:#00e5ff;}'+
+
+    /* ── Quote bar ── */
     '.quote-bar{position:relative;z-index:10;flex-shrink:0;display:flex;align-items:center;gap:14px;padding:10px 28px;background:rgba(2,12,26,.85);border-top:1px solid rgba(0,229,255,.15);backdrop-filter:blur(10px);}'+
     '.quote-label{font-family:\'Share Tech Mono\',monospace;font-size:10px;letter-spacing:2px;color:#00e5ff;opacity:.7;white-space:nowrap;flex-shrink:0;}'+
     '.quote-mark{font-size:22px;color:#1e88e5;opacity:.4;line-height:1;font-family:Georgia,serif;flex-shrink:0;}'+
     '.quote-text{font-size:14px;color:#e0f4ff;font-style:italic;font-family:Georgia,serif;}'+
     '.quote-author{font-family:\'Share Tech Mono\',monospace;font-size:11px;color:#00e5ff;white-space:nowrap;flex-shrink:0;}'+
+
+    /* ── Shift planner agent view styles ── */
     '.sp-D1{background:rgba(0,180,255,.18);border:1px solid rgba(0,180,255,.4);color:#a8e8ff;}'+
     '.sp-D2{background:rgba(0,120,220,.18);border:1px solid rgba(0,120,220,.4);color:#88ccff;}'+
     '.sp-D3{background:rgba(100,60,220,.18);border:1px solid rgba(100,60,220,.4);color:#c0a0ff;}'+
@@ -305,25 +319,53 @@ function showDashboard(username,team){
     '.ap-tbl td.ap-col-name{text-align:left;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',sans-serif;font-size:13px;font-weight:700;color:#e0f4ff;position:sticky;left:0;background:rgba(4,20,40,.95);border-right:1px solid rgba(0,180,255,.2);white-space:nowrap;}'+
     '.ap-tbl tr:hover td{background:rgba(0,60,100,.2);}.ap-tbl tr:hover td.ap-col-name{background:rgba(0,60,100,.5);}'+
     '</style>'+
+
     '<div class="db-bg"></div><div class="db-stars"></div>'+
     '<div class="db-ocean">'+
     '<div class="db-wave wv1"><svg viewBox="0 0 1200 200" preserveAspectRatio="none"><path d="M0,100 C150,40 300,160 450,100 C600,40 750,160 900,100 C1050,40 1150,120 1200,100 L1200,200 L0,200 Z" fill="#0a3558" opacity=".9"/></svg></div>'+
     '<div class="db-wave wv2"><svg viewBox="0 0 1200 200" preserveAspectRatio="none"><path d="M0,130 C200,70 400,170 600,130 C800,90 1000,170 1200,130 L1200,200 L0,200 Z" fill="#041828" opacity=".7"/></svg></div>'+
     '</div>'+
+
     '<div class="db-topbar">'+
     '<div class="db-brand"><div class="db-brand-icon">&#x1F6A2;</div><h1>LRP SUPPORT PORTAL</h1></div>'+
     '<div class="db-user-info"><div class="name" id="db-username"></div><div class="team-lbl" id="db-team"></div></div>'+
     '<button class="db-logout" onclick="signOut()">&#x238B; SIGN OUT</button>'+
     '</div>'+
+
     '<div class="db-body">'+
-    '<div class="db-card" onclick="openTool(\'handover\')"><span class="db-card-badge badge-ops">OPERATIONS</span><span class="db-card-icon">&#x1F4CB;</span><div class="db-card-title">SHIFT HANDOVER LOGGER</div><div class="db-card-desc">Manage shift transitions, track ticket statuses, and generate handover reports for your team.</div><div class="db-card-btn">OPEN MODULE &rarr;</div></div>'+
-    '<div class="db-divider"></div>'+
-    '<div class="db-card" onclick="openTool(\'playbook\')"><span class="db-card-badge badge-log">TRACKING</span><span class="db-card-icon">&#x23F1;&#xFE0F;</span><div class="db-card-title">SUPPORT TICKET TIME LOGGER</div><div class="db-card-desc">Track ticket resolution times, follow the playbook checklist, and log your end-of-shift summary.</div><div class="db-card-btn">OPEN MODULE &rarr;</div></div>'+
-    '<div class="db-divider"></div>'+
-    '<div class="db-card" onclick="openCredentials()"><span class="db-card-badge badge-cred">SECURE</span><span class="db-card-icon">&#x1F510;</span><div class="db-card-title">CLIENT CREDENTIALS</div><div class="db-card-desc">Access client login credentials &mdash; App URLs, User IDs and passwords for all environments.</div><div class="db-card-btn">OPEN MODULE &rarr;</div></div>'+
-    '<div class="db-divider"></div>'+
-    '<div class="db-card" onclick="openShiftPlanner()"><span class="db-card-badge badge-plan">SCHEDULE</span><span class="db-card-icon">&#x1F4C5;</span><div class="db-card-title">SHIFT PLANNER</div><div class="db-card-desc">View your team shift schedule. Today\'s date is highlighted automatically.</div><div class="db-card-btn">OPEN MODULE &rarr;</div></div>'+
+    '<div class="db-card" onclick="openTool(\'handover\')">'+
+      '<span class="db-card-badge badge-ops">OPERATIONS</span>'+
+      '<span class="db-card-icon">&#x1F4CB;</span>'+
+      '<div class="db-card-title">SHIFT HANDOVER LOGGER</div>'+
+      '<div class="db-card-desc">Manage shift transitions, track ticket statuses, and generate handover reports for your team.</div>'+
+      '<div class="db-card-btn">OPEN MODULE &rarr;</div>'+
     '</div>'+
+    '<div class="db-divider"></div>'+
+    '<div class="db-card" onclick="openTool(\'playbook\')">'+
+      '<span class="db-card-badge badge-log">TRACKING</span>'+
+      '<span class="db-card-icon">&#x23F1;&#xFE0F;</span>'+
+      '<div class="db-card-title">SUPPORT TICKET TIME LOGGER</div>'+
+      '<div class="db-card-desc">Track ticket resolution times, follow the playbook checklist, and log your end-of-shift summary.</div>'+
+      '<div class="db-card-btn">OPEN MODULE &rarr;</div>'+
+    '</div>'+
+    '<div class="db-divider"></div>'+
+    '<div class="db-card" onclick="openCredentials()">'+
+      '<span class="db-card-badge badge-cred">SECURE</span>'+
+      '<span class="db-card-icon">&#x1F510;</span>'+
+      '<div class="db-card-title">CLIENT CREDENTIALS</div>'+
+      '<div class="db-card-desc">Access client login credentials &mdash; App URLs, User IDs and passwords for all environments.</div>'+
+      '<div class="db-card-btn">OPEN MODULE &rarr;</div>'+
+    '</div>'+
+    '<div class="db-divider"></div>'+
+    '<div class="db-card" onclick="openShiftPlanner()">'+
+      '<span class="db-card-badge badge-plan">SCHEDULE</span>'+
+      '<span class="db-card-icon">&#x1F4C5;</span>'+
+      '<div class="db-card-title">SHIFT PLANNER</div>'+
+      '<div class="db-card-desc">View your team shift schedule. Today\'s date is highlighted automatically.</div>'+
+      '<div class="db-card-btn">OPEN MODULE &rarr;</div>'+
+    '</div>'+
+    '</div>'+
+
     '<div class="quote-bar">'+
     '<span class="quote-label">MOTIVATION OF THE SESSION</span>'+
     '<span class="quote-mark">&#x275D;</span>'+
@@ -336,30 +378,44 @@ function showDashboard(username,team){
   document.getElementById('db-quote-text').textContent=q.text;
   document.getElementById('db-quote-author').textContent='\u2014 '+q.author;
 
-  window.signOut=function(){localStorage.removeItem('lrp_session');localStorage.removeItem('lrp_quote');location.reload();};
+  window.signOut=function(){
+    localStorage.removeItem('lrp_session');
+    localStorage.removeItem('lrp_quote');
+    location.reload();
+  };
 
+  /* ── openTool ── */
   window.openTool=function(tool){
     const files={handover:'Shift_Handover_V5.html',playbook:'Support Ticket Logger_V7.html'};
     const lbl=tool==='handover'?'&#x1F4CB; Shift Handover Logger':'&#x23F1;&#xFE0F; Support Ticket Time Logger';
-    const ov=document.createElement('div');ov.style.cssText='position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;background:#020f1e;';
-    const bar=document.createElement('div');bar.style.cssText='display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;padding:10px 24px;background:rgba(4,28,53,.95);border-bottom:1px solid rgba(0,180,255,.2);flex-shrink:0;';
-    bar.innerHTML='<div style="display:flex;align-items:center;gap:12px;"><div style="width:34px;height:34px;background:linear-gradient(135deg,#c0441a,#e8610a);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;">&#x1F6A2;</div>'+
+    const ov=document.createElement('div');
+    ov.style.cssText='position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;background:#020f1e;';
+    const bar=document.createElement('div');
+    bar.style.cssText='display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;padding:10px 24px;background:rgba(4,28,53,.95);border-bottom:1px solid rgba(0,180,255,.2);flex-shrink:0;';
+    bar.innerHTML=
+      '<div style="display:flex;align-items:center;gap:12px;">'+
+      '<div style="width:34px;height:34px;background:linear-gradient(135deg,#c0441a,#e8610a);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;">&#x1F6A2;</div>'+
       '<div><div style="font-family:\'Orbitron\',sans-serif;font-size:12px;font-weight:900;color:#e0f4ff;letter-spacing:2px;">LRP SUPPORT PORTAL</div>'+
       '<div style="font-size:10px;color:rgba(0,200,255,.6);letter-spacing:1px;">'+lbl+'</div></div></div><div></div>'+
       '<div style="display:flex;gap:10px;">'+
       '<button id="back-btn" style="font-family:\'Rajdhani\',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(0,100,180,.25);border:1px solid rgba(0,180,255,.4);border-radius:3px;color:#a8e8ff;cursor:pointer;text-transform:uppercase;">\u2190 BACK</button>'+
       '<button id="so-btn" style="font-family:\'Rajdhani\',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);border-radius:3px;color:#ff9977;cursor:pointer;text-transform:uppercase;">\u238B SIGN OUT</button></div>';
-    const iframe=document.createElement('iframe');iframe.src=files[tool];iframe.style.cssText='flex:1;border:none;width:100%;height:100%;';
+    const iframe=document.createElement('iframe');
+    iframe.src=files[tool];
+    iframe.style.cssText='flex:1;border:none;width:100%;height:100%;';
     ov.appendChild(bar);ov.appendChild(iframe);document.body.appendChild(ov);
     document.getElementById('back-btn').onclick=function(){ov.remove();};
     document.getElementById('so-btn').onclick=function(){ov.remove();signOut();};
   };
 
+  /* ── openCredentials ── */
   window.openCredentials=function(){
-    const ov=document.createElement('div');ov.id='cred-overlay';
+    const ov=document.createElement('div');
+    ov.id='cred-overlay';
     ov.style.cssText='position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;background:#020f1e;font-family:Rajdhani,sans-serif;';
     ov.innerHTML=
-      '<style>@import url(\'https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap\');'+
+      '<style>'+
+      '@import url(\'https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap\');'+
       '.cr-bar{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;padding:12px 24px;background:rgba(4,28,53,.95);border-bottom:1px solid rgba(0,180,255,.2);flex-shrink:0;}'+
       '.cr-body{flex:1;overflow-y:auto;padding:24px 28px;}'+
       '.sw-inner{position:relative;flex:1;display:flex;align-items:center;}'+
@@ -394,7 +450,8 @@ function showDashboard(username,team){
       '.cr-empty{text-align:center;padding:60px 20px;color:rgba(0,200,255,.5);font-size:14px;letter-spacing:2px;}'+
       '</style>'+
       '<div class="cr-bar">'+
-      '<div style="display:flex;align-items:center;gap:12px;"><div style="width:34px;height:34px;background:linear-gradient(135deg,#c0441a,#e8610a);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;">&#x1F6A2;</div>'+
+      '<div style="display:flex;align-items:center;gap:12px;">'+
+      '<div style="width:34px;height:34px;background:linear-gradient(135deg,#c0441a,#e8610a);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;">&#x1F6A2;</div>'+
       '<div><div style="font-family:\'Orbitron\',sans-serif;font-size:12px;font-weight:900;color:#e0f4ff;letter-spacing:2px;">LRP SUPPORT PORTAL</div>'+
       '<div style="font-size:10px;color:rgba(160,80,255,.8);letter-spacing:1px;">&#x1F510; CLIENT CREDENTIALS</div></div></div><div></div>'+
       '<div style="display:flex;gap:10px;">'+
@@ -402,7 +459,8 @@ function showDashboard(username,team){
       '<button onclick="signOut()" style="font-family:\'Rajdhani\',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);border-radius:3px;color:#ff9977;cursor:pointer;text-transform:uppercase;">\u238B SIGN OUT</button>'+
       '</div></div>'+
       '<div class="cr-body"><div class="cr-section-title">&#x1F510; Client Login Credentials</div>'+
-      '<div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;"><div class="sw-inner"><span class="cr-search-icon">&#x1F50D;</span>'+
+      '<div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">'+
+      '<div class="sw-inner"><span class="cr-search-icon">&#x1F50D;</span>'+
       '<input class="cr-search" id="cr-search-input" type="text" placeholder="Search by client name..." oninput="filterCredentials()"/></div>'+
       '<span class="cr-count" id="cr-count"></span></div>'+
       '<div class="cr-table-wrap"><div id="cr-table-container" class="cr-loading">&#x23F3; LOADING CREDENTIALS...</div></div></div>';
@@ -435,13 +493,27 @@ function showDashboard(username,team){
           '<button class="cr-copy" id="copy-btn-'+i+'" onclick="copyPw('+i+',\''+encodeURIComponent(c.password||'')+'\')">&#x1F4CB; Copy</button>'+
           '</div></td></tr>';
       }).join('');
-      document.getElementById('cr-table-container').innerHTML='<table class="cr-table"><thead><tr><th>Client Name</th><th>App URL</th><th>Environment</th><th>User ID</th><th>Password</th></tr></thead><tbody>'+rows+'</tbody></table>';
+      document.getElementById('cr-table-container').innerHTML=
+        '<table class="cr-table"><thead><tr>'+
+        '<th>Client Name</th><th>App URL</th><th>Environment</th><th>User ID</th><th>Password</th>'+
+        '</tr></thead><tbody>'+rows+'</tbody></table>';
     };
-    window.togglePw=function(i,enc){const el=document.getElementById('pw-val-'+i),btn=el.nextElementSibling;if(el.textContent==='••••••••'){el.textContent=decodeURIComponent(enc);btn.textContent='🙈 Hide';}else{el.textContent='••••••••';btn.textContent='👁 Show';}};
-    window.copyPw=function(i,enc){navigator.clipboard.writeText(decodeURIComponent(enc)).then(function(){const btn=document.getElementById('copy-btn-'+i);btn.textContent='✅ Copied';btn.classList.add('copied');setTimeout(function(){btn.textContent='📋 Copy';btn.classList.remove('copied');},2000);});};
+    window.togglePw=function(i,enc){
+      const el=document.getElementById('pw-val-'+i),btn=el.nextElementSibling;
+      if(el.textContent==='••••••••'){el.textContent=decodeURIComponent(enc);btn.textContent='🙈 Hide';}
+      else{el.textContent='••••••••';btn.textContent='👁 Show';}
+    };
+    window.copyPw=function(i,enc){
+      navigator.clipboard.writeText(decodeURIComponent(enc)).then(function(){
+        const btn=document.getElementById('copy-btn-'+i);
+        btn.textContent='✅ Copied';btn.classList.add('copied');
+        setTimeout(function(){btn.textContent='📋 Copy';btn.classList.remove('copied');},2000);
+      });
+    };
     loadCredentials();
   };
 
+  /* ── openShiftPlanner ── */
   window.openShiftPlanner=function(){
     const PDATES=['30-03-2026','31-03-2026','01-04-2026','02-04-2026','03-04-2026','04-04-2026','05-04-2026','06-04-2026','07-04-2026','08-04-2026','09-04-2026','10-04-2026','11-04-2026','12-04-2026','13-04-2026','14-04-2026','15-04-2026','16-04-2026','17-04-2026','18-04-2026','19-04-2026','20-04-2026','21-04-2026','22-04-2026','23-04-2026','24-04-2026','25-04-2026','26-04-2026','27-04-2026','28-04-2026','29-04-2026','30-04-2026','01-05-2026','02-05-2026','03-05-2026'];
     const PDAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
@@ -456,14 +528,22 @@ function showDashboard(username,team){
       {id:'SM2332',name:'Seenivasan Lakshmipathy',primary:'Customer Service',shifts:['D1','D1','W/OFF','W/OFF','D1','D1','D1','D1','D1','Compff','W/OFF','W/OFF','N','N','N','N','N','W/OFF','W/OFF','D2','D2','Compff','W/OFF','D2','D2','D2','W/OFF','W/OFF','D1','D1','D1','W/OFF','N','N','N']},
       {id:'SM2331',name:'Vinothraj Vijayakumar',primary:'Customer Service', shifts:['N','N','N','N','N','W/OFF','W/OFF','D2','D2','Compff','W/OFF','D1','D1','D1','W/OFF','Holiday','W/OFF','N','N','N','N','N','W/OFF','D2','D2','W/OFF','D2','D2','D2','D2','W/OFF','W/OFF','D2','D2','D2']}
     ];
-    const LGND=[{key:'D1',label:'Morning',cls:'sp-D1'},{key:'D2',label:'Afternoon',cls:'sp-D2'},{key:'D4',label:'Day',cls:'sp-D4'},{key:'D5',label:'Evening',cls:'sp-D5'},{key:'N',label:'Night',cls:'sp-N'},{key:'W/OFF',label:'Week Off',cls:'sp-WOFF'},{key:'Holiday',label:'Holiday',cls:'sp-HOL'},{key:'Compff',label:'Comp Off',cls:'sp-COMP'}];
+    const LGND=[
+      {key:'D1',label:'Morning',cls:'sp-D1'},{key:'D2',label:'Afternoon',cls:'sp-D2'},
+      {key:'D4',label:'Day',cls:'sp-D4'},{key:'D5',label:'Evening',cls:'sp-D5'},
+      {key:'N',label:'Night',cls:'sp-N'},{key:'W/OFF',label:'Week Off',cls:'sp-WOFF'},
+      {key:'Holiday',label:'Holiday',cls:'sp-HOL'},{key:'Compff',label:'Comp Off',cls:'sp-COMP'}
+    ];
     function getTi(){const d=new Date(),pad=n=>String(n).padStart(2,'0');return PDATES.indexOf(pad(d.getDate())+'-'+pad(d.getMonth()+1)+'-'+d.getFullYear());}
     function spCls(s){const v=(s||'').trim().toUpperCase();if(v==='D1')return 'sp-D1';if(v==='D2')return 'sp-D2';if(v==='D3')return 'sp-D3';if(v==='D4')return 'sp-D4';if(v==='D5')return 'sp-D5';if(v==='N')return 'sp-N';if(v==='W/OFF')return 'sp-WOFF';if(v==='HOLIDAY')return 'sp-HOL';if(v==='COMPFF')return 'sp-COMP';return 'sp-WOFF';}
-    const ov=document.createElement('div');ov.id='planner-overlay';
+
+    const ov=document.createElement('div');
+    ov.id='planner-overlay';
     ov.style.cssText='position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;background:#020f1e;';
     ov.innerHTML=
       '<div style="display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;padding:10px 24px;background:rgba(4,28,53,.95);border-bottom:1px solid rgba(0,180,255,.2);flex-shrink:0;">'+
-      '<div style="display:flex;align-items:center;gap:12px;"><div style="width:34px;height:34px;background:linear-gradient(135deg,#c0441a,#e8610a);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;">&#x1F6A2;</div>'+
+      '<div style="display:flex;align-items:center;gap:12px;">'+
+      '<div style="width:34px;height:34px;background:linear-gradient(135deg,#c0441a,#e8610a);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;">&#x1F6A2;</div>'+
       '<div><div style="font-family:\'Orbitron\',sans-serif;font-size:12px;font-weight:900;color:#e0f4ff;letter-spacing:2px;">LRP SUPPORT PORTAL</div>'+
       '<div style="font-size:10px;color:rgba(0,200,255,.7);letter-spacing:1px;">&#x1F4C5; SHIFT PLANNER</div></div></div>'+
       '<div style="display:flex;align-items:center;gap:10px;justify-content:center;">'+
@@ -476,10 +556,15 @@ function showDashboard(username,team){
       '</div></div>'+
       '<div style="flex:1;overflow:auto;padding:16px 20px;">'+
       '<div id="ap-legend" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;"></div>'+
-      '<div style="overflow-x:auto;border:1px solid rgba(0,180,255,.2);border-radius:8px;"><div id="ap-table" style="min-width:1100px;"><div style="padding:40px;text-align:center;color:rgba(0,200,255,.6);font-size:14px;letter-spacing:2px;">&#x23F3; Loading shift planner...</div></div></div>'+
-      '</div>';
+      '<div style="overflow-x:auto;border:1px solid rgba(0,180,255,.2);border-radius:8px;">'+
+      '<div id="ap-table" style="min-width:1100px;"><div style="padding:40px;text-align:center;color:rgba(0,200,255,.6);font-size:14px;letter-spacing:2px;">&#x23F3; Loading shift planner...</div></div>'+
+      '</div></div>';
     document.body.appendChild(ov);
-    document.getElementById('ap-legend').innerHTML=LGND.map(l=>'<span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:rgba(168,216,234,.7);"><span class="sp-pill '+l.cls+'">'+l.key+'</span>'+l.label+'</span>').join('');
+
+    document.getElementById('ap-legend').innerHTML=LGND.map(l=>
+      '<span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:rgba(168,216,234,.7);">'+
+      '<span class="sp-pill '+l.cls+'">'+l.key+'</span>'+l.label+'</span>').join('');
+
     function buildTable(team){
       if(!team||!team.length){document.getElementById('ap-table').innerHTML='<div style="padding:40px;text-align:center;color:rgba(0,200,255,.4);">No data available.</div>';return;}
       const ti=getTi();
@@ -487,27 +572,57 @@ function showDashboard(username,team){
       const sq=(document.getElementById('ap-search').value||'').toLowerCase();
       const filtered=sq?team.filter(m=>(m.name||'').toLowerCase().includes(sq)||(m.id||'').toLowerCase().includes(sq)):team;
       let hdr='<tr><th class="ap-col-name" rowspan="2">Name</th>';
-      PDATES.forEach(function(d,i){const isT=i===ti,isW=PDAYS[i]==='Sat'||PDAYS[i]==='Sun',p=d.split('-');hdr+='<th style="padding:7px 9px;text-align:center;font-size:10px;font-weight:700;white-space:nowrap;border:1px solid rgba(0,180,255,.15);background:'+(isT?'rgba(0,180,255,.15)':'rgba(0,40,80,.7)')+';color:'+(isT?'#00c8ff':isW?'rgba(168,216,234,.4)':'rgba(0,200,255,.8)')+';">'+p[0]+'/'+p[1]+'</th>';});
+      PDATES.forEach(function(d,i){
+        const isT=i===ti,isW=PDAYS[i]==='Sat'||PDAYS[i]==='Sun',p=d.split('-');
+        hdr+='<th style="padding:7px 9px;text-align:center;font-size:10px;font-weight:700;white-space:nowrap;border:1px solid rgba(0,180,255,.15);background:'+(isT?'rgba(0,180,255,.15)':'rgba(0,40,80,.7)')+';color:'+(isT?'#00c8ff':isW?'rgba(168,216,234,.4)':'rgba(0,200,255,.8)')+';">'+p[0]+'/'+p[1]+'</th>';
+      });
       hdr+='</tr><tr>';
-      PDAYS.forEach(function(d,i){const isT=i===ti,isW=d==='Sat'||d==='Sun';hdr+='<th style="font-size:9px;padding:7px 9px;text-align:center;font-weight:700;white-space:nowrap;border:1px solid rgba(0,180,255,.15);background:'+(isT?'rgba(0,180,255,.15)':'rgba(0,40,80,.7)')+';color:'+(isT?'#00c8ff':isW?'rgba(168,216,234,.3)':'rgba(0,200,255,.8)')+';">'+d+'</th>';});
+      PDAYS.forEach(function(d,i){
+        const isT=i===ti,isW=d==='Sat'||d==='Sun';
+        hdr+='<th style="font-size:9px;padding:7px 9px;text-align:center;font-weight:700;white-space:nowrap;border:1px solid rgba(0,180,255,.15);background:'+(isT?'rgba(0,180,255,.15)':'rgba(0,40,80,.7)')+';color:'+(isT?'#00c8ff':isW?'rgba(168,216,234,.3)':'rgba(0,200,255,.8)')+';">'+d+'</th>';
+      });
       hdr+='</tr>';
       const rows=filtered.map(function(m){
-        let cells='';(m.shifts||[]).forEach(function(s,i){const isT=i===ti;cells+='<td class="'+(isT?'sp-today-col':'')+'"><span class="sp-pill '+spCls(s)+(isT?' sp-today-pill':'')+'">'+(s||'—')+'</span></td>';});
-        return '<tr><td class="ap-col-name"><div>'+m.name+'</div><div style="font-size:10px;color:rgba(0,200,255,.5);font-family:\'Courier New\',monospace;margin-top:1px;">'+m.id+'</div></td>'+cells+'</tr>';
+        let cells='';
+        (m.shifts||[]).forEach(function(s,i){
+          const isT=i===ti;
+          cells+='<td class="'+(isT?'sp-today-col':'')+'">'+
+            '<span class="sp-pill '+spCls(s)+(isT?' sp-today-pill':'')+'">'+(s||'—')+'</span></td>';
+        });
+        return '<tr>'+
+          '<td class="ap-col-name"><div>'+m.name+'</div>'+
+          '<div style="font-size:10px;color:rgba(0,200,255,.5);font-family:\'Courier New\',monospace;margin-top:1px;">'+m.id+'</div></td>'+
+          cells+'</tr>';
       }).join('');
-      document.getElementById('ap-table').innerHTML='<table class="ap-tbl"><thead>'+hdr+'</thead><tbody>'+rows+'</tbody></table>';
+      document.getElementById('ap-table').innerHTML=
+        '<table class="ap-tbl"><thead>'+hdr+'</thead><tbody>'+rows+'</tbody></table>';
     }
-    document.getElementById('ap-search').addEventListener('input',function(){if(window._apLastTeam)buildTable(window._apLastTeam);});
+
+    document.getElementById('ap-search').addEventListener('input',function(){
+      if(window._apLastTeam)buildTable(window._apLastTeam);
+    });
+
     fetch(API_URL+'?action=getPlanner&t='+Date.now())
       .then(r=>r.json())
       .then(function(data){
         if(data.success&&data.planner&&data.planner.length){
           window._apLastTeam=data.planner;
-          if(data.updatedAt){const d=new Date(data.updatedAt);document.getElementById('ap-updated-lbl').textContent='Updated: '+d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}
-        }else{window._apLastTeam=PDEF;}
+          if(data.updatedAt){
+            const d=new Date(data.updatedAt);
+            document.getElementById('ap-updated-lbl').textContent=
+              'Updated: '+d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+' '+
+              d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+          }
+        }else{
+          window._apLastTeam=PDEF;
+        }
         buildTable(window._apLastTeam);
       })
-      .catch(function(){window._apLastTeam=PDEF;buildTable(PDEF);document.getElementById('ap-updated-lbl').textContent='(offline — showing default)';});
+      .catch(function(){
+        window._apLastTeam=PDEF;
+        buildTable(PDEF);
+        document.getElementById('ap-updated-lbl').textContent='(offline — showing default)';
+      });
   };
 }
 
