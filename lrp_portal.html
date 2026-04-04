@@ -155,6 +155,21 @@
 <script>
   const API_URL = 'https://script.google.com/macros/s/AKfycbx4Yt6dXiMOpztGU7ujn1TiJZUxfpTDCzSZ07rDd-EewnS8D0h4adFV6VP_3IzomL1H_w/exec';
 
+  // ── AUTO-RESTORE SESSION ON PAGE LOAD ──
+  window.addEventListener('load', function() {
+    const saved = localStorage.getItem('lrp_session');
+    if (saved) {
+      try {
+        const session = JSON.parse(saved);
+        if (session && session.username && session.team) {
+          showDashboard(session.username, session.team);
+        }
+      } catch(e) {
+        localStorage.removeItem('lrp_session');
+      }
+    }
+  });
+
   const AGENT_QUOTES = [
     { text: "Every customer interaction is a chance to turn a problem into loyalty.", author: "LRP Wisdom" },
     { text: "Patience is not the ability to wait, but how you act while you're waiting.", author: "Joyce Meyer" },
@@ -179,10 +194,10 @@
   ];
 
   function getSessionQuote() {
-    const saved = sessionStorage.getItem('lrp_quote');
+    const saved = localStorage.getItem('lrp_quote');
     if (saved) return JSON.parse(saved);
     const q = AGENT_QUOTES[Math.floor(Math.random() * AGENT_QUOTES.length)];
-    sessionStorage.setItem('lrp_quote', JSON.stringify(q));
+    localStorage.setItem('lrp_quote', JSON.stringify(q));
     return q;
   }
 
@@ -212,7 +227,8 @@
         showMsg('login-msg','✅ IDENTITY VERIFIED','success');
         sessionStorage.removeItem('lrp_quote');
         setTimeout(() => {
-          sessionStorage.setItem('lrp_user', JSON.stringify({ username: data.user.username, team: data.user.team }));
+          // Save session to localStorage so it survives page refresh
+          localStorage.setItem('lrp_session', JSON.stringify({ username: data.user.username, team: data.user.team }));
           if (data.isDefault) {
             showChangePassword(data.user.username, data.user.team);
           } else {
@@ -394,7 +410,7 @@
         <div class="name" id="db-username"></div>
         <div class="team-lbl" id="db-team"></div>
       </div>
-      <button class="db-logout" onclick="location.reload()">&#x238B; SIGN OUT</button>
+      <button class="db-logout" onclick="signOut()">&#x238B; SIGN OUT</button>
     </div>
 
     <div class="db-body">
@@ -436,6 +452,13 @@
     document.getElementById('db-quote-text').textContent   = q.text;
     document.getElementById('db-quote-author').textContent = '\u2014 ' + q.author;
 
+    // Sign out: clear session then reload to show login screen
+    window.signOut = function() {
+      localStorage.removeItem('lrp_session');
+      localStorage.removeItem('lrp_quote');
+      location.reload();
+    };
+
     /* ── openTool ── */
     window.openTool = function(tool) {
       const files = { handover:'Shift_Handover_V5.html', playbook:'Support Ticket Logger_V7.html' };
@@ -455,7 +478,7 @@
         '<div></div>' +
         '<div style="display:flex;gap:10px;">' +
           '<button id="back-btn" style="font-family:\'Rajdhani\',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(0,100,180,.25);border:1px solid rgba(0,180,255,.4);border-radius:3px;color:#a8e8ff;cursor:pointer;text-transform:uppercase;">\u2190 BACK</button>' +
-          '<button id="so-btn"   style="font-family:\'Rajdhani\',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);border-radius:3px;color:#ff9977;cursor:pointer;text-transform:uppercase;">\u238B SIGN OUT</button>' +
+          '<button id="so-btn"   style="font-family:\'Rajdhani\',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);border-radius:3px;color:#ff9977;cursor:pointer;text-transform:uppercase;" onclick="signOut()">\u238B SIGN OUT</button>' +
         '</div>';
       const iframe = document.createElement('iframe');
       iframe.src = files[tool];
@@ -464,7 +487,7 @@
       overlay.appendChild(iframe);
       document.body.appendChild(overlay);
       document.getElementById('back-btn').onclick = function() { overlay.remove(); };
-      document.getElementById('so-btn').onclick   = function() { overlay.remove(); location.reload(); };
+      document.getElementById('so-btn').onclick   = function() { overlay.remove(); signOut(); };
     };
 
     /* ── openCredentials ── */
@@ -526,7 +549,7 @@
           '<div></div>' +
           '<div style="display:flex;gap:10px;">' +
             '<button onclick="document.getElementById(\'cred-overlay\').remove()" style="font-family:\'Rajdhani\',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(0,100,180,.25);border:1px solid rgba(0,180,255,.4);border-radius:3px;color:#a8e8ff;cursor:pointer;text-transform:uppercase;">\u2190 BACK</button>' +
-            '<button onclick="location.reload()" style="font-family:\'Rajdhani\',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);border-radius:3px;color:#ff9977;cursor:pointer;text-transform:uppercase;">\u238B SIGN OUT</button>' +
+            '<button onclick="location.reload()" style="font-family:\'Rajdhani\',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);border-radius:3px;color:#ff9977;cursor:pointer;text-transform:uppercase;" onclick="signOut()">\u238B SIGN OUT</button>' +
           '</div>' +
         '</div>' +
         '<div class="cr-body">' +
