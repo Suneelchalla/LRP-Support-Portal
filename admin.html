@@ -118,7 +118,6 @@ tr:last-child td{border-bottom:none;}
 .ho-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;align-items:center;justify-content:center;padding:20px;}
 .ho-overlay.open{display:flex;}
 .ho-box{background:#041c35;border:1px solid rgba(0,180,255,.3);border-radius:10px;width:100%;max-width:720px;max-height:88vh;overflow-y:auto;padding:28px 32px;position:relative;}
-/* SHIFT PLANNER */
 .planner-filter-btn{padding:5px 14px;font-size:11px;font-weight:700;letter-spacing:1px;background:rgba(0,100,180,.15);border:1px solid rgba(0,180,255,.3);border-radius:4px;color:#a8e8ff;cursor:pointer;transition:all .2s;}
 .planner-filter-btn:hover{background:rgba(0,100,180,.35);}
 .planner-filter-btn.active{background:rgba(0,180,255,.3);border-color:#00c8ff;color:#fff;}
@@ -147,7 +146,6 @@ tr:last-child td{border-bottom:none;}
 <body>
 <div class="toast" id="toast"></div>
 
-<!-- LOGIN -->
 <div class="login-screen" id="loginScreen">
   <div class="login-box">
     <div style="font-size:40px;margin-bottom:12px;">🛡️</div>
@@ -160,7 +158,6 @@ tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
-<!-- DASHBOARD -->
 <div id="dashboard" style="display:none;">
   <div class="topbar">
     <div class="brand">
@@ -323,7 +320,6 @@ tr:last-child td{border-bottom:none;}
     <div class="tab-panel" id="panel-planner">
       <div class="page-title">SHIFT PLANNER</div>
       <div class="page-sub">Edit shift cells below, then click <strong style="color:#88ffcc;">Submit to Agents</strong> to publish</div>
-
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
         <input type="text" id="planner-search" placeholder="🔍  Search by name or role..."
           style="background:rgba(2,15,30,.7);border:1px solid rgba(0,120,180,.35);border-radius:4px;padding:8px 12px;font-size:13px;color:#a8e8ff;outline:none;font-family:'Courier New',monospace;width:240px;"
@@ -346,18 +342,13 @@ tr:last-child td{border-bottom:none;}
           </button>
         </div>
       </div>
-
       <div style="font-size:11px;color:rgba(168,216,234,.4);margin-bottom:10px;">
-        ✏️ Click any shift cell to edit &nbsp;|&nbsp; Unsaved changes are shown until you click <strong style="color:#88ffcc;">Submit to Agents</strong>
+        ✏️ Click any shift cell to edit &nbsp;|&nbsp; Unsaved changes shown until you click <strong style="color:#88ffcc;">Submit to Agents</strong>
       </div>
-
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;" id="planner-legend"></div>
-
       <div style="overflow-x:auto;border:1px solid rgba(0,180,255,.2);border-radius:8px;">
         <div id="planner-table-container" style="min-width:1200px;"><div class="loading">⏳ LOADING...</div></div>
       </div>
-
-      <!-- Inline cell editor popup -->
       <div id="planner-cell-editor" style="display:none;position:fixed;z-index:9999;background:#041c35;border:1px solid rgba(0,180,255,.4);border-radius:8px;padding:14px 16px;box-shadow:0 8px 32px rgba(0,0,0,.6);min-width:200px;">
         <div style="font-size:10px;color:rgba(0,200,255,.7);letter-spacing:1px;margin-bottom:8px;font-weight:700;" id="pce-label">EDIT SHIFT</div>
         <select id="pce-select" style="width:100%;background:rgba(2,15,30,.8);border:1px solid rgba(0,120,180,.4);border-radius:4px;padding:8px 10px;font-size:13px;color:#a8e8ff;outline:none;font-family:'Courier New',monospace;margin-bottom:10px;">
@@ -374,7 +365,6 @@ tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
-<!-- HANDOVER DETAIL MODAL -->
 <div class="ho-overlay" id="hoDetailOverlay">
   <div class="ho-box">
     <button onclick="closeHoDetail()" style="position:absolute;top:14px;right:16px;background:rgba(255,80,60,.2);border:1px solid rgba(255,80,60,.4);border-radius:6px;color:#ff9977;cursor:pointer;font-size:13px;font-weight:700;padding:5px 12px;">✕ Close</button>
@@ -383,13 +373,12 @@ tr:last-child td{border-bottom:none;}
 </div>
 
 <script>
-const API_URL    = 'https://script.google.com/macros/s/AKfycbx4Yt6dXiMOpztGU7ujn1TiJZUxfpTDCzSZ07rDd-EewnS8D0h4adFV6VP_3IzomL1H_w/exec';
+const API_URL    = 'https://script.google.com/macros/s/AKfycbzZjd-JaDNMwPx9X6eg1OCvCJFrhXRdIcle31JFmrNYu_qkviVXeZz5V4g4Wq6Re_ND_A/exec';
 const ADMIN_USER = 'admin';
 const ADMIN_PASS = 'admin@lrp';
 let allUsers=[],allCreds=[],allLogs=[],filteredLogs=[],allHandovers=[],filteredHandovers=[];
 let selectedAgent=null,currentTab='agents';
 
-/* LOGIN */
 window.addEventListener('load',()=>{
   if(sessionStorage.getItem('admin_logged_in')==='true'){
     document.getElementById('loginScreen').style.display='none';
@@ -405,21 +394,18 @@ function adminLogin(){
     document.getElementById('loginScreen').style.display='none';
     document.getElementById('dashboard').style.display='block';
     loadUsers();
-  } else { document.getElementById('adm-err').style.display='block'; }
+  }else{document.getElementById('adm-err').style.display='block';}
 }
 function adminLogout(){
-  if(!confirm('Are you sure you want to sign out?')) return;
+  if(!confirm('Are you sure you want to sign out?'))return;
   sessionStorage.removeItem('admin_logged_in');
   document.getElementById('loginScreen').style.display='flex';
   document.getElementById('dashboard').style.display='none';
   document.getElementById('adm-user').value='';
   document.getElementById('adm-pass').value='';
 }
-document.addEventListener('keydown',e=>{
-  if(e.key==='Enter'&&document.getElementById('loginScreen').style.display!=='none') adminLogin();
-});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('loginScreen').style.display!=='none')adminLogin();});
 
-/* TABS */
 function switchTab(tab){
   currentTab=tab;
   ['agents','creds','tracker','handover','planner'].forEach(t=>{
@@ -440,23 +426,17 @@ function refreshCurrent(){
   else if(currentTab==='planner')  loadPlanner();
 }
 
-/* UTILS */
 function showToast(msg,success=true){
   const t=document.getElementById('toast');
-  t.textContent=msg;
-  t.style.borderColor=success?'rgba(0,255,136,.4)':'rgba(255,80,60,.4)';
-  t.style.color=success?'#00ff88':'#ff9977';
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3000);
+  t.textContent=msg;t.style.borderColor=success?'rgba(0,255,136,.4)':'rgba(255,80,60,.4)';t.style.color=success?'#00ff88':'#ff9977';
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);
 }
 function showFormMsg(id,text,type){
-  const el=document.getElementById(id);
-  el.textContent=text;el.className='form-msg '+type;el.style.display='inline-block';
-  if(type!=='loading') setTimeout(()=>{el.style.display='none';},3000);
+  const el=document.getElementById(id);el.textContent=text;el.className='form-msg '+type;el.style.display='inline-block';
+  if(type!=='loading')setTimeout(()=>{el.style.display='none';},3000);
 }
 function formatDate(iso){
-  if(!iso) return '—';
-  const d=new Date(iso);
+  if(!iso)return '—';const d=new Date(iso);
   return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
 }
 function formatDur(secs){
@@ -464,18 +444,18 @@ function formatDur(secs){
   return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
 }
 function getStatus(lastLogin){
-  if(!lastLogin) return {label:'NEVER',cls:'badge-offline'};
+  if(!lastLogin)return{label:'NEVER',cls:'badge-offline'};
   const diff=(new Date()-new Date(lastLogin))/3600000;
-  if(diff<24)  return {label:'TODAY',    cls:'badge-online'};
-  if(diff<168) return {label:'THIS WEEK',cls:'badge-recent'};
-  return {label:'INACTIVE',cls:'badge-offline'};
+  if(diff<24)return{label:'TODAY',cls:'badge-online'};
+  if(diff<168)return{label:'THIS WEEK',cls:'badge-recent'};
+  return{label:'INACTIVE',cls:'badge-offline'};
 }
 function envClass(e){
   const v=(e||'').toLowerCase();
-  if(v==='production') return 'env-prod'; if(v==='uat') return 'env-uat';
-  if(v==='development') return 'env-dev'; if(v==='staging') return 'env-staging';
-  if(v==='train 2') return 'env-train2'; if(v==='train') return 'env-train';
-  if(v==='ecom') return 'env-ecom'; if(v==='testing') return 'env-testing';
+  if(v==='production')return 'env-prod';if(v==='uat')return 'env-uat';
+  if(v==='development')return 'env-dev';if(v==='staging')return 'env-staging';
+  if(v==='train 2')return 'env-train2';if(v==='train')return 'env-train';
+  if(v==='ecom')return 'env-ecom';if(v==='testing')return 'env-testing';
   return 'env-default';
 }
 
@@ -560,7 +540,7 @@ function clearAgentForm(){
   document.getElementById('ag-cancel-btn').style.display='none';document.getElementById('ag-msg').style.display='none';
 }
 async function resetPassword(username,idx){
-  if(!confirm('Reset password for "'+username+'" to a temporary password?')) return;
+  if(!confirm('Reset password for "'+username+'" to a temporary password?'))return;
   const btn=document.getElementById('rbtn_'+idx);btn.textContent='⏳...';btn.disabled=true;
   try{
     const res=await fetch(API_URL+'?'+new URLSearchParams({action:'resetPassword',username}));
@@ -570,7 +550,7 @@ async function resetPassword(username,idx){
   }catch{btn.textContent='🔑 Reset PW';btn.disabled=false;showToast('⚠ Connection error.',false);}
 }
 async function deleteUser(username,idx){
-  if(!confirm('⚠ Permanently delete agent "'+username+'"?\n\nThis cannot be undone!')) return;
+  if(!confirm('⚠ Permanently delete agent "'+username+'"?\n\nThis cannot be undone!'))return;
   const btn=document.getElementById('dbtn_'+idx);btn.textContent='⏳...';btn.disabled=true;
   try{
     const res=await fetch(API_URL+'?'+new URLSearchParams({action:'deleteUser',username}));
@@ -646,7 +626,7 @@ function clearCredForm(){
 }
 async function deleteCred(credId,i){
   const name=allCreds[i]?.clientName||credId;
-  if(!confirm('⚠ Delete credential for "'+name+'"?\n\nThis cannot be undone!')) return;
+  if(!confirm('⚠ Delete credential for "'+name+'"?\n\nThis cannot be undone!'))return;
   const btn=document.getElementById('cdel-'+i);btn.textContent='⏳...';btn.disabled=true;
   try{
     const res=await fetch(API_URL+'?'+new URLSearchParams({action:'deleteCredential',id:credId}));
@@ -810,9 +790,7 @@ function openHoDetail(idx){
 }
 function closeHoDetail(){document.getElementById('hoDetailOverlay').classList.remove('open');}
 
-/* ══════════════════════════════
-   SHIFT PLANNER
-══════════════════════════════ */
+/* SHIFT PLANNER */
 const PLANNER_DATES=['30-03-2026','31-03-2026','01-04-2026','02-04-2026','03-04-2026','04-04-2026','05-04-2026','06-04-2026','07-04-2026','08-04-2026','09-04-2026','10-04-2026','11-04-2026','12-04-2026','13-04-2026','14-04-2026','15-04-2026','16-04-2026','17-04-2026','18-04-2026','19-04-2026','20-04-2026','21-04-2026','22-04-2026','23-04-2026','24-04-2026','25-04-2026','26-04-2026','27-04-2026','28-04-2026','29-04-2026','30-04-2026','01-05-2026','02-05-2026','03-05-2026'];
 const PLANNER_DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const PLANNER_DEFAULT=[
@@ -834,8 +812,7 @@ const SHIFT_LEGEND=[
 ];
 let plannerShiftFilter='ALL';
 let PLANNER_TEAM=JSON.parse(JSON.stringify(PLANNER_DEFAULT));
-let plannerDirty=false;
-let pceTarget=null;
+let plannerDirty=false,pceTarget=null;
 
 async function loadPlanner(){
   document.getElementById('planner-table-container').innerHTML='<div class="loading">⏳ LOADING PLANNER...</div>';
@@ -848,15 +825,10 @@ async function loadPlanner(){
         const d=new Date(data.updatedAt);
         document.getElementById('planner-saved-label').textContent='✅ Last published: '+d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
       }
-    } else {
-      PLANNER_TEAM=JSON.parse(JSON.stringify(PLANNER_DEFAULT));
-    }
+    }else{PLANNER_TEAM=JSON.parse(JSON.stringify(PLANNER_DEFAULT));}
   }catch{PLANNER_TEAM=JSON.parse(JSON.stringify(PLANNER_DEFAULT));}
-  plannerDirty=false;
-  resetPublishBtn();
-  renderPlanner();
+  plannerDirty=false;resetPublishBtn();renderPlanner();
 }
-
 function resetPublishBtn(){
   const btn=document.getElementById('planner-publish-btn');
   btn.textContent='📤 Submit to Agents';
@@ -864,7 +836,6 @@ function resetPublishBtn(){
   btn.style.borderColor='rgba(0,200,80,.4)';
   btn.disabled=false;
 }
-
 async function publishPlanner(){
   const btn=document.getElementById('planner-publish-btn');
   btn.disabled=true;btn.textContent='⏳ Submitting...';
@@ -877,16 +848,9 @@ async function publishPlanner(){
       document.getElementById('planner-saved-label').textContent='✅ Published: '+now.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+' '+now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
       showToast('📤 Shift planner submitted to agents successfully!');
       resetPublishBtn();
-    } else {
-      showToast('⚠ Submit failed. Try again.',false);
-      btn.textContent='📤 Submit to Agents';btn.disabled=false;
-    }
-  }catch{
-    showToast('⚠ Connection error.',false);
-    btn.textContent='📤 Submit to Agents';btn.disabled=false;
-  }
+    }else{showToast('⚠ Submit failed. Try again.',false);btn.textContent='📤 Submit to Agents';btn.disabled=false;}
+  }catch{showToast('⚠ Connection error.',false);btn.textContent='📤 Submit to Agents';btn.disabled=false;}
 }
-
 function getPlannerTodayIndex(){
   const d=new Date(),pad=n=>String(n).padStart(2,'0');
   return PLANNER_DATES.indexOf(pad(d.getDate())+'-'+pad(d.getMonth()+1)+'-'+d.getFullYear());
@@ -914,9 +878,7 @@ function openPlannerEditor(memberIdx,dateIdx,currentVal,cellEl){
   if(left+210>window.innerWidth)left=window.innerWidth-220;
   editor.style.top=top+'px';editor.style.left=left+'px';
 }
-function closePlannerEditor(){
-  document.getElementById('planner-cell-editor').style.display='none';pceTarget=null;
-}
+function closePlannerEditor(){document.getElementById('planner-cell-editor').style.display='none';pceTarget=null;}
 function applyPlannerCellEdit(){
   if(!pceTarget)return;
   PLANNER_TEAM[pceTarget.memberIdx].shifts[pceTarget.dateIdx]=document.getElementById('pce-select').value;
@@ -945,8 +907,7 @@ function renderPlanner(){
   if(!team.length){document.getElementById('planner-table-container').innerHTML='<div style="padding:40px;text-align:center;color:rgba(0,200,255,.4);font-size:14px;letter-spacing:2px;">No team members found.</div>';return;}
   let hdr='<tr><th class="col-name" rowspan="2">Name</th><th style="text-align:left;min-width:120px;background:rgba(0,40,80,.6);border:1px solid rgba(0,180,255,.15);padding:8px 10px;font-size:10px;font-weight:700;color:rgba(0,200,255,.8);text-transform:uppercase;letter-spacing:1px;white-space:nowrap;position:sticky;top:0;z-index:2;" rowspan="2">Primary Role</th>';
   PLANNER_DATES.forEach((d,i)=>{
-    const isT=i===ti,isW=PLANNER_DAYS[i]==='Sat'||PLANNER_DAYS[i]==='Sun';
-    const p=d.split('-');
+    const isT=i===ti,isW=PLANNER_DAYS[i]==='Sat'||PLANNER_DAYS[i]==='Sun',p=d.split('-');
     hdr+='<th style="padding:8px 10px;text-align:center;font-size:10px;font-weight:700;white-space:nowrap;border:1px solid rgba(0,180,255,.15);background:'+(isT?'rgba(0,180,255,.15)':'rgba(0,40,80,.6)')+';color:'+(isT?'#00c8ff':isW?'rgba(168,216,234,.4)':'rgba(0,200,255,.8)')+';">'+p[0]+'/'+p[1]+'</th>';
   });
   hdr+='</tr><tr>';
