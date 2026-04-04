@@ -1,4 +1,287 @@
-function showDashboard(username, team) {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LRP Support Portal</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+  :root {
+    --ocean-deep: #020f1e; --rust: #c0441a; --signal-orange: #e8610a;
+    --nav-light-green: #00ff88; --nav-light-red: #ff3344; --panel: rgba(4,28,53,0.92);
+  }
+  body { font-family: 'Rajdhani', sans-serif; background: var(--ocean-deep); min-height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .scene { position: fixed; inset: 0; overflow: hidden; }
+  .sky { position: absolute; inset: 0; background: linear-gradient(180deg,#020810 0%,#041428 25%,#06203f 50%,#0a3558 70%,#1a5c7a 85%,#2a7a96 100%); }
+  .stars { position: absolute; inset: 0; background-image: radial-gradient(1px 1px at 10% 15%,rgba(255,255,255,.9) 0%,transparent 100%),radial-gradient(1px 1px at 25% 8%,rgba(255,255,255,.7) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 40% 20%,rgba(255,255,255,.8) 0%,transparent 100%),radial-gradient(1px 1px at 55% 5%,rgba(255,255,255,.6) 0%,transparent 100%),radial-gradient(1px 1px at 70% 12%,rgba(255,255,255,.9) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 85% 18%,rgba(255,255,255,.7) 0%,transparent 100%),radial-gradient(1px 1px at 15% 35%,rgba(255,255,255,.5) 0%,transparent 100%),radial-gradient(1px 1px at 90% 30%,rgba(255,255,255,.6) 0%,transparent 100%); }
+  .moon { position: absolute; top: 6%; right: 12%; width: 70px; height: 70px; border-radius: 50%; background: radial-gradient(circle at 35% 35%,#fffae0,#f0d080 40%,#c8a020); box-shadow: 0 0 30px 10px rgba(240,200,80,.3),0 0 80px 30px rgba(240,200,80,.1); }
+  .moon-reflection { position: absolute; bottom: 28%; right: 11%; width: 20px; height: 100px; background: linear-gradient(180deg,rgba(240,200,80,.5),transparent); border-radius: 50%; filter: blur(4px); animation: shimmer 3s ease-in-out infinite; }
+  @keyframes shimmer { 0%,100%{transform:scaleX(1);opacity:.6} 50%{transform:scaleX(1.8);opacity:.9} }
+  .ocean { position: absolute; bottom: 0; left: 0; right: 0; height: 32%; overflow: hidden; }
+  .wave-layer { position: absolute; bottom: 0; left: -50%; width: 200%; height: 100%; }
+  .wave-layer svg { width: 100%; height: 100%; }
+  .wave1 { animation: waveMove 8s linear infinite; opacity: .9; }
+  .wave2 { animation: waveMove 12s linear infinite reverse; opacity: .6; bottom: 10px; }
+  .wave3 { animation: waveMove 6s linear infinite; opacity: .4; bottom: 20px; }
+  @keyframes waveMove { 0%{transform:translateX(0)} 100%{transform:translateX(25%)} }
+  .ship-wrapper { position: absolute; bottom: 28%; left: -420px; animation: sailAcross 45s linear infinite; }
+  @keyframes sailAcross { 0%{left:-420px} 100%{left:calc(100vw + 50px)} }
+  .ship { position: relative; filter: drop-shadow(0 10px 30px rgba(0,0,0,.8)); }
+  .nav-light-port { position: absolute; top: 28px; left: 38px; width: 6px; height: 6px; border-radius: 50%; background: var(--nav-light-red); box-shadow: 0 0 8px 3px rgba(255,51,68,.8); animation: blink 2s ease-in-out infinite; }
+  .nav-light-starboard { position: absolute; top: 28px; right: 30px; width: 6px; height: 6px; border-radius: 50%; background: var(--nav-light-green); box-shadow: 0 0 8px 3px rgba(0,255,136,.8); animation: blink 2s ease-in-out infinite 1s; }
+  .mast-light { position: absolute; top: 0; left: 50%; width: 8px; height: 8px; border-radius: 50%; background: #fff; box-shadow: 0 0 10px 4px rgba(255,255,255,.9); animation: blink 1.5s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+  .smoke { position: absolute; top: -30px; left: 52%; }
+  .smoke-puff { position: absolute; border-radius: 50%; background: rgba(180,180,180,.3); animation: smokePuff 4s ease-out infinite; }
+  .smoke-puff:nth-child(1){width:16px;height:16px;animation-delay:0s}
+  .smoke-puff:nth-child(2){width:22px;height:22px;animation-delay:1.3s}
+  .smoke-puff:nth-child(3){width:12px;height:12px;animation-delay:2.6s}
+  @keyframes smokePuff { 0%{transform:translate(0,0) scale(1);opacity:.6} 100%{transform:translate(-30px,-60px) scale(3);opacity:0} }
+  .wake { position: absolute; top: 50%; right: 100%; width: 200px; height: 20px; background: linear-gradient(90deg,transparent,rgba(168,216,234,.4),rgba(168,216,234,.15)); clip-path: polygon(0 50%,100% 30%,100% 70%); transform: translateY(-50%); }
+  .lighthouse { position: absolute; bottom: 29%; right: 5%; }
+  .lighthouse svg { width: 40px; }
+  .lighthouse-beam { position: absolute; top: 2px; left: 50%; width: 0; height: 0; border-left: 60px solid transparent; border-right: 60px solid transparent; border-bottom: 120px solid rgba(255,220,80,.08); transform-origin: center bottom; transform: translateX(-50%); animation: rotate 4s linear infinite; }
+  @keyframes rotate { 0%{transform:translateX(-50%) rotate(-20deg);opacity:.8} 50%{transform:translateX(-50%) rotate(20deg);opacity:.2} 100%{transform:translateX(-50%) rotate(-20deg);opacity:.8} }
+  .floating-container { position: absolute; border-radius: 3px; opacity: .4; animation: float 6s ease-in-out infinite; }
+  .fc1{width:50px;height:20px;background:#8b1a1a;bottom:34%;left:8%;animation-delay:0s}
+  .fc2{width:40px;height:16px;background:#1a4a8b;bottom:35%;left:15%;animation-delay:1s}
+  .fc3{width:35px;height:14px;background:#1a6b2a;bottom:33%;right:20%;animation-delay:2s}
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+  .panel-wrap { position: relative; z-index: 100; width: 100%; max-width: 420px; padding: 16px; }
+  .panel { background: var(--panel); border: 1px solid rgba(0,180,255,.25); border-radius: 6px; padding: 30px 32px 28px; backdrop-filter: blur(18px); box-shadow: 0 0 0 1px rgba(0,180,255,.1),0 20px 60px rgba(0,0,0,.7); position: relative; }
+  .panel::before,.panel::after { content: ''; position: absolute; width: 18px; height: 18px; border-color: rgba(0,180,255,.5); border-style: solid; }
+  .panel::before{top:-1px;left:-1px;border-width:2px 0 0 2px}
+  .panel::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
+  .brand-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+  .brand-icon { width: 40px; height: 40px; background: linear-gradient(135deg,var(--rust),var(--signal-orange)); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; box-shadow: 0 4px 12px rgba(200,80,20,.4); }
+  .brand-text h1 { font-family: 'Orbitron',sans-serif; font-size: 13px; font-weight: 900; color: #e0f4ff; letter-spacing: 3px; line-height: 1; }
+  .brand-text p { font-size: 10px; color: rgba(0,200,255,.6); letter-spacing: 2px; margin-top: 3px; }
+  .divider { height: 1px; background: linear-gradient(90deg,transparent,rgba(0,180,255,.4),transparent); margin: 14px 0 20px; }
+  .form-group { margin-bottom: 14px; }
+  .form-group label { display: block; font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: rgba(0,180,255,.7); margin-bottom: 5px; }
+  .input-wrap { position: relative; display: flex; align-items: center; }
+  .input-icon { position: absolute; left: 11px; font-size: 14px; opacity: .6; z-index: 1; }
+  .form-group input { width: 100%; background: rgba(2,15,30,.7); border: 1px solid rgba(0,120,180,.35); border-radius: 3px; padding: 10px 12px 10px 36px; font-family: 'Share Tech Mono',monospace; font-size: 12px; color: #a8e8ff; outline: none; transition: border-color .3s,box-shadow .3s; }
+  .form-group input::placeholder { color: rgba(100,160,200,.4); }
+  .form-group input:focus { border-color: rgba(0,200,255,.7); box-shadow: 0 0 0 3px rgba(0,180,255,.1); }
+  .btn-primary { width: 100%; margin-top: 6px; padding: 12px; background: linear-gradient(135deg,#0a4a7a,#0d6fa8); border: 1px solid rgba(0,200,255,.4); border-radius: 3px; font-family: 'Orbitron',sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #a8f0ff; cursor: pointer; transition: all .3s; }
+  .btn-primary:hover { background: linear-gradient(135deg,#0d6fa8,#14a0d0); box-shadow: 0 0 20px rgba(0,180,255,.3); color: #fff; }
+  .btn-primary:disabled { opacity: .6; cursor: not-allowed; }
+  .msg { margin-top: 8px; padding: 8px 12px; border-radius: 3px; font-size: 11px; font-weight: 600; letter-spacing: 1px; display: none; }
+  .msg.error   { background: rgba(180,40,40,.25);  border-left: 2px solid #ff4444; color: #ff9999; }
+  .msg.success { background: rgba(20,160,80,.2);   border-left: 2px solid #00ff88; color: #88ffcc; }
+  .msg.loading { background: rgba(0,100,180,.2);   border-left: 2px solid #00c8ff; color: #a8e8ff; }
+  .msg.warn    { background: rgba(255,160,0,.15);  border-left: 2px solid #ffa040; color: #ffd080; }
+  .access-note { text-align: center; margin-top: 18px; font-size: 11px; color: rgba(0,180,255,.4); letter-spacing: 1px; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<div class="scene">
+  <div class="sky"></div>
+  <div class="stars"></div>
+  <div class="moon"></div>
+  <div class="moon-reflection"></div>
+  <div class="lighthouse">
+    <div class="lighthouse-beam"></div>
+    <svg viewBox="0 0 40 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="14" y="40" width="12" height="35" fill="#1a3a5c"/>
+      <rect x="12" y="25" width="16" height="18" fill="#8b3a2a" rx="1"/>
+      <rect x="10" y="22" width="20" height="5" fill="#6b2a1a"/>
+      <polygon points="14,22 26,22 23,10 17,10" fill="#c0441a"/>
+      <rect x="16" y="8" width="8" height="4" fill="#ffd700" opacity=".8"/>
+    </svg>
+  </div>
+  <div class="floating-container fc1"></div>
+  <div class="floating-container fc2"></div>
+  <div class="floating-container fc3"></div>
+  <div class="ship-wrapper">
+    <div class="ship">
+      <div class="mast-light"></div>
+      <div class="nav-light-port"></div>
+      <div class="nav-light-starboard"></div>
+      <div class="smoke"><div class="smoke-puff"></div><div class="smoke-puff"></div><div class="smoke-puff"></div></div>
+      <div class="wake"></div>
+      <svg width="400" height="100" viewBox="0 0 400 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 75 L380 75 L370 90 L30 92 Z" fill="#1a2a3a"/>
+        <rect x="12" y="72" width="366" height="5" fill="#c0441a"/>
+        <rect x="20" y="55" width="355" height="20" fill="#2a3d50" rx="1"/>
+        <rect x="30"  y="38" width="48" height="18" fill="#8b1a1a" rx="1"/>
+        <rect x="82"  y="38" width="48" height="18" fill="#1a4a8b" rx="1"/>
+        <rect x="134" y="38" width="48" height="18" fill="#1a6b2a" rx="1"/>
+        <rect x="186" y="38" width="48" height="18" fill="#7a5a10" rx="1"/>
+        <rect x="238" y="38" width="48" height="18" fill="#4a1a6b" rx="1"/>
+        <rect x="290" y="38" width="48" height="18" fill="#8b1a1a" rx="1"/>
+        <rect x="310" y="16" width="55" height="40" fill="#2a4a6a" rx="2"/>
+        <rect x="316" y="20" width="18" height="14" fill="rgba(100,200,255,.3)" rx="1"/>
+        <rect x="340" y="20" width="18" height="14" fill="rgba(100,200,255,.3)" rx="1"/>
+        <line x1="345" y1="0" x2="345" y2="16" stroke="#5a6a7a" stroke-width="2"/>
+      </svg>
+    </div>
+  </div>
+  <div class="ocean">
+    <div class="wave-layer wave1"><svg viewBox="0 0 1200 200" preserveAspectRatio="none"><path d="M0,100 C150,40 300,160 450,100 C600,40 750,160 900,100 C1050,40 1150,120 1200,100 L1200,200 L0,200 Z" fill="#0a3558" opacity=".9"/></svg></div>
+    <div class="wave-layer wave2"><svg viewBox="0 0 1200 200" preserveAspectRatio="none"><path d="M0,130 C200,70 400,170 600,130 C800,90 1000,170 1200,130 L1200,200 L0,200 Z" fill="#041828" opacity=".7"/></svg></div>
+    <div class="wave-layer wave3"><svg viewBox="0 0 1200 200" preserveAspectRatio="none"><path d="M0,140 C150,110 350,165 550,140 C750,115 950,165 1200,140 L1200,200 L0,200 Z" fill="rgba(168,216,234,.08)"/></svg></div>
+  </div>
+</div>
+
+<!-- LOGIN PANEL -->
+<div class="panel-wrap" id="panelWrap">
+  <div class="panel">
+    <div class="brand-bar">
+      <div class="brand-icon">🚢</div>
+      <div class="brand-text">
+        <h1>LRP SUPPORT PORTAL</h1>
+        <p>AGENT ACCESS</p>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="form-group">
+      <label>Username</label>
+      <div class="input-wrap"><span class="input-icon">👤</span><input type="text" id="login-user" placeholder="Enter your username" autocomplete="off"/></div>
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <div class="input-wrap"><span class="input-icon">🔒</span><input type="password" id="login-pass" placeholder="••••••••••"/></div>
+    </div>
+    <div id="login-msg" class="msg"></div>
+    <button class="btn-primary" id="login-btn" onclick="handleLogin()">⚓ SIGN IN</button>
+    <div class="access-note">🛡️ Access is provided by your administrator.<br>Contact admin if you need an account.</div>
+  </div>
+</div>
+
+<script>
+  const API_URL = 'https://script.google.com/macros/s/AKfycbx4Yt6dXiMOpztGU7ujn1TiJZUxfpTDCzSZ07rDd-EewnS8D0h4adFV6VP_3IzomL1H_w/exec';
+
+  const AGENT_QUOTES = [
+    { text: "Every customer interaction is a chance to turn a problem into loyalty.", author: "LRP Wisdom" },
+    { text: "Patience is not the ability to wait, but how you act while you're waiting.", author: "Joyce Meyer" },
+    { text: "Your attitude, not your aptitude, will determine your altitude.", author: "Zig Ziglar" },
+    { text: "The customer's perception is your reality.", author: "Kate Zabriskie" },
+    { text: "Go the extra mile. It's never crowded.", author: "Wayne Dyer" },
+    { text: "Small acts of kindness in support create lifelong customers.", author: "LRP Wisdom" },
+    { text: "Excellence is not a skill, it's an attitude.", author: "Ralph Marston" },
+    { text: "The best time to solve a problem is before the customer notices it.", author: "LRP Wisdom" },
+    { text: "Your work is going to fill a large part of your life. Do it with pride.", author: "Steve Jobs" },
+    { text: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+    { text: "Customers don't expect you to be perfect. They expect you to fix things when they go wrong.", author: "Donald Porter" },
+    { text: "A good customer service agent turns a complaint into a compliment.", author: "LRP Wisdom" },
+    { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+    { text: "Success is the sum of small efforts repeated day in and day out.", author: "Robert Collier" },
+    { text: "Make each interaction count — someone's day depends on it.", author: "LRP Wisdom" },
+    { text: "Treat every customer as if they sign your paycheck — because they do.", author: "LRP Wisdom" },
+    { text: "You don't build a business. You build people, and people build the business.", author: "Zig Ziglar" },
+    { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+    { text: "It always seems impossible until it's done.", author: "Nelson Mandela" },
+    { text: "Quality is remembered long after the price is forgotten.", author: "Gucci" }
+  ];
+
+  function getSessionQuote() {
+    const saved = sessionStorage.getItem('lrp_quote');
+    if (saved) return JSON.parse(saved);
+    const q = AGENT_QUOTES[Math.floor(Math.random() * AGENT_QUOTES.length)];
+    sessionStorage.setItem('lrp_quote', JSON.stringify(q));
+    return q;
+  }
+
+  function showMsg(id, text, type) {
+    const el = document.getElementById(id);
+    el.textContent = text; el.className = 'msg ' + type; el.style.display = 'block';
+  }
+
+  async function handleLogin() {
+    const u = document.getElementById('login-user').value.trim();
+    const p = document.getElementById('login-pass').value;
+    if (!u || !p) { showMsg('login-msg','⚠ ENTER USERNAME AND PASSWORD.','error'); return; }
+
+    if (u.toLowerCase() === 'admin' && p === 'admin@lrp') {
+      showMsg('login-msg','✅ ADMIN ACCESS GRANTED','success');
+      setTimeout(() => { window.location.href = 'admin.html'; }, 1000);
+      return;
+    }
+
+    const btn = document.getElementById('login-btn');
+    btn.disabled = true;
+    showMsg('login-msg','⏳ VERIFYING...','loading');
+    try {
+      const res  = await fetch(API_URL + '?' + new URLSearchParams({ action:'login', username:u, password:p }));
+      const data = await res.json();
+      if (data.success) {
+        showMsg('login-msg','✅ IDENTITY VERIFIED','success');
+        sessionStorage.removeItem('lrp_quote');
+        setTimeout(() => {
+          sessionStorage.setItem('lrp_user', JSON.stringify({ username: data.user.username, team: data.user.team }));
+          if (data.isDefault) {
+            showChangePassword(data.user.username, data.user.team);
+          } else {
+            showDashboard(data.user.username, data.user.team);
+          }
+        }, 1200);
+      } else {
+        showMsg('login-msg','⚠ INVALID CREDENTIALS — ACCESS DENIED.','error');
+        btn.disabled = false;
+      }
+    } catch(err) {
+      showMsg('login-msg','⚠ CONNECTION ERROR. CHECK NETWORK.','error');
+      btn.disabled = false;
+    }
+  }
+
+  /* ── CHANGE PASSWORD SCREEN ── */
+  function showChangePassword(username, team) {
+    document.getElementById('panelWrap').innerHTML = `
+      <div class="panel">
+        <div class="brand-bar">
+          <div class="brand-icon">🔐</div>
+          <div class="brand-text"><h1>SET NEW PASSWORD</h1><p>FIRST TIME LOGIN</p></div>
+        </div>
+        <div class="divider"></div>
+        <div style="background:rgba(255,160,0,.1);border:1px solid rgba(255,160,0,.35);border-radius:4px;padding:10px 14px;margin-bottom:18px;">
+          <div style="font-size:11px;font-weight:700;color:#ffa040;letter-spacing:1px;">⚠ TEMPORARY PASSWORD DETECTED</div>
+          <div style="font-size:11px;color:rgba(168,216,234,.7);margin-top:4px;line-height:1.5;">Your admin has set a temporary password. Please create your personal password to continue.</div>
+        </div>
+        <div class="form-group">
+          <label>New Password</label>
+          <div class="input-wrap"><span class="input-icon">🔐</span><input type="password" id="new-pass" placeholder="Min 6 characters"/></div>
+        </div>
+        <div class="form-group">
+          <label>Confirm New Password</label>
+          <div class="input-wrap"><span class="input-icon">✅</span><input type="password" id="new-confirm" placeholder="Re-enter new password"/></div>
+        </div>
+        <div id="cpw-msg" class="msg"></div>
+        <button class="btn-primary" id="cpw-btn" onclick="submitNewPassword('${username}','${team}')">🔒 SET MY PASSWORD</button>
+      </div>`;
+  }
+
+  async function submitNewPassword(username, team) {
+    const np = document.getElementById('new-pass').value;
+    const nc = document.getElementById('new-confirm').value;
+    if (!np||!nc)    { showMsg('cpw-msg','⚠ BOTH FIELDS ARE REQUIRED.','error'); return; }
+    if (np.length<6) { showMsg('cpw-msg','⚠ PASSWORD MUST BE ≥ 6 CHARACTERS.','error'); return; }
+    if (np !== nc)   { showMsg('cpw-msg','⚠ PASSWORDS DO NOT MATCH.','error'); return; }
+    const btn = document.getElementById('cpw-btn');
+    btn.disabled = true;
+    showMsg('cpw-msg','⏳ UPDATING PASSWORD...','loading');
+    try {
+      const res  = await fetch(API_URL + '?' + new URLSearchParams({ action:'changePassword', username, newPassword:np }));
+      const data = await res.json();
+      if (data.success) {
+        showMsg('cpw-msg','✅ PASSWORD SET! ENTERING PORTAL...','success');
+        setTimeout(() => showDashboard(username, team), 1200);
+      } else {
+        showMsg('cpw-msg','⚠ FAILED TO UPDATE. TRY AGAIN.','error');
+        btn.disabled = false;
+      }
+    } catch(err) {
+      showMsg('cpw-msg','⚠ CONNECTION ERROR.','error');
+      btn.disabled = false;
+    }
+  }
+
+  /* ── DASHBOARD ── */
+  function showDashboard(username, team) {
     const q = getSessionQuote();
 
     document.body.innerHTML = `
@@ -8,7 +291,6 @@ function showDashboard(username, team) {
       html,body{width:100%;height:100%;overflow:hidden;}
       body{font-family:'Rajdhani',sans-serif;background:#020f1e;display:flex;flex-direction:column;}
 
-      /* ── Background layers ── */
       .db-bg{position:fixed;inset:0;background:linear-gradient(180deg,#020810 0%,#041428 40%,#0a3558 100%);z-index:0;}
       .db-stars{position:fixed;inset:0;z-index:0;background-image:
         radial-gradient(1px 1px at 10% 15%,rgba(255,255,255,.8) 0%,transparent 100%),
@@ -24,7 +306,6 @@ function showDashboard(username, team) {
       .wv2{animation:wv 12s linear infinite reverse;opacity:.5;bottom:8px;}
       @keyframes wv{0%{transform:translateX(0)}100%{transform:translateX(25%)}}
 
-      /* ── Topbar ── */
       .db-topbar{
         position:relative;z-index:10;
         display:grid;grid-template-columns:auto 1fr auto;
@@ -46,17 +327,16 @@ function showDashboard(username, team) {
         border-radius:3px;color:#ff9977;cursor:pointer;transition:all .3s;text-transform:uppercase;}
       .db-logout:hover{background:rgba(180,40,20,.55);color:#fff;}
 
-      /* ── Cards area ── */
       .db-body{
         position:relative;z-index:5;
         flex:1;
         display:flex;align-items:center;justify-content:center;
         gap:20px;
-        padding:16px 24px 0;
+        padding:20px 24px 0;
         min-height:0;
       }
       .db-card{
-        flex:1;max-width:300px;min-width:200px;
+        flex:1;max-width:300px;min-width:180px;
         background:rgba(4,28,53,.88);
         border:1px solid rgba(0,180,255,.25);
         border-radius:4px;padding:24px 20px;
@@ -83,7 +363,6 @@ function showDashboard(username, team) {
       .badge-log{background:rgba(180,100,0,.15);border:1px solid rgba(180,100,0,.4);color:#ffa040;}
       .badge-cred{background:rgba(120,60,180,.2);border:1px solid rgba(160,80,220,.4);color:#c080ff;}
 
-      /* ── Quote bar — pinned to bottom ── */
       .quote-bar{
         position:relative;z-index:10;
         flex-shrink:0;
@@ -93,11 +372,7 @@ function showDashboard(username, team) {
         border-top:1px solid rgba(0,229,255,.15);
         backdrop-filter:blur(10px);
       }
-      .quote-label{
-        font-family:'Share Tech Mono',monospace;font-size:10px;
-        letter-spacing:2px;color:#00e5ff;opacity:.7;
-        white-space:nowrap;flex-shrink:0;
-      }
+      .quote-label{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:#00e5ff;opacity:.7;white-space:nowrap;flex-shrink:0;}
       .quote-mark{font-size:22px;color:#1e88e5;opacity:.4;line-height:1;font-family:Georgia,serif;flex-shrink:0;}
       .quote-text{font-size:14px;color:#e0f4ff;font-style:italic;font-family:Georgia,serif;}
       .quote-author{font-family:'Share Tech Mono',monospace;font-size:11px;color:#00e5ff;white-space:nowrap;flex-shrink:0;}
@@ -110,246 +385,235 @@ function showDashboard(username, team) {
       <div class="db-wave wv2"><svg viewBox="0 0 1200 200" preserveAspectRatio="none"><path d="M0,130 C200,70 400,170 600,130 C800,90 1000,170 1200,130 L1200,200 L0,200 Z" fill="#041828" opacity=".7"/></svg></div>
     </div>
 
-    <!-- Topbar -->
     <div class="db-topbar">
       <div class="db-brand">
-        <div class="db-brand-icon">🚢</div>
+        <div class="db-brand-icon">&#x1F6A2;</div>
         <h1>LRP SUPPORT PORTAL</h1>
       </div>
       <div class="db-user-info">
-        <div class="name">${username.toUpperCase()}</div>
-        <div class="team-lbl">⚓ ${team}</div>
+        <div class="name" id="db-username"></div>
+        <div class="team-lbl" id="db-team"></div>
       </div>
-      <button class="db-logout" onclick="location.reload()">⎋ SIGN OUT</button>
+      <button class="db-logout" onclick="location.reload()">&#x238B; SIGN OUT</button>
     </div>
 
-    <!-- Cards -->
     <div class="db-body">
       <div class="db-card" onclick="openTool('handover')">
         <span class="db-card-badge badge-ops">OPERATIONS</span>
-        <span class="db-card-icon">📋</span>
+        <span class="db-card-icon">&#x1F4CB;</span>
         <div class="db-card-title">SHIFT HANDOVER LOGGER</div>
         <div class="db-card-desc">Manage shift transitions, track ticket statuses across shifts, and generate handover reports for your team.</div>
-        <div class="db-card-btn">OPEN MODULE →</div>
+        <div class="db-card-btn">OPEN MODULE &rarr;</div>
       </div>
-
       <div class="db-divider"></div>
-
       <div class="db-card" onclick="openTool('playbook')">
         <span class="db-card-badge badge-log">TRACKING</span>
-        <span class="db-card-icon">⏱️</span>
+        <span class="db-card-icon">&#x23F1;&#xFE0F;</span>
         <div class="db-card-title">SUPPORT TICKET TIME LOGGER</div>
         <div class="db-card-desc">Track ticket resolution times, follow the support playbook checklist, and log your end-of-shift performance summary.</div>
-        <div class="db-card-btn">OPEN MODULE →</div>
+        <div class="db-card-btn">OPEN MODULE &rarr;</div>
       </div>
-
       <div class="db-divider"></div>
-
       <div class="db-card" onclick="openCredentials()">
         <span class="db-card-badge badge-cred">SECURE</span>
-        <span class="db-card-icon">🔐</span>
+        <span class="db-card-icon">&#x1F510;</span>
         <div class="db-card-title">CLIENT CREDENTIALS</div>
-        <div class="db-card-desc">Access client login credentials — App URLs, User IDs and passwords for all environments. Search by client name.</div>
-        <div class="db-card-btn">OPEN MODULE →</div>
+        <div class="db-card-desc">Access client login credentials &mdash; App URLs, User IDs and passwords for all environments. Search by client name.</div>
+        <div class="db-card-btn">OPEN MODULE &rarr;</div>
       </div>
     </div>
 
-    <!-- Quote bar — bottom of page -->
     <div class="quote-bar">
       <span class="quote-label">MOTIVATION OF THE SESSION</span>
-      <span class="quote-mark">❝</span>
-      <span class="quote-text">${q.text}</span>
-      <span class="quote-author">— ${q.author}</span>
+      <span class="quote-mark">&#x275D;</span>
+      <span class="quote-text" id="db-quote-text"></span>
+      <span class="quote-author" id="db-quote-author"></span>
     </div>`;
 
-    // ── openTool & openCredentials (unchanged logic) ──
+    // Inject dynamic values safely via DOM to avoid template literal nesting issues
+    document.getElementById('db-username').textContent = username.toUpperCase();
+    document.getElementById('db-team').textContent     = '\u2693 ' + team;
+    document.getElementById('db-quote-text').textContent   = q.text;
+    document.getElementById('db-quote-author').textContent = '\u2014 ' + q.author;
+
+    /* ── openTool ── */
     window.openTool = function(tool) {
       const files = { handover:'Shift_Handover_V5.html', playbook:'Support Ticket Logger_V7.html' };
+      const toolLabel = tool === 'handover' ? '&#x1F4CB; Shift Handover Logger' : '&#x23F1;&#xFE0F; Support Ticket Time Logger';
       const overlay = document.createElement('div');
       overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;background:#020f1e;';
-      const toolLabel = tool==='handover' ? '📋 Shift Handover Logger' : '⏱️ Support Ticket Time Logger';
       const bar = document.createElement('div');
       bar.style.cssText = 'display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;padding:10px 24px;background:rgba(4,28,53,.95);border-bottom:1px solid rgba(0,180,255,.2);flex-shrink:0;';
-      bar.innerHTML = `
-        <div style="display:flex;align-items:center;gap:12px;">
-          <div style="width:34px;height:34px;background:linear-gradient(135deg,#c0441a,#e8610a);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;">🚢</div>
-          <div>
-            <div style="font-family:'Orbitron',sans-serif;font-size:12px;font-weight:900;color:#e0f4ff;letter-spacing:2px;">LRP SUPPORT PORTAL</div>
-            <div style="font-size:10px;color:rgba(0,200,255,.6);letter-spacing:1px;">${toolLabel}</div>
-          </div>
-        </div>
-        <div></div>
-        <div style="display:flex;gap:10px;">
-          <button id="back-btn" style="font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(0,100,180,.25);border:1px solid rgba(0,180,255,.4);border-radius:3px;color:#a8e8ff;cursor:pointer;text-transform:uppercase;">← BACK</button>
-          <button id="so-btn" style="font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);border-radius:3px;color:#ff9977;cursor:pointer;text-transform:uppercase;">⎋ SIGN OUT</button>
-        </div>`;
+      bar.innerHTML =
+        '<div style="display:flex;align-items:center;gap:12px;">' +
+          '<div style="width:34px;height:34px;background:linear-gradient(135deg,#c0441a,#e8610a);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;">&#x1F6A2;</div>' +
+          '<div>' +
+            '<div style="font-family:\'Orbitron\',sans-serif;font-size:12px;font-weight:900;color:#e0f4ff;letter-spacing:2px;">LRP SUPPORT PORTAL</div>' +
+            '<div style="font-size:10px;color:rgba(0,200,255,.6);letter-spacing:1px;">' + toolLabel + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div></div>' +
+        '<div style="display:flex;gap:10px;">' +
+          '<button id="back-btn" style="font-family:\'Rajdhani\',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(0,100,180,.25);border:1px solid rgba(0,180,255,.4);border-radius:3px;color:#a8e8ff;cursor:pointer;text-transform:uppercase;">\u2190 BACK</button>' +
+          '<button id="so-btn"   style="font-family:\'Rajdhani\',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);border-radius:3px;color:#ff9977;cursor:pointer;text-transform:uppercase;">\u238B SIGN OUT</button>' +
+        '</div>';
       const iframe = document.createElement('iframe');
       iframe.src = files[tool];
       iframe.style.cssText = 'flex:1;border:none;width:100%;height:100%;';
       overlay.appendChild(bar);
       overlay.appendChild(iframe);
       document.body.appendChild(overlay);
-      document.getElementById('back-btn').onclick = () => overlay.remove();
-      document.getElementById('so-btn').onclick   = () => { overlay.remove(); location.reload(); };
+      document.getElementById('back-btn').onclick = function() { overlay.remove(); };
+      document.getElementById('so-btn').onclick   = function() { overlay.remove(); location.reload(); };
     };
 
+    /* ── openCredentials ── */
     window.openCredentials = function() {
       const overlay = document.createElement('div');
       overlay.id = 'cred-overlay';
       overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;background:#020f1e;font-family:Rajdhani,sans-serif;';
-      overlay.innerHTML = `
-        <style>
-          @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap');
-          .cr-bar{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;padding:12px 24px;background:rgba(4,28,53,.95);border-bottom:1px solid rgba(0,180,255,.2);flex-shrink:0;}
-          .cr-body{flex:1;overflow-y:auto;padding:24px 28px;}
-          .cr-search-wrap{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
-          .sw-inner{position:relative;flex:1;display:flex;align-items:center;}
-          .cr-search{flex:1;background:rgba(2,15,30,.8);border:1px solid rgba(0,120,180,.4);border-radius:4px;padding:11px 16px 11px 40px;font-family:'Share Tech Mono',monospace;font-size:13px;color:#a8e8ff;outline:none;transition:border-color .3s;width:100%;}
-          .cr-search:focus{border-color:rgba(0,200,255,.7);box-shadow:0 0 0 3px rgba(0,180,255,.1);}
-          .cr-search::placeholder{color:rgba(100,160,200,.4);}
-          .cr-search-icon{position:absolute;left:12px;font-size:16px;pointer-events:none;}
-          .cr-count{font-size:11px;color:rgba(0,200,255,.6);letter-spacing:1px;white-space:nowrap;}
-          .cr-table-wrap{background:rgba(4,28,53,.85);border:1px solid rgba(0,180,255,.2);border-radius:6px;overflow:hidden;}
-          .cr-table{width:100%;border-collapse:collapse;}
-          .cr-table thead tr{background:rgba(0,60,100,.5);}
-          .cr-table th{padding:12px 14px;text-align:left;font-size:10px;font-weight:700;color:rgba(0,200,255,.8);text-transform:uppercase;letter-spacing:1px;border:1px solid rgba(0,180,255,.25);}
-          .cr-table td{padding:12px 14px;font-size:13px;border:1px solid rgba(0,180,255,.15);color:#a8d8ea;vertical-align:middle;word-break:break-word;}
-          .cr-table tr:hover td{background:rgba(0,60,100,.25);}
-          .cr-table-wrap{overflow-x:auto;}
-          .cr-client{font-weight:700;color:#e0f4ff;font-size:14px;}
-          .cr-url a{color:#00c8ff;text-decoration:none;font-family:'Share Tech Mono',monospace;font-size:11px;}
-          .cr-url a:hover{text-decoration:underline;}
-          .cr-env{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;}
-          .env-prod{background:rgba(255,60,60,.15);border:1px solid rgba(255,60,60,.4);color:#ff8888;}
-          .env-uat{background:rgba(255,160,0,.15);border:1px solid rgba(255,160,0,.4);color:#ffa040;}
-          .env-dev{background:rgba(0,180,80,.15);border:1px solid rgba(0,180,80,.4);color:#00ff88;}
-          .env-staging{background:rgba(100,100,255,.15);border:1px solid rgba(100,100,255,.4);color:#aaaaff;}
-          .env-train{background:rgba(0,180,200,.15);border:1px solid rgba(0,180,200,.4);color:#00d4f0;}
-          .env-train2{background:rgba(0,140,180,.15);border:1px solid rgba(0,140,180,.4);color:#00b0d8;}
-          .env-ecom{background:rgba(180,80,180,.15);border:1px solid rgba(180,80,180,.4);color:#e080e0;}
-          .env-testing{background:rgba(180,180,0,.15);border:1px solid rgba(180,180,0,.4);color:#d4d400;}
-          .env-default{background:rgba(100,100,100,.15);border:1px solid rgba(100,100,100,.4);color:#aaa;}
-          .cr-uid{font-family:'Share Tech Mono',monospace;font-size:12px;color:#a8e8ff;}
-          .pw-wrap{display:flex;align-items:center;gap:8px;}
-          .pw-val{font-family:'Share Tech Mono',monospace;font-size:12px;color:#a8e8ff;letter-spacing:1px;}
-          .pw-toggle{background:rgba(0,100,180,.2);border:1px solid rgba(0,180,255,.3);border-radius:3px;padding:3px 8px;font-size:10px;color:#a8e8ff;cursor:pointer;transition:all .2s;white-space:nowrap;}
-          .pw-toggle:hover{background:rgba(0,100,180,.4);color:#fff;}
-          .cr-copy{background:rgba(0,150,80,.15);border:1px solid rgba(0,200,80,.3);border-radius:3px;padding:3px 8px;font-size:10px;color:#00dd88;cursor:pointer;transition:all .2s;white-space:nowrap;}
-          .cr-copy:hover{background:rgba(0,150,80,.35);color:#fff;}
-          .cr-copy.copied{background:rgba(0,200,100,.2);border-color:rgba(0,255,136,.5);color:#00ff88;}
-          .cr-empty{text-align:center;padding:60px 20px;color:rgba(0,200,255,.5);font-size:14px;letter-spacing:2px;}
-          .cr-loading{text-align:center;padding:60px 20px;color:rgba(0,200,255,.6);font-size:14px;letter-spacing:2px;}
-          .cr-section-title{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:900;color:rgba(0,200,255,.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;}
-        </style>
-        <div class="cr-bar">
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div style="width:34px;height:34px;background:linear-gradient(135deg,#c0441a,#e8610a);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;">🚢</div>
-            <div>
-              <div style="font-family:'Orbitron',sans-serif;font-size:12px;font-weight:900;color:#e0f4ff;letter-spacing:2px;">LRP SUPPORT PORTAL</div>
-              <div style="font-size:10px;color:rgba(160,80,255,.8);letter-spacing:1px;">🔐 CLIENT CREDENTIALS</div>
-            </div>
-          </div>
-          <div></div>
-          <div style="display:flex;gap:10px;">
-            <button onclick="document.getElementById('cred-overlay').remove()" style="font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(0,100,180,.25);border:1px solid rgba(0,180,255,.4);border-radius:3px;color:#a8e8ff;cursor:pointer;text-transform:uppercase;">← BACK</button>
-            <button onclick="location.reload()" style="font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);border-radius:3px;color:#ff9977;cursor:pointer;text-transform:uppercase;">⎋ SIGN OUT</button>
-          </div>
-        </div>
-        <div class="cr-body">
-          <div class="cr-section-title">🔐 Client Login Credentials</div>
-          <div class="cr-search-wrap">
-            <div class="sw-inner">
-              <span class="cr-search-icon">🔍</span>
-              <input class="cr-search" id="cr-search-input" type="text" placeholder="Search by client name..." oninput="filterCredentials()"/>
-            </div>
-            <span class="cr-count" id="cr-count"></span>
-          </div>
-          <div class="cr-table-wrap">
-            <div id="cr-table-container" class="cr-loading">⏳ LOADING CREDENTIALS...</div>
-          </div>
-        </div>`;
+      overlay.innerHTML =
+        '<style>' +
+        '@import url(\'https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap\');' +
+        '.cr-bar{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;padding:12px 24px;background:rgba(4,28,53,.95);border-bottom:1px solid rgba(0,180,255,.2);flex-shrink:0;}' +
+        '.cr-body{flex:1;overflow-y:auto;padding:24px 28px;}' +
+        '.cr-search-wrap{display:flex;align-items:center;gap:12px;margin-bottom:20px;}' +
+        '.sw-inner{position:relative;flex:1;display:flex;align-items:center;}' +
+        '.cr-search{flex:1;background:rgba(2,15,30,.8);border:1px solid rgba(0,120,180,.4);border-radius:4px;padding:11px 16px 11px 40px;font-family:\'Share Tech Mono\',monospace;font-size:13px;color:#a8e8ff;outline:none;transition:border-color .3s;width:100%;}' +
+        '.cr-search:focus{border-color:rgba(0,200,255,.7);}' +
+        '.cr-search::placeholder{color:rgba(100,160,200,.4);}' +
+        '.cr-search-icon{position:absolute;left:12px;font-size:16px;pointer-events:none;}' +
+        '.cr-count{font-size:11px;color:rgba(0,200,255,.6);letter-spacing:1px;white-space:nowrap;}' +
+        '.cr-table-wrap{background:rgba(4,28,53,.85);border:1px solid rgba(0,180,255,.2);border-radius:6px;overflow-x:auto;}' +
+        '.cr-table{width:100%;border-collapse:collapse;}' +
+        '.cr-table thead tr{background:rgba(0,60,100,.5);}' +
+        '.cr-table th{padding:12px 14px;text-align:left;font-size:10px;font-weight:700;color:rgba(0,200,255,.8);text-transform:uppercase;letter-spacing:1px;border:1px solid rgba(0,180,255,.25);}' +
+        '.cr-table td{padding:12px 14px;font-size:13px;border:1px solid rgba(0,180,255,.15);color:#a8d8ea;vertical-align:middle;word-break:break-word;}' +
+        '.cr-table tr:hover td{background:rgba(0,60,100,.25);}' +
+        '.cr-client{font-weight:700;color:#e0f4ff;font-size:14px;}' +
+        '.cr-url a{color:#00c8ff;text-decoration:none;font-family:\'Share Tech Mono\',monospace;font-size:11px;}' +
+        '.cr-url a:hover{text-decoration:underline;}' +
+        '.cr-env{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;}' +
+        '.env-prod{background:rgba(255,60,60,.15);border:1px solid rgba(255,60,60,.4);color:#ff8888;}' +
+        '.env-uat{background:rgba(255,160,0,.15);border:1px solid rgba(255,160,0,.4);color:#ffa040;}' +
+        '.env-dev{background:rgba(0,180,80,.15);border:1px solid rgba(0,180,80,.4);color:#00ff88;}' +
+        '.env-staging{background:rgba(100,100,255,.15);border:1px solid rgba(100,100,255,.4);color:#aaaaff;}' +
+        '.env-train{background:rgba(0,180,200,.15);border:1px solid rgba(0,180,200,.4);color:#00d4f0;}' +
+        '.env-train2{background:rgba(0,140,180,.15);border:1px solid rgba(0,140,180,.4);color:#00b0d8;}' +
+        '.env-ecom{background:rgba(180,80,180,.15);border:1px solid rgba(180,80,180,.4);color:#e080e0;}' +
+        '.env-testing{background:rgba(180,180,0,.15);border:1px solid rgba(180,180,0,.4);color:#d4d400;}' +
+        '.env-default{background:rgba(100,100,100,.15);border:1px solid rgba(100,100,100,.4);color:#aaa;}' +
+        '.cr-uid{font-family:\'Share Tech Mono\',monospace;font-size:12px;color:#a8e8ff;}' +
+        '.pw-wrap{display:flex;align-items:center;gap:8px;}' +
+        '.pw-val{font-family:\'Share Tech Mono\',monospace;font-size:12px;color:#a8e8ff;letter-spacing:1px;}' +
+        '.pw-toggle{background:rgba(0,100,180,.2);border:1px solid rgba(0,180,255,.3);border-radius:3px;padding:3px 8px;font-size:10px;color:#a8e8ff;cursor:pointer;white-space:nowrap;}' +
+        '.pw-toggle:hover{background:rgba(0,100,180,.4);color:#fff;}' +
+        '.cr-copy{background:rgba(0,150,80,.15);border:1px solid rgba(0,200,80,.3);border-radius:3px;padding:3px 8px;font-size:10px;color:#00dd88;cursor:pointer;white-space:nowrap;}' +
+        '.cr-copy:hover{background:rgba(0,150,80,.35);color:#fff;}' +
+        '.cr-copy.copied{background:rgba(0,200,100,.2);border-color:rgba(0,255,136,.5);color:#00ff88;}' +
+        '.cr-empty{text-align:center;padding:60px 20px;color:rgba(0,200,255,.5);font-size:14px;letter-spacing:2px;}' +
+        '.cr-loading{text-align:center;padding:60px 20px;color:rgba(0,200,255,.6);font-size:14px;letter-spacing:2px;}' +
+        '.cr-section-title{font-family:\'Orbitron\',sans-serif;font-size:11px;font-weight:900;color:rgba(0,200,255,.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;}' +
+        '</style>' +
+        '<div class="cr-bar">' +
+          '<div style="display:flex;align-items:center;gap:12px;">' +
+            '<div style="width:34px;height:34px;background:linear-gradient(135deg,#c0441a,#e8610a);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;">&#x1F6A2;</div>' +
+            '<div>' +
+              '<div style="font-family:\'Orbitron\',sans-serif;font-size:12px;font-weight:900;color:#e0f4ff;letter-spacing:2px;">LRP SUPPORT PORTAL</div>' +
+              '<div style="font-size:10px;color:rgba(160,80,255,.8);letter-spacing:1px;">&#x1F510; CLIENT CREDENTIALS</div>' +
+            '</div>' +
+          '</div>' +
+          '<div></div>' +
+          '<div style="display:flex;gap:10px;">' +
+            '<button onclick="document.getElementById(\'cred-overlay\').remove()" style="font-family:\'Rajdhani\',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(0,100,180,.25);border:1px solid rgba(0,180,255,.4);border-radius:3px;color:#a8e8ff;cursor:pointer;text-transform:uppercase;">\u2190 BACK</button>' +
+            '<button onclick="location.reload()" style="font-family:\'Rajdhani\',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:7px 16px;background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);border-radius:3px;color:#ff9977;cursor:pointer;text-transform:uppercase;">\u238B SIGN OUT</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="cr-body">' +
+          '<div class="cr-section-title">&#x1F510; Client Login Credentials</div>' +
+          '<div class="cr-search-wrap">' +
+            '<div class="sw-inner">' +
+              '<span class="cr-search-icon">&#x1F50D;</span>' +
+              '<input class="cr-search" id="cr-search-input" type="text" placeholder="Search by client name..." oninput="filterCredentials()"/>' +
+            '</div>' +
+            '<span class="cr-count" id="cr-count"></span>' +
+          '</div>' +
+          '<div class="cr-table-wrap"><div id="cr-table-container" class="cr-loading">&#x23F3; LOADING CREDENTIALS...</div></div>' +
+        '</div>';
 
       document.body.appendChild(overlay);
 
-      let allCreds = [];
+      var allCreds = [];
 
       window.loadCredentials = async function() {
         try {
           const res  = await fetch(API_URL + '?action=getCredentials&t=' + Date.now());
           const data = await res.json();
-          if (data.success) {
-            allCreds = data.credentials || [];
-            renderCredentials(allCreds);
-          } else {
-            document.getElementById('cr-table-container').innerHTML = '<div class="cr-empty">⚠ Failed to load credentials.</div>';
-          }
+          if (data.success) { allCreds = data.credentials || []; renderCredentials(allCreds); }
+          else { document.getElementById('cr-table-container').innerHTML = '<div class="cr-empty">&#x26A0; Failed to load credentials.</div>'; }
         } catch(e) {
-          document.getElementById('cr-table-container').innerHTML = '<div class="cr-empty">⚠ Connection error. Try again.</div>';
+          document.getElementById('cr-table-container').innerHTML = '<div class="cr-empty">&#x26A0; Connection error. Try again.</div>';
         }
       };
 
       window.filterCredentials = function() {
         const q = document.getElementById('cr-search-input').value.toLowerCase().trim();
-        const filtered = q ? allCreds.filter(c => (c.clientName||'').toLowerCase().includes(q)) : allCreds;
-        renderCredentials(filtered, allCreds.length);
+        renderCredentials(q ? allCreds.filter(function(c){ return (c.clientName||'').toLowerCase().includes(q); }) : allCreds, allCreds.length);
       };
 
       window.renderCredentials = function(list, total) {
         const cnt = document.getElementById('cr-count');
-        if (!list.length) {
-          cnt.textContent = '0 results';
-          document.getElementById('cr-table-container').innerHTML = '<div class="cr-empty">🔍 No clients found.</div>';
-          return;
-        }
+        if (!list.length) { cnt.textContent = '0 results'; document.getElementById('cr-table-container').innerHTML = '<div class="cr-empty">&#x1F50D; No clients found.</div>'; return; }
         cnt.textContent = total ? list.length + ' of ' + total + ' clients' : list.length + ' clients';
-        const envClass = e => {
+        function envClass(e) {
           const v = (e||'').toLowerCase();
-          if (v==='production')  return 'env-prod';
-          if (v==='uat')         return 'env-uat';
-          if (v==='development') return 'env-dev';
-          if (v==='staging')     return 'env-staging';
-          if (v==='train 2')     return 'env-train2';
-          if (v==='train')       return 'env-train';
-          if (v==='ecom')        return 'env-ecom';
-          if (v==='testing')     return 'env-testing';
+          if (v==='production') return 'env-prod'; if (v==='uat') return 'env-uat';
+          if (v==='development') return 'env-dev'; if (v==='staging') return 'env-staging';
+          if (v==='train 2') return 'env-train2'; if (v==='train') return 'env-train';
+          if (v==='ecom') return 'env-ecom'; if (v==='testing') return 'env-testing';
           return 'env-default';
-        };
-        const rows = list.map((c, i) => `
-          <tr>
-            <td class="cr-client">🏢 ${c.clientName||'—'}</td>
-            <td class="cr-url">${c.appUrl ? '<a href="'+c.appUrl+'" target="_blank">🔗 '+c.appUrl+'</a>' : '—'}</td>
-            <td><span class="cr-env ${envClass(c.environment)}">${c.environment||'—'}</span></td>
-            <td class="cr-uid">${c.userId||'—'}</td>
-            <td>
-              <div class="pw-wrap">
-                <span class="pw-val" id="pw-val-${i}">••••••••</span>
-                <button class="pw-toggle" onclick="togglePw(${i},'${encodeURIComponent(c.password||'')}')">👁 Show</button>
-                <button class="cr-copy" id="copy-btn-${i}" onclick="copyPw(${i},'${encodeURIComponent(c.password||'')}')">📋 Copy</button>
-              </div>
-            </td>
-          </tr>`).join('');
-        document.getElementById('cr-table-container').innerHTML = `
-          <table class="cr-table">
-            <thead><tr><th>Client Name</th><th>Application URL</th><th>Environment</th><th>User ID</th><th>Password</th></tr></thead>
-            <tbody>${rows}</tbody>
-          </table>`;
+        }
+        var rows = list.map(function(c, i) {
+          return '<tr>' +
+            '<td class="cr-client">&#x1F3E2; ' + (c.clientName||'&mdash;') + '</td>' +
+            '<td class="cr-url">' + (c.appUrl ? '<a href="' + c.appUrl + '" target="_blank">&#x1F517; ' + c.appUrl + '</a>' : '&mdash;') + '</td>' +
+            '<td><span class="cr-env ' + envClass(c.environment) + '">' + (c.environment||'&mdash;') + '</span></td>' +
+            '<td class="cr-uid">' + (c.userId||'&mdash;') + '</td>' +
+            '<td><div class="pw-wrap">' +
+              '<span class="pw-val" id="pw-val-' + i + '">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</span>' +
+              '<button class="pw-toggle" onclick="togglePw(' + i + ',\'' + encodeURIComponent(c.password||'') + '\')">&#x1F441; Show</button>' +
+              '<button class="cr-copy" id="copy-btn-' + i + '" onclick="copyPw(' + i + ',\'' + encodeURIComponent(c.password||'') + '\')">&#x1F4CB; Copy</button>' +
+            '</div></td>' +
+          '</tr>';
+        }).join('');
+        document.getElementById('cr-table-container').innerHTML =
+          '<table class="cr-table"><thead><tr>' +
+          '<th>Client Name</th><th>Application URL</th><th>Environment</th><th>User ID</th><th>Password</th>' +
+          '</tr></thead><tbody>' + rows + '</tbody></table>';
       };
 
       window.togglePw = function(i, encoded) {
-        const el = document.getElementById('pw-val-'+i);
+        const el = document.getElementById('pw-val-' + i);
         const btn = el.nextElementSibling;
         if (el.textContent === '••••••••') { el.textContent = decodeURIComponent(encoded); btn.textContent = '🙈 Hide'; }
         else { el.textContent = '••••••••'; btn.textContent = '👁 Show'; }
       };
 
       window.copyPw = function(i, encoded) {
-        navigator.clipboard.writeText(decodeURIComponent(encoded)).then(() => {
-          const btn = document.getElementById('copy-btn-'+i);
+        navigator.clipboard.writeText(decodeURIComponent(encoded)).then(function() {
+          const btn = document.getElementById('copy-btn-' + i);
           btn.textContent = '✅ Copied'; btn.classList.add('copied');
-          setTimeout(() => { btn.textContent = '📋 Copy'; btn.classList.remove('copied'); }, 2000);
+          setTimeout(function() { btn.textContent = '📋 Copy'; btn.classList.remove('copied'); }, 2000);
         });
       };
 
       loadCredentials();
     };
   }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') handleLogin();
+  });
+</script>
+</body>
+</html>
