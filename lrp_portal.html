@@ -158,6 +158,40 @@
 <script>
   const API_URL = 'https://script.google.com/macros/s/AKfycbx4Yt6dXiMOpztGU7ujn1TiJZUxfpTDCzSZ07rDd-EewnS8D0h4adFV6VP_3IzomL1H_w/exec';
 
+  /* ── QUOTES ── */
+  const AGENT_QUOTES = [
+    { text: "Every customer interaction is a chance to turn a problem into loyalty.", author: "LRP Wisdom" },
+    { text: "Patience is not the ability to wait, but how you act while you're waiting.", author: "Joyce Meyer" },
+    { text: "Your attitude, not your aptitude, will determine your altitude.", author: "Zig Ziglar" },
+    { text: "The customer's perception is your reality.", author: "Kate Zabriskie" },
+    { text: "Go the extra mile. It's never crowded.", author: "Wayne Dyer" },
+    { text: "Small acts of kindness in support create lifelong customers.", author: "LRP Wisdom" },
+    { text: "Excellence is not a skill, it's an attitude.", author: "Ralph Marston" },
+    { text: "The best time to solve a problem is before the customer notices it.", author: "LRP Wisdom" },
+    { text: "Your work is going to fill a large part of your life. Do it with pride.", author: "Steve Jobs" },
+    { text: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+    { text: "Customers don't expect you to be perfect. They expect you to fix things when they go wrong.", author: "Donald Porter" },
+    { text: "A good customer service agent turns a complaint into a compliment.", author: "LRP Wisdom" },
+    { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+    { text: "Success is the sum of small efforts repeated day in and day out.", author: "Robert Collier" },
+    { text: "Make each interaction count — someone's day depends on it.", author: "LRP Wisdom" },
+    { text: "Treat every customer as if they sign your paycheck — because they do.", author: "LRP Wisdom" },
+    { text: "You don't build a business. You build people, and people build the business.", author: "Zig Ziglar" },
+    { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+    { text: "It always seems impossible until it's done.", author: "Nelson Mandela" },
+    { text: "Quality is remembered long after the price is forgotten.", author: "Gucci" }
+  ];
+
+  /* Picks a random quote once per login session */
+  function getSessionQuote() {
+    const saved = sessionStorage.getItem('lrp_quote');
+    if (saved) return JSON.parse(saved);
+    const q = AGENT_QUOTES[Math.floor(Math.random() * AGENT_QUOTES.length)];
+    sessionStorage.setItem('lrp_quote', JSON.stringify(q));
+    return q;
+  }
+
+  /* ── HELPERS ── */
   function showMsg(id, text, type) {
     const el = document.getElementById(id);
     el.textContent = text; el.className = 'msg ' + type; el.style.display = 'block';
@@ -182,6 +216,8 @@
       const data = await res.json();
       if (data.success) {
         showMsg('login-msg','✅ IDENTITY VERIFIED','success');
+        /* Clear any old quote so a fresh one is picked this session */
+        sessionStorage.removeItem('lrp_quote');
         setTimeout(() => {
           sessionStorage.setItem('lrp_user', JSON.stringify({ username: data.user.username, team: data.user.team }));
           if (data.isDefault) {
@@ -253,6 +289,8 @@
 
   /* ── DASHBOARD ── */
   function showDashboard(username, team) {
+    const q = getSessionQuote(); /* ← fetch quote for this session */
+
     document.body.innerHTML = `
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap');
@@ -266,16 +304,41 @@
       .wv1{animation:wv 8s linear infinite;opacity:.9;}
       .wv2{animation:wv 12s linear infinite reverse;opacity:.5;bottom:8px;}
       @keyframes wv{0%{transform:translateX(0)}100%{transform:translateX(25%)}}
-      .db-topbar{position:relative;z-index:10;display:grid;grid-template-columns:auto 1fr auto;align-items:center;padding:14px 28px;background:rgba(4,28,53,.9);border-bottom:1px solid rgba(0,180,255,.2);backdrop-filter:blur(12px);gap:16px;}
+      .db-topbar{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:rgba(4,28,53,.9);border-bottom:1px solid rgba(0,180,255,.2);backdrop-filter:blur(12px);gap:16px;}
       .db-brand{display:flex;align-items:center;gap:12px;}
       .db-brand-icon{width:40px;height:40px;background:linear-gradient(135deg,#c0441a,#e8610a);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
       .db-brand h1{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:900;color:#e0f4ff;letter-spacing:3px;white-space:nowrap;}
-      .db-user-info{display:flex;flex-direction:column;align-items:center;}
+      .db-topbar-right{display:flex;align-items:center;gap:20px;}
+      .db-user-info{display:flex;flex-direction:column;align-items:flex-end;}
       .db-user-info .name{font-family:'Orbitron',sans-serif;font-size:11px;color:#a8e8ff;letter-spacing:2px;}
       .db-user-info .team-lbl{font-size:11px;color:rgba(0,200,255,.6);}
-      .db-logout{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:8px 18px;background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);border-radius:3px;color:#ff9977;cursor:pointer;transition:all .3s;text-transform:uppercase;}
+      .db-logout{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;padding:8px 18px;background:rgba(180,40,20,.25);border:1px solid rgba(255,80,60,.4);border-radius:3px;color:#ff9977;cursor:pointer;transition:all .3s;text-transform:uppercase;white-space:nowrap;}
       .db-logout:hover{background:rgba(180,40,20,.55);color:#fff;}
-      .db-body{position:relative;z-index:5;display:flex;align-items:center;justify-content:center;height:calc(100vh - 73px);gap:24px;padding:20px;flex-wrap:wrap;}
+
+      /* ── Quote Widget ── */
+      .quote-widget{
+        position:relative;z-index:5;
+        max-width:860px;margin:18px auto 0;padding:0 20px;
+      }
+      .quote-inner{
+        background:linear-gradient(135deg,rgba(4,28,53,.92),rgba(2,15,30,.95));
+        border:1px solid rgba(0,180,255,.2);
+        border-left:3px solid #00e5ff;
+        border-radius:6px;
+        padding:14px 22px;
+        display:flex;align-items:center;gap:16px;
+        box-shadow:0 4px 24px rgba(0,229,255,.06);
+        animation: quoteFadeIn .9s ease forwards;
+        opacity:0;
+      }
+      @keyframes quoteFadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+      .quote-mark{font-size:32px;color:#1e88e5;opacity:.35;line-height:1;flex-shrink:0;font-family:Georgia,serif;}
+      .quote-content{flex:1;}
+      .quote-label{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:#00e5ff;opacity:.6;margin-bottom:4px;}
+      .quote-text{font-size:13px;color:#e0f4ff;font-style:italic;font-family:Georgia,serif;line-height:1.6;}
+      .quote-author{font-family:'Share Tech Mono',monospace;font-size:11px;color:#00e5ff;margin-top:5px;text-align:right;}
+
+      .db-body{position:relative;z-index:5;display:flex;align-items:center;justify-content:center;height:calc(100vh - 73px - 80px);gap:24px;padding:16px 20px;flex-wrap:wrap;}
       .db-card{width:280px;background:rgba(4,28,53,.88);border:1px solid rgba(0,180,255,.25);border-radius:4px;padding:30px 26px;cursor:pointer;transition:all .35s;backdrop-filter:blur(18px);box-shadow:0 20px 60px rgba(0,0,0,.6);position:relative;}
       .db-card:hover{transform:translateY(-8px);border-color:rgba(0,200,255,.6);box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 40px rgba(0,180,255,.15);}
       .db-card-icon{font-size:44px;margin-bottom:16px;display:block;}
@@ -294,11 +357,27 @@
       <div class="db-wave wv1"><svg viewBox="0 0 1200 200" preserveAspectRatio="none"><path d="M0,100 C150,40 300,160 450,100 C600,40 750,160 900,100 C1050,40 1150,120 1200,100 L1200,200 L0,200 Z" fill="#0a3558" opacity=".9"/></svg></div>
       <div class="db-wave wv2"><svg viewBox="0 0 1200 200" preserveAspectRatio="none"><path d="M0,130 C200,70 400,170 600,130 C800,90 1000,170 1200,130 L1200,200 L0,200 Z" fill="#041828" opacity=".7"/></svg></div>
     </div>
+
     <div class="db-topbar">
       <div class="db-brand"><div class="db-brand-icon">🚢</div><h1>LRP SUPPORT PORTAL</h1></div>
-      <div class="db-user-info"><div class="name">${username.toUpperCase()}</div><div class="team-lbl">⚓ ${team}</div></div>
-      <button class="db-logout" onclick="location.reload()">⎋ SIGN OUT</button>
+      <div class="db-topbar-right">
+        <div class="db-user-info"><div class="name">${username.toUpperCase()}</div><div class="team-lbl">⚓ ${team}</div></div>
+        <button class="db-logout" onclick="location.reload()">⎋ SIGN OUT</button>
+      </div>
     </div>
+
+    <!-- ✦ QUOTE OF THE SESSION ✦ -->
+    <div class="quote-widget">
+      <div class="quote-inner">
+        <div class="quote-mark">❝</div>
+        <div class="quote-content">
+          <div class="quote-label">MOTIVATION OF THE SESSION</div>
+          <div class="quote-text">${q.text}</div>
+          <div class="quote-author">— ${q.author}</div>
+        </div>
+      </div>
+    </div>
+
     <div class="db-body">
       <div class="db-card" onclick="openTool('handover')">
         <span class="db-card-badge badge-ops">OPERATIONS</span>
@@ -510,7 +589,7 @@
 
       window.copyPw = function(i, encoded) {
         navigator.clipboard.writeText(decodeURIComponent(encoded)).then(() => {
-          const btn = document.getElementById('copy-btn-'+i);
+          const btn = document.getElementById('copy-btn-${i}');
           btn.textContent = '✅ Copied'; btn.classList.add('copied');
           setTimeout(() => { btn.textContent = '📋 Copy'; btn.classList.remove('copied'); }, 2000);
         });
