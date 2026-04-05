@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Why Not Solved by HD</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f7fb;color:#1a1a1a;font-size:14px;min-height:100vh;}
+:root{--blue:#1a7db5;--dark:#0a3d78;--green:#1a8c5c;--red:#c0392b;--orange:#d07020;--purple:#6030a0;--border:#c8dff0;}
+.topbar{background:#fff;border-bottom:2px solid var(--border);padding:11px 22px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(26,90,160,.07);}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--blue),var(--dark));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.brand h1{font-size:13px;font-weight:800;color:var(--dark);letter-spacing:2px;}
+.brand-sub{font-size:10px;color:#2a6090;letter-spacing:1px;font-weight:600;}
+.agent-lbl{font-size:11px;color:#3a7aaa;font-weight:700;background:#eef5fc;border:1px solid var(--border);border-radius:12px;padding:4px 12px;}
+.tab-row{display:flex;background:#fff;border-bottom:2px solid var(--border);padding:0 22px;}
+.tab-btn{padding:11px 20px;background:none;border:none;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#3a7aaa;cursor:pointer;position:relative;transition:color .2s;white-space:nowrap;}
+.tab-btn.active{color:var(--blue);}
+.tab-btn.active::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:2.5px;background:var(--blue);border-radius:2px;}
+.tab-btn .badge{display:inline-block;background:var(--red);color:#fff;border-radius:9px;font-size:9px;padding:1px 6px;margin-left:5px;font-weight:700;}
+.tab-panel{display:none;padding:20px 22px;}.tab-panel.active{display:block;}
+.loading{text-align:center;padding:50px;color:#3a7aaa;font-size:14px;font-weight:600;}
+.empty-state{text-align:center;padding:60px 20px;}
+.empty-icon{font-size:48px;margin-bottom:12px;}
+.empty-title{font-size:16px;font-weight:700;color:var(--dark);margin-bottom:6px;}
+.empty-sub{font-size:13px;color:#3a7aaa;}
+.ticket-list{display:flex;flex-direction:column;gap:12px;}
+.ticket-card{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:0 2px 6px rgba(26,90,160,.05);}
+.ticket-card.pending{border-left:4px solid var(--orange);}
+.ticket-card.completed{border-left:4px solid var(--green);}
+.tc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px;}
+.tc-id{font-size:15px;font-weight:800;color:var(--dark);}
+.tc-pills{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+.pill{display:inline-block;padding:2px 9px;border-radius:10px;font-size:10px;font-weight:700;}
+.pill-orange{background:#fff3d8;border:1px solid #f5c840;color:#8a6010;}
+.pill-blue{background:#e4f0ff;border:1px solid #80bce8;color:#1a5a90;}
+.pill-purple{background:#f0e8ff;border:1px solid #c0a0e0;color:var(--purple);}
+.pill-red{background:#fde8e8;border:1px solid #f0aaaa;color:var(--red);}
+.pill-green{background:#d4f5e4;border:1px solid #6cd4a0;color:var(--green);}
+.pill-gray{background:#f0f0f0;border:1px solid #d0d0d0;color:#666;}
+.tc-summary{font-size:13px;color:#2a4a6a;line-height:1.6;margin-bottom:10px;background:#f8fbff;border:1px solid #ddeeff;border-radius:6px;padding:8px 12px;}
+.tc-meta{font-size:11px;color:#3a7aaa;font-weight:600;display:flex;gap:14px;flex-wrap:wrap;}
+.btn-action{padding:8px 18px;background:linear-gradient(135deg,var(--blue),var(--dark));border:none;border-radius:7px;color:#fff;font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:opacity .2s;}
+.btn-action:hover{opacity:.88;}
+.btn-view{padding:7px 14px;background:#eef5fc;border:1.5px solid var(--border);border-radius:7px;color:#1a5a90;font-size:11px;font-weight:700;cursor:pointer;}
+.btn-view:hover{background:#d0e8f8;}
+.completed-badge{display:inline-flex;align-items:center;gap:5px;background:#d4f5e4;border:1px solid #6cd4a0;border-radius:12px;padding:3px 10px;font-size:10px;font-weight:700;color:var(--green);}
+.overlay{display:none;position:fixed;inset:0;background:rgba(10,50,100,.52);z-index:9999;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;}
+.overlay.open{display:flex;}
+.overlay-box{background:#fff;border-radius:12px;width:100%;max-width:720px;margin:auto;box-shadow:0 16px 50px rgba(10,50,100,.25);}
+.ov-header{background:linear-gradient(135deg,var(--blue),var(--dark));color:#fff;padding:18px 24px;border-radius:12px 12px 0 0;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.ov-header-text h2{font-size:16px;font-weight:800;letter-spacing:1px;margin-bottom:3px;}
+.ov-header-text p{font-size:11px;opacity:.8;}
+.ov-close{background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.ov-body{padding:20px 24px;}
+.info-banner{background:#eef5fc;border:1.5px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:20px;}
+.ib-title{font-size:10px;font-weight:700;color:var(--blue);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;}
+.ib-summary{font-size:13px;color:#1a3a5c;line-height:1.7;font-weight:500;}
+.ib-id{font-size:15px;font-weight:800;color:var(--dark);margin-bottom:6px;}
+.fs{margin-bottom:18px;}
+.fs-title{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#3a7aaa;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #ddeeff;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.form-grid.g3{grid-template-columns:1fr 1fr 1fr;}
+.form-grid.g1{grid-template-columns:1fr;}
+.field{margin-bottom:0;}
+.field label{display:block;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);margin-bottom:4px;}
+.field input,.field select,.field textarea{width:100%;background:#f4f9ff;border:1.5px solid var(--border);border-radius:7px;padding:8px 11px;font-size:13px;color:#1a3a5c;outline:none;transition:border-color .2s;font-family:inherit;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);background:#fff;}
+.field textarea{resize:vertical;min-height:80px;line-height:1.6;}
+.field textarea::placeholder{color:#4a8ab5;}
+.req{color:var(--red);}
+.dur-row{display:flex;gap:6px;align-items:center;}
+.dur-row input{width:64px;text-align:center;}
+.dur-lbl{font-size:11px;color:#3a7aaa;font-weight:600;white-space:nowrap;}
+.radio-group{display:flex;gap:7px;flex-wrap:wrap;}
+.rpill{display:flex;align-items:center;gap:6px;padding:6px 13px;border:1.5px solid var(--border);border-radius:20px;cursor:pointer;font-size:12px;font-weight:700;color:#3a7aaa;transition:all .2s;background:#f4f9ff;user-select:none;}
+.rpill input{display:none;}
+.rpill:hover{border-color:var(--blue);}
+.rpill.ck-green{background:var(--green);border-color:var(--green);color:#fff;}
+.rpill.ck-red{background:var(--red);border-color:var(--red);color:#fff;}
+.rpill.ck-blue{background:var(--blue);border-color:var(--blue);color:#fff;}
+.submit-row{display:flex;align-items:center;gap:10px;padding-top:14px;border-top:1px solid #ddeeff;margin-top:4px;flex-wrap:wrap;}
+.btn-submit{padding:10px 24px;background:linear-gradient(135deg,var(--green),#138048);border:none;border-radius:7px;color:#fff;font-size:12px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:opacity .2s;}
+.btn-submit:hover{opacity:.88;}.btn-submit:disabled{opacity:.5;cursor:not-allowed;}
+.btn-cancel{padding:10px 16px;background:#eef0f5;border:1.5px solid #c0cce0;border-radius:7px;color:#5a6a80;font-size:12px;font-weight:700;cursor:pointer;}
+.msg{font-size:11px;font-weight:700;padding:6px 12px;border-radius:5px;display:none;}
+.msg.error{background:#fde8e8;border-left:3px solid #e04040;color:var(--red);display:block;}
+.msg.success{background:#d4f5e4;border-left:3px solid #30b870;color:var(--green);display:block;}
+.msg.loading{background:#e4f0ff;border-left:3px solid var(--blue);color:#1a5a90;display:block;}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.db{background:#f4f9ff;border:1px solid var(--border);border-radius:7px;padding:10px 13px;}
+.db-lbl{font-size:10px;font-weight:700;color:var(--blue);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;}
+.db-val{font-size:13px;color:#1a3a5c;font-weight:600;line-height:1.5;}
+.ds{margin-bottom:13px;}
+.ds-title{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#3a7aaa;margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid #ddeeff;}
+.ds-text{font-size:13px;color:#2a4a6a;line-height:1.7;white-space:pre-wrap;background:#f8fbff;border:1px solid #ddeeff;border-radius:7px;padding:11px 13px;}
+.kb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:12px;}
+.kb-card{background:#fff;border:1.5px solid var(--border);border-left:4px solid var(--blue);border-radius:10px;padding:15px 16px;cursor:pointer;transition:all .2s;box-shadow:0 2px 6px rgba(26,90,160,.05);}
+.kb-card:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:0 6px 18px rgba(26,125,181,.12);}
+.kb-excerpt{font-size:12px;color:#2a4a6a;line-height:1.6;margin:8px 0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.toast{position:fixed;bottom:18px;right:18px;padding:10px 18px;border-radius:8px;font-size:13px;color:#fff;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.15);opacity:0;transition:opacity .3s;pointer-events:none;z-index:99999;}
+.toast.show{opacity:1;}
+.toast.ok{background:var(--green);}.toast.err{background:var(--red);}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-icon">🧠</div>
+    <div>
+      <h1>WHY NOT SOLVED BY HD</h1>
+      <div class="brand-sub">KNOWLEDGE & SELF-REVIEW MODULE</div>
+    </div>
+  </div>
+  <div class="agent-lbl" id="agentLbl">👤 Loading...</div>
+</div>
+
+<div class="tab-row">
+  <button class="tab-btn active" id="tbtn-pending" onclick="switchTab('pending')">
+    ⚠️ ACTION REQUIRED <span class="badge" id="pendingBadge" style="display:none">0</span>
+  </button>
+  <button class="tab-btn" id="tbtn-completed" onclick="switchTab('completed')">✅ COMPLETED</button>
+  <button class="tab-btn" id="tbtn-kb" onclick="switchTab('kb')">📚 KNOWLEDGE BASE</button>
+</div>
+
+<!-- PENDING -->
+<div class="tab-panel active" id="panel-pending">
+  <div id="pendingContainer"><div class="loading">⏳ Loading assigned tickets...</div></div>
+</div>
+
+<!-- COMPLETED -->
+<div class="tab-panel" id="panel-completed">
+  <div id="completedContainer"><div class="loading">⏳ Loading...</div></div>
+</div>
+
+<!-- KNOWLEDGE BASE -->
+<div class="tab-panel" id="panel-kb">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+    <input type="text" id="kbSearch" placeholder="🔍  Search by ticket, component, client, keyword..."
+      oninput="filterKB()"
+      style="flex:1;min-width:200px;background:#fff;border:1.5px solid var(--border);border-radius:7px;padding:8px 13px;font-size:13px;color:#1a3a5c;outline:none;"/>
+    <span id="kbCount" style="font-size:11px;color:#3a7aaa;font-weight:700;white-space:nowrap;"></span>
+  </div>
+  <div id="kbContainer"><div class="loading">⏳ Loading knowledge base...</div></div>
+</div>
+
+<!-- FILL REVIEW OVERLAY -->
+<div class="overlay" id="fillOverlay">
+  <div class="overlay-box">
+    <div class="ov-header">
+      <div class="ov-header-text">
+        <h2>📝 Complete Your Review</h2>
+        <p id="fillSubtitle">Fill all required fields below and submit</p>
+      </div>
+      <button class="ov-close" onclick="closeFill()">✕ Close</button>
+    </div>
+    <div class="ov-body">
+      <div class="info-banner">
+        <div class="ib-title">📋 Ticket assigned by Admin</div>
+        <div class="ib-id" id="fill-ticketId-display"></div>
+        <div class="ib-summary" id="fill-summary-display"></div>
+      </div>
+
+      <div class="fs">
+        <div class="fs-title">🎫 Ticket Details</div>
+        <div class="form-grid g3">
+          <div class="field"><label>Client / Customer <span class="req">*</span></label>
+            <input type="text" id="f-client" placeholder="e.g. SWIRE"/></div>
+          <div class="field"><label>Component <span class="req">*</span></label>
+            <select id="f-component">
+              <option value="">— Select —</option>
+              <option>Exports</option><option>Imports</option><option>Operations</option>
+              <option>VSS</option><option>EMS</option><option>Cost</option>
+              <option>Finance</option><option>Feeder Ops</option><option>CMR</option>
+              <option>Ecom</option><option>EDI</option><option>PNC</option>
+              <option>Devops</option><option>Helpdesk</option>
+            </select></div>
+          <div class="field"><label>Priority <span class="req">*</span></label>
+            <select id="f-priority">
+              <option value="">— Select —</option>
+              <option>Showstopper</option><option>Critical</option>
+              <option>High</option><option>Medium</option><option>Low</option>
+            </select></div>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label>Root Cause (as per Engg) <span class="req">*</span></label>
+            <select id="f-rootCause">
+              <option value="">— Select —</option>
+              <option>Clarification</option><option>Bug Fix</option>
+              <option>Data Correction</option><option>Config Change</option><option>Other</option>
+            </select></div>
+          <div class="field"><label>Ticket Date <span class="req">*</span></label>
+            <input type="date" id="f-ticketDate"/></div>
+        </div>
+      </div>
+
+      <div class="fs">
+        <div class="fs-title">🤔 Why Was It Not Solved by HD?</div>
+        <div class="field" style="margin-bottom:10px;">
+          <label>Primary Reason <span class="req">*</span></label>
+          <div class="radio-group" id="rg-reason">
+            <label class="rpill"><input type="radio" name="reason" value="Insufficient product knowledge"/>📚 Insufficient knowledge</label>
+            <label class="rpill"><input type="radio" name="reason" value="No system access to verify"/>🔒 No system access</label>
+            <label class="rpill"><input type="radio" name="reason" value="Customer details unclear"/>❓ Details unclear</label>
+            <label class="rpill"><input type="radio" name="reason" value="Required backend data access"/>🔧 Backend data needed</label>
+            <label class="rpill"><input type="radio" name="reason" value="No documented solution"/>📄 No documented solution</label>
+            <label class="rpill"><input type="radio" name="reason" value="Misunderstood the ask"/>🔄 Misunderstood ask</label>
+            <label class="rpill"><input type="radio" name="reason" value="Complexity / time constraint"/>⏱ Complexity / time</label>
+            <label class="rpill"><input type="radio" name="reason" value="Other"/>Other</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Detailed Explanation <span class="req">*</span></label>
+          <textarea id="f-why" placeholder="Explain in detail why you escalated to engineering instead of resolving it yourself…"></textarea>
+        </div>
+      </div>
+
+      <div class="fs">
+        <div class="fs-title">💡 Learning & Future Action</div>
+        <div class="field" style="margin-bottom:10px;">
+          <label>What Did You Learn From This Ticket? <span class="req">*</span></label>
+          <textarea id="f-learned" placeholder="What caused the issue? How did engineering resolve it? What do you now understand better?"></textarea>
+        </div>
+        <div class="field">
+          <label>How Will You Solve It Next Time? <span class="req">*</span></label>
+          <textarea id="f-nextTime" placeholder="Describe the exact steps you will take if you receive the same or similar case in future…"></textarea>
+        </div>
+      </div>
+
+      <div class="fs">
+        <div class="fs-title">⏱ Engineering Resolution Time</div>
+        <div class="field">
+          <label>How Long Did Engineering Take to Resolve? <span class="req">*</span></label>
+          <div class="dur-row">
+            <input type="number" id="f-dur-days" min="0" max="365" placeholder="0"/>
+            <span class="dur-lbl">days</span>
+            <input type="number" id="f-dur-hours" min="0" max="23" placeholder="0"/>
+            <span class="dur-lbl">hrs</span>
+            <input type="number" id="f-dur-mins" min="0" max="59" placeholder="0"/>
+            <span class="dur-lbl">mins</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="fs">
+        <div class="fs-title">🧪 Sandbox Verification</div>
+        <div class="field" style="margin-bottom:10px;">
+          <label>Did You Try to Reproduce in Sandbox? <span class="req">*</span></label>
+          <div class="radio-group" id="rg-sandbox">
+            <label class="rpill"><input type="radio" name="sandbox" value="Yes"/>✅ Yes, I tried</label>
+            <label class="rpill"><input type="radio" name="sandbox" value="No"/>❌ No</label>
+            <label class="rpill"><input type="radio" name="sandbox" value="N/A"/>⚪ Not Applicable</label>
+          </div>
+        </div>
+        <div class="field" id="sandboxResultField" style="display:none;">
+          <label>Sandbox Result</label>
+          <textarea id="f-sandboxResult" placeholder="Describe what happened when you reproduced in sandbox…" style="min-height:60px;"></textarea>
+        </div>
+      </div>
+
+      <div class="field" style="margin-bottom:16px;">
+        <label>Reference Link / Notes (Optional)</label>
+        <textarea id="f-reference" placeholder="Paste any Confluence page, document link, or notes shared by engineering…" style="min-height:55px;"></textarea>
+      </div>
+
+      <div class="submit-row">
+        <button class="btn-submit" id="submitBtn" onclick="submitReview()">✅ Submit Review</button>
+        <button class="btn-cancel" onclick="closeFill()">Cancel</button>
+        <span class="msg" id="fillMsg"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW DETAIL OVERLAY -->
+<div class="overlay" id="viewOverlay">
+  <div class="overlay-box">
+    <div class="ov-header">
+      <div class="ov-header-text">
+        <h2 id="viewTitle">Ticket Review</h2>
+        <p id="viewSubtitle"></p>
+      </div>
+      <button class="ov-close" onclick="closeView()">✕ Close</button>
+    </div>
+    <div class="ov-body" id="viewBody"></div>
+  </div>
+</div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbxHeMgaV389GYgDf8CeFMUVRnC5uuBe9x60e4_wBLuoCjE83158t6AIuapJoTy6TyfzcA/exec';
+
+const AGENT = (function(){
+  try{const s=localStorage.getItem('lrp_session');if(s){const p=JSON.parse(s);return p.username||'';}}catch(e){}
+  return '';
+})();
+document.getElementById('agentLbl').textContent = '👤 ' + (AGENT||'Agent').toUpperCase();
+
+let allPending=[], allCompleted=[], allKB=[], currentTicket=null;
+
+// ── TAB ──
+function switchTab(t){
+  ['pending','completed','kb'].forEach(x=>{
+    document.getElementById('tbtn-'+x).classList.toggle('active',x===t);
+    document.getElementById('panel-'+x).classList.toggle('active',x===t);
+  });
+  if(t==='completed' && !allCompleted.length) loadCompleted();
+  if(t==='kb') loadKB();
+}
+
+// ── TOAST ──
+function toast(msg,type='ok'){const el=document.getElementById('toast');el.textContent=msg;el.className='toast show '+type;setTimeout(()=>el.className='toast',3000);}
+
+// ── RADIO PILLS ──
+function initRadios(){
+  document.querySelectorAll('.rpill input').forEach(r=>{
+    r.addEventListener('change',()=>{
+      const grp=r.name;
+      document.querySelectorAll('input[name="'+grp+'"]').forEach(x=>{
+        x.closest('.rpill').classList.remove('ck-green','ck-red','ck-blue');
+      });
+      const lbl=r.closest('.rpill');
+      if(grp==='sandbox'){
+        if(r.value==='Yes')lbl.classList.add('ck-green');
+        else if(r.value==='No')lbl.classList.add('ck-red');
+        else lbl.classList.add('ck-blue');
+        document.getElementById('sandboxResultField').style.display=(r.value==='Yes')?'block':'none';
+      } else {
+        lbl.classList.add('ck-blue');
+      }
+    });
+  });
+}
+initRadios();
+
+function getRadioVal(name){
+  const el=document.querySelector('input[name="'+name+'"]:checked');
+  return el?el.value:'';
+}
+
+// ── PILLS ──
+function priorityPill(p){
+  const m={Showstopper:'pill-red',Critical:'pill-red',High:'pill-orange',Medium:'pill-blue',Low:'pill-gray'};
+  return p?`<span class="pill ${m[p]||'pill-gray'}">${p}</span>`:'';
+}
+function compPill(c){return c?`<span class="pill pill-purple">${c}</span>`:'—';}
+function clientPill(c){return c?`<span class="pill pill-blue">${c}</span>`:'—';}
+
+// ── FORMAT DURATION ──
+function buildDurStr(){
+  const d=parseInt(document.getElementById('f-dur-days').value)||0;
+  const h=parseInt(document.getElementById('f-dur-hours').value)||0;
+  const m=parseInt(document.getElementById('f-dur-mins').value)||0;
+  if(!d&&!h&&!m)return'';
+  let parts=[];
+  if(d)parts.push(d+'d');
+  if(h)parts.push(h+'h');
+  if(m)parts.push(m+'m');
+  return parts.join(' ');
+}
+
+// ── LOAD PENDING ──
+async function loadPending(){
+  if(!AGENT){document.getElementById('pendingContainer').innerHTML='<div class="loading">⚠️ Agent session not found. Please log in from the portal.</div>';return;}
+  try{
+    const res=await fetch(API+'?action=getWNSTickets&agent='+encodeURIComponent(AGENT)+'&status=Pending&t='+Date.now());
+    const data=await res.json();
+    if(data.success){allPending=data.tickets||[];renderPending();}
+    else document.getElementById('pendingContainer').innerHTML='<div class="loading">⚠️ Failed to load.</div>';
+  }catch{document.getElementById('pendingContainer').innerHTML='<div class="loading">⚠️ Connection error.</div>';}
+}
+
+function renderPending(){
+  const el=document.getElementById('pendingContainer');
+  const badge=document.getElementById('pendingBadge');
+  if(!allPending.length){
+    badge.style.display='none';
+    el.innerHTML=`<div class="empty-state"><div class="empty-icon">🎉</div><div class="empty-title">All Clear!</div><div class="empty-sub">No pending review tickets assigned to you right now.</div></div>`;
+    return;
+  }
+  badge.textContent=allPending.length;badge.style.display='inline-block';
+  el.innerHTML='<div class="ticket-list">'+allPending.map((t,i)=>`
+    <div class="ticket-card pending">
+      <div class="tc-top">
+        <div class="tc-id">🎫 ${t.ticketId||'—'}</div>
+        <span class="pill pill-orange">⏳ REVIEW REQUIRED</span>
+      </div>
+      <div class="tc-summary">${t.summary||'No summary provided.'}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+        <div class="tc-meta"><span>📌 Assigned: ${(t.assignedAt||'').slice(0,10)||'—'}</span></div>
+        <button class="btn-action" onclick="openFill(${i})">✍️ Fill Review →</button>
+      </div>
+    </div>`).join('')+'</div>';
+}
+
+// ── LOAD COMPLETED ──
+async function loadCompleted(){
+  if(!AGENT){document.getElementById('completedContainer').innerHTML='<div class="loading">⚠️ Agent session not found.</div>';return;}
+  try{
+    const res=await fetch(API+'?action=getWNSTickets&agent='+encodeURIComponent(AGENT)+'&status=Completed&t='+Date.now());
+    const data=await res.json();
+    if(data.success){allCompleted=data.tickets||[];renderCompleted();}
+    else document.getElementById('completedContainer').innerHTML='<div class="loading">⚠️ Failed to load.</div>';
+  }catch{document.getElementById('completedContainer').innerHTML='<div class="loading">⚠️ Connection error.</div>';}
+}
+
+function renderCompleted(){
+  const el=document.getElementById('completedContainer');
+  if(!allCompleted.length){
+    el.innerHTML=`<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">No Completed Reviews Yet</div><div class="empty-sub">Your completed reviews will appear here.</div></div>`;
+    return;
+  }
+  el.innerHTML='<div class="ticket-list">'+allCompleted.map((t,i)=>`
+    <div class="ticket-card completed">
+      <div class="tc-top">
+        <div class="tc-id">🎫 ${t.ticketId||'—'}</div>
+        <div class="tc-pills">${priorityPill(t.priority)||''}${t.component?compPill(t.component):''}
+          <span class="completed-badge">✅ COMPLETED</span>
+        </div>
+      </div>
+      <div class="tc-summary">${t.summary||'—'}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+        <div class="tc-meta">
+          <span>🗓 Ticket Date: ${t.ticketDate||'—'}</span>
+          <span>✅ Submitted: ${(t.submittedAt||'').slice(0,10)||'—'}</span>
+          <span>⏱ Engg took: ${t.engResolutionTime||'—'}</span>
+        </div>
+        <button class="btn-view" onclick="openView(allCompleted[${i}])">👁 View Details</button>
+      </div>
+    </div>`).join('')+'</div>';
+}
+
+// ── LOAD KB ──
+async function loadKB(){
+  document.getElementById('kbContainer').innerHTML='<div class="loading">⏳ Loading...</div>';
+  try{
+    const res=await fetch(API+'?action=getWNSTickets&status=Completed&t='+Date.now());
+    const data=await res.json();
+    if(data.success){allKB=data.tickets||[];renderKB(allKB);}
+    else document.getElementById('kbContainer').innerHTML='<div class="loading">⚠️ Failed to load.</div>';
+  }catch{document.getElementById('kbContainer').innerHTML='<div class="loading">⚠️ Connection error.</div>';}
+}
+
+function filterKB(){
+  const q=document.getElementById('kbSearch').value.toLowerCase();
+  renderKB(q?allKB.filter(t=>
+    (t.ticketId||'').toLowerCase().includes(q)||
+    (t.component||'').toLowerCase().includes(q)||
+    (t.client||'').toLowerCase().includes(q)||
+    (t.summary||'').toLowerCase().includes(q)||
+    (t.whatLearned||'').toLowerCase().includes(q)||
+    (t.howSolveNext||'').toLowerCase().includes(q)
+  ):allKB);
+}
+
+function renderKB(list){
+  document.getElementById('kbCount').textContent=list.length+' entries';
+  const el=document.getElementById('kbContainer');
+  if(!list.length){el.innerHTML=`<div class="empty-state"><div class="empty-icon">📚</div><div class="empty-title">No entries yet</div><div class="empty-sub">Completed ticket reviews from all agents will appear here as a shared knowledge base.</div></div>`;return;}
+  el.innerHTML='<div class="kb-grid">'+list.map((t,i)=>`
+    <div class="kb-card" onclick="openView(allKB[${i}])">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px;">
+        <span style="font-size:14px;font-weight:800;color:var(--dark);">🎫 ${t.ticketId||'—'}</span>
+        <span style="font-size:10px;font-weight:700;background:#eef5fc;border:1px solid var(--border);border-radius:12px;padding:2px 9px;color:#1a5a90;white-space:nowrap;">👤 ${t.agentName||'—'}</span>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
+        ${t.component?compPill(t.component):''}
+        ${t.client?clientPill(t.client):''}
+        <span class="pill ${t.sandboxTried==='Yes'?'pill-green':'pill-gray'}">${t.sandboxTried==='Yes'?'✅ Sandbox tried':'❌ No sandbox'}</span>
+      </div>
+      <div class="kb-excerpt"><strong>Learned:</strong> ${t.whatLearned||'—'}</div>
+      <div style="font-size:10px;color:#3a7aaa;font-weight:600;padding-top:8px;border-top:1px solid #ddeeff;display:flex;justify-content:space-between;">
+        <span>📅 ${t.ticketDate||'—'}</span>
+        <span>⏱ Engg: ${t.engResolutionTime||'—'}</span>
+      </div>
+    </div>`).join('')+'</div>';
+}
+
+// ── FILL OVERLAY ──
+function openFill(i){
+  currentTicket=allPending[i];
+  document.getElementById('fill-ticketId-display').textContent='🎫 '+currentTicket.ticketId;
+  document.getElementById('fill-summary-display').textContent=currentTicket.summary||'No summary.';
+  document.getElementById('fillSubtitle').textContent=currentTicket.ticketId+' — fill all details below';
+  ['f-client','f-why','f-learned','f-nextTime','f-sandboxResult','f-reference'].forEach(id=>document.getElementById(id).value='');
+  ['f-component','f-priority','f-rootCause'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-ticketDate').value='';
+  ['f-dur-days','f-dur-hours','f-dur-mins'].forEach(id=>document.getElementById(id).value='');
+  document.querySelectorAll('#fillOverlay .rpill').forEach(p=>p.classList.remove('ck-green','ck-red','ck-blue'));
+  document.querySelectorAll('#fillOverlay input[type="radio"]').forEach(r=>r.checked=false);
+  document.getElementById('sandboxResultField').style.display='none';
+  document.getElementById('fillMsg').className='msg';
+  document.getElementById('submitBtn').disabled=false;
+  document.getElementById('fillOverlay').classList.add('open');
+}
+function closeFill(){document.getElementById('fillOverlay').classList.remove('open');}
+
+// ── SUBMIT ──
+async function submitReview(){
+  const client=document.getElementById('f-client').value.trim();
+  const component=document.getElementById('f-component').value;
+  const priority=document.getElementById('f-priority').value;
+  const rootCause=document.getElementById('f-rootCause').value;
+  const ticketDate=document.getElementById('f-ticketDate').value;
+  const reason=getRadioVal('reason');
+  const why=document.getElementById('f-why').value.trim();
+  const learned=document.getElementById('f-learned').value.trim();
+  const next=document.getElementById('f-nextTime').value.trim();
+  const sandbox=getRadioVal('sandbox');
+  const durStr=buildDurStr();
+
+  if(!client){showMsg('⚠ Client / Customer is required.','error');return;}
+  if(!component){showMsg('⚠ Please select a component.','error');return;}
+  if(!priority){showMsg('⚠ Please select a priority.','error');return;}
+  if(!rootCause){showMsg('⚠ Please select the root cause.','error');return;}
+  if(!ticketDate){showMsg('⚠ Please enter the ticket date.','error');return;}
+  if(!reason){showMsg('⚠ Please select a primary reason.','error');return;}
+  if(!why){showMsg('⚠ Detailed explanation is required.','error');return;}
+  if(!learned){showMsg('⚠ Please fill in what you learned.','error');return;}
+  if(!next){showMsg('⚠ Please fill in how you will solve it next time.','error');return;}
+  if(!durStr){showMsg('⚠ Please enter how long engineering took to resolve.','error');return;}
+  if(!sandbox){showMsg('⚠ Please select the sandbox option.','error');return;}
+
+  const btn=document.getElementById('submitBtn');btn.disabled=true;
+  showMsg('⏳ Submitting...','loading');
+  try{
+    const params=new URLSearchParams({
+      action:'submitWNSReview',
+      ticketId:currentTicket.ticketId,
+      agentName:AGENT,
+      client,component,priority,rootCause,ticketDate,
+      primaryReason:reason,
+      whyNotSolved:why,
+      whatLearned:learned,
+      howSolveNext:next,
+      engResolutionTime:durStr,
+      sandboxTried:sandbox,
+      sandboxResult:document.getElementById('f-sandboxResult').value.trim(),
+      reference:document.getElementById('f-reference').value.trim(),
+      submittedAt:new Date().toISOString()
+    });
+    const res=await fetch(API+'?'+params.toString());
+    const data=await res.json();
+    if(data.success){
+      toast('✅ Review submitted successfully!','ok');
+      closeFill();
+      allCompleted=[];
+      loadPending();
+    } else {
+      showMsg('⚠ Failed: '+(data.error||'Unknown error'),'error');
+      btn.disabled=false;
+    }
+  }catch{showMsg('⚠ Connection error. Please try again.','error');btn.disabled=false;}
+}
+
+function showMsg(txt,type){const el=document.getElementById('fillMsg');el.textContent=txt;el.className='msg '+type;}
+
+// ── VIEW OVERLAY ──
+function openView(t){
+  document.getElementById('viewTitle').textContent='🎫 '+t.ticketId;
+  document.getElementById('viewSubtitle').textContent=(t.agentName||'Agent')+' · '+(t.ticketDate||'');
+  const sandboxStr=t.sandboxTried==='Yes'?'✅ Yes':t.sandboxTried==='No'?'❌ No':'⚪ N/A';
+  document.getElementById('viewBody').innerHTML=`
+    <div class="detail-grid">
+      ${[['Client',t.client],['Component',t.component],['Priority',t.priority],['Root Cause',t.rootCause],
+         ['Ticket Date',t.ticketDate],['Reviewed By',t.agentName],
+         ['Engg Resolution Time',t.engResolutionTime],['Sandbox Tried',sandboxStr],
+         ['Primary Reason',t.primaryReason],['Submitted',(t.submittedAt||'').slice(0,10)||'—']
+        ].map(([l,v])=>`<div class="db"><div class="db-lbl">${l}</div><div class="db-val">${v||'—'}</div></div>`).join('')}
+    </div>
+    ${[['📋 Issue Summary (from Admin)',t.summary],
+       ['🤔 Why Not Solved by HD',t.whyNotSolved],
+       ['💡 What Was Learned',t.whatLearned],
+       ['🚀 How to Solve Next Time',t.howSolveNext],
+       ['🧪 Sandbox Result',t.sandboxResult],
+       ['🔗 Reference / Notes',t.reference]
+      ].filter(([,v])=>v&&v.trim()).map(([l,v])=>`
+      <div class="ds">
+        <div class="ds-title">${l}</div>
+        <div class="ds-text">${v}</div>
+      </div>`).join('')}`;
+  document.getElementById('viewOverlay').classList.add('open');
+}
+function closeView(){document.getElementById('viewOverlay').classList.remove('open');}
+
+['fillOverlay','viewOverlay'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',e=>{
+    if(e.target===document.getElementById(id)){
+      id==='fillOverlay'?closeFill():closeView();
+    }
+  });
+});
+
+// ── INIT ──
+loadPending();
+document.getElementById('tbtn-completed').addEventListener('click',()=>{if(!allCompleted.length)loadCompleted();});
+</script>
+</body>
+</html>
