@@ -5,69 +5,43 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>LRP Admin Dashboard</title>
 <style>
-/* ── LIGHT BLUE COLOR SCALE ──
-   Old faint:  #7aaac8  →  replaced with #3a7aaa (much more visible)
-   Old mid:    #5a89b0  →  replaced with #2a6090 (deeper)
-   Placeholders: #a0bcd8 → #4a8ab5
-*/
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#eef5fc;color:#1a3a5c;min-height:100vh;}
-
-/* ── OCEAN LOGIN ── */
 .login-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:999;overflow:hidden;}
-.ocean-bg{position:absolute;inset:0;background:linear-gradient(180deg,#b8e0f7 0%,#7ec8e3 35%,#1a7db5 60%,#1056a0 80%,#0a3d78 100%);}
-.sky-sun{position:absolute;top:40px;right:120px;width:72px;height:72px;border-radius:50%;cursor:pointer;transition:all .8s cubic-bezier(.4,0,.2,1);animation:sunPulse 4s ease-in-out infinite;z-index:10;}
-.sky-sun.sun-mode{background:radial-gradient(circle,#fff9c4 30%,#ffe57f 60%,rgba(255,220,80,0) 100%);box-shadow:0 0 40px 10px rgba(255,220,80,.3);}
+.ocean-bg{position:absolute;inset:0;background:linear-gradient(180deg,#b8e0f7 0%,#7ec8e3 35%,#1a7db5 60%,#1056a0 80%,#0a3d78 100%);transition:background 1s ease;}
+.ocean-bg.dark{background:linear-gradient(180deg,#080c1a 0%,#0d1530 25%,#0a1a3d 55%,#060e24 80%,#020810 100%);}
+.sky-sun{position:absolute;top:40px;right:120px;width:72px;height:72px;border-radius:50%;cursor:pointer;transition:all .8s cubic-bezier(.4,0,.2,1);z-index:10;}
+.sky-sun.sun-mode{background:radial-gradient(circle,#fff9c4 30%,#ffe57f 60%,rgba(255,220,80,0) 100%);box-shadow:0 0 40px 10px rgba(255,220,80,.3);animation:sunPulse 4s ease-in-out infinite;}
 .sky-sun.moon-mode{background:radial-gradient(circle at 35% 35%,#e8e8ff 30%,#b0b8d8 70%,rgba(150,160,200,0) 100%);box-shadow:0 0 30px 8px rgba(150,160,255,.25);animation:moonPulse 4s ease-in-out infinite;}
 @keyframes sunPulse{0%,100%{opacity:.9;transform:scale(1);}50%{opacity:1;transform:scale(1.06);}}
 @keyframes moonPulse{0%,100%{opacity:.85;transform:scale(1);}50%{opacity:1;transform:scale(1.04);}}
-
-/* ── DARK MODE for login ── */
-.ocean-bg{position:absolute;inset:0;background:linear-gradient(180deg,#b8e0f7 0%,#7ec8e3 35%,#1a7db5 60%,#1056a0 80%,#0a3d78 100%);transition:background 1s ease;}
-.ocean-bg.dark{background:linear-gradient(180deg,#080c1a 0%,#0d1530 25%,#0a1a3d 55%,#060e24 80%,#020810 100%);}
 .stars{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 1.2s ease;}
 .ocean-bg.dark .stars{opacity:1;}
 .star{position:absolute;background:#fff;border-radius:50%;animation:twinkle linear infinite;}
 @keyframes twinkle{0%,100%{opacity:.2;}50%{opacity:1;}}
-.wave1{transition:background .8s;}
-.wave2{transition:background .8s;}
-.wave3{transition:background .8s;}
-.ocean-bg.dark .wave1{background:rgba(100,140,255,.18);}
-.ocean-bg.dark .wave2{background:rgba(80,120,220,.12);}
-.ocean-bg.dark .wave3{background:rgba(60,100,200,.07);}
-.cloud{transition:opacity .8s;}
-.ocean-bg.dark .cloud{opacity:.08;}
-.login-box{transition:background .8s,border-color .8s,box-shadow .8s,color .8s;}
-.login-box.dark{background:rgba(10,18,40,.92);border:1px solid rgba(80,120,255,.3);box-shadow:0 12px 40px rgba(0,0,80,.6);}
-.login-box.dark h2{color:#a0c4ff;}
-.login-box.dark p{color:#6080b0;}
-.login-box.dark input{background:#0d1a35;border-color:#2a3d6a;color:#c0d8ff;}
-.login-box.dark input::placeholder{color:#3a5080;}
-.login-box.dark input:focus{border-color:#4a80e8;background:#101e3a;}
-.login-box.dark button{background:linear-gradient(135deg,#2a5aaa,#1a3a7a);}
-.login-box.dark .login-err{color:#ff8080;}
-.clouds{position:absolute;top:40px;width:100%;pointer-events:none;}
-.cloud{position:absolute;background:rgba(255,255,255,.82);border-radius:50px;animation:cloudDrift linear infinite;}
+.cloud{position:absolute;background:rgba(255,255,255,.82);border-radius:50px;animation:cloudDrift linear infinite;transition:opacity .8s;}
 .cloud::before,.cloud::after{content:'';position:absolute;background:rgba(255,255,255,.82);border-radius:50%;}
-.cloud1{width:120px;height:32px;top:20px;left:-140px;animation-duration:28s;animation-delay:0s;}
-.cloud1::before{width:60px;height:48px;top:-22px;left:20px;}
-.cloud1::after{width:44px;height:36px;top:-16px;left:56px;}
+.cloud1{width:120px;height:32px;top:20px;left:-140px;animation-duration:28s;}
+.cloud1::before{width:60px;height:48px;top:-22px;left:20px;}.cloud1::after{width:44px;height:36px;top:-16px;left:56px;}
 .cloud2{width:90px;height:24px;top:56px;left:-110px;animation-duration:36s;animation-delay:-14s;}
-.cloud2::before{width:44px;height:36px;top:-18px;left:14px;}
-.cloud2::after{width:34px;height:28px;top:-12px;left:44px;}
+.cloud2::before{width:44px;height:36px;top:-18px;left:14px;}.cloud2::after{width:34px;height:28px;top:-12px;left:44px;}
 .cloud3{width:110px;height:28px;top:12px;left:-130px;animation-duration:44s;animation-delay:-22s;}
 .cloud3::before{width:52px;height:42px;top:-20px;left:18px;}
 @keyframes cloudDrift{from{left:-160px;}to{left:110%;}}
+.ocean-bg.dark .cloud{opacity:.08;}
+.ocean-bg.dark .wave1{background:rgba(100,140,255,.18);}
+.ocean-bg.dark .wave2{background:rgba(80,120,220,.12);}
+.ocean-bg.dark .wave3{background:rgba(60,100,200,.07);}
 .ocean-surface{position:absolute;bottom:0;left:0;right:0;height:55%;}
-.wave{position:absolute;width:200%;height:80px;left:-50%;}
+.wave{position:absolute;width:200%;height:80px;left:-50%;transition:background .8s;}
 .wave1{bottom:46%;background:rgba(255,255,255,.22);border-radius:50% 50% 0 0/40px 40px 0 0;animation:waveDrift 7s ease-in-out infinite;}
 .wave2{bottom:44%;background:rgba(255,255,255,.14);border-radius:50% 50% 0 0/30px 30px 0 0;animation:waveDrift 9s ease-in-out infinite reverse;}
 .wave3{bottom:40%;background:rgba(255,255,255,.08);border-radius:50% 50% 0 0/20px 20px 0 0;animation:waveDrift 11s ease-in-out infinite;}
 @keyframes waveDrift{0%,100%{transform:translateX(0);}50%{transform:translateX(5%);}}
 .boat{position:absolute;bottom:46.5%;left:50%;transform:translateX(-50%);animation:boatBob 3.5s ease-in-out infinite;}
 @keyframes boatBob{0%,100%{transform:translateX(-50%) translateY(0) rotate(-1deg);}50%{transform:translateX(-50%) translateY(-6px) rotate(1.5deg);}}
-.boat-hull{width:160px;height:30px;background:linear-gradient(180deg,#e8a020,#c07010);border-radius:0 0 50% 50% / 0 0 20px 20px;position:relative;left:0;box-shadow:0 4px 12px rgba(0,0,0,.25);}
-.boat-deck{width:160px;height:10px;background:#f5c040;border-radius:4px 4px 0 0;position:relative;top:0;}
+.boat-hull{width:160px;height:30px;background:linear-gradient(180deg,#e8a020,#c07010);border-radius:0 0 50% 50%/0 0 20px 20px;position:relative;box-shadow:0 4px 12px rgba(0,0,0,.25);}
+.boat-deck{width:160px;height:10px;background:#f5c040;border-radius:4px 4px 0 0;}
 .boat-cabin{width:48px;height:24px;background:#fff;border:2px solid #d0d0d0;border-radius:4px 4px 0 0;position:absolute;top:-34px;left:56px;}
 .boat-cabin-window{width:12px;height:10px;background:#7ec8e3;border-radius:2px;position:absolute;top:6px;left:8px;}
 .boat-cabin-window2{width:12px;height:10px;background:#7ec8e3;border-radius:2px;position:absolute;top:6px;right:8px;}
@@ -76,22 +50,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .containers{position:absolute;top:-52px;left:8px;display:flex;gap:2px;}
 .cbox{width:22px;height:18px;border-radius:2px;border:1.5px solid rgba(0,0,0,.15);}
 .cb1{background:#e53935;}.cb2{background:#1e88e5;}.cb3{background:#43a047;}.cb4{background:#fb8c00;}.cb5{background:#8e24aa;}
-.seagulls{position:absolute;top:90px;left:0;width:100%;pointer-events:none;}
-.sg{position:absolute;animation:sgFly linear infinite;}
-.sg svg{width:28px;height:14px;}
-@keyframes sgFly{from{left:-40px;}to{left:110%;}}
-.login-box{position:relative;z-index:2;background:rgba(255,255,255,.92);border:1px solid rgba(255,255,255,.7);border-radius:16px;padding:36px 32px 32px;width:360px;text-align:center;backdrop-filter:blur(14px);box-shadow:0 12px 40px rgba(10,60,120,.2);}
+.login-box{position:relative;z-index:2;background:rgba(255,255,255,.92);border:1px solid rgba(255,255,255,.7);border-radius:16px;padding:36px 32px 32px;width:360px;text-align:center;backdrop-filter:blur(14px);box-shadow:0 12px 40px rgba(10,60,120,.2);transition:background .8s,border-color .8s,box-shadow .8s;}
+.login-box.dark{background:rgba(10,18,40,.92);border:1px solid rgba(80,120,255,.3);box-shadow:0 12px 40px rgba(0,0,80,.6);}
+.login-box.dark h2{color:#a0c4ff;}.login-box.dark p{color:#6080b0;}
+.login-box.dark input{background:#0d1a35;border-color:#2a3d6a;color:#c0d8ff;}
+.login-box.dark input::placeholder{color:#3a5080;}
+.login-box.dark input:focus{border-color:#4a80e8;background:#101e3a;}
+.login-box.dark button{background:linear-gradient(135deg,#2a5aaa,#1a3a7a);}
+.login-box.dark .login-err{color:#ff8080;}
 .login-logo{width:56px;height:56px;background:linear-gradient(135deg,#1a7db5,#0a3d78);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px;}
 .login-box h2{font-size:18px;font-weight:700;color:#0a3d78;letter-spacing:2px;margin-bottom:4px;}
 .login-box p{font-size:11px;color:#2a6090;letter-spacing:1px;margin-bottom:22px;}
 .login-box input{width:100%;background:#f0f7ff;border:1.5px solid #b8d4ee;border-radius:8px;padding:11px 14px;font-size:13px;color:#1a3a5c;outline:none;margin-bottom:10px;}
 .login-box input:focus{border-color:#1a7db5;background:#fff;}
 .login-box button{width:100%;padding:12px;background:linear-gradient(135deg,#1a7db5,#0a3d78);border:none;border-radius:8px;font-size:13px;font-weight:700;letter-spacing:2px;color:#fff;cursor:pointer;transition:opacity .2s;text-transform:uppercase;}
-.login-box button:hover{opacity:.88;}
-.login-box button:disabled{opacity:.6;cursor:not-allowed;}
+.login-box button:hover{opacity:.88;}.login-box button:disabled{opacity:.6;cursor:not-allowed;}
 .login-err{color:#c0392b;font-size:12px;margin-top:8px;display:none;}
-
-/* ── TOPBAR ── */
 .topbar{background:#fff;border-bottom:1.5px solid #c8dff0;padding:12px 28px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(26,90,160,.06);}
 .brand{display:flex;align-items:center;gap:12px;}
 .brand-icon{width:40px;height:40px;background:linear-gradient(135deg,#1a7db5,#0a3d78);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;}
@@ -102,29 +76,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .refresh-btn:hover{background:#d0e8f8;border-color:#1a7db5;}
 .logout-btn{padding:7px 16px;background:#fff0f0;border:1.5px solid #f0b8b8;border-radius:6px;color:#c0392b;cursor:pointer;font-size:12px;font-weight:600;letter-spacing:1px;transition:all .2s;}
 .logout-btn:hover{background:#fad4d4;}
-
-/* ── MAIN ── */
 .main{padding:24px 28px;}
 .admin-tabs{display:flex;gap:0;margin-bottom:24px;border-bottom:2px solid #c8dff0;flex-wrap:wrap;background:#fff;border-radius:10px 10px 0 0;padding:0 8px;box-shadow:0 1px 4px rgba(26,90,160,.04);}
 .admin-tab{padding:12px 20px;background:none;border:none;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#3a7aaa;cursor:pointer;position:relative;transition:color .2s;white-space:nowrap;}
 .admin-tab.active{color:#1a7db5;}
 .admin-tab.active::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:2.5px;background:#1a7db5;border-radius:2px;}
-.tab-panel{display:none;} .tab-panel.active{display:block;}
+.tab-panel{display:none;}.tab-panel.active{display:block;}
 .page-title{font-size:22px;font-weight:800;color:#0a3d78;letter-spacing:2px;margin-bottom:4px;}
 .page-sub{font-size:13px;color:#2a6090;margin-bottom:22px;}
 .section-title{font-size:12px;font-weight:700;color:#1a7db5;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
 .loading{text-align:center;padding:40px;color:#2a6090;font-size:14px;letter-spacing:1px;}
 .error-msg{text-align:center;padding:40px;color:#c0392b;font-size:14px;}
 .no-data-msg{text-align:center;padding:50px 20px;color:#3a7aaa;font-size:14px;}
-
-/* ── STAT CARDS ── */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
 .stat-card{background:#fff;border:1.5px solid #c8dff0;border-radius:10px;padding:18px;text-align:center;box-shadow:0 2px 8px rgba(26,90,160,.05);}
 .stat-num{font-size:30px;font-weight:800;margin-bottom:4px;}
 .stat-lbl{font-size:11px;color:#3a7aaa;letter-spacing:1px;text-transform:uppercase;font-weight:600;}
 .blue{color:#1a7db5;}.green{color:#1a8c5c;}.orange{color:#d07020;}.red{color:#c0392b;}
-
-/* ── TABLES ── */
 .table-wrap{background:#fff;border:1.5px solid #c8dff0;border-radius:10px;overflow:hidden;margin-bottom:24px;box-shadow:0 2px 8px rgba(26,90,160,.04);}
 .search-bar{padding:12px 16px;border-bottom:1px solid #ddeeff;display:flex;align-items:center;gap:10px;background:#f4f9ff;}
 .search-bar input{flex:1;background:#fff;border:1.5px solid #b8d4ee;border-radius:6px;padding:7px 12px;font-size:13px;color:#1a3a5c;outline:none;}
@@ -134,10 +102,7 @@ table{width:100%;border-collapse:collapse;}
 thead tr{background:#eef5fc;}
 th{padding:11px 14px;text-align:left;font-size:11px;font-weight:700;color:#1a7db5;text-transform:uppercase;letter-spacing:1px;border-bottom:1.5px solid #c8dff0;}
 td{padding:11px 14px;font-size:13px;border-bottom:1px solid #e4f0fa;color:#2a4a6a;vertical-align:middle;}
-tr:hover td{background:#f0f8ff;}
-tr:last-child td{border-bottom:none;}
-
-/* ── BADGES ── */
+tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
 .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;}
 .badge-online{background:#d4f5e4;border:1px solid #6cd4a0;color:#1a7050;}
 .badge-recent{background:#fff3d8;border:1px solid #f5c840;color:#8a6010;}
@@ -152,50 +117,36 @@ tr:last-child td{border-bottom:none;}
 .env-ecom{background:#f0d8f8;border:1px solid #d090e8;color:#601080;}
 .env-testing{background:#f8f8d0;border:1px solid #d8d840;color:#606010;}
 .env-default{background:#f0f0f0;border:1px solid #d0d0d0;color:#666;}
-
-/* ── BUTTONS ── */
 .reset-btn{background:#fff8e8;border:1.5px solid #f0c840;border-radius:5px;color:#906a10;cursor:pointer;font-size:11px;font-weight:700;padding:4px 10px;transition:all .2s;white-space:nowrap;}
-.reset-btn:hover{background:#ffedb0;}
-.reset-btn.done{background:#d4f5e4;border-color:#6cd4a0;color:#1a7050;}
+.reset-btn:hover{background:#ffedb0;}.reset-btn.done{background:#d4f5e4;border-color:#6cd4a0;color:#1a7050;}
 .delete-btn{background:#fde8e8;border:1.5px solid #f0aaaa;border-radius:5px;color:#a02020;cursor:pointer;font-size:11px;font-weight:700;padding:4px 10px;transition:all .2s;white-space:nowrap;margin-left:5px;}
 .delete-btn:hover{background:#f9c8c8;}
 .edit-btn{background:#e4f0ff;border:1.5px solid #80bce8;border-radius:5px;color:#1a5a90;cursor:pointer;font-size:11px;font-weight:700;padding:4px 10px;transition:all .2s;white-space:nowrap;}
 .edit-btn:hover{background:#c0dcf5;}
 .view-btn{background:#eef5fc;border:1.5px solid #a8cce8;border-radius:5px;color:#1a5a90;cursor:pointer;font-size:11px;font-weight:700;padding:4px 10px;transition:all .2s;white-space:nowrap;}
 .view-btn:hover{background:#c8dff5;}
-
-/* ── FORMS ── */
 .form-panel{background:#fff;border-radius:10px;padding:22px;margin-bottom:24px;box-shadow:0 2px 8px rgba(26,90,160,.05);}
-.form-panel.green-border{border:1.5px solid #9cd4bc;}
-.form-panel.purple-border{border:1.5px solid #c0a0e0;}
+.form-panel.green-border{border:1.5px solid #9cd4bc;}.form-panel.purple-border{border:1.5px solid #c0a0e0;}
 .form-panel-title{font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;}
-.form-panel-title.green{color:#1a7050;}
-.form-panel-title.purple{color:#6030a0;}
+.form-panel-title.green{color:#1a7050;}.form-panel-title.purple{color:#6030a0;}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
 .form-field label{display:block;font-size:10px;font-weight:700;letter-spacing:1.5px;color:#1a7db5;text-transform:uppercase;margin-bottom:4px;}
 .form-field input,.form-field select{width:100%;background:#f4f9ff;border:1.5px solid #b8d4ee;border-radius:6px;padding:8px 12px;font-size:13px;color:#1a3a5c;outline:none;transition:border-color .2s;}
 .form-field input:focus,.form-field select:focus{border-color:#1a7db5;background:#fff;}
 .form-field input::placeholder{color:#4a8ab5;}
-.form-field select option{background:#fff;color:#1a3a5c;}
 .form-actions{display:flex;gap:10px;align-items:center;}
 .btn-green{padding:9px 22px;background:linear-gradient(135deg,#1a8c5c,#138048);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;transition:opacity .2s;}
-.btn-green:hover{opacity:.88;}
-.btn-green:disabled{opacity:.5;cursor:not-allowed;}
+.btn-green:hover{opacity:.88;}.btn-green:disabled{opacity:.5;cursor:not-allowed;}
 .btn-purple{padding:9px 22px;background:linear-gradient(135deg,#6030a0,#4a2080);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;transition:opacity .2s;}
-.btn-purple:hover{opacity:.88;}
-.btn-purple:disabled{opacity:.5;cursor:not-allowed;}
+.btn-purple:hover{opacity:.88;}.btn-purple:disabled{opacity:.5;cursor:not-allowed;}
 .btn-cancel{padding:9px 22px;background:#eef0f5;border:1.5px solid #c0cce0;border-radius:6px;color:#5a6a80;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;transition:all .2s;}
 .btn-cancel:hover{background:#dde5f0;}
 .form-msg{font-size:11px;font-weight:700;letter-spacing:1px;padding:6px 12px;border-radius:4px;display:none;}
 .form-msg.error{background:#fde8e8;border-left:3px solid #e04040;color:#a02020;}
 .form-msg.success{background:#d4f5e4;border-left:3px solid #30b870;color:#1a7050;}
 .form-msg.loading{background:#e4f0ff;border-left:3px solid #1a7db5;color:#1a5a90;}
-
-/* ── TOAST ── */
 .toast{position:fixed;bottom:24px;right:24px;background:#fff;border:1.5px solid #b8d4ee;border-radius:10px;padding:12px 20px;font-size:13px;color:#1a3a5c;box-shadow:0 8px 24px rgba(26,90,160,.12);opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;}
 .toast.show{opacity:1;}
-
-/* ── AGENT CARDS ── */
 .agent-card{background:#fff;border:1.5px solid #c8dff0;border-radius:10px;padding:18px;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(26,90,160,.04);}
 .agent-card:hover,.agent-card.selected{border-color:#1a7db5;box-shadow:0 4px 16px rgba(26,125,181,.12);transform:translateY(-2px);}
 .agent-card.selected{border-color:#1a7db5;background:#eef5fc;}
@@ -206,13 +157,9 @@ tr:last-child td{border-bottom:none;}
 .agent-stat-lbl{font-size:9px;color:#3a7aaa;letter-spacing:1px;text-transform:uppercase;font-weight:600;}
 .agent-card-footer{margin-top:10px;padding-top:8px;border-top:1px solid #ddeeff;font-size:10px;color:#3a7aaa;display:flex;justify-content:space-between;font-weight:600;}
 .pw-toggle-sm{background:none;border:none;color:#1a7db5;cursor:pointer;font-size:13px;padding:0 4px;}
-
-/* ── HANDOVER OVERLAY ── */
 .ho-overlay{display:none;position:fixed;inset:0;background:rgba(10,50,100,.5);z-index:9999;align-items:center;justify-content:center;padding:20px;}
 .ho-overlay.open{display:flex;}
 .ho-box{background:#fff;border:1.5px solid #c8dff0;border-radius:12px;width:100%;max-width:720px;max-height:88vh;overflow-y:auto;padding:28px 32px;position:relative;box-shadow:0 12px 40px rgba(10,50,100,.2);}
-
-/* ── SHIFT PLANNER ── */
 .planner-filter-btn{padding:5px 14px;font-size:11px;font-weight:700;letter-spacing:1px;background:#eef5fc;border:1.5px solid #b8d4ee;border-radius:5px;color:#1a5a90;cursor:pointer;transition:all .2s;}
 .planner-filter-btn:hover{background:#d0e8f8;}
 .planner-filter-btn.active{background:#1a7db5;border-color:#1a7db5;color:#fff;}
@@ -222,20 +169,14 @@ tr:last-child td{border-bottom:none;}
 .planner-tbl td{padding:7px 8px;text-align:center;border:1px solid #ddeeff;color:#2a4a6a;vertical-align:middle;}
 .planner-tbl td.col-name{text-align:left;font-size:13px;font-weight:700;color:#0a3d78;position:sticky;left:0;background:#f4f9ff;border-right:1.5px solid #b8d4ee;white-space:nowrap;}
 .planner-tbl td.col-primary{text-align:left;font-size:11px;color:#2a6090;}
-.planner-tbl tr:hover td{background:#eef5fc;}
-.planner-tbl tr:hover td.col-name{background:#d0e8f8;}
+.planner-tbl tr:hover td{background:#eef5fc;}.planner-tbl tr:hover td.col-name{background:#d0e8f8;}
 .shift-pill{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.5px;min-width:44px;}
-.sp-D1{background:#ddeeff;border:1px solid #7ab8e8;color:#0a4070;}
-.sp-D2{background:#d8eeff;border:1px solid #60a0d8;color:#083860;}
-.sp-D3{background:#e8deff;border:1px solid #a878d8;color:#400880;}
-.sp-D4{background:#d4f0e8;border:1px solid #50c0a0;color:#0a5040;}
-.sp-D5{background:#d8f5e0;border:1px solid #60d088;color:#0a5020;}
-.sp-N{background:#dde0f8;border:1px solid #8090d8;color:#202870;}
-.sp-WOFF{background:#f0f0f0;border:1px solid #c0c0c0;color:#606060;}
-.sp-HOL{background:#fff8d8;border:1px solid #e8d040;color:#705010;}
+.sp-D1{background:#ddeeff;border:1px solid #7ab8e8;color:#0a4070;}.sp-D2{background:#d8eeff;border:1px solid #60a0d8;color:#083860;}
+.sp-D3{background:#e8deff;border:1px solid #a878d8;color:#400880;}.sp-D4{background:#d4f0e8;border:1px solid #50c0a0;color:#0a5040;}
+.sp-D5{background:#d8f5e0;border:1px solid #60d088;color:#0a5020;}.sp-N{background:#dde0f8;border:1px solid #8090d8;color:#202870;}
+.sp-WOFF{background:#f0f0f0;border:1px solid #c0c0c0;color:#606060;}.sp-HOL{background:#fff8d8;border:1px solid #e8d040;color:#705010;}
 .sp-COMP{background:#ffe8d8;border:1px solid #e09050;color:#703010;}
-.sp-TODAY{outline:2.5px solid #1a7db5!important;outline-offset:-2px;}
-.col-today{background:#eef8ff!important;}
+.sp-TODAY{outline:2.5px solid #1a7db5!important;outline-offset:-2px;}.col-today{background:#eef8ff!important;}
 </style>
 </head>
 <body>
@@ -246,33 +187,21 @@ tr:last-child td{border-bottom:none;}
   <div class="ocean-bg" id="oceanBg">
     <div class="stars" id="stars"></div>
     <div class="sky-sun sun-mode" id="skySun" onclick="toggleDarkMode()" title="Click to toggle dark mode"></div>
-
     <div class="ocean-surface">
-      <div class="wave wave1"></div>
-      <div class="wave wave2"></div>
-      <div class="wave wave3"></div>
+      <div class="wave wave1"></div><div class="wave wave2"></div><div class="wave wave3"></div>
     </div>
     <div class="boat">
       <div style="position:relative;">
-        <div class="boat-mast"></div>
-        <div class="boat-flag"></div>
-        <div class="boat-cabin">
-          <div class="boat-cabin-window"></div>
-          <div class="boat-cabin-window2"></div>
-        </div>
-        <div class="containers">
-          <div class="cbox cb1"></div><div class="cbox cb2"></div><div class="cbox cb3"></div>
-          <div class="cbox cb4"></div><div class="cbox cb5"></div>
-        </div>
-        <div class="boat-deck"></div>
-        <div class="boat-hull"></div>
+        <div class="boat-mast"></div><div class="boat-flag"></div>
+        <div class="boat-cabin"><div class="boat-cabin-window"></div><div class="boat-cabin-window2"></div></div>
+        <div class="containers"><div class="cbox cb1"></div><div class="cbox cb2"></div><div class="cbox cb3"></div><div class="cbox cb4"></div><div class="cbox cb5"></div></div>
+        <div class="boat-deck"></div><div class="boat-hull"></div>
       </div>
     </div>
   </div>
   <div class="login-box">
     <div class="login-logo">🚢</div>
-    <h2>ADMIN ACCESS</h2>
-    <p>LRP SUPPORT PORTAL</p>
+    <h2>ADMIN ACCESS</h2><p>LRP SUPPORT PORTAL</p>
     <input type="text" id="adm-user" placeholder="Admin username" autocomplete="off"/>
     <input type="password" id="adm-pass" placeholder="Admin password"/>
     <button id="adm-btn" onclick="adminLogin()">⚓ Sign In</button>
@@ -283,30 +212,25 @@ tr:last-child td{border-bottom:none;}
 <!-- DASHBOARD -->
 <div id="dashboard" style="display:none;">
   <div class="topbar">
-    <div class="brand">
-      <div class="brand-icon">🚢</div>
-      <div><h1>LRP SUPPORT PORTAL</h1><div class="brand-sub">ADMIN COMMAND CENTER</div></div>
-    </div>
+    <div class="brand"><div class="brand-icon">🚢</div><div><h1>LRP SUPPORT PORTAL</h1><div class="brand-sub">ADMIN COMMAND CENTER</div></div></div>
     <div class="topbar-right">
       <span style="font-size:11px;color:#3a7aaa;letter-spacing:1px;font-weight:600;" id="lastRefreshed"></span>
       <button class="refresh-btn" onclick="refreshCurrent()">↻ Refresh</button>
       <button class="logout-btn" onclick="adminLogout()">⎋ Sign Out</button>
     </div>
   </div>
-
   <div class="main">
     <div class="admin-tabs">
-      <button class="admin-tab active" id="atab-agents"   onclick="switchTab('agents')">🧑‍✈️ AGENTS</button>
-      <button class="admin-tab"        id="atab-creds"    onclick="switchTab('creds')">🔐 CLIENT CREDENTIALS</button>
-      <button class="admin-tab"        id="atab-tracker"  onclick="switchTab('tracker')">📊 AGENT TRACKER</button>
-      <button class="admin-tab"        id="atab-handover" onclick="switchTab('handover')">📂 SHIFT HANDOVER</button>
-      <button class="admin-tab"        id="atab-planner"  onclick="switchTab('planner')">📅 SHIFT PLANNER</button>
+      <button class="admin-tab active" id="atab-agents" onclick="switchTab('agents')">🧑‍✈️ AGENTS</button>
+      <button class="admin-tab" id="atab-creds" onclick="switchTab('creds')">🔐 CLIENT CREDENTIALS</button>
+      <button class="admin-tab" id="atab-tracker" onclick="switchTab('tracker')">📊 AGENT TRACKER</button>
+      <button class="admin-tab" id="atab-handover" onclick="switchTab('handover')">📂 SHIFT HANDOVER</button>
+      <button class="admin-tab" id="atab-planner" onclick="switchTab('planner')">📅 SHIFT PLANNER</button>
     </div>
 
-    <!-- AGENTS -->
+    <!-- AGENTS TAB -->
     <div class="tab-panel active" id="panel-agents">
-      <div class="page-title">AGENT MANAGEMENT</div>
-      <div class="page-sub">Create agent logins and monitor activity</div>
+      <div class="page-title">AGENT MANAGEMENT</div><div class="page-sub">Create agent logins and monitor activity</div>
       <div class="stats-row">
         <div class="stat-card"><div class="stat-num blue" id="s-total">—</div><div class="stat-lbl">Total Agents</div></div>
         <div class="stat-card"><div class="stat-num green" id="s-online">—</div><div class="stat-lbl">Active Today</div></div>
@@ -321,7 +245,7 @@ tr:last-child td{border-bottom:none;}
           <div class="form-field"><label>Email *</label><input type="email" id="ag-email" placeholder="agent@example.com"/></div>
           <div class="form-field"><label>Team *</label><input type="text" id="ag-team" placeholder="e.g. LRP Support"/></div>
           <div class="form-field"><label>Username *</label><input type="text" id="ag-username" placeholder="e.g. john.smith" autocomplete="off"/></div>
-          <div class="form-field"><label>Password * <span style="font-size:9px;color:#3a7aaa;font-weight:600;">(agent must change on first login)</span></label><input type="text" id="ag-password" placeholder="Set a temporary password"/></div>
+          <div class="form-field"><label>Password * <span style="font-size:9px;color:#3a7aaa;">(agent must change on first login)</span></label><input type="text" id="ag-password" placeholder="Set a temporary password"/></div>
         </div>
         <div class="form-actions">
           <button class="btn-green" id="ag-submit-btn" onclick="submitAgent()">💾 Create Agent Login</button>
@@ -339,22 +263,16 @@ tr:last-child td{border-bottom:none;}
       </div>
     </div>
 
-    <!-- CREDENTIALS -->
+    <!-- CREDENTIALS TAB -->
     <div class="tab-panel" id="panel-creds">
-      <div class="page-title">CLIENT CREDENTIALS</div>
-      <div class="page-sub">Manage client login credentials visible to all agents</div>
+      <div class="page-title">CLIENT CREDENTIALS</div><div class="page-sub">Manage client login credentials visible to all agents</div>
       <div class="form-panel purple-border">
         <div class="form-panel-title purple" id="credFormTitle">➕ Add New Client Credential</div>
         <input type="hidden" id="edit-cred-id"/>
         <div class="form-grid">
           <div class="form-field"><label>Client Name *</label><input type="text" id="cred-client" placeholder="e.g. Acme Corp"/></div>
           <div class="form-field"><label>Environment *</label>
-            <select id="cred-env">
-              <option value="">— Select —</option>
-              <option>Production</option><option>UAT</option><option>Staging</option>
-              <option>Development</option><option>Train</option><option>Train 2</option>
-              <option>Ecom</option><option>Testing</option>
-            </select>
+            <select id="cred-env"><option value="">— Select —</option><option>Production</option><option>UAT</option><option>Staging</option><option>Development</option><option>Train</option><option>Train 2</option><option>Ecom</option><option>Testing</option></select>
           </div>
           <div class="form-field"><label>Application URL</label><input type="text" id="cred-url" placeholder="https://app.example.com"/></div>
           <div class="form-field"><label>User ID *</label><input type="text" id="cred-userid" placeholder="e.g. admin@acme.com"/></div>
@@ -368,17 +286,14 @@ tr:last-child td{border-bottom:none;}
       </div>
       <div class="section-title">🗂 All Client Credentials <span style="font-size:11px;color:#3a7aaa;margin-left:8px;font-weight:600;" id="cred-count"></span></div>
       <div class="table-wrap">
-        <div class="search-bar">
-          <input type="text" id="credSearchInput" placeholder="🔍  Search by client name..." oninput="filterCredTable()"/>
-        </div>
+        <div class="search-bar"><input type="text" id="credSearchInput" placeholder="🔍  Search by client name..." oninput="filterCredTable()"/></div>
         <div id="credTableContainer"><div class="loading">⏳ LOADING...</div></div>
       </div>
     </div>
 
-    <!-- TRACKER -->
+    <!-- TRACKER TAB -->
     <div class="tab-panel" id="panel-tracker">
-      <div class="page-title">AGENT TRACKER</div>
-      <div class="page-sub">Ticket performance summary per agent from Support Ticket Logger</div>
+      <div class="page-title">AGENT TRACKER</div><div class="page-sub">Ticket performance summary per agent from Support Ticket Logger</div>
       <div style="display:flex;gap:12px;margin-bottom:18px;align-items:center;flex-wrap:wrap;">
         <input type="date" id="tracker-date-from" style="background:#f4f9ff;border:1.5px solid #b8d4ee;border-radius:6px;padding:7px 12px;font-size:13px;color:#1a3a5c;outline:none;"/>
         <span style="color:#3a7aaa;font-size:12px;font-weight:600;">to</span>
@@ -391,31 +306,19 @@ tr:last-child td{border-bottom:none;}
       <div id="tracker-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:24px;"><div class="loading">⏳ LOADING...</div></div>
       <div class="section-title">📋 Ticket Breakdown <span style="font-size:11px;color:#3a7aaa;margin-left:8px;font-weight:600;" id="tracker-breakdown-label"></span></div>
       <div class="table-wrap">
-        <div class="search-bar">
-          <input type="text" id="trackerSearchInput" placeholder="🔍  Filter by agent, ticket ID, component..." oninput="filterTrackerTable()"/>
-        </div>
+        <div class="search-bar"><input type="text" id="trackerSearchInput" placeholder="🔍  Filter by agent, ticket ID, component..." oninput="filterTrackerTable()"/></div>
         <div id="trackerTableContainer"><div class="loading" style="color:#3a7aaa;">Select an agent card to filter, or see all tickets below.</div></div>
       </div>
     </div>
 
-    <!-- HANDOVER -->
+    <!-- HANDOVER TAB -->
     <div class="tab-panel" id="panel-handover">
-      <div class="page-title">SHIFT HANDOVER MONITOR</div>
-      <div class="page-sub">All shift handovers submitted by agents</div>
+      <div class="page-title">SHIFT HANDOVER MONITOR</div><div class="page-sub">All shift handovers submitted by agents</div>
       <div style="display:flex;gap:12px;margin-bottom:18px;align-items:flex-end;flex-wrap:wrap;">
-        <div style="display:flex;flex-direction:column;gap:3px;">
-          <span style="font-size:10px;color:#1a7db5;letter-spacing:1px;font-weight:700;">FROM DATE</span>
-          <input type="date" id="ho-date-from" style="background:#f4f9ff;border:1.5px solid #b8d4ee;border-radius:6px;padding:7px 12px;font-size:13px;color:#1a3a5c;outline:none;"/>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:3px;">
-          <span style="font-size:10px;color:#1a7db5;letter-spacing:1px;font-weight:700;">TO DATE</span>
-          <input type="date" id="ho-date-to" style="background:#f4f9ff;border:1.5px solid #b8d4ee;border-radius:6px;padding:7px 12px;font-size:13px;color:#1a3a5c;outline:none;"/>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:3px;">
-          <span style="font-size:10px;color:#1a7db5;letter-spacing:1px;font-weight:700;">SHIFT</span>
-          <select id="ho-shift-filter" style="background:#f4f9ff;border:1.5px solid #b8d4ee;border-radius:6px;padding:7px 12px;font-size:13px;color:#1a3a5c;outline:none;">
-            <option value="">All Shifts</option><option>D1</option><option>D2</option><option>D3</option>
-          </select>
+        <div style="display:flex;flex-direction:column;gap:3px;"><span style="font-size:10px;color:#1a7db5;letter-spacing:1px;font-weight:700;">FROM DATE</span><input type="date" id="ho-date-from" style="background:#f4f9ff;border:1.5px solid #b8d4ee;border-radius:6px;padding:7px 12px;font-size:13px;color:#1a3a5c;outline:none;"/></div>
+        <div style="display:flex;flex-direction:column;gap:3px;"><span style="font-size:10px;color:#1a7db5;letter-spacing:1px;font-weight:700;">TO DATE</span><input type="date" id="ho-date-to" style="background:#f4f9ff;border:1.5px solid #b8d4ee;border-radius:6px;padding:7px 12px;font-size:13px;color:#1a3a5c;outline:none;"/></div>
+        <div style="display:flex;flex-direction:column;gap:3px;"><span style="font-size:10px;color:#1a7db5;letter-spacing:1px;font-weight:700;">SHIFT</span>
+          <select id="ho-shift-filter" style="background:#f4f9ff;border:1.5px solid #b8d4ee;border-radius:6px;padding:7px 12px;font-size:13px;color:#1a3a5c;outline:none;"><option value="">All Shifts</option><option>D1</option><option>D2</option><option>D3</option></select>
         </div>
         <div style="display:flex;gap:8px;">
           <button onclick="applyHandoverFilter()" style="padding:9px 16px;background:#1a7db5;border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:12px;font-weight:700;">🔍 Filter</button>
@@ -431,42 +334,32 @@ tr:last-child td{border-bottom:none;}
       </div>
       <div class="section-title">📋 Handover Submissions <span style="font-size:11px;color:#3a7aaa;margin-left:8px;font-weight:600;" id="ho-count-label"></span></div>
       <div class="table-wrap">
-        <div class="search-bar">
-          <input type="text" id="hoSearchInput" placeholder="🔍  Search by date, shift, or member name..." oninput="filterHandoverTable()"/>
-        </div>
+        <div class="search-bar"><input type="text" id="hoSearchInput" placeholder="🔍  Search by date, shift, or member name..." oninput="filterHandoverTable()"/></div>
         <div id="hoTableContainer"><div class="loading">⏳ LOADING HANDOVER DATA...</div></div>
       </div>
     </div>
 
-    <!-- SHIFT PLANNER -->
+    <!-- PLANNER TAB -->
     <div class="tab-panel" id="panel-planner">
-      <div class="page-title">SHIFT PLANNER</div>
-      <div class="page-sub">Edit shift cells below, then click <strong style="color:#1a8c5c;">Submit to Agents</strong> to publish</div>
+      <div class="page-title">SHIFT PLANNER</div><div class="page-sub">Edit shift cells below, then click <strong style="color:#1a8c5c;">Submit to Agents</strong> to publish</div>
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
-        <input type="text" id="planner-search" placeholder="🔍  Search by name or role..."
-          style="background:#f4f9ff;border:1.5px solid #b8d4ee;border-radius:6px;padding:7px 12px;font-size:13px;color:#1a3a5c;outline:none;width:240px;"
-          oninput="renderPlanner()"/>
+        <input type="text" id="planner-search" placeholder="🔍  Search by name or role..." style="background:#f4f9ff;border:1.5px solid #b8d4ee;border-radius:6px;padding:7px 12px;font-size:13px;color:#1a3a5c;outline:none;width:240px;" oninput="renderPlanner()"/>
         <div style="display:flex;gap:6px;flex-wrap:wrap;">
-          <button class="planner-filter-btn active" data-shift="ALL"   onclick="setPlannerFilter(this)">All</button>
-          <button class="planner-filter-btn"        data-shift="D1"    onclick="setPlannerFilter(this)">D1</button>
-          <button class="planner-filter-btn"        data-shift="D2"    onclick="setPlannerFilter(this)">D2</button>
-          <button class="planner-filter-btn"        data-shift="D4"    onclick="setPlannerFilter(this)">D4</button>
-          <button class="planner-filter-btn"        data-shift="D5"    onclick="setPlannerFilter(this)">D5</button>
-          <button class="planner-filter-btn"        data-shift="N"     onclick="setPlannerFilter(this)">Night</button>
-          <button class="planner-filter-btn"        data-shift="W/OFF" onclick="setPlannerFilter(this)">W/OFF</button>
+          <button class="planner-filter-btn active" data-shift="ALL" onclick="setPlannerFilter(this)">All</button>
+          <button class="planner-filter-btn" data-shift="D1" onclick="setPlannerFilter(this)">D1</button>
+          <button class="planner-filter-btn" data-shift="D2" onclick="setPlannerFilter(this)">D2</button>
+          <button class="planner-filter-btn" data-shift="D4" onclick="setPlannerFilter(this)">D4</button>
+          <button class="planner-filter-btn" data-shift="D5" onclick="setPlannerFilter(this)">D5</button>
+          <button class="planner-filter-btn" data-shift="N" onclick="setPlannerFilter(this)">Night</button>
+          <button class="planner-filter-btn" data-shift="W/OFF" onclick="setPlannerFilter(this)">W/OFF</button>
         </div>
         <div style="margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
           <span style="font-size:11px;color:#3a7aaa;font-weight:600;" id="planner-today-label"></span>
           <span style="font-size:11px;color:#1a8c5c;font-weight:600;" id="planner-saved-label"></span>
-          <button onclick="publishPlanner()" id="planner-publish-btn"
-            style="padding:10px 22px;background:linear-gradient(135deg,#1a8c5c,#138048);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:13px;font-weight:700;letter-spacing:1px;">
-            📤 Submit to Agents
-          </button>
+          <button onclick="publishPlanner()" id="planner-publish-btn" style="padding:10px 22px;background:linear-gradient(135deg,#1a8c5c,#138048);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:13px;font-weight:700;letter-spacing:1px;">📤 Submit to Agents</button>
         </div>
       </div>
-      <div style="font-size:11px;color:#3a7aaa;font-weight:600;margin-bottom:10px;">
-        ✏️ Click any shift cell to edit &nbsp;|&nbsp; Unsaved changes shown until you click <strong style="color:#1a8c5c;">Submit to Agents</strong>
-      </div>
+      <div style="font-size:11px;color:#3a7aaa;font-weight:600;margin-bottom:10px;">✏️ Click any shift cell to edit &nbsp;|&nbsp; Unsaved changes shown until you click <strong style="color:#1a8c5c;">Submit to Agents</strong></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;" id="planner-legend"></div>
       <div style="overflow-x:auto;border:1.5px solid #c8dff0;border-radius:10px;background:#fff;">
         <div id="planner-table-container" style="min-width:1200px;"><div class="loading">⏳ LOADING...</div></div>
@@ -474,8 +367,7 @@ tr:last-child td{border-bottom:none;}
       <div id="planner-cell-editor" style="display:none;position:fixed;z-index:9999;background:#fff;border:1.5px solid #b8d4ee;border-radius:10px;padding:14px 16px;box-shadow:0 8px 32px rgba(26,90,160,.14);min-width:200px;">
         <div style="font-size:10px;color:#1a7db5;letter-spacing:1px;margin-bottom:8px;font-weight:700;" id="pce-label">EDIT SHIFT</div>
         <select id="pce-select" style="width:100%;background:#f4f9ff;border:1.5px solid #b8d4ee;border-radius:6px;padding:8px 10px;font-size:13px;color:#1a3a5c;outline:none;margin-bottom:10px;">
-          <option>D1</option><option>D2</option><option>D3</option><option>D4</option><option>D5</option>
-          <option>N</option><option>W/OFF</option><option>Holiday</option><option>Compff</option>
+          <option>D1</option><option>D2</option><option>D3</option><option>D4</option><option>D5</option><option>N</option><option>W/OFF</option><option>Holiday</option><option>Compff</option>
         </select>
         <div style="display:flex;gap:8px;">
           <button onclick="applyPlannerCellEdit()" style="flex:1;padding:7px;background:#1a7db5;border:none;border-radius:5px;color:#fff;cursor:pointer;font-size:12px;font-weight:700;">✓ Apply</button>
@@ -495,408 +387,119 @@ tr:last-child td{border-bottom:none;}
 </div>
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbzAZLBRc6I7iG3xBQ0BH496JqtKyGKaJH5gF9epdnmv5gxZ4bKbglvjnZrObFm5JeUZEw/exec';
-
-let adminToken = null;
+const API_URL='https://script.google.com/macros/s/AKfycbzAZLBRc6I7iG3xBQ0BH496JqtKyGKaJH5gF9epdnmv5gxZ4bKbglvjnZrObFm5JeUZEw/exec';
+let adminToken=null;
 let allUsers=[],allCreds=[],allLogs=[],filteredLogs=[],allHandovers=[],filteredHandovers=[];
 let selectedAgent=null,currentTab='agents';
 
-window.addEventListener('load', () => {
-  const savedToken = sessionStorage.getItem('admin_token');
-  if (savedToken) verifyToken(savedToken);
-});
+window.addEventListener('load',()=>{const t=sessionStorage.getItem('admin_token');if(t)verifyToken(t);});
+async function verifyToken(token){try{const res=await fetch(API_URL+'?action=verifyAdminToken&token='+encodeURIComponent(token));const data=await res.json();if(data.valid){adminToken=token;showDashboard();}else sessionStorage.removeItem('admin_token');}catch{sessionStorage.removeItem('admin_token');}}
 
-async function verifyToken(token) {
-  try {
-    const res = await fetch(API_URL + '?action=verifyAdminToken&token=' + encodeURIComponent(token));
-    const data = await res.json();
-    if (data.valid) { adminToken = token; showDashboard(); }
-    else sessionStorage.removeItem('admin_token');
-  } catch { sessionStorage.removeItem('admin_token'); }
-}
-
-async function adminLogin() {
-  const u = document.getElementById('adm-user').value.trim();
-  const p = document.getElementById('adm-pass').value;
-  const err = document.getElementById('adm-err');
-  const btn = document.getElementById('adm-btn');
-  err.style.display = 'none';
-  if (!u || !p) { err.textContent = '⚠ Please enter username and password.'; err.style.display = 'block'; return; }
-  btn.disabled = true; btn.textContent = '⏳ Signing in...';
-  try {
-    const res = await fetch(API_URL + '?' + new URLSearchParams({ action: 'adminLogin', username: u, password: p }));
-    const data = await res.json();
-    if (data.success && data.token) {
-      adminToken = data.token;
-      sessionStorage.setItem('admin_token', adminToken);
-      showDashboard();
-    } else if (data.error === 'ADMIN_NOT_CONFIGURED') {
-      err.textContent = '⚠ Admin not configured. Set ADMIN_USER and ADMIN_PASS in Script Properties.';
-      err.style.display = 'block';
-    } else {
-      err.textContent = '⚠ Invalid admin credentials.';
-      err.style.display = 'block';
-    }
-  } catch { err.textContent = '⚠ Connection error. Try again.'; err.style.display = 'block'; }
-  btn.disabled = false; btn.textContent = '⚓ Sign In';
-}
-
-function showDashboard() {
-  document.getElementById('loginScreen').style.display = 'none';
-  document.getElementById('dashboard').style.display = 'block';
-  document.getElementById('adm-pass').value = '';
-  loadUsers();
-}
-
-function adminLogout() {
-  if (!confirm('Are you sure you want to sign out?')) return;
-  adminToken = null; sessionStorage.removeItem('admin_token');
-  document.getElementById('loginScreen').style.display = 'flex';
-  document.getElementById('dashboard').style.display = 'none';
-  document.getElementById('adm-user').value = '';
-  document.getElementById('adm-pass').value = '';
-  document.getElementById('adm-err').style.display = 'none';
-}
-
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') adminLogin();
-});
-
-function switchTab(tab) {
-  currentTab = tab;
-  ['agents','creds','tracker','handover','planner'].forEach(t => {
-    document.getElementById('atab-'+t).classList.toggle('active', t===tab);
-    document.getElementById('panel-'+t).classList.toggle('active', t===tab);
-  });
-  if (tab==='creds') loadCreds(); if (tab==='tracker') loadTracker();
-  if (tab==='handover') loadHandovers(); if (tab==='planner') loadPlanner();
-  document.getElementById('lastRefreshed').textContent = '';
-}
-function refreshCurrent() {
-  if (currentTab==='agents') loadUsers();
-  else if (currentTab==='creds') loadCreds();
-  else if (currentTab==='tracker') loadTracker();
-  else if (currentTab==='handover') loadHandovers();
-  else if (currentTab==='planner') loadPlanner();
-}
-function showToast(msg, success=true) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.borderColor = success ? '#6cd4a0' : '#f0aaaa';
-  t.style.color = success ? '#1a7050' : '#a02020';
-  t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000);
-}
-function showFormMsg(id, text, type) {
-  const el = document.getElementById(id);
-  el.textContent = text; el.className = 'form-msg '+type; el.style.display = 'inline-block';
-  if (type !== 'loading') setTimeout(() => { el.style.display = 'none'; }, 3000);
-}
-function formatDate(iso) {
-  if (!iso) return '—';
-  const d = new Date(iso);
-  return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-}
-function formatDur(secs) {
-  const h=Math.floor(secs/3600),m=Math.floor((secs%3600)/60),s=secs%60;
-  return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
-}
-function getStatus(lastLogin) {
-  if (!lastLogin) return {label:'NEVER',cls:'badge-offline'};
-  const diff = (new Date()-new Date(lastLogin))/3600000;
-  if (diff<24) return {label:'TODAY',cls:'badge-online'};
-  if (diff<168) return {label:'THIS WEEK',cls:'badge-recent'};
-  return {label:'INACTIVE',cls:'badge-offline'};
-}
-function envClass(e) {
-  const v=(e||'').toLowerCase();
-  if(v==='production')return 'env-prod';if(v==='uat')return 'env-uat';if(v==='development')return 'env-dev';
-  if(v==='staging')return 'env-staging';if(v==='train 2')return 'env-train2';if(v==='train')return 'env-train';
-  if(v==='ecom')return 'env-ecom';if(v==='testing')return 'env-testing';return 'env-default';
-}
-
-// ── AGENTS ────────────────────────────────────────────────────────────────────
-async function loadUsers() {
-  document.getElementById('tableContainer').innerHTML='<div class="loading">⏳ FETCHING AGENT DATA...</div>';
-  try {
-    const res = await fetch(API_URL+'?action=getUsers&t='+Date.now());
-    const data = await res.json();
-    if (data.success) { allUsers=data.users||[]; updateStats(allUsers); renderTable(allUsers); document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString(); }
-    else document.getElementById('tableContainer').innerHTML='<div class="error-msg">⚠ Failed to load data.</div>';
-  } catch { document.getElementById('tableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>'; }
-}
-function updateStats(users) {
-  const today=users.filter(u=>u.lastLogin&&(new Date()-new Date(u.lastLogin))/3600000<24).length;
-  const week=users.filter(u=>{if(!u.lastLogin)return false;const h=(new Date()-new Date(u.lastLogin))/3600000;return h>=24&&h<168;}).length;
-  const never=users.filter(u=>!u.lastLogin).length;
-  document.getElementById('s-total').textContent=users.length;
-  document.getElementById('s-online').textContent=today;
-  document.getElementById('s-recent').textContent=week;
-  document.getElementById('s-inactive').textContent=never;
-}
-function renderTable(users) {
-  if (!users.length) { document.getElementById('tableContainer').innerHTML='<div class="loading" style="color:#3a7aaa;">No agents found.</div>'; document.getElementById('filterCount').textContent=''; return; }
-  document.getElementById('filterCount').textContent=users.length+' agents';
-  const rows=users.map((u,i)=>{
-    const st=getStatus(u.lastLogin);
-    const defBadge=u.isDefault?'<span style="background:#fff8d8;border:1px solid #e8d040;border-radius:3px;padding:2px 7px;font-size:10px;font-weight:700;color:#705010;margin-left:6px;">TEMP PW</span>':'';
-    return '<tr><td style="color:#3a7aaa;font-size:12px;font-weight:600;">'+(i+1)+'</td>'+
-      '<td style="font-weight:700;color:#0a3d78;">👤 '+u.username+defBadge+'</td>'+
-      '<td>'+(u.email||'—')+'</td>'+
-      '<td><span style="background:#eef5fc;border:1px solid #a8cce8;border-radius:4px;padding:2px 8px;font-size:11px;color:#1a5a90;">⚓ '+(u.team||'—')+'</span></td>'+
-      '<td><span class="badge '+st.cls+'">'+st.label+'</span></td>'+
-      '<td style="font-size:11px;color:#3a7aaa;font-weight:600;">'+formatDate(u.lastLogin)+'</td>'+
-      '<td style="font-size:11px;color:#3a7aaa;font-weight:600;">'+formatDate(u.registeredAt)+'</td>'+
-      '<td><button class="edit-btn" onclick="editAgent('+i+')">✏ Edit</button>'+
-      '<button class="reset-btn" id="rbtn_'+i+'" onclick="resetPassword(\''+u.username+'\','+i+')">🔑 Reset PW</button>'+
-      '<button class="delete-btn" id="dbtn_'+i+'" onclick="deleteUser(\''+u.username+'\','+i+')">🗑 Delete</button></td></tr>';
-  }).join('');
-  document.getElementById('tableContainer').innerHTML='<table><thead><tr><th>#</th><th>Username</th><th>Email</th><th>Team</th><th>Status</th><th>Last Login</th><th>Created</th><th>Actions</th></tr></thead><tbody>'+rows+'</tbody></table>';
-}
-function filterTable() {
-  const q=document.getElementById('searchInput').value.toLowerCase();
-  const f=allUsers.filter(u=>(u.username||'').toLowerCase().includes(q)||(u.email||'').toLowerCase().includes(q)||(u.team||'').toLowerCase().includes(q));
-  renderTable(f); document.getElementById('filterCount').textContent=f.length+' of '+allUsers.length+' agents';
-}
-async function submitAgent() {
-  const orig=document.getElementById('edit-agent-original-username').value;
-  const name=document.getElementById('ag-name').value.trim(),email=document.getElementById('ag-email').value.trim();
-  const team=document.getElementById('ag-team').value.trim(),username=document.getElementById('ag-username').value.trim();
-  const password=document.getElementById('ag-password').value.trim();
-  if (!name||!email||!team||!username||!password) { showFormMsg('ag-msg','⚠ All fields are required.','error'); return; }
-  if (password.length<6) { showFormMsg('ag-msg','⚠ Password must be ≥ 6 characters.','error'); return; }
-  const btn=document.getElementById('ag-submit-btn'); btn.disabled=true; showFormMsg('ag-msg','⏳ Saving...','loading');
-  const vesselId=orig?'':'VID-'+Math.random().toString(36).toUpperCase().slice(2,8);
-  const action=orig?'updateAgent':'register';
-  try {
-    const res=await fetch(API_URL+'?'+new URLSearchParams({action,username,email,team,password,vesselId,originalUsername:orig||username}));
+async function adminLogin(){
+  const u=document.getElementById('adm-user').value.trim(),p=document.getElementById('adm-pass').value;
+  const err=document.getElementById('adm-err'),btn=document.getElementById('adm-btn');
+  err.style.display='none';
+  if(!u||!p){err.textContent='⚠ Please enter username and password.';err.style.display='block';return;}
+  btn.disabled=true;btn.textContent='⏳ Signing in...';
+  try{
+    const res=await fetch(API_URL+'?'+new URLSearchParams({action:'adminLogin',username:u,password:p}));
     const data=await res.json();
-    if (data.success) { showFormMsg('ag-msg',orig?'✅ Agent updated!':'✅ Agent login created!','success'); clearAgentForm(); setTimeout(loadUsers,800); }
-    else if (data.error==='USERNAME_EXISTS') showFormMsg('ag-msg','⚠ Username already taken.','error');
-    else showFormMsg('ag-msg','⚠ Failed. Try again.','error');
-  } catch { showFormMsg('ag-msg','⚠ Connection error.','error'); }
-  btn.disabled=false;
+    if(data.success&&data.token){adminToken=data.token;sessionStorage.setItem('admin_token',adminToken);showDashboard();}
+    else if(data.error==='ADMIN_NOT_CONFIGURED'){err.textContent='⚠ Admin not configured. Set ADMIN_USER and ADMIN_PASS in Script Properties.';err.style.display='block';}
+    else{err.textContent='⚠ Invalid admin credentials.';err.style.display='block';}
+  }catch{err.textContent='⚠ Connection error. Try again.';err.style.display='block';}
+  btn.disabled=false;btn.textContent='⚓ Sign In';
 }
-function editAgent(i) {
-  const u=allUsers[i];
-  document.getElementById('edit-agent-original-username').value=u.username;
-  document.getElementById('ag-name').value=u.username; document.getElementById('ag-email').value=u.email||'';
-  document.getElementById('ag-team').value=u.team||''; document.getElementById('ag-username').value=u.username;
-  document.getElementById('ag-password').value='';
-  document.getElementById('agentFormTitle').textContent='✏ Edit Agent: '+u.username;
-  document.getElementById('ag-submit-btn').textContent='💾 Update Agent';
-  document.getElementById('ag-cancel-btn').style.display='inline-block';
-  document.getElementById('agentFormTitle').scrollIntoView({behavior:'smooth'});
-}
-function cancelAgentEdit() { clearAgentForm(); }
-function clearAgentForm() {
-  ['edit-agent-original-username','ag-name','ag-email','ag-team','ag-username','ag-password'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('agentFormTitle').textContent='➕ Create New Agent Login';
-  document.getElementById('ag-submit-btn').textContent='💾 Create Agent Login';
-  document.getElementById('ag-cancel-btn').style.display='none';
-  document.getElementById('ag-msg').style.display='none';
-}
-async function resetPassword(username,idx) {
-  if (!confirm('Reset password for "'+username+'" to a temporary password?')) return;
-  const btn=document.getElementById('rbtn_'+idx); btn.textContent='⏳...'; btn.disabled=true;
-  try {
-    const res=await fetch(API_URL+'?'+new URLSearchParams({action:'resetPassword',username}));
-    const data=await res.json();
-    if (data.success) { btn.textContent='✅ Done'; btn.classList.add('done'); showToast('✅ Password reset for '+username+'. Temp: LRP@1234'); setTimeout(loadUsers,2000); }
-    else { btn.textContent='🔑 Reset PW'; btn.disabled=false; showToast('⚠ Reset failed.',false); }
-  } catch { btn.textContent='🔑 Reset PW'; btn.disabled=false; showToast('⚠ Connection error.',false); }
-}
-async function deleteUser(username,idx) {
-  if (!confirm('⚠ Permanently delete agent "'+username+'"?\n\nThis cannot be undone!')) return;
-  const btn=document.getElementById('dbtn_'+idx); btn.textContent='⏳...'; btn.disabled=true;
-  try {
-    const res=await fetch(API_URL+'?'+new URLSearchParams({action:'deleteUser',username}));
-    const data=await res.json();
-    if (data.success) { showToast('🗑 Agent "'+username+'" deleted.'); setTimeout(loadUsers,800); }
-    else { btn.textContent='🗑 Delete'; btn.disabled=false; showToast('⚠ Delete failed.',false); }
-  } catch { btn.textContent='🗑 Delete'; btn.disabled=false; showToast('⚠ Connection error.',false); }
-}
+function showDashboard(){document.getElementById('loginScreen').style.display='none';document.getElementById('dashboard').style.display='block';document.getElementById('adm-pass').value='';loadUsers();}
+function adminLogout(){if(!confirm('Are you sure you want to sign out?'))return;adminToken=null;sessionStorage.removeItem('admin_token');document.getElementById('loginScreen').style.display='flex';document.getElementById('dashboard').style.display='none';document.getElementById('adm-user').value='';document.getElementById('adm-pass').value='';document.getElementById('adm-err').style.display='none';}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('loginScreen').style.display!=='none')adminLogin();});
 
-// ── CREDENTIALS ───────────────────────────────────────────────────────────────
-async function loadCreds() {
-  document.getElementById('credTableContainer').innerHTML='<div class="loading">⏳ LOADING CREDENTIALS...</div>';
-  try {
-    const res=await fetch(API_URL+'?action=getCredentials&t='+Date.now());
-    const data=await res.json();
-    if (data.success) { allCreds=data.credentials||[]; renderCredTable(allCreds); document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString(); }
-    else document.getElementById('credTableContainer').innerHTML='<div class="error-msg">⚠ Failed to load credentials.</div>';
-  } catch { document.getElementById('credTableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>'; }
-}
-function renderCredTable(list) {
-  document.getElementById('cred-count').textContent=list.length+' records';
-  if (!list.length) { document.getElementById('credTableContainer').innerHTML='<div class="loading" style="color:#3a7aaa;">No credentials yet.</div>'; return; }
-  const rows=list.map((c,i)=>'<tr>'+
-    '<td style="color:#3a7aaa;font-size:12px;font-weight:600;">'+(i+1)+'</td>'+
-    '<td style="font-weight:700;color:#0a3d78;">🏢 '+(c.clientName||'—')+'</td>'+
-    '<td style="font-size:11px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+(c.appUrl?'<a href="'+c.appUrl+'" target="_blank" style="color:#1a7db5;text-decoration:none;">🔗 '+c.appUrl+'</a>':'—')+'</td>'+
-    '<td><span class="env-badge '+envClass(c.environment)+'">'+(c.environment||'—')+'</span></td>'+
-    '<td style="font-size:12px;">'+(c.userId||'—')+'</td>'+
-    '<td><span id="adm-pw-'+i+'" style="font-size:12px;">••••••••</span>'+
-    '<button class="pw-toggle-sm" onclick="admTogglePw('+i+',\''+encodeURIComponent(c.password||'')+'\')">👁</button></td>'+
-    '<td><button class="edit-btn" onclick="editCred('+i+')">✏ Edit</button>'+
-    '<button class="delete-btn" id="cdel-'+i+'" onclick="deleteCred(\''+c.id+'\','+i+')">🗑 Delete</button></td></tr>'
-  ).join('');
-  document.getElementById('credTableContainer').innerHTML='<table><thead><tr><th>#</th><th>Client Name</th><th>App URL</th><th>Environment</th><th>User ID</th><th>Password</th><th>Actions</th></tr></thead><tbody>'+rows+'</tbody></table>';
-}
-function filterCredTable() {
-  const q=document.getElementById('credSearchInput').value.toLowerCase();
-  renderCredTable(allCreds.filter(c=>(c.clientName||'').toLowerCase().includes(q)));
-}
-function admTogglePw(i,encoded) {
-  const el=document.getElementById('adm-pw-'+i);
-  el.textContent=el.textContent==='••••••••'?decodeURIComponent(encoded):'••••••••';
-}
-async function submitCredential() {
-  const id=document.getElementById('edit-cred-id').value;
-  const client=document.getElementById('cred-client').value.trim(),env=document.getElementById('cred-env').value;
-  const url=document.getElementById('cred-url').value.trim(),userid=document.getElementById('cred-userid').value.trim();
-  const pass=document.getElementById('cred-pass').value.trim();
-  if (!client||!env||!userid||!pass) { showFormMsg('cred-msg','⚠ Fill all required fields.','error'); return; }
-  const btn=document.getElementById('cred-submit-btn'); btn.disabled=true; showFormMsg('cred-msg','⏳ Saving...','loading');
-  try {
-    const res=await fetch(API_URL+'?'+new URLSearchParams({action:id?'updateCredential':'addCredential',id,clientName:client,environment:env,appUrl:url,userId:userid,password:pass}));
-    const data=await res.json();
-    if (data.success) { showFormMsg('cred-msg',id?'✅ Updated!':'✅ Added!','success'); clearCredForm(); loadCreds(); }
-    else showFormMsg('cred-msg','⚠ Save failed.','error');
-  } catch { showFormMsg('cred-msg','⚠ Connection error.','error'); }
-  btn.disabled=false;
-}
-function editCred(i) {
-  const c=allCreds[i];
-  document.getElementById('edit-cred-id').value=c.id||''; document.getElementById('cred-client').value=c.clientName||'';
-  document.getElementById('cred-env').value=c.environment||''; document.getElementById('cred-url').value=c.appUrl||'';
-  document.getElementById('cred-userid').value=c.userId||''; document.getElementById('cred-pass').value=c.password||'';
-  document.getElementById('credFormTitle').textContent='✏ Edit: '+c.clientName;
-  document.getElementById('cred-cancel-btn').style.display='inline-block';
-  document.getElementById('credFormTitle').scrollIntoView({behavior:'smooth'});
-}
-function cancelCredEdit() { clearCredForm(); }
-function clearCredForm() {
-  ['edit-cred-id','cred-client','cred-url','cred-userid','cred-pass'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('cred-env').value=''; document.getElementById('credFormTitle').textContent='➕ Add New Client Credential';
-  document.getElementById('cred-cancel-btn').style.display='none'; document.getElementById('cred-msg').style.display='none';
-}
-async function deleteCred(credId,i) {
-  const name=allCreds[i]?.clientName||credId;
-  if (!confirm('⚠ Delete credential for "'+name+'"?\n\nThis cannot be undone!')) return;
-  const btn=document.getElementById('cdel-'+i); btn.textContent='⏳...'; btn.disabled=true;
-  try {
-    const res=await fetch(API_URL+'?'+new URLSearchParams({action:'deleteCredential',id:credId}));
-    const data=await res.json();
-    if (data.success) { showToast('🗑 "'+name+'" deleted.'); loadCreds(); }
-    else { btn.textContent='🗑 Delete'; btn.disabled=false; showToast('⚠ Delete failed.',false); }
-  } catch { btn.textContent='🗑 Delete'; btn.disabled=false; showToast('⚠ Connection error.',false); }
-}
+function switchTab(tab){currentTab=tab;['agents','creds','tracker','handover','planner'].forEach(t=>{document.getElementById('atab-'+t).classList.toggle('active',t===tab);document.getElementById('panel-'+t).classList.toggle('active',t===tab);});if(tab==='creds')loadCreds();if(tab==='tracker')loadTracker();if(tab==='handover')loadHandovers();if(tab==='planner')loadPlanner();document.getElementById('lastRefreshed').textContent='';}
+function refreshCurrent(){if(currentTab==='agents')loadUsers();else if(currentTab==='creds')loadCreds();else if(currentTab==='tracker')loadTracker();else if(currentTab==='handover')loadHandovers();else if(currentTab==='planner')loadPlanner();}
+function showToast(msg,success=true){const t=document.getElementById('toast');t.textContent=msg;t.style.borderColor=success?'#6cd4a0':'#f0aaaa';t.style.color=success?'#1a7050':'#a02020';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+function showFormMsg(id,text,type){const el=document.getElementById(id);el.textContent=text;el.className='form-msg '+type;el.style.display='inline-block';if(type!=='loading')setTimeout(()=>{el.style.display='none';},3000);}
+function formatDate(iso){if(!iso)return'—';const d=new Date(iso);return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}
+function formatDur(secs){const h=Math.floor(secs/3600),m=Math.floor((secs%3600)/60),s=secs%60;return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
+function getStatus(lastLogin){if(!lastLogin)return{label:'NEVER',cls:'badge-offline'};const diff=(new Date()-new Date(lastLogin))/3600000;if(diff<24)return{label:'TODAY',cls:'badge-online'};if(diff<168)return{label:'THIS WEEK',cls:'badge-recent'};return{label:'INACTIVE',cls:'badge-offline'};}
+function envClass(e){const v=(e||'').toLowerCase();if(v==='production')return'env-prod';if(v==='uat')return'env-uat';if(v==='development')return'env-dev';if(v==='staging')return'env-staging';if(v==='train 2')return'env-train2';if(v==='train')return'env-train';if(v==='ecom')return'env-ecom';if(v==='testing')return'env-testing';return'env-default';}
 
-// ── TRACKER ───────────────────────────────────────────────────────────────────
-async function loadTracker() {
-  document.getElementById('tracker-date-from').value=''; document.getElementById('tracker-date-to').value='';
-  document.getElementById('tracker-filter-label').textContent=''; selectedAgent=null;
-  document.getElementById('tracker-cards').innerHTML='<div class="loading">⏳ LOADING TRACKER DATA...</div>';
-  document.getElementById('trackerTableContainer').innerHTML='<div class="loading" style="color:#3a7aaa;">Loading...</div>';
-  try {
-    const res=await fetch(API_URL+'?action=getTicketLogs&t='+Date.now());
-    const data=await res.json();
-    if (data.success) { allLogs=data.logs||[]; filteredLogs=[...allLogs]; renderTrackerCards(filteredLogs); renderTrackerTable(filteredLogs); document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString(); }
-    else document.getElementById('tracker-cards').innerHTML='<div class="error-msg">⚠ Failed to load tracker data.</div>';
-  } catch { document.getElementById('tracker-cards').innerHTML='<div class="error-msg">⚠ Connection error.</div>'; }
-}
-function applyTrackerFilter() {
-  const from=document.getElementById('tracker-date-from').value,to=document.getElementById('tracker-date-to').value;
-  if (!from&&!to) { filteredLogs=[...allLogs]; document.getElementById('tracker-filter-label').textContent=''; }
-  else {
-    filteredLogs=allLogs.filter(l=>{if(!l.dateKey)return true;if(from&&l.dateKey<from)return false;if(to&&l.dateKey>to)return false;return true;});
-    document.getElementById('tracker-filter-label').textContent='Showing: '+(from||'…')+' → '+(to||'…')+' · '+filteredLogs.length+' tickets';
-  }
-  selectedAgent=null; renderTrackerCards(filteredLogs); renderTrackerTable(filteredLogs);
-}
-function renderTrackerCards(logs) {
-  const container=document.getElementById('tracker-cards');
-  if (!logs.length) { container.innerHTML='<div class="no-data-msg">📭 No ticket data found.</div>'; return; }
-  const agentMap={};
-  logs.forEach(l=>{const a=l.agentName||'Unknown';if(!agentMap[a])agentMap[a]={tickets:[],totalSecs:0};agentMap[a].tickets.push(l);agentMap[a].totalSecs+=Number(l.durationSecs)||0;});
-  container.innerHTML='';
-  Object.entries(agentMap).sort((a,b)=>b[1].tickets.length-a[1].tickets.length).forEach(([name,data])=>{
-    const count=data.tickets.length,avgSecs=count>0?Math.round(data.totalSecs/count):0;
-    const lastDate=data.tickets[data.tickets.length-1]?.date||'—',lastShift=data.tickets[data.tickets.length-1]?.shiftId||'—';
-    const compCount={};data.tickets.forEach(t=>{if(t.component)compCount[t.component]=(compCount[t.component]||0)+1;});
-    const topComp=Object.entries(compCount).sort((a,b)=>b[1]-a[1])[0];
-    const card=document.createElement('div'); card.className='agent-card'+(selectedAgent===name?' selected':'');
-    card.innerHTML='<div class="agent-card-name">👤 '+name+'</div>'+
-      '<div class="agent-card-stats">'+
-      '<div class="agent-stat"><div class="agent-stat-val blue">'+count+'</div><div class="agent-stat-lbl">Tickets</div></div>'+
-      '<div class="agent-stat"><div class="agent-stat-val green" style="font-size:15px;">'+formatDur(avgSecs)+'</div><div class="agent-stat-lbl">Avg Time</div></div>'+
-      '<div class="agent-stat"><div class="agent-stat-val orange" style="font-size:15px;">'+formatDur(data.totalSecs)+'</div><div class="agent-stat-lbl">Total Time</div></div>'+
-      '<div class="agent-stat"><div class="agent-stat-val" style="font-size:13px;color:#6030a0;">'+(topComp?topComp[0]:'—')+'</div><div class="agent-stat-lbl">Top Component</div></div></div>'+
-      '<div class="agent-card-footer"><span>Last active: '+lastDate+'</span><span>Shift: '+lastShift+'</span></div>';
-    card.addEventListener('click',()=>{
-      selectedAgent=selectedAgent===name?null:name; renderTrackerCards(filteredLogs);
-      const toShow=selectedAgent?filteredLogs.filter(l=>l.agentName===selectedAgent):filteredLogs;
-      document.getElementById('tracker-breakdown-label').textContent=selectedAgent?'— '+selectedAgent:'';
-      document.getElementById('trackerSearchInput').value=''; renderTrackerTable(toShow);
-    });
-    container.appendChild(card);
-  });
-}
-function renderTrackerTable(logs) {
-  const container=document.getElementById('trackerTableContainer');
-  if (!logs.length) { container.innerHTML='<div class="no-data-msg">No tickets to display.</div>'; return; }
-  const rows=[...logs].reverse().map((l,i)=>'<tr>'+
-    '<td style="color:#3a7aaa;font-size:11px;font-weight:600;">'+(i+1)+'</td>'+
-    '<td style="font-size:11px;color:#1a5a90;">👤 '+(l.agentName||'—')+'</td>'+
-    '<td style="font-weight:700;color:#0a3d78;">'+(l.ticketId||'—')+'</td>'+
-    '<td style="font-weight:700;color:#1a8c5c;">'+(l.duration||'—')+'</td>'+
-    '<td style="font-size:11px;color:#2a4a6a;">'+(l.date||'—')+' <span style="color:#3a7aaa;font-weight:600;">'+(l.time||'')+'</span></td>'+
-    '<td><span style="background:#eef5fc;border:1px solid #a8cce8;border-radius:3px;padding:2px 8px;font-size:10px;color:#1a5a90;">'+(l.shiftId||'—')+'</span></td>'+
-    '<td>'+(l.component?'<span style="font-size:10px;font-weight:700;color:#6030a0;background:#f0e8ff;border:1px solid #c0a0e0;border-radius:12px;padding:2px 8px;">'+l.component+'</span>':'—')+'</td>'+
-    '<td style="font-size:11px;color:#2a4a6a;max-width:200px;word-break:break-word;">'+(l.description||'—')+'</td>'+
-    '<td style="font-size:11px;color:#2a4a6a;max-width:200px;word-break:break-word;">'+(l.remarks||'—')+'</td></tr>'
-  ).join('');
-  container.innerHTML='<table><thead><tr><th>#</th><th>Agent</th><th>Ticket ID</th><th>Duration</th><th>Date / Time</th><th>Shift</th><th>Component</th><th>Description</th><th>Remarks</th></tr></thead><tbody>'+rows+'</tbody></table>';
-}
-function filterTrackerTable() {
-  const q=document.getElementById('trackerSearchInput').value.toLowerCase();
-  const base=selectedAgent?filteredLogs.filter(l=>l.agentName===selectedAgent):filteredLogs;
-  renderTrackerTable(q?base.filter(l=>(l.agentName||'').toLowerCase().includes(q)||(l.ticketId||'').toLowerCase().includes(q)||(l.component||'').toLowerCase().includes(q)||(l.shiftId||'').toLowerCase().includes(q)):base);
-}
+// ── AGENTS ──
+async function loadUsers(){document.getElementById('tableContainer').innerHTML='<div class="loading">⏳ FETCHING AGENT DATA...</div>';try{const res=await fetch(API_URL+'?action=getUsers&t='+Date.now());const data=await res.json();if(data.success){allUsers=data.users||[];updateStats(allUsers);renderTable(allUsers);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}else document.getElementById('tableContainer').innerHTML='<div class="error-msg">⚠ Failed to load data.</div>';}catch{document.getElementById('tableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}}
+function updateStats(users){const today=users.filter(u=>u.lastLogin&&(new Date()-new Date(u.lastLogin))/3600000<24).length;const week=users.filter(u=>{if(!u.lastLogin)return false;const h=(new Date()-new Date(u.lastLogin))/3600000;return h>=24&&h<168;}).length;const never=users.filter(u=>!u.lastLogin).length;document.getElementById('s-total').textContent=users.length;document.getElementById('s-online').textContent=today;document.getElementById('s-recent').textContent=week;document.getElementById('s-inactive').textContent=never;}
+function renderTable(users){if(!users.length){document.getElementById('tableContainer').innerHTML='<div class="loading" style="color:#3a7aaa;">No agents found.</div>';document.getElementById('filterCount').textContent='';return;}document.getElementById('filterCount').textContent=users.length+' agents';const rows=users.map((u,i)=>{const st=getStatus(u.lastLogin);const defBadge=u.isDefault?'<span style="background:#fff8d8;border:1px solid #e8d040;border-radius:3px;padding:2px 7px;font-size:10px;font-weight:700;color:#705010;margin-left:6px;">TEMP PW</span>':'';return'<tr><td style="color:#3a7aaa;font-size:12px;font-weight:600;">'+(i+1)+'</td><td style="font-weight:700;color:#0a3d78;">👤 '+u.username+defBadge+'</td><td>'+(u.email||'—')+'</td><td><span style="background:#eef5fc;border:1px solid #a8cce8;border-radius:4px;padding:2px 8px;font-size:11px;color:#1a5a90;">⚓ '+(u.team||'—')+'</span></td><td><span class="badge '+st.cls+'">'+st.label+'</span></td><td style="font-size:11px;color:#3a7aaa;font-weight:600;">'+formatDate(u.lastLogin)+'</td><td style="font-size:11px;color:#3a7aaa;font-weight:600;">'+formatDate(u.registeredAt)+'</td><td><button class="edit-btn" onclick="editAgent('+i+')">✏ Edit</button><button class="reset-btn" id="rbtn_'+i+'" onclick="resetPassword(\''+u.username+'\','+i+')">🔑 Reset PW</button><button class="delete-btn" id="dbtn_'+i+'" onclick="deleteUser(\''+u.username+'\','+i+')">🗑 Delete</button></td></tr>';}).join('');document.getElementById('tableContainer').innerHTML='<table><thead><tr><th>#</th><th>Username</th><th>Email</th><th>Team</th><th>Status</th><th>Last Login</th><th>Created</th><th>Actions</th></tr></thead><tbody>'+rows+'</tbody></table>';}
+function filterTable(){const q=document.getElementById('searchInput').value.toLowerCase();const f=allUsers.filter(u=>(u.username||'').toLowerCase().includes(q)||(u.email||'').toLowerCase().includes(q)||(u.team||'').toLowerCase().includes(q));renderTable(f);document.getElementById('filterCount').textContent=f.length+' of '+allUsers.length+' agents';}
+async function submitAgent(){const orig=document.getElementById('edit-agent-original-username').value;const name=document.getElementById('ag-name').value.trim(),email=document.getElementById('ag-email').value.trim(),team=document.getElementById('ag-team').value.trim(),username=document.getElementById('ag-username').value.trim(),password=document.getElementById('ag-password').value.trim();if(!name||!email||!team||!username||!password){showFormMsg('ag-msg','⚠ All fields are required.','error');return;}if(password.length<6){showFormMsg('ag-msg','⚠ Password must be ≥ 6 characters.','error');return;}const btn=document.getElementById('ag-submit-btn');btn.disabled=true;showFormMsg('ag-msg','⏳ Saving...','loading');const vesselId=orig?'':'VID-'+Math.random().toString(36).toUpperCase().slice(2,8);const action=orig?'updateAgent':'register';try{const res=await fetch(API_URL+'?'+new URLSearchParams({action,username,email,team,password,vesselId,originalUsername:orig||username}));const data=await res.json();if(data.success){showFormMsg('ag-msg',orig?'✅ Agent updated!':'✅ Agent login created!','success');clearAgentForm();setTimeout(loadUsers,800);}else if(data.error==='USERNAME_EXISTS')showFormMsg('ag-msg','⚠ Username already taken.','error');else showFormMsg('ag-msg','⚠ Failed. Try again.','error');}catch{showFormMsg('ag-msg','⚠ Connection error.','error');}btn.disabled=false;}
+function editAgent(i){const u=allUsers[i];document.getElementById('edit-agent-original-username').value=u.username;document.getElementById('ag-name').value=u.username;document.getElementById('ag-email').value=u.email||'';document.getElementById('ag-team').value=u.team||'';document.getElementById('ag-username').value=u.username;document.getElementById('ag-password').value='';document.getElementById('agentFormTitle').textContent='✏ Edit Agent: '+u.username;document.getElementById('ag-submit-btn').textContent='💾 Update Agent';document.getElementById('ag-cancel-btn').style.display='inline-block';document.getElementById('agentFormTitle').scrollIntoView({behavior:'smooth'});}
+function cancelAgentEdit(){clearAgentForm();}
+function clearAgentForm(){['edit-agent-original-username','ag-name','ag-email','ag-team','ag-username','ag-password'].forEach(id=>document.getElementById(id).value='');document.getElementById('agentFormTitle').textContent='➕ Create New Agent Login';document.getElementById('ag-submit-btn').textContent='💾 Create Agent Login';document.getElementById('ag-cancel-btn').style.display='none';document.getElementById('ag-msg').style.display='none';}
+async function resetPassword(username,idx){if(!confirm('Reset password for "'+username+'" to a temporary password?'))return;const btn=document.getElementById('rbtn_'+idx);btn.textContent='⏳...';btn.disabled=true;try{const res=await fetch(API_URL+'?'+new URLSearchParams({action:'resetPassword',username}));const data=await res.json();if(data.success){btn.textContent='✅ Done';btn.classList.add('done');showToast('✅ Password reset for '+username+'. Temp: LRP@1234');setTimeout(loadUsers,2000);}else{btn.textContent='🔑 Reset PW';btn.disabled=false;showToast('⚠ Reset failed.',false);}}catch{btn.textContent='🔑 Reset PW';btn.disabled=false;showToast('⚠ Connection error.',false);}}
+async function deleteUser(username,idx){if(!confirm('⚠ Permanently delete agent "'+username+'"?\n\nThis cannot be undone!'))return;const btn=document.getElementById('dbtn_'+idx);btn.textContent='⏳...';btn.disabled=true;try{const res=await fetch(API_URL+'?'+new URLSearchParams({action:'deleteUser',username}));const data=await res.json();if(data.success){showToast('🗑 Agent "'+username+'" deleted.');setTimeout(loadUsers,800);}else{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Delete failed.',false);}}catch{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Connection error.',false);}}
+
+// ── CREDENTIALS ──
+async function loadCreds(){document.getElementById('credTableContainer').innerHTML='<div class="loading">⏳ LOADING CREDENTIALS...</div>';try{const res=await fetch(API_URL+'?action=getCredentials&t='+Date.now());const data=await res.json();if(data.success){allCreds=data.credentials||[];renderCredTable(allCreds);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}else document.getElementById('credTableContainer').innerHTML='<div class="error-msg">⚠ Failed to load credentials.</div>';}catch{document.getElementById('credTableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}}
+function renderCredTable(list){document.getElementById('cred-count').textContent=list.length+' records';if(!list.length){document.getElementById('credTableContainer').innerHTML='<div class="loading" style="color:#3a7aaa;">No credentials yet.</div>';return;}const rows=list.map((c,i)=>'<tr><td style="color:#3a7aaa;font-size:12px;font-weight:600;">'+(i+1)+'</td><td style="font-weight:700;color:#0a3d78;">🏢 '+(c.clientName||'—')+'</td><td style="font-size:11px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+(c.appUrl?'<a href="'+c.appUrl+'" target="_blank" style="color:#1a7db5;text-decoration:none;">🔗 '+c.appUrl+'</a>':'—')+'</td><td><span class="env-badge '+envClass(c.environment)+'">'+(c.environment||'—')+'</span></td><td style="font-size:12px;">'+(c.userId||'—')+'</td><td><span id="adm-pw-'+i+'" style="font-size:12px;">••••••••</span><button class="pw-toggle-sm" onclick="admTogglePw('+i+',\''+encodeURIComponent(c.password||'')+'\')">👁</button></td><td><button class="edit-btn" onclick="editCred('+i+')">✏ Edit</button><button class="delete-btn" id="cdel-'+i+'" onclick="deleteCred(\''+c.id+'\','+i+')">🗑 Delete</button></td></tr>').join('');document.getElementById('credTableContainer').innerHTML='<table><thead><tr><th>#</th><th>Client Name</th><th>App URL</th><th>Environment</th><th>User ID</th><th>Password</th><th>Actions</th></tr></thead><tbody>'+rows+'</tbody></table>';}
+function filterCredTable(){const q=document.getElementById('credSearchInput').value.toLowerCase();renderCredTable(allCreds.filter(c=>(c.clientName||'').toLowerCase().includes(q)));}
+function admTogglePw(i,encoded){const el=document.getElementById('adm-pw-'+i);el.textContent=el.textContent==='••••••••'?decodeURIComponent(encoded):'••••••••';}
+async function submitCredential(){const id=document.getElementById('edit-cred-id').value;const client=document.getElementById('cred-client').value.trim(),env=document.getElementById('cred-env').value,url=document.getElementById('cred-url').value.trim(),userid=document.getElementById('cred-userid').value.trim(),pass=document.getElementById('cred-pass').value.trim();if(!client||!env||!userid||!pass){showFormMsg('cred-msg','⚠ Fill all required fields.','error');return;}const btn=document.getElementById('cred-submit-btn');btn.disabled=true;showFormMsg('cred-msg','⏳ Saving...','loading');try{const res=await fetch(API_URL+'?'+new URLSearchParams({action:id?'updateCredential':'addCredential',id,clientName:client,environment:env,appUrl:url,userId:userid,password:pass}));const data=await res.json();if(data.success){showFormMsg('cred-msg',id?'✅ Updated!':'✅ Added!','success');clearCredForm();loadCreds();}else showFormMsg('cred-msg','⚠ Save failed.','error');}catch{showFormMsg('cred-msg','⚠ Connection error.','error');}btn.disabled=false;}
+function editCred(i){const c=allCreds[i];document.getElementById('edit-cred-id').value=c.id||'';document.getElementById('cred-client').value=c.clientName||'';document.getElementById('cred-env').value=c.environment||'';document.getElementById('cred-url').value=c.appUrl||'';document.getElementById('cred-userid').value=c.userId||'';document.getElementById('cred-pass').value=c.password||'';document.getElementById('credFormTitle').textContent='✏ Edit: '+c.clientName;document.getElementById('cred-cancel-btn').style.display='inline-block';document.getElementById('credFormTitle').scrollIntoView({behavior:'smooth'});}
+function cancelCredEdit(){clearCredForm();}
+function clearCredForm(){['edit-cred-id','cred-client','cred-url','cred-userid','cred-pass'].forEach(id=>document.getElementById(id).value='');document.getElementById('cred-env').value='';document.getElementById('credFormTitle').textContent='➕ Add New Client Credential';document.getElementById('cred-cancel-btn').style.display='none';document.getElementById('cred-msg').style.display='none';}
+async function deleteCred(credId,i){const name=allCreds[i]?.clientName||credId;if(!confirm('⚠ Delete credential for "'+name+'"?\n\nThis cannot be undone!'))return;const btn=document.getElementById('cdel-'+i);btn.textContent='⏳...';btn.disabled=true;try{const res=await fetch(API_URL+'?'+new URLSearchParams({action:'deleteCredential',id:credId}));const data=await res.json();if(data.success){showToast('🗑 "'+name+'" deleted.');loadCreds();}else{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Delete failed.',false);}}catch{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Connection error.',false);}}
+
+// ── TRACKER ──
+async function loadTracker(){document.getElementById('tracker-date-from').value='';document.getElementById('tracker-date-to').value='';document.getElementById('tracker-filter-label').textContent='';selectedAgent=null;document.getElementById('tracker-cards').innerHTML='<div class="loading">⏳ LOADING TRACKER DATA...</div>';document.getElementById('trackerTableContainer').innerHTML='<div class="loading" style="color:#3a7aaa;">Loading...</div>';try{const res=await fetch(API_URL+'?action=getTicketLogs&t='+Date.now());const data=await res.json();if(data.success){allLogs=data.logs||[];filteredLogs=[...allLogs];renderTrackerCards(filteredLogs);renderTrackerTable(filteredLogs);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}else document.getElementById('tracker-cards').innerHTML='<div class="error-msg">⚠ Failed to load tracker data.</div>';}catch{document.getElementById('tracker-cards').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}}
+function applyTrackerFilter(){const from=document.getElementById('tracker-date-from').value,to=document.getElementById('tracker-date-to').value;if(!from&&!to){filteredLogs=[...allLogs];document.getElementById('tracker-filter-label').textContent='';}else{filteredLogs=allLogs.filter(l=>{if(!l.dateKey)return true;if(from&&l.dateKey<from)return false;if(to&&l.dateKey>to)return false;return true;});document.getElementById('tracker-filter-label').textContent='Showing: '+(from||'…')+' → '+(to||'…')+' · '+filteredLogs.length+' tickets';}selectedAgent=null;renderTrackerCards(filteredLogs);renderTrackerTable(filteredLogs);}
+function renderTrackerCards(logs){const container=document.getElementById('tracker-cards');if(!logs.length){container.innerHTML='<div class="no-data-msg">📭 No ticket data found.</div>';return;}const agentMap={};logs.forEach(l=>{const a=l.agentName||'Unknown';if(!agentMap[a])agentMap[a]={tickets:[],totalSecs:0};agentMap[a].tickets.push(l);agentMap[a].totalSecs+=Number(l.durationSecs)||0;});container.innerHTML='';Object.entries(agentMap).sort((a,b)=>b[1].tickets.length-a[1].tickets.length).forEach(([name,data])=>{const count=data.tickets.length,avgSecs=count>0?Math.round(data.totalSecs/count):0;const lastDate=data.tickets[data.tickets.length-1]?.date||'—',lastShift=data.tickets[data.tickets.length-1]?.shiftId||'—';const compCount={};data.tickets.forEach(t=>{if(t.component)compCount[t.component]=(compCount[t.component]||0)+1;});const topComp=Object.entries(compCount).sort((a,b)=>b[1]-a[1])[0];const card=document.createElement('div');card.className='agent-card'+(selectedAgent===name?' selected':'');card.innerHTML='<div class="agent-card-name">👤 '+name+'</div><div class="agent-card-stats"><div class="agent-stat"><div class="agent-stat-val blue">'+count+'</div><div class="agent-stat-lbl">Tickets</div></div><div class="agent-stat"><div class="agent-stat-val green" style="font-size:15px;">'+formatDur(avgSecs)+'</div><div class="agent-stat-lbl">Avg Time</div></div><div class="agent-stat"><div class="agent-stat-val orange" style="font-size:15px;">'+formatDur(data.totalSecs)+'</div><div class="agent-stat-lbl">Total Time</div></div><div class="agent-stat"><div class="agent-stat-val" style="font-size:13px;color:#6030a0;">'+(topComp?topComp[0]:'—')+'</div><div class="agent-stat-lbl">Top Component</div></div></div><div class="agent-card-footer"><span>Last active: '+lastDate+'</span><span>Shift: '+lastShift+'</span></div>';card.addEventListener('click',()=>{selectedAgent=selectedAgent===name?null:name;renderTrackerCards(filteredLogs);const toShow=selectedAgent?filteredLogs.filter(l=>l.agentName===selectedAgent):filteredLogs;document.getElementById('tracker-breakdown-label').textContent=selectedAgent?'— '+selectedAgent:'';document.getElementById('trackerSearchInput').value='';renderTrackerTable(toShow);});container.appendChild(card);});}
+function renderTrackerTable(logs){const container=document.getElementById('trackerTableContainer');if(!logs.length){container.innerHTML='<div class="no-data-msg">No tickets to display.</div>';return;}const rows=[...logs].reverse().map((l,i)=>'<tr><td style="color:#3a7aaa;font-size:11px;font-weight:600;">'+(i+1)+'</td><td style="font-size:11px;color:#1a5a90;">👤 '+(l.agentName||'—')+'</td><td style="font-weight:700;color:#0a3d78;">'+(l.ticketId||'—')+'</td><td style="font-weight:700;color:#1a8c5c;">'+(l.duration||'—')+'</td><td style="font-size:11px;color:#2a4a6a;">'+(l.date||'—')+' <span style="color:#3a7aaa;font-weight:600;">'+(l.time||'')+'</span></td><td><span style="background:#eef5fc;border:1px solid #a8cce8;border-radius:3px;padding:2px 8px;font-size:10px;color:#1a5a90;">'+(l.shiftId||'—')+'</span></td><td>'+(l.component?'<span style="font-size:10px;font-weight:700;color:#6030a0;background:#f0e8ff;border:1px solid #c0a0e0;border-radius:12px;padding:2px 8px;">'+l.component+'</span>':'—')+'</td><td style="font-size:11px;color:#2a4a6a;max-width:200px;word-break:break-word;">'+(l.description||'—')+'</td><td style="font-size:11px;color:#2a4a6a;max-width:200px;word-break:break-word;">'+(l.remarks||'—')+'</td></tr>').join('');container.innerHTML='<table><thead><tr><th>#</th><th>Agent</th><th>Ticket ID</th><th>Duration</th><th>Date / Time</th><th>Shift</th><th>Component</th><th>Description</th><th>Remarks</th></tr></thead><tbody>'+rows+'</tbody></table>';}
+function filterTrackerTable(){const q=document.getElementById('trackerSearchInput').value.toLowerCase();const base=selectedAgent?filteredLogs.filter(l=>l.agentName===selectedAgent):filteredLogs;renderTrackerTable(q?base.filter(l=>(l.agentName||'').toLowerCase().includes(q)||(l.ticketId||'').toLowerCase().includes(q)||(l.component||'').toLowerCase().includes(q)||(l.shiftId||'').toLowerCase().includes(q)):base);}
 
 // ── HANDOVER ──────────────────────────────────────────────────────────────────
-async function loadHandovers() {
-  document.getElementById('ho-date-from').value=''; document.getElementById('ho-date-to').value='';
-  document.getElementById('ho-shift-filter').value=''; document.getElementById('ho-filter-label').textContent='';
+// filteredHandovers stays in original order (oldest first).
+// The table renders them newest-first by iterating reversed.
+// We store the ORIGINAL index on each row so View/Delete always get the right record.
+
+async function loadHandovers(){
+  document.getElementById('ho-date-from').value='';document.getElementById('ho-date-to').value='';
+  document.getElementById('ho-shift-filter').value='';document.getElementById('ho-filter-label').textContent='';
   document.getElementById('hoTableContainer').innerHTML='<div class="loading">⏳ LOADING HANDOVER DATA...</div>';
-  try {
+  try{
     const res=await fetch(API_URL+'?action=getHandovers&t='+Date.now());
     const data=await res.json();
-    if (data.success) { allHandovers=data.handovers||[]; filteredHandovers=[...allHandovers]; renderHandoverStats(filteredHandovers); renderHandoverTable(filteredHandovers); document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString(); }
-    else document.getElementById('hoTableContainer').innerHTML='<div class="error-msg">⚠ Failed to load data.</div>';
-  } catch { document.getElementById('hoTableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>'; }
+    if(data.success){
+      allHandovers=data.handovers||[];
+      filteredHandovers=[...allHandovers];
+      renderHandoverStats(filteredHandovers);
+      renderHandoverTable(filteredHandovers);
+      document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();
+    }else document.getElementById('hoTableContainer').innerHTML='<div class="error-msg">⚠ Failed to load data.</div>';
+  }catch{document.getElementById('hoTableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}
 }
-function applyHandoverFilter() {
+
+function applyHandoverFilter(){
   const from=document.getElementById('ho-date-from').value,to=document.getElementById('ho-date-to').value,shift=document.getElementById('ho-shift-filter').value;
   filteredHandovers=allHandovers.filter(h=>{if(from&&h.date<from)return false;if(to&&h.date>to)return false;if(shift&&h.shift!==shift)return false;return true;});
   const parts=[];if(from||to)parts.push((from||'…')+' → '+(to||'…'));if(shift)parts.push('Shift: '+shift);
   document.getElementById('ho-filter-label').textContent=parts.length?parts.join(' · ')+' · '+filteredHandovers.length+' records':'';
-  renderHandoverStats(filteredHandovers); renderHandoverTable(filteredHandovers);
+  renderHandoverStats(filteredHandovers);renderHandoverTable(filteredHandovers);
 }
-function renderHandoverStats(list) {
+
+function renderHandoverStats(list){
   document.getElementById('ho-s-total').textContent=list.length;
   document.getElementById('ho-s-pending').textContent=list.reduce((a,h)=>a+(h.pendingTickets||0),0);
   document.getElementById('ho-s-completed').textContent=list.reduce((a,h)=>a+(h.completedTickets||0),0);
   document.getElementById('ho-s-showstopper').textContent=list.reduce((a,h)=>a+(h.showstopperCount||0),0);
 }
-function renderHandoverTable(list) {
+
+function renderHandoverTable(list){
   document.getElementById('ho-count-label').textContent=list.length+' records';
-  if (!list.length) { document.getElementById('hoTableContainer').innerHTML='<div class="no-data-msg">📭 No handover submissions found.</div>'; return; }
-  const rows=[...list].reverse().map((h,i)=>{
+  if(!list.length){document.getElementById('hoTableContainer').innerHTML='<div class="no-data-msg">📭 No handover submissions found.</div>';return;}
+
+  // Build rows newest-first; store originalIdx (position in list) on each button
+  const rows=[...list].map((h,origIdx)=>({h,origIdx})).reverse().map(({h,origIdx},displayIdx)=>{
     const submittedAt=h.submittedAt?new Date(h.submittedAt).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'—';
     const sc={D1:'env-dev',D2:'env-uat',D3:'env-staging'}[h.shift]||'env-default';
     return '<tr>'+
-      '<td style="color:#3a7aaa;font-size:11px;font-weight:600;">'+(i+1)+'</td>'+
+      '<td style="color:#3a7aaa;font-size:11px;font-weight:600;">'+(displayIdx+1)+'</td>'+
       '<td style="font-weight:700;color:#0a3d78;">'+(h.date||'—')+'</td>'+
       '<td><span class="env-badge '+sc+'">'+(h.shift||'—')+'</span></td>'+
       '<td style="font-size:12px;color:#2a4a6a;max-width:180px;">'+(h.currentMembers||'—')+'</td>'+
@@ -906,18 +509,31 @@ function renderHandoverTable(list) {
       '<td style="text-align:center;"><span style="font-size:14px;font-weight:700;color:#1a8c5c;">'+(h.completedTickets||0)+'</span></td>'+
       '<td style="text-align:center;">'+(h.showstopperCount>0?'<span style="background:#fde8e8;border:1px solid #f0aaaa;border-radius:12px;padding:2px 8px;font-size:11px;font-weight:700;color:#a02020;">🔴 '+h.showstopperCount+'</span>':'<span style="color:#3a7aaa;font-size:12px;font-weight:600;">—</span>')+'</td>'+
       '<td style="font-size:11px;color:#3a7aaa;font-weight:600;">'+submittedAt+'</td>'+
-      '<td><button class="view-btn" onclick="openHoDetail('+(list.length-1-i)+')">👁 View</button></td></tr>';
+      // ★ FIX: pass origIdx directly — no reverse confusion
+      '<td style="white-space:nowrap;">'+
+        '<button class="view-btn" onclick="openHoDetail('+origIdx+')">👁 View</button> '+
+        '<button class="delete-btn" style="margin-left:4px;" onclick="deleteHandover('+origIdx+',\''+esc(h.date)+'\',\''+esc(h.shift)+'\')">🗑 Delete</button>'+
+      '</td>'+
+    '</tr>';
   }).join('');
-  document.getElementById('hoTableContainer').innerHTML='<table><thead><tr><th>#</th><th>Date</th><th>Shift</th><th>Current Members</th><th>Next Members</th><th style="text-align:center;">Total</th><th style="text-align:center;">Pending</th><th style="text-align:center;">Done</th><th style="text-align:center;">Showstopper</th><th>Submitted At</th><th>Detail</th></tr></thead><tbody>'+rows+'</tbody></table>';
+
+  document.getElementById('hoTableContainer').innerHTML='<table><thead><tr><th>#</th><th>Date</th><th>Shift</th><th>Current Members</th><th>Next Members</th><th style="text-align:center;">Total</th><th style="text-align:center;">Pending</th><th style="text-align:center;">Done</th><th style="text-align:center;">Showstopper</th><th>Submitted At</th><th>Actions</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
-function filterHandoverTable() {
+
+function esc(s){return(s||'').replace(/'/g,"\\'");}
+
+function filterHandoverTable(){
   const q=document.getElementById('hoSearchInput').value.toLowerCase();
   renderHandoverTable(q?filteredHandovers.filter(h=>(h.date||'').includes(q)||(h.shift||'').toLowerCase().includes(q)||(h.currentMembers||'').toLowerCase().includes(q)||(h.nextMembers||'').toLowerCase().includes(q)):filteredHandovers);
 }
-function openHoDetail(idx) {
-  const h=[...filteredHandovers].reverse()[idx]; if(!h) return;
+
+// ★ FIX: openHoDetail now receives the ORIGINAL index in filteredHandovers (no reverse)
+function openHoDetail(origIdx){
+  const h=filteredHandovers[origIdx];
+  if(!h)return;
   const submittedAt=h.submittedAt?new Date(h.submittedAt).toLocaleString():'—';
-  const catRow=(label,color,bg,border,count,pending,ids)=>'<div style="background:'+bg+';border:1px solid '+border+';border-radius:8px;padding:12px 14px;margin-bottom:8px;">'+
+  const catRow=(label,color,bg,border,count,pending,ids)=>
+    '<div style="background:'+bg+';border:1px solid '+border+';border-radius:8px;padding:12px 14px;margin-bottom:8px;">'+
     '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">'+
     '<span style="font-size:12px;font-weight:700;color:'+color+';">'+label+'</span>'+
     '<div style="display:flex;gap:8px;"><span style="font-size:11px;border-radius:10px;padding:2px 8px;color:'+color+';background:rgba(0,0,0,.05);">'+count+' total</span>'+
@@ -941,12 +557,26 @@ function openHoDetail(idx) {
     catRow('🔴 Showstopper','#a02020','#fde8e8','#f0aaaa',h.showstopperCount||0,h.showstopperPending||0,h.showstopperIds||'')+
     catRow('🟠 High Priority','#8a5010','#fff3d8','#f5c840',h.highCount||0,h.highPending||0,h.highIds||'')+
     catRow('🟣 Customer Escalated','#5020a0','#f0e8ff','#c0a0e0',h.escalatedCount||0,h.escalatedPending||0,h.escalatedIds||'')+
-    catRow('⚫ Long Pending','#404040','#f0f0f0','#c0c0c0',h.longpendingCount||0,h.longpendingPending||0,h.longpendingIds||'')+infoHtml;
+    catRow('⚫ Long Pending','#404040','#f0f0f0','#c0c0c0',h.longpendingCount||0,h.longpendingPending||0,h.longpendingIds||'')+
+    infoHtml;
   document.getElementById('hoDetailOverlay').classList.add('open');
 }
-function closeHoDetail() { document.getElementById('hoDetailOverlay').classList.remove('open'); }
+function closeHoDetail(){document.getElementById('hoDetailOverlay').classList.remove('open');}
 
-// ── SHIFT PLANNER ─────────────────────────────────────────────────────────────
+// ★ NEW: Delete handover record
+async function deleteHandover(origIdx, date, shift){
+  if(!confirm('⚠ Delete handover record for "'+date+' — '+shift+'"?\n\nThis will also allow agents to re-submit this shift. Cannot be undone!'))return;
+  try{
+    const res=await fetch(API_URL+'?'+new URLSearchParams({action:'deleteHandover',date,shift}));
+    const data=await res.json();
+    if(data.success){
+      showToast('🗑 Handover "'+date+' '+shift+'" deleted.');
+      loadHandovers();
+    }else{showToast('⚠ Delete failed: '+(data.error||'Unknown error'),false);}
+  }catch{showToast('⚠ Connection error.',false);}
+}
+
+// ── SHIFT PLANNER ──
 const PLANNER_DATES=['30-03-2026','31-03-2026','01-04-2026','02-04-2026','03-04-2026','04-04-2026','05-04-2026','06-04-2026','07-04-2026','08-04-2026','09-04-2026','10-04-2026','11-04-2026','12-04-2026','13-04-2026','14-04-2026','15-04-2026','16-04-2026','17-04-2026','18-04-2026','19-04-2026','20-04-2026','21-04-2026','22-04-2026','23-04-2026','24-04-2026','25-04-2026','26-04-2026','27-04-2026','28-04-2026','29-04-2026','30-04-2026','01-05-2026','02-05-2026','03-05-2026'];
 const PLANNER_DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const PLANNER_DEFAULT=[
@@ -960,156 +590,26 @@ const PLANNER_DEFAULT=[
   {sl:8,id:'SM2332',name:'Seenivasan Lakshmipathy',group:'G2',primary:'Customer Service',shifts:['D1','D1','W/OFF','W/OFF','D1','D1','D1','D1','D1','Compff','W/OFF','W/OFF','N','N','N','N','N','W/OFF','W/OFF','D2','D2','Compff','W/OFF','D2','D2','D2','W/OFF','W/OFF','D1','D1','D1','W/OFF','N','N','N']},
   {sl:9,id:'SM2331',name:'Vinothraj Vijayakumar',group:'G2',primary:'Customer Service',shifts:['N','N','N','N','N','W/OFF','W/OFF','D2','D2','Compff','W/OFF','D1','D1','D1','W/OFF','Holiday','W/OFF','N','N','N','N','N','W/OFF','D2','D2','W/OFF','D2','D2','D2','D2','W/OFF','W/OFF','D2','D2','D2']}
 ];
-const SHIFT_LEGEND=[
-  {key:'D1',label:'D1 — Morning',cls:'sp-D1'},{key:'D2',label:'D2 — Afternoon',cls:'sp-D2'},
-  {key:'D4',label:'D4 — Day',cls:'sp-D4'},{key:'D5',label:'D5 — Evening',cls:'sp-D5'},
-  {key:'N',label:'Night',cls:'sp-N'},{key:'W/OFF',label:'Week Off',cls:'sp-WOFF'},
-  {key:'Holiday',label:'Holiday',cls:'sp-HOL'},{key:'Compff',label:'Comp Off',cls:'sp-COMP'}
-];
+const SHIFT_LEGEND=[{key:'D1',label:'D1 — Morning',cls:'sp-D1'},{key:'D2',label:'D2 — Afternoon',cls:'sp-D2'},{key:'D4',label:'D4 — Day',cls:'sp-D4'},{key:'D5',label:'D5 — Evening',cls:'sp-D5'},{key:'N',label:'Night',cls:'sp-N'},{key:'W/OFF',label:'Week Off',cls:'sp-WOFF'},{key:'Holiday',label:'Holiday',cls:'sp-HOL'},{key:'Compff',label:'Comp Off',cls:'sp-COMP'}];
 let plannerShiftFilter='ALL';
 let PLANNER_TEAM=JSON.parse(JSON.stringify(PLANNER_DEFAULT));
 let plannerDirty=false,pceTarget=null;
+async function loadPlanner(){document.getElementById('planner-table-container').innerHTML='<div class="loading">⏳ LOADING PLANNER...</div>';try{const res=await fetch(API_URL+'?action=getPlanner&t='+Date.now());const data=await res.json();if(data.success&&data.planner&&Array.isArray(data.planner)&&data.planner.length){PLANNER_TEAM=data.planner;if(data.updatedAt){const d=new Date(data.updatedAt);document.getElementById('planner-saved-label').textContent='✅ Last published: '+d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}}else{PLANNER_TEAM=JSON.parse(JSON.stringify(PLANNER_DEFAULT));}}catch{PLANNER_TEAM=JSON.parse(JSON.stringify(PLANNER_DEFAULT));}plannerDirty=false;resetPublishBtn();renderPlanner();}
+function resetPublishBtn(){const btn=document.getElementById('planner-publish-btn');btn.textContent='📤 Submit to Agents';btn.style.background='linear-gradient(135deg,#1a8c5c,#138048)';btn.disabled=false;}
+async function publishPlanner(){const btn=document.getElementById('planner-publish-btn');btn.disabled=true;btn.textContent='⏳ Submitting...';try{const res=await fetch(API_URL+'?'+new URLSearchParams({action:'savePlanner',payload:JSON.stringify(PLANNER_TEAM)}));const data=await res.json();if(data.success){plannerDirty=false;const now=new Date();document.getElementById('planner-saved-label').textContent='✅ Published: '+now.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+' '+now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});showToast('📤 Shift planner submitted to agents successfully!');resetPublishBtn();}else{showToast('⚠ Submit failed. Try again.',false);btn.textContent='📤 Submit to Agents';btn.disabled=false;}}catch{showToast('⚠ Connection error.',false);btn.textContent='📤 Submit to Agents';btn.disabled=false;}}
+function getPlannerTodayIndex(){const d=new Date(),pad=n=>String(n).padStart(2,'0');return PLANNER_DATES.indexOf(pad(d.getDate())+'-'+pad(d.getMonth()+1)+'-'+d.getFullYear());}
+function shiftPillClass(s){const v=(s||'').trim().toUpperCase();if(v==='D1')return'sp-D1';if(v==='D2')return'sp-D2';if(v==='D3')return'sp-D3';if(v==='D4')return'sp-D4';if(v==='D5')return'sp-D5';if(v==='N')return'sp-N';if(v==='W/OFF')return'sp-WOFF';if(v==='HOLIDAY')return'sp-HOL';if(v==='COMPFF')return'sp-COMP';return'sp-WOFF';}
+function setPlannerFilter(btn){plannerShiftFilter=btn.dataset.shift;document.querySelectorAll('.planner-filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderPlanner();}
+function openPlannerEditor(memberIdx,dateIdx,currentVal,cellEl){pceTarget={memberIdx,dateIdx};document.getElementById('pce-select').value=currentVal||'W/OFF';document.getElementById('pce-label').textContent=PLANNER_TEAM[memberIdx].name+' — '+PLANNER_DATES[dateIdx];const editor=document.getElementById('planner-cell-editor');editor.style.display='block';const rect=cellEl.getBoundingClientRect();let top=rect.bottom+window.scrollY+4,left=rect.left+window.scrollX;if(left+210>window.innerWidth)left=window.innerWidth-220;editor.style.top=top+'px';editor.style.left=left+'px';}
+function closePlannerEditor(){document.getElementById('planner-cell-editor').style.display='none';pceTarget=null;}
+function applyPlannerCellEdit(){if(!pceTarget)return;PLANNER_TEAM[pceTarget.memberIdx].shifts[pceTarget.dateIdx]=document.getElementById('pce-select').value;plannerDirty=true;const btn=document.getElementById('planner-publish-btn');btn.textContent='📤 Submit to Agents *';btn.style.background='linear-gradient(135deg,#c07010,#a05008)';closePlannerEditor();renderPlanner();}
+document.addEventListener('click',function(e){const ed=document.getElementById('planner-cell-editor');if(ed&&ed.style.display!=='none'&&!ed.contains(e.target)&&!e.target.closest('td'))closePlannerEditor();});
+function renderPlanner(){const ti=getPlannerTodayIndex();const search=(document.getElementById('planner-search')?.value||'').toLowerCase();const lbl=document.getElementById('planner-today-label');if(ti>=0)lbl.textContent='Today: '+PLANNER_DATES[ti]+' ('+PLANNER_DAYS[ti]+')';else lbl.textContent='';document.getElementById('planner-legend').innerHTML=SHIFT_LEGEND.map(l=>'<span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#2a6090;font-weight:600;"><span class="shift-pill '+l.cls+'">'+l.key+'</span>'+l.label+'</span>').join('');let team=PLANNER_TEAM;if(search)team=team.filter(m=>m.name.toLowerCase().includes(search)||m.primary.toLowerCase().includes(search)||m.id.toLowerCase().includes(search));if(plannerShiftFilter!=='ALL')team=team.filter(m=>m.shifts.some(s=>s.trim().toUpperCase()===plannerShiftFilter.toUpperCase()));if(!team.length){document.getElementById('planner-table-container').innerHTML='<div style="padding:40px;text-align:center;color:#3a7aaa;font-size:14px;">No team members found.</div>';return;}let hdr='<tr><th class="col-name" rowspan="2">Name</th><th style="text-align:left;min-width:120px;background:#eef5fc;border:1px solid #c8dff0;padding:8px 10px;font-size:10px;font-weight:700;color:#1a7db5;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;position:sticky;top:0;z-index:2;" rowspan="2">Primary Role</th>';PLANNER_DATES.forEach((d,i)=>{const isT=i===ti,isW=PLANNER_DAYS[i]==='Sat'||PLANNER_DAYS[i]==='Sun',p=d.split('-');hdr+='<th style="padding:8px 10px;text-align:center;font-size:10px;font-weight:700;white-space:nowrap;border:1px solid #c8dff0;background:'+(isT?'#d8eeff':'#eef5fc')+';color:'+(isT?'#1a7db5':isW?'#3a7aaa':'#1a7db5')+';">'+p[0]+'/'+p[1]+'</th>';});hdr+='</tr><tr>';PLANNER_DAYS.forEach((d,i)=>{const isT=i===ti,isW=d==='Sat'||d==='Sun';hdr+='<th style="font-size:9px;padding:8px 10px;text-align:center;font-weight:700;white-space:nowrap;border:1px solid #c8dff0;background:'+(isT?'#d8eeff':'#eef5fc')+';color:'+(isT?'#1a7db5':isW?'#3a7aaa':'#1a7db5')+';">'+d+'</th>';});hdr+='</tr>';const bodyRows=team.map(m=>{const ri=PLANNER_TEAM.indexOf(m);let cells='';m.shifts.forEach((s,i)=>{const isT=i===ti,pill=shiftPillClass(s),hl=plannerShiftFilter!=='ALL'&&s.trim().toUpperCase()===plannerShiftFilter.toUpperCase();cells+='<td class="'+(isT?'col-today':'')+'" style="cursor:pointer;" title="Click to edit" onclick="openPlannerEditor('+ri+','+i+',\''+s+'\',this)"><span class="shift-pill '+pill+(isT?' sp-TODAY':'')+'"'+(hl?' style="box-shadow:0 0 6px rgba(26,125,181,.3);"':'')+'>'+s+'</span></td>';});return'<tr><td class="col-name"><div>'+m.name+'</div><div style="font-size:10px;color:#3a7aaa;margin-top:2px;font-weight:600;">'+m.id+'</div></td><td class="col-primary">'+m.primary+'</td>'+cells+'</tr>';}).join('');document.getElementById('planner-table-container').innerHTML='<table class="planner-tbl"><thead>'+hdr+'</thead><tbody>'+bodyRows+'</tbody></table>';}
 
-async function loadPlanner() {
-  document.getElementById('planner-table-container').innerHTML='<div class="loading">⏳ LOADING PLANNER...</div>';
-  try {
-    const res=await fetch(API_URL+'?action=getPlanner&t='+Date.now());
-    const data=await res.json();
-    if (data.success&&data.planner&&Array.isArray(data.planner)&&data.planner.length) {
-      PLANNER_TEAM=data.planner;
-      if (data.updatedAt) { const d=new Date(data.updatedAt); document.getElementById('planner-saved-label').textContent='✅ Last published: '+d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}); }
-    } else { PLANNER_TEAM=JSON.parse(JSON.stringify(PLANNER_DEFAULT)); }
-  } catch { PLANNER_TEAM=JSON.parse(JSON.stringify(PLANNER_DEFAULT)); }
-  plannerDirty=false; resetPublishBtn(); renderPlanner();
-}
-function resetPublishBtn() {
-  const btn=document.getElementById('planner-publish-btn');
-  btn.textContent='📤 Submit to Agents';
-  btn.style.background='linear-gradient(135deg,#1a8c5c,#138048)';
-  btn.disabled=false;
-}
-async function publishPlanner() {
-  const btn=document.getElementById('planner-publish-btn'); btn.disabled=true; btn.textContent='⏳ Submitting...';
-  try {
-    const res=await fetch(API_URL+'?'+new URLSearchParams({action:'savePlanner',payload:JSON.stringify(PLANNER_TEAM)}));
-    const data=await res.json();
-    if (data.success) {
-      plannerDirty=false; const now=new Date();
-      document.getElementById('planner-saved-label').textContent='✅ Published: '+now.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+' '+now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-      showToast('📤 Shift planner submitted to agents successfully!'); resetPublishBtn();
-    } else { showToast('⚠ Submit failed. Try again.',false); btn.textContent='📤 Submit to Agents'; btn.disabled=false; }
-  } catch { showToast('⚠ Connection error.',false); btn.textContent='📤 Submit to Agents'; btn.disabled=false; }
-}
-function getPlannerTodayIndex() {
-  const d=new Date(),pad=n=>String(n).padStart(2,'0');
-  return PLANNER_DATES.indexOf(pad(d.getDate())+'-'+pad(d.getMonth()+1)+'-'+d.getFullYear());
-}
-function shiftPillClass(s) {
-  const v=(s||'').trim().toUpperCase();
-  if(v==='D1')return 'sp-D1';if(v==='D2')return 'sp-D2';if(v==='D3')return 'sp-D3';
-  if(v==='D4')return 'sp-D4';if(v==='D5')return 'sp-D5';if(v==='N')return 'sp-N';
-  if(v==='W/OFF')return 'sp-WOFF';if(v==='HOLIDAY')return 'sp-HOL';if(v==='COMPFF')return 'sp-COMP';
-  return 'sp-WOFF';
-}
-function setPlannerFilter(btn) {
-  plannerShiftFilter=btn.dataset.shift;
-  document.querySelectorAll('.planner-filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active'); renderPlanner();
-}
-function openPlannerEditor(memberIdx,dateIdx,currentVal,cellEl) {
-  pceTarget={memberIdx,dateIdx};
-  document.getElementById('pce-select').value=currentVal||'W/OFF';
-  document.getElementById('pce-label').textContent=PLANNER_TEAM[memberIdx].name+' — '+PLANNER_DATES[dateIdx];
-  const editor=document.getElementById('planner-cell-editor'); editor.style.display='block';
-  const rect=cellEl.getBoundingClientRect();
-  let top=rect.bottom+window.scrollY+4,left=rect.left+window.scrollX;
-  if(left+210>window.innerWidth)left=window.innerWidth-220;
-  editor.style.top=top+'px'; editor.style.left=left+'px';
-}
-function closePlannerEditor() { document.getElementById('planner-cell-editor').style.display='none'; pceTarget=null; }
-function applyPlannerCellEdit() {
-  if (!pceTarget) return;
-  PLANNER_TEAM[pceTarget.memberIdx].shifts[pceTarget.dateIdx]=document.getElementById('pce-select').value;
-  plannerDirty=true;
-  const btn=document.getElementById('planner-publish-btn');
-  btn.textContent='📤 Submit to Agents *';
-  btn.style.background='linear-gradient(135deg,#c07010,#a05008)';
-  closePlannerEditor(); renderPlanner();
-}
-document.addEventListener('click', function(e) {
-  const ed=document.getElementById('planner-cell-editor');
-  if(ed&&ed.style.display!=='none'&&!ed.contains(e.target)&&!e.target.closest('td'))closePlannerEditor();
-});
-function renderPlanner() {
-  const ti=getPlannerTodayIndex();
-  const search=(document.getElementById('planner-search')?.value||'').toLowerCase();
-  const lbl=document.getElementById('planner-today-label');
-  if(ti>=0)lbl.textContent='Today: '+PLANNER_DATES[ti]+' ('+PLANNER_DAYS[ti]+')';else lbl.textContent='';
-  document.getElementById('planner-legend').innerHTML=SHIFT_LEGEND.map(l=>
-    '<span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#2a6090;font-weight:600;">'+
-    '<span class="shift-pill '+l.cls+'">'+l.key+'</span>'+l.label+'</span>').join('');
-  let team=PLANNER_TEAM;
-  if(search)team=team.filter(m=>m.name.toLowerCase().includes(search)||m.primary.toLowerCase().includes(search)||m.id.toLowerCase().includes(search));
-  if(plannerShiftFilter!=='ALL')team=team.filter(m=>m.shifts.some(s=>s.trim().toUpperCase()===plannerShiftFilter.toUpperCase()));
-  if(!team.length){document.getElementById('planner-table-container').innerHTML='<div style="padding:40px;text-align:center;color:#3a7aaa;font-size:14px;">No team members found.</div>';return;}
-  let hdr='<tr><th class="col-name" rowspan="2">Name</th><th style="text-align:left;min-width:120px;background:#eef5fc;border:1px solid #c8dff0;padding:8px 10px;font-size:10px;font-weight:700;color:#1a7db5;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;position:sticky;top:0;z-index:2;" rowspan="2">Primary Role</th>';
-  PLANNER_DATES.forEach((d,i)=>{
-    const isT=i===ti,isW=PLANNER_DAYS[i]==='Sat'||PLANNER_DAYS[i]==='Sun',p=d.split('-');
-    hdr+='<th style="padding:8px 10px;text-align:center;font-size:10px;font-weight:700;white-space:nowrap;border:1px solid #c8dff0;background:'+(isT?'#d8eeff':'#eef5fc')+';color:'+(isT?'#1a7db5':isW?'#3a7aaa':'#1a7db5')+';">'+p[0]+'/'+p[1]+'</th>';
-  });
-  hdr+='</tr><tr>';
-  PLANNER_DAYS.forEach((d,i)=>{
-    const isT=i===ti,isW=d==='Sat'||d==='Sun';
-    hdr+='<th style="font-size:9px;padding:8px 10px;text-align:center;font-weight:700;white-space:nowrap;border:1px solid #c8dff0;background:'+(isT?'#d8eeff':'#eef5fc')+';color:'+(isT?'#1a7db5':isW?'#3a7aaa':'#1a7db5')+';">'+d+'</th>';
-  });
-  hdr+='</tr>';
-  const bodyRows=team.map(m=>{
-    const ri=PLANNER_TEAM.indexOf(m);let cells='';
-    m.shifts.forEach((s,i)=>{
-      const isT=i===ti,pill=shiftPillClass(s),hl=plannerShiftFilter!=='ALL'&&s.trim().toUpperCase()===plannerShiftFilter.toUpperCase();
-      cells+='<td class="'+(isT?'col-today':'')+'" style="cursor:pointer;" title="Click to edit" onclick="openPlannerEditor('+ri+','+i+',\''+s+'\',this)">'+
-        '<span class="shift-pill '+pill+(isT?' sp-TODAY':'')+'"'+(hl?' style="box-shadow:0 0 6px rgba(26,125,181,.3);"':'')+'>'+s+'</span></td>';
-    });
-    return '<tr><td class="col-name"><div>'+m.name+'</div><div style="font-size:10px;color:#3a7aaa;margin-top:2px;font-weight:600;">'+m.id+'</div></td><td class="col-primary">'+m.primary+'</td>'+cells+'</tr>';
-  }).join('');
-  document.getElementById('planner-table-container').innerHTML='<table class="planner-tbl"><thead>'+hdr+'</thead><tbody>'+bodyRows+'</tbody></table>';
-}
-
-// ── SUN / MOON DARK MODE TOGGLE ──────────────────────────────────────────────
-let darkMode = false;
-
-// Generate stars once
-(function createStars() {
-  const container = document.getElementById('stars');
-  if (!container) return;
-  for (let i = 0; i < 120; i++) {
-    const s = document.createElement('div');
-    s.className = 'star';
-    const size = Math.random() * 2.5 + 0.8;
-    s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*65}%;left:${Math.random()*100}%;animation-duration:${2+Math.random()*3}s;animation-delay:${Math.random()*4}s;`;
-    container.appendChild(s);
-  }
-})();
-
-function toggleDarkMode() {
-  darkMode = !darkMode;
-  const sun  = document.getElementById('skySun');
-  const bg   = document.getElementById('oceanBg');
-  const box  = document.querySelector('.login-box');
-
-  if (darkMode) {
-    sun.classList.remove('sun-mode');
-    sun.classList.add('moon-mode');
-    bg.classList.add('dark');
-    box.classList.add('dark');
-  } else {
-    sun.classList.remove('moon-mode');
-    sun.classList.add('sun-mode');
-    bg.classList.remove('dark');
-    box.classList.remove('dark');
-  }
-}
-
+// ── DARK MODE ──
+let darkMode=false;
+(function createStars(){const container=document.getElementById('stars');if(!container)return;for(let i=0;i<120;i++){const s=document.createElement('div');s.className='star';const size=Math.random()*2.5+0.8;s.style.cssText=`width:${size}px;height:${size}px;top:${Math.random()*65}%;left:${Math.random()*100}%;animation-duration:${2+Math.random()*3}s;animation-delay:${Math.random()*4}s;`;container.appendChild(s);}})();
+function toggleDarkMode(){darkMode=!darkMode;const sun=document.getElementById('skySun'),bg=document.getElementById('oceanBg'),box=document.querySelector('.login-box');if(darkMode){sun.classList.remove('sun-mode');sun.classList.add('moon-mode');bg.classList.add('dark');box.classList.add('dark');}else{sun.classList.remove('moon-mode');sun.classList.add('sun-mode');bg.classList.remove('dark');box.classList.remove('dark');}}
 setInterval(()=>{if(document.getElementById('dashboard').style.display!=='none'&&currentTab==='agents')loadUsers();},60000);
 </script>
 </body>
