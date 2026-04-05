@@ -8,7 +8,6 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f4f6f9; color: #1a1a1a; font-size: 14px; }
-
   .header { background: #185FA5; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; }
   .header-title { color: #fff; font-size: 17px; font-weight: 600; }
   .header-sub { color: rgba(255,255,255,0.7); font-size: 12px; margin-top: 2px; }
@@ -17,11 +16,9 @@
   .header-btn:hover { background: rgba(255,255,255,0.28); }
   .header-btn.accent { background: rgba(255,255,255,0.35); font-weight: 600; }
   .header-btn.accent:hover { background: rgba(255,255,255,0.48); }
-
   .layout { display: grid; grid-template-columns: 1fr 320px; min-height: calc(100vh - 50px); }
   .left-panel { padding: 16px 16px 32px 22px; border-right: 1px solid #e0e4ea; overflow-y: auto; }
   .right-panel { padding: 16px 20px 32px 14px; background: #fff; overflow-y: auto; }
-
   .fulllog-overlay { display: none; position: fixed; inset: 0; background: #fff; z-index: 500; overflow-y: auto; }
   .fulllog-overlay.open { display: block; }
   .fulllog-header { background: #185FA5; padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; }
@@ -57,7 +54,6 @@
   .fl-info-note-box { background: #fffbeb; border: 1.5px solid #f59e0b; border-radius: 10px; padding: 12px 14px; }
   .fl-info-note-label { font-size: 11px; font-weight: 700; color: #92400e; margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
   .fl-info-note-text { font-size: 13px; color: #374151; white-space: pre-wrap; line-height: 1.6; min-height: 40px; }
-
   .section-card { background: #f0f4f8; border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; }
   .section-label { font-size: 11px; font-weight: 600; color: #5f6b7a; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; }
   input, select, textarea { border: 1px solid #d0d7df; border-radius: 7px; padding: 6px 10px; font-size: 13px; background: #fff; color: #1a1a1a; width: 100%; outline: none; transition: border .15s; }
@@ -68,7 +64,6 @@
   .stat-box { border-radius: 8px; padding: 9px; text-align: center; }
   .stat-num { font-size: 20px; font-weight: 600; }
   .stat-lbl { font-size: 11px; margin-top: 1px; }
-
   .info-boxes-section { margin-bottom: 14px; }
   .info-boxes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .info-box-wrap { background: #fffbeb; border: 1.5px solid #f59e0b; border-radius: 10px; padding: 10px 12px; }
@@ -77,7 +72,6 @@
   .info-box-textarea { border: none; background: transparent; resize: none; font-size: 12px; color: #374151; width: 100%; min-height: 72px; padding: 0; outline: none; font-family: inherit; line-height: 1.6; }
   .info-box-textarea:focus { outline: none; box-shadow: none; border: none; }
   .info-box-textarea::placeholder { color: #b6975a; }
-
   .ms-wrap { position: relative; }
   .ms-display { border: 1px solid #d0d7df; border-radius: 7px; padding: 6px 10px; background: #fff; cursor: pointer; min-height: 34px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; user-select: none; }
   .ms-display:hover { border-color: #185FA5; }
@@ -92,7 +86,6 @@
   .ms-opt.dimmed { opacity: 0.4; pointer-events: none; }
   .ms-check { width: 14px; height: 14px; border: 1px solid #c0c8d4; border-radius: 3px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 10px; }
   .ms-opt.selected .ms-check { background: #185FA5; border-color: #185FA5; color: #fff; }
-
   .ss-wrap { position: relative; }
   .ss-display { border: 1px solid #d0d7df; border-radius: 7px; padding: 6px 10px; background: #fff; cursor: pointer; min-height: 34px; display: flex; align-items: center; user-select: none; }
   .ss-display:hover { border-color: #185FA5; }
@@ -107,52 +100,45 @@
   .ss-opt.selected { background: #dbeafe; color: #1d4ed8; font-weight: 600; }
   .ss-opt.dimmed { opacity: 0.35; pointer-events: none; font-style: italic; }
   .ss-hint { font-size: 11px; color: #9ca3af; padding: 8px 12px; text-align: center; }
-
   .cat-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 13px; border-radius: 8px 8px 0 0; }
   .cat-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 6px; }
   .cat-title { font-size: 13px; font-weight: 600; }
   .cat-count { color: #fff; border-radius: 10px; padding: 1px 7px; font-size: 11px; margin-left: 5px; }
   .cat-add { font-size: 12px; padding: 3px 10px; border-radius: 6px; border: 1.5px solid; background: transparent; cursor: pointer; font-weight: 500; }
   .cat-body { border: 1px solid; border-top: none; border-radius: 0 0 8px 8px; padding: 8px 10px 4px; margin-bottom: 12px; background: #fff; }
-
   .ticket-row { border: 1px solid #e0e4ea; border-left: 3px solid; border-radius: 7px; padding: 8px 10px; margin-bottom: 7px; background: #fff; }
   .ticket-line { display: flex; gap: 5px; align-items: center; }
   .ticket-line input, .ticket-line select { flex: 1; min-width: 0; font-size: 12px; padding: 5px 7px; }
-  .ticket-line .f-id     { flex: 0.7; }
+  .ticket-line .f-id { flex: 0.7; }
   .ticket-line .f-client { flex: 0.8; }
   .ticket-line .f-status { flex: 0.7; }
   .ticket-line .f-assign { flex: 0.8; }
-  .ticket-line .f-date   { flex: 0.8; }
-  .ticket-line .f-age    { flex: 0 0 50px; text-align: center; font-size: 11px; font-weight: 700; border-radius: 5px; padding: 5px 4px; border: none; background: #FAEEDA; color: #854F0B; pointer-events: none; }
+  .ticket-line .f-date { flex: 0.8; }
+  .ticket-line .f-age { flex: 0 0 50px; text-align: center; font-size: 11px; font-weight: 700; border-radius: 5px; padding: 5px 4px; border: none; background: #FAEEDA; color: #854F0B; pointer-events: none; }
   .btn-remove { background: none; border: none; color: #E24B4A; font-size: 17px; cursor: pointer; line-height: 1; padding: 0 2px; flex-shrink: 0; }
   .btn-remove:hover { color: #a32d2d; }
-
   .f-tooltip-wrap { position: relative; min-width: 0; }
   .f-tooltip-wrap input { width: 100%; }
-  .f-tooltip-wrap.f-desc  { flex: 1.6; }
+  .f-tooltip-wrap.f-desc { flex: 1.6; }
   .f-tooltip-wrap.f-action { flex: 1.2; }
   .field-tooltip { display: none; position: absolute; bottom: calc(100% + 6px); left: 0; z-index: 300; background: #1e293b; color: #f1f5f9; font-size: 12px; line-height: 1.5; padding: 8px 12px; border-radius: 8px; white-space: pre-wrap; word-break: break-word; max-width: 320px; min-width: 140px; box-shadow: 0 6px 20px rgba(0,0,0,.22); pointer-events: none; }
   .field-tooltip::after { content: ''; position: absolute; top: 100%; left: 14px; border: 6px solid transparent; border-top-color: #1e293b; }
   .field-tooltip .tt-label { font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
   .f-tooltip-wrap:hover .field-tooltip, .f-tooltip-wrap input:focus + .field-tooltip { display: block; }
   .f-tooltip-wrap.empty .field-tooltip { display: none !important; }
-
   .btn-submit-admin { width: 100%; background: linear-gradient(135deg,#0f766e,#0d9488); color: #fff; border: none; border-radius: 8px; padding: 11px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 10px; transition: opacity .2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
   .btn-submit-admin:hover { opacity: .88; }
   .btn-submit-admin:disabled { opacity: .5; cursor: not-allowed; }
   .admin-submit-status { margin-top: 8px; font-size: 12px; font-weight: 600; text-align: center; padding: 7px 12px; border-radius: 7px; display: none; }
   .admin-submit-status.loading { background: #dbeafe; color: #185FA5; display: block; }
   .admin-submit-status.success { background: #d1fae5; color: #065f46; display: block; }
-  .admin-submit-status.error   { background: #fee2e2; color: #991b1b; display: block; }
-
+  .admin-submit-status.error { background: #fee2e2; color: #991b1b; display: block; }
   .server-loaded-banner { display: none; background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; font-size: 12px; font-weight: 600; color: #065f46; text-align: center; }
   .server-loaded-banner.visible { display: block; }
-
   .btn-submit { width: 100%; background: #185FA5; color: #fff; border: none; border-radius: 8px; padding: 11px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 4px; transition: background .15s; }
   .btn-submit:hover { background: #0c447c; }
   .btn-import { font-size: 12px; padding: 5px 12px; border-radius: 7px; border: 1.5px solid #185FA5; color: #185FA5; background: transparent; cursor: pointer; font-weight: 500; }
   .btn-import:hover { background: #dbeafe; }
-
   .log-empty { text-align: center; padding: 2.5rem 1rem; color: #9ca3af; }
   .log-empty-icon { font-size: 36px; margin-bottom: 8px; }
   .summary-card { background: #185FA5; border-radius: 10px; padding: 12px 14px; color: #fff; margin-bottom: 10px; }
@@ -171,20 +157,16 @@
   .status-pill { font-size: 10px; padding: 2px 7px; border-radius: 7px; flex-shrink: 0; }
   .status-completed { background: #d1fae5; color: #065f46; }
   .status-pending { background: #fee2e2; color: #991b1b; }
-
   .saved-shifts { margin-top: 14px; }
   .saved-label { font-size: 11px; color: #9ca3af; margin-bottom: 6px; }
   .saved-list { display: flex; flex-wrap: wrap; gap: 5px; }
   .saved-btn { font-size: 11px; padding: 3px 9px; border-radius: 6px; border: 1px solid #d0d7df; background: transparent; color: #5f6b7a; cursor: pointer; }
   .saved-btn.active { border-color: #185FA5; background: #dbeafe; color: #185FA5; }
   .saved-btn:hover { border-color: #185FA5; }
-
   .tickets-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
   .tickets-heading { font-size: 14px; font-weight: 600; }
-
   .toast { position: fixed; top: 16px; right: 16px; z-index: 999; padding: 9px 16px; border-radius: 8px; font-size: 13px; color: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.15); opacity: 0; transition: opacity .25s; pointer-events: none; }
   .toast.show { opacity: 1; }
-
   @media (max-width: 860px) {
     .layout { grid-template-columns: 1fr; }
     .right-panel { border-top: 1px solid #e0e4ea; }
@@ -209,11 +191,9 @@
 
 <div class="layout">
   <div class="left-panel">
-
     <div class="server-loaded-banner" id="serverLoadedBanner">
       ✅ This shift handover was already submitted. Showing saved data from server.
     </div>
-
     <div class="section-card">
       <div class="section-label">Shift Details</div>
       <div class="grid-2">
@@ -314,15 +294,11 @@
     <button class="btn-submit" id="btnSubmitHandover" onclick="submitHandover()" style="margin-top:14px;">✔ Submit Handover</button>
     <button class="btn-submit-admin" id="btnSubmitAdmin" onclick="submitToAdmin()" style="display:none;">📤 Submit to Admin</button>
     <div class="admin-submit-status" id="adminSubmitStatus"></div>
-
   </div>
 
   <div class="right-panel">
     <div class="section-label" style="margin-bottom:10px;">Handover Summary</div>
-    <div id="logEmpty" class="log-empty">
-      <div class="log-empty-icon">📋</div>
-      <div style="font-size:13px;">Submit a shift to see the summary here.</div>
-    </div>
+    <div id="logEmpty" class="log-empty"><div class="log-empty-icon">📋</div><div style="font-size:13px;">Submit a shift to see the summary here.</div></div>
     <div id="logContent" style="display:none;">
       <div class="summary-card">
         <div class="summary-shift" id="sumShiftTitle"></div>
@@ -366,32 +342,18 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbzAZLBRc6I7iG3xBQ0BH496JqtKyGKaJH5gF9epdnmv5gxZ4bKbglvjnZrObFm5JeUZEw/exec';
+const API_URL='https://script.google.com/macros/s/AKfycbzAZLBRc6I7iG3xBQ0BH496JqtKyGKaJH5gF9epdnmv5gxZ4bKbglvjnZrObFm5JeUZEw/exec';
 
-const CLIENT_MAP = {
-  "SWIPHX":"SWIRE","SWI":"SWIRE","HSL":"HSL","MILAHA":"MILAHA","MIL":"MILAHA",
-  "TASLI":"TASLI","TAS":"TASLI","ESLGEN":"ESL","ESL":"ESL","LSCSAIL":"LSCSAIL",
-  "LSC":"LSCSAIL","VCL":"VCL","NFR":"NFR","VSS":"VSS","LRP":"LRP"
-};
-function resolveClient(id){
-  if(!id) return "";
-  const p=id.split("-"); if(p.length<2) return "";
-  const pfx=p[0].toUpperCase();
-  const keys=Object.keys(CLIENT_MAP).sort((a,b)=>b.length-a.length);
-  for(const k of keys){ if(pfx===k) return CLIENT_MAP[k]; }
-  return pfx;
-}
+const CLIENT_MAP={"SWIPHX":"SWIRE","SWI":"SWIRE","HSL":"HSL","MILAHA":"MILAHA","MIL":"MILAHA","TASLI":"TASLI","TAS":"TASLI","ESLGEN":"ESL","ESL":"ESL","LSCSAIL":"LSCSAIL","LSC":"LSCSAIL","VCL":"VCL","NFR":"NFR","VSS":"VSS","LRP":"LRP"};
+function resolveClient(id){if(!id)return"";const p=id.split("-");if(p.length<2)return"";const pfx=p[0].toUpperCase();const keys=Object.keys(CLIENT_MAP).sort((a,b)=>b.length-a.length);for(const k of keys){if(pfx===k)return CLIENT_MAP[k];}return pfx;}
 
-const TEAM=[
-  "Challa Venkat Suneel","Akash Nagarathinam","Vignesh Maharajan","Vinothkumar Boopathy",
-  "Vignesh Rajapandian","Vinothraj","Rene Claret","Kulasekar B","Seenivasan"
-];
+const TEAM=["Challa Venkat Suneel","Akash Nagarathinam","Vignesh Maharajan","Vinothkumar Boopathy","Vignesh Rajapandian","Vinothraj","Rene Claret","Kulasekar B","Seenivasan"];
 const SHIFTS=["D1","D2","D3"];
 const CATS=[
-  {key:"showstopper",label:"Showstopper",      color:"#E24B4A",border:"#F09595",bg:"#FCEBEB"},
-  {key:"high",       label:"High Priority",     color:"#BA7517",border:"#EF9F27",bg:"#FAEEDA"},
-  {key:"escalated",  label:"Customer Escalated",color:"#7C3AED",border:"#C4B5FD",bg:"#F3E8FF"},
-  {key:"longpending",label:"Long Pending",      color:"#888780",border:"#B4B2A9",bg:"#F1EFE8"}
+  {key:"showstopper",label:"Showstopper",color:"#E24B4A",border:"#F09595",bg:"#FCEBEB"},
+  {key:"high",label:"High Priority",color:"#BA7517",border:"#EF9F27",bg:"#FAEEDA"},
+  {key:"escalated",label:"Customer Escalated",color:"#7C3AED",border:"#C4B5FD",bg:"#F3E8FF"},
+  {key:"longpending",label:"Long Pending",color:"#888780",border:"#B4B2A9",bg:"#F1EFE8"}
 ];
 
 let tickets={showstopper:[],high:[],escalated:[],longpending:[]};
@@ -402,7 +364,7 @@ let ticketCounter=0;
 
 document.addEventListener("DOMContentLoaded",()=>{
   document.getElementById("shiftDate").value=todayStr();
-  buildDropdowns(); updateImportBtn(); renderSaved(); loadShift();
+  buildDropdowns();updateImportBtn();renderSaved();loadShift();
 });
 document.addEventListener("click",e=>{
   if(!e.target.closest(".ms-wrap")&&!e.target.closest(".ss-wrap"))
@@ -410,30 +372,22 @@ document.addEventListener("click",e=>{
 });
 
 function todayStr(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;}
-function shiftKey(d,s){return "shift:"+d+":"+s;}
+function shiftKey(d,s){return"shift:"+d+":"+s;}
 function getDate(){return document.getElementById("shiftDate").value;}
 function getShift(){return document.getElementById("shiftSelect").value;}
 function prevShift(s){return SHIFTS[(SHIFTS.indexOf(s)+SHIFTS.length-1)%SHIFTS.length];}
-function uid(){return "t"+(++ticketCounter)+(Math.random()*1000|0);}
-function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");}
-function calcAge(dateStr){
-  if(!dateStr) return "";
-  const days=Math.floor((new Date()-new Date(dateStr))/86400000);
-  if(days<0) return "0d"; if(days===0) return "Today"; return days+"d";
-}
-function showToast(msg,type="success"){
-  const t=document.getElementById("toast");
-  t.style.background=({success:"#3B6D11",error:"#a32d2d",warn:"#854F0B",info:"#185FA5"})[type]||"#3B6D11";
-  t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),2800);
-}
-function getInfoBoxes(){return [1,2,3,4].map(i=>document.getElementById("infoBox"+i).value);}
-function setInfoBoxes(arr){[1,2,3,4].forEach((i,idx)=>{document.getElementById("infoBox"+i).value=(arr&&arr[idx])?arr[idx]:"";}); }
+function uid(){return"t"+(++ticketCounter)+(Math.random()*1000|0);}
+function esc(s){return(s||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");}
+function calcAge(dateStr){if(!dateStr)return"";const days=Math.floor((new Date()-new Date(dateStr))/86400000);if(days<0)return"0d";if(days===0)return"Today";return days+"d";}
+function showToast(msg,type="success"){const t=document.getElementById("toast");t.style.background=({success:"#3B6D11",error:"#a32d2d",warn:"#854F0B",info:"#185FA5"})[type]||"#3B6D11";t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2800);}
+function getInfoBoxes(){return[1,2,3,4].map(i=>document.getElementById("infoBox"+i).value);}
+function setInfoBoxes(arr){[1,2,3,4].forEach((i,idx)=>{document.getElementById("infoBox"+i).value=(arr&&arr[idx])?arr[idx]:"";});}
 
-// ── Helpers ──
-function parseMembers(str){if(!str||!str.trim())return [];return str.split(',').map(s=>s.trim()).filter(Boolean);}
-function normDate(str){if(!str)return '';const p=str.split('-');if(p.length===3&&p[0].length===2)return `${p[2]}-${p[1]}-${p[0]}`;return str;}
+// ── Helpers for server data ──
+function parseMembers(str){if(!str||!str.trim())return[];return str.split(',').map(s=>s.trim()).filter(Boolean);}
+function normDate(str){if(!str)return'';const p=str.split('-');if(p.length===3&&p[0].length===2)return`${p[2]}-${p[1]}-${p[0]}`;return str;}
 function buildTicketStubs(idsStr,count,pendingCount){
-  if(!idsStr||!idsStr.trim())return [];
+  if(!idsStr||!idsStr.trim())return[];
   const ids=idsStr.split(',').map(s=>s.trim()).filter(Boolean);
   const pending=Number(pendingCount)||0;
   return ids.map((id,i)=>({_id:uid(),ticketId:id==='(no id)'?'':id,client:resolveClient(id),desc:'',status:i<pending?'Pending':'Completed',assignedTo:'',nextAction:'',createdDate:''}));
@@ -444,7 +398,7 @@ function buildDropdowns(){
   ["ms-current","ms-next"].forEach(id=>{
     const dd=document.getElementById(id+"-dd");
     TEAM.forEach(name=>{
-      const div=document.createElement("div"); div.className="ms-opt"; div.dataset.name=name;
+      const div=document.createElement("div");div.className="ms-opt";div.dataset.name=name;
       div.innerHTML=`<span class="ms-check"></span><span>${name}</span>`;
       div.onclick=(e)=>{e.stopPropagation();toggleOption(id,name);};
       dd.appendChild(div);
@@ -452,38 +406,21 @@ function buildDropdowns(){
   });
 }
 function toggleDropdown(id){
-  const dd=document.getElementById(id+"-dd"); const wasOpen=dd.classList.contains("open");
+  const dd=document.getElementById(id+"-dd");const wasOpen=dd.classList.contains("open");
   document.querySelectorAll(".ms-dropdown,.ss-dropdown").forEach(d=>d.classList.remove("open"));
-  if(!wasOpen){
-    if(id==="ms-current")syncCrossDropdown("ms-current","ms-next");
-    if(id==="ms-next")syncCrossDropdown("ms-next","ms-current");
-    dd.classList.add("open");
-  }
+  if(!wasOpen){if(id==="ms-current")syncCrossDropdown("ms-current","ms-next");if(id==="ms-next")syncCrossDropdown("ms-next","ms-current");dd.classList.add("open");}
 }
 function toggleOption(msId,name){
-  const arr=selected[msId];
-  selected[msId]=arr.includes(name)?arr.filter(x=>x!==name):[...arr,name];
-  renderDisplay(msId);
-  if(msId==="ms-current"){
-    selected["ms-next"]=selected["ms-next"].filter(n=>!selected["ms-current"].includes(n));
-    renderDisplay("ms-next"); syncCrossDropdown("ms-next","ms-current"); onCurrentMembersChanged(false);
-  } else if(msId==="ms-next"){ syncCrossDropdown("ms-current","ms-next"); }
+  const arr=selected[msId];selected[msId]=arr.includes(name)?arr.filter(x=>x!==name):[...arr,name];renderDisplay(msId);
+  if(msId==="ms-current"){selected["ms-next"]=selected["ms-next"].filter(n=>!selected["ms-current"].includes(n));renderDisplay("ms-next");syncCrossDropdown("ms-next","ms-current");onCurrentMembersChanged(false);}
+  else if(msId==="ms-next"){syncCrossDropdown("ms-current","ms-next");}
 }
-function syncCrossDropdown(msId,otherMsId){
-  const taken=selected[otherMsId];
-  document.querySelectorAll(`#${msId}-dd .ms-opt`).forEach(o=>o.classList.toggle("dimmed",taken.includes(o.dataset.name)));
-}
+function syncCrossDropdown(msId,otherMsId){const taken=selected[otherMsId];document.querySelectorAll(`#${msId}-dd .ms-opt`).forEach(o=>o.classList.toggle("dimmed",taken.includes(o.dataset.name)));}
 function renderDisplay(msId){
-  const vals=selected[msId]; const display=document.querySelector(`#${msId} .ms-display`); display.innerHTML="";
-  if(!vals.length){ display.innerHTML=`<span class="ms-placeholder">Select members...</span><span class="ms-arrow">▾</span>`; }
-  else {
-    vals.forEach(s=>{const sp=document.createElement("span");sp.className="ms-tag";sp.textContent=s;display.appendChild(sp);});
-    const arr=document.createElement("span");arr.className="ms-arrow";arr.textContent="▾";display.appendChild(arr);
-  }
-  document.querySelectorAll(`#${msId}-dd .ms-opt`).forEach(o=>{
-    const n=o.dataset.name,isSel=vals.includes(n);
-    o.classList.toggle("selected",isSel); o.querySelector(".ms-check").textContent=isSel?"✓":"";
-  });
+  const vals=selected[msId];const display=document.querySelector(`#${msId} .ms-display`);display.innerHTML="";
+  if(!vals.length){display.innerHTML=`<span class="ms-placeholder">Select members...</span><span class="ms-arrow">▾</span>`;}
+  else{vals.forEach(s=>{const sp=document.createElement("span");sp.className="ms-tag";sp.textContent=s;display.appendChild(sp);});const arr=document.createElement("span");arr.className="ms-arrow";arr.textContent="▾";display.appendChild(arr);}
+  document.querySelectorAll(`#${msId}-dd .ms-opt`).forEach(o=>{const n=o.dataset.name,isSel=vals.includes(n);o.classList.toggle("selected",isSel);o.querySelector(".ms-check").textContent=isSel?"✓":"";});
 }
 function setDropdown(msId,values){selected[msId]=[...(values||[])];renderDisplay(msId);}
 
@@ -498,7 +435,7 @@ function onCurrentMembersChanged(){
   renderSSDisplay("ss-mails",false);renderSSDisplay("ss-jira",false);buildSSDropdown("ss-mails");buildSSDropdown("ss-jira");
 }
 function renderSSDisplay(ssId,disabled=false,solo=false){
-  const display=document.getElementById(ssId+"-display"); const valEl=document.getElementById(ssId+"-val"); const val=ssSelected[ssId];
+  const display=document.getElementById(ssId+"-display");const valEl=document.getElementById(ssId+"-val");const val=ssSelected[ssId];
   if(disabled){display.classList.add("disabled");valEl.className="ss-val placeholder";valEl.textContent="Select current members first";return;}
   display.classList.remove("disabled");
   if(solo){valEl.className="ss-val";valEl.textContent=val;display.onclick=null;display.style.cursor="default";display.title="Only one current member — auto-assigned";}
@@ -519,12 +456,12 @@ function buildSSDropdown(ssId){
   if(members.length>1){const h=document.createElement("div");h.className="ss-hint";h.textContent="Dimmed name is assigned to the other field.";dd.appendChild(h);}
 }
 function toggleSSDropdown(ssId){
-  const members=selected["ms-current"]; if(!members.length||members.length===1)return;
-  buildSSDropdown(ssId); const dd=document.getElementById(ssId+"-dd"); const wasOpen=dd.classList.contains("open");
-  document.querySelectorAll(".ms-dropdown,.ss-dropdown").forEach(d=>d.classList.remove("open")); if(!wasOpen)dd.classList.add("open");
+  const members=selected["ms-current"];if(!members.length||members.length===1)return;
+  buildSSDropdown(ssId);const dd=document.getElementById(ssId+"-dd");const wasOpen=dd.classList.contains("open");
+  document.querySelectorAll(".ms-dropdown,.ss-dropdown").forEach(d=>d.classList.remove("open"));if(!wasOpen)dd.classList.add("open");
 }
 function selectSSOption(ssId,name){
-  ssSelected[ssId]=name; document.querySelectorAll(".ss-dropdown").forEach(d=>d.classList.remove("open"));
+  ssSelected[ssId]=name;document.querySelectorAll(".ss-dropdown").forEach(d=>d.classList.remove("open"));
   renderSSDisplay("ss-mails",false);renderSSDisplay("ss-jira",false);buildSSDropdown("ss-mails");buildSSDropdown("ss-jira");
 }
 function setSSValues(mailsVal,jiraVal){
@@ -534,19 +471,18 @@ function setSSValues(mailsVal,jiraVal){
   if(!disabled&&!solo){buildSSDropdown("ss-mails");buildSSDropdown("ss-jira");}
 }
 
-// ── Tickets ──
 const catColorMap={showstopper:"#E24B4A",high:"#BA7517",escalated:"#7C3AED",longpending:"#888780"};
 function addTicket(cat,data={}){
   const obj={_id:uid(),category:cat,ticketId:"",client:"",desc:"",status:"Pending",assignedTo:"",nextAction:"",createdDate:"",...data};
-  tickets[cat].push(obj); renderCatBody(cat); updateStats();
+  tickets[cat].push(obj);renderCatBody(cat);updateStats();
 }
 function renderCatBody(cat){
-  const body=document.getElementById("body-"+cat); const color=catColorMap[cat]; body.innerHTML="";
+  const body=document.getElementById("body-"+cat);const color=catColorMap[cat];body.innerHTML="";
   if(!tickets[cat].length){body.innerHTML=`<div style="font-size:12px;color:#9ca3af;padding:4px 2px;">No tickets. Click "+ Add" to add one.</div>`;document.getElementById("count-"+cat).textContent="0";return;}
   document.getElementById("count-"+cat).textContent=tickets[cat].length;
   tickets[cat].forEach(t=>{
     const age=calcAge(t.createdDate);const hasDesc=!!(t.desc&&t.desc.trim());const hasAction=!!(t.nextAction&&t.nextAction.trim());
-    const row=document.createElement("div"); row.className="ticket-row"; row.style.borderLeftColor=color;
+    const row=document.createElement("div");row.className="ticket-row";row.style.borderLeftColor=color;
     row.innerHTML=`<div class="ticket-line">
       <input class="f-id" value="${esc(t.ticketId)}" placeholder="Ticket ID" data-cat="${cat}" data-tid="${t._id}" oninput="handleTicketIdInput(this)" onchange="updateTicket(this.dataset.cat,this.dataset.tid,'ticketId',this.value)"/>
       <input class="f-client" value="${esc(t.client)}" placeholder="Client" data-id="${t._id}" data-cat="${cat}" data-auto-filled="${resolveClient(t.ticketId)===t.client&&t.client?'true':'false'}" style="${resolveClient(t.ticketId)&&resolveClient(t.ticketId)===t.client?'background:#f0fdf4;color:#065f46;font-weight:600;':''}" onchange="updateTicket('${cat}','${t._id}','client',this.value)"/>
@@ -573,23 +509,20 @@ function renderCatBody(cat){
     body.appendChild(row);
   });
 }
-function syncTooltip(inputEl,label){
-  const wrap=inputEl.closest(".f-tooltip-wrap");const tt=wrap.querySelector(".field-tooltip");const val=inputEl.value.trim();
-  if(val){wrap.classList.remove("empty");tt.innerHTML=`<div class="tt-label">${label}</div>${esc(val)}`;}else{wrap.classList.add("empty");}
-}
+function syncTooltip(inputEl,label){const wrap=inputEl.closest(".f-tooltip-wrap");const tt=wrap.querySelector(".field-tooltip");const val=inputEl.value.trim();if(val){wrap.classList.remove("empty");tt.innerHTML=`<div class="tt-label">${label}</div>${esc(val)}`;}else{wrap.classList.add("empty");}}
 function handleTicketIdInput(inputEl){
-  const pos=inputEl.selectionStart; inputEl.value=inputEl.value.toUpperCase(); inputEl.setSelectionRange(pos,pos);
+  const pos=inputEl.selectionStart;inputEl.value=inputEl.value.toUpperCase();inputEl.setSelectionRange(pos,pos);
   const cat=inputEl.dataset.cat,id=inputEl.dataset.tid,val=inputEl.value;
-  const t=tickets[cat]&&tickets[cat].find(x=>x._id===id); if(!t)return;
-  t.ticketId=val; const resolved=resolveClient(val);
-  const clientInput=inputEl.closest(".ticket-line").querySelector(".f-client"); if(!clientInput)return;
+  const t=tickets[cat]&&tickets[cat].find(x=>x._id===id);if(!t)return;
+  t.ticketId=val;const resolved=resolveClient(val);
+  const clientInput=inputEl.closest(".ticket-line").querySelector(".f-client");if(!clientInput)return;
   if(resolved){t.client=resolved;clientInput.value=resolved;clientInput.style.background="#f0fdf4";clientInput.style.color="#065f46";clientInput.style.fontWeight="600";clientInput.dataset.autoFilled="true";}
   else{if(clientInput.dataset.autoFilled==="true"){t.client="";clientInput.value="";clientInput.style.background="";clientInput.style.color="";clientInput.style.fontWeight="";clientInput.dataset.autoFilled="false";}}
   updateStats();
 }
 function updateTicket(cat,id,field,val){
-  const t=tickets[cat].find(x=>x._id===id); if(!t)return; t[field]=val;
-  if(field==="ticketId"){const r=resolveClient(val);if(r)t.client=r;} updateStats();
+  const t=tickets[cat].find(x=>x._id===id);if(!t)return;t[field]=val;
+  if(field==="ticketId"){const r=resolveClient(val);if(r)t.client=r;}updateStats();
   if(field==="status"){document.querySelectorAll(`#body-${cat} select`).forEach(s=>{s.style.color=s.value==="Completed"?"#065f46":"#a32d2d";});}
   if(field==="createdDate")renderCatBody(cat);
 }
@@ -600,16 +533,15 @@ function updateStats(){
   document.getElementById("statPending").textContent=pend;
   document.getElementById("statCompleted").textContent=all.length-pend;
 }
-
 function onShiftChange(){updateImportBtn();loadShift();}
 
-// ── LOAD SHIFT — server first, then localStorage ──
+// ── LOAD SHIFT: server first, then localStorage ──
 async function loadShift(){
   tickets={showstopper:[],high:[],escalated:[],longpending:[]};
   setDropdown("ms-current",[]);setDropdown("ms-next",[]);
   ssSelected={"ss-mails":"","ss-jira":""};
   renderSSDisplay("ss-mails",true);renderSSDisplay("ss-jira",true);
-  setInfoBoxes([]); CATS.forEach(c=>renderCatBody(c.key)); updateStats();
+  setInfoBoxes([]);CATS.forEach(c=>renderCatBody(c.key));updateStats();
   currentLog=null;
   document.getElementById("logEmpty").style.display="";
   document.getElementById("logContent").style.display="none";
@@ -619,15 +551,15 @@ async function loadShift(){
   document.getElementById("serverLoadedBanner").classList.remove("visible");
   document.getElementById("btnSubmitHandover").style.display="";
 
-  // STEP 1 — try server
-  try {
+  // STEP 1 — try server first
+  try{
     const res=await fetch(API_URL+'?action=getHandovers&t='+Date.now());
     const data=await res.json();
     if(data.success&&data.handovers&&data.handovers.length){
       const cd=getDate(),cs=getShift();
       const rec=data.handovers.find(h=>{
         const hd=h.date||'';
-        return (hd===cd||normDate(hd)===cd)&&h.shift===cs;
+        return(hd===cd||normDate(hd)===cd)&&h.shift===cs;
       });
       if(rec){
         setDropdown("ms-current",parseMembers(rec.currentMembers));
@@ -639,12 +571,12 @@ async function loadShift(){
           if(rec.mailsHandledBy&&members.includes(rec.mailsHandledBy))ssSelected["ss-mails"]=rec.mailsHandledBy;
           if(rec.jiraHandledBy&&members.includes(rec.jiraHandledBy))ssSelected["ss-jira"]=rec.jiraHandledBy;
           renderSSDisplay("ss-mails",false);renderSSDisplay("ss-jira",false);
-        } else { setSSValues(rec.mailsHandledBy||'',rec.jiraHandledBy||''); }
+        }else{setSSValues(rec.mailsHandledBy||'',rec.jiraHandledBy||'');}
         tickets.showstopper=buildTicketStubs(rec.showstopperIds,rec.showstopperCount,rec.showstopperPending);
         tickets.high=buildTicketStubs(rec.highIds,rec.highCount,rec.highPending);
         tickets.escalated=buildTicketStubs(rec.escalatedIds,rec.escalatedCount,rec.escalatedPending);
         tickets.longpending=buildTicketStubs(rec.longpendingIds,rec.longpendingCount,rec.longpendingPending);
-        CATS.forEach(c=>renderCatBody(c.key)); updateStats();
+        CATS.forEach(c=>renderCatBody(c.key));updateStats();
         currentLog={
           date:rec.date,shift:rec.shift,
           currentMembers:parseMembers(rec.currentMembers),nextMembers:parseMembers(rec.nextMembers),
@@ -662,18 +594,15 @@ async function loadShift(){
         return;
       }
     }
-  } catch(err){ showToast("Could not reach server — using local data.","warn"); }
+  }catch(err){showToast("Could not reach server — using local data.","warn");}
 
-  // STEP 2 — localStorage
+  // STEP 2 — localStorage fallback
   const raw=localStorage.getItem(shiftKey(getDate(),getShift()));
   if(!raw){
     const prev=prevShift(getShift());
     const prevRaw=localStorage.getItem(shiftKey(getDate(),prev));
     if(prevRaw){
-      try{
-        const pd=JSON.parse(prevRaw);
-        if(pd.nextMembers&&pd.nextMembers.length){setDropdown("ms-current",pd.nextMembers);onCurrentMembersChanged(false);showToast("Current members pre-filled from "+prev+" handover","info");}
-      }catch(e){}
+      try{const pd=JSON.parse(prevRaw);if(pd.nextMembers&&pd.nextMembers.length){setDropdown("ms-current",pd.nextMembers);onCurrentMembersChanged(false);showToast("Current members pre-filled from "+prev+" handover","info");}}catch(e){}
     }
     return;
   }
@@ -682,9 +611,8 @@ async function loadShift(){
     setDropdown("ms-current",data.currentMembers||[]);setDropdown("ms-next",data.nextMembers||[]);
     setInfoBoxes(data.infoBoxes||[]);
     CATS.forEach(c=>{(data.tickets[c.key]||[]).forEach(t=>tickets[c.key].push(t));});
-    CATS.forEach(c=>renderCatBody(c.key)); updateStats();
-    setSSValues(data.mailsHandledBy||"",data.jiraHandledBy||"");
-    onCurrentMembersChanged();
+    CATS.forEach(c=>renderCatBody(c.key));updateStats();
+    setSSValues(data.mailsHandledBy||"",data.jiraHandledBy||"");onCurrentMembersChanged();
     const members=selected["ms-current"];
     if(members.length>1){
       if(data.mailsHandledBy&&members.includes(data.mailsHandledBy))ssSelected["ss-mails"]=data.mailsHandledBy;
@@ -701,9 +629,9 @@ function saveShift(log){
     currentMembers:selected["ms-current"],nextMembers:selected["ms-next"],
     mailsHandledBy:ssSelected["ss-mails"],jiraHandledBy:ssSelected["ss-jira"],
     infoBoxes:getInfoBoxes(),tickets,log
-  }));
-  renderSaved();
+  }));renderSaved();
 }
+
 function submitHandover(){
   const log={
     date:getDate(),shift:getShift(),
@@ -722,10 +650,7 @@ async function submitToAdmin(){
   const log=currentLog;const all=Object.values(log.tickets).flat();
   const pending=all.filter(t=>t.status==="Pending").length;const completed=all.length-pending;
   const cs={};
-  CATS.forEach(cat=>{
-    const tix=log.tickets[cat.key]||[];
-    cs[cat.key+'Count']=tix.length;cs[cat.key+'Ids']=tix.map(t=>t.ticketId||'(no id)').join(', ');cs[cat.key+'Pending']=tix.filter(t=>t.status==='Pending').length;
-  });
+  CATS.forEach(cat=>{const tix=log.tickets[cat.key]||[];cs[cat.key+'Count']=tix.length;cs[cat.key+'Ids']=tix.map(t=>t.ticketId||'(no id)').join(', ');cs[cat.key+'Pending']=tix.filter(t=>t.status==='Pending').length;});
   const btn=document.getElementById("btnSubmitAdmin");const statusEl=document.getElementById("adminSubmitStatus");
   btn.disabled=true;statusEl.className="admin-submit-status loading";statusEl.textContent="⏳ Submitting to admin...";
   try{
@@ -748,26 +673,18 @@ async function submitToAdmin(){
       btn.textContent="✅ Submitted to Admin";btn.disabled=true;
       document.getElementById("serverLoadedBanner").classList.add("visible");
       showToast("Handover submitted to admin!","success");
-    } else { throw new Error(data.error||'Unknown error'); }
-  }catch(err){
-    statusEl.className="admin-submit-status error";statusEl.textContent="⚠ Failed to submit. Please try again.";
-    btn.disabled=false;showToast("Failed to submit to admin.","error");
-  }
+    }else{throw new Error(data.error||'Unknown error');}
+  }catch(err){statusEl.className="admin-submit-status error";statusEl.textContent="⚠ Failed to submit. Please try again.";btn.disabled=false;showToast("Failed to submit to admin.","error");}
 }
 
 function showSummary(log){
-  document.getElementById("logEmpty").style.display="none";
-  document.getElementById("logContent").style.display="block";
-  document.getElementById("btnFullLog").style.display="";
+  document.getElementById("logEmpty").style.display="none";document.getElementById("logContent").style.display="block";document.getElementById("btnFullLog").style.display="";
   document.getElementById("sumShiftTitle").textContent=log.date+" — "+log.shift;
   document.getElementById("sumSubmitTime").textContent="Submitted "+new Date(log.submittedAt).toLocaleTimeString();
   const all=Object.values(log.tickets).flat();const pend=all.filter(t=>t.status==="Pending").length;
-  document.getElementById("sumTotal").textContent=all.length;
-  document.getElementById("sumPend").textContent=pend;
-  document.getElementById("sumComp").textContent=all.length-pend;
+  document.getElementById("sumTotal").textContent=all.length;document.getElementById("sumPend").textContent=pend;document.getElementById("sumComp").textContent=all.length-pend;
   document.getElementById("sumMembers").textContent=(log.currentMembers.join(", ")||"—")+" → "+(log.nextMembers.join(", ")||"—");
-  document.getElementById("sumMails").textContent=log.mailsHandledBy||"—";
-  document.getElementById("sumJira").textContent=log.jiraHandledBy||"—";
+  document.getElementById("sumMails").textContent=log.mailsHandledBy||"—";document.getElementById("sumJira").textContent=log.jiraHandledBy||"—";
   const miniCats=document.getElementById("miniCats");miniCats.innerHTML="";
   CATS.forEach(cat=>{
     const tix=log.tickets[cat.key]||[];if(!tix.length)return;
@@ -776,8 +693,7 @@ function showSummary(log){
     head.innerHTML=`<span style="width:8px;height:8px;border-radius:50%;background:${cat.color};display:inline-block;"></span><span style="color:${cat.color}">${cat.label}</span><span style="font-size:10px;background:${cat.color};color:#fff;border-radius:8px;padding:1px 6px;">${tix.length}</span>`;
     wrap.appendChild(head);
     tix.forEach(t=>{
-      const ageDays=t.createdDate?Math.floor((new Date()-new Date(t.createdDate))/86400000):0;
-      const isOld=t.status==="Pending"&&ageDays>10;
+      const ageDays=t.createdDate?Math.floor((new Date()-new Date(t.createdDate))/86400000):0;const isOld=t.status==="Pending"&&ageDays>10;
       const row=document.createElement("div");row.className="mini-ticket";row.style.borderLeftColor=cat.color;
       if(isOld){row.style.background="#FEE2E2";row.style.borderLeft="3px solid #E24B4A";}
       row.innerHTML=`<span style="font-weight:600;${isOld?'color:#991b1b;':''}">${esc(t.ticketId)||"—"}</span><span style="color:#5f6b7a;font-size:10px;margin-left:4px;flex:1;padding:0 4px;">${esc(t.client)}</span>${isOld?`<span style="font-size:10px;font-weight:700;color:#991b1b;background:#FECACA;border-radius:5px;padding:1px 6px;margin-right:4px;">${ageDays}d overdue</span>`:""}<span class="status-pill ${t.status==='Completed'?'status-completed':'status-pending'}">${t.status}</span>`;
@@ -798,99 +714,37 @@ function mailHandover(){
   CATS.forEach(cat=>{
     const tix=log.tickets[cat.key]||[];body+=`${catLabels[cat.key].toUpperCase()} (${tix.length})\n${"-".repeat(30)}\n`;
     if(!tix.length){body+=`  No tickets.\n`;}
-    else{tix.forEach((t,i)=>{
-      const age=calcAge(t.createdDate);const ageDays=t.createdDate?Math.floor((new Date()-new Date(t.createdDate))/86400000):0;
-      const overdue=t.status==="Pending"&&ageDays>10?` ⚠ ${ageDays}d OVERDUE`:"";
-      body+=`  ${i+1}. ${t.ticketId||"—"} [${t.client||"—"}]${overdue}\n`;
-      if(t.desc)body+=`     Description : ${t.desc}\n`;
-      if(t.assignedTo)body+=`     Assigned To : ${t.assignedTo}\n`;
-      if(t.nextAction)body+=`     Next Action : ${t.nextAction}\n`;
-      body+=`     Age: ${age||"—"}   Status: ${statusIcon(t.status)} ${t.status}\n\n`;
-    });}
+    else{tix.forEach((t,i)=>{const age=calcAge(t.createdDate);const ageDays=t.createdDate?Math.floor((new Date()-new Date(t.createdDate))/86400000):0;const overdue=t.status==="Pending"&&ageDays>10?` ⚠ ${ageDays}d OVERDUE`:"";body+=`  ${i+1}. ${t.ticketId||"—"} [${t.client||"—"}]${overdue}\n`;if(t.desc)body+=`     Description : ${t.desc}\n`;if(t.assignedTo)body+=`     Assigned To : ${t.assignedTo}\n`;if(t.nextAction)body+=`     Next Action : ${t.nextAction}\n`;body+=`     Age: ${age||"—"}   Status: ${statusIcon(t.status)} ${t.status}\n\n`;});}
     body+="\n";
   });
-  const boxes=(log.infoBoxes||[]).filter(b=>b&&b.trim());
-  if(boxes.length){body+=`IMPORTANT INFORMATION\n${"-".repeat(30)}\n`;boxes.forEach((txt,i)=>{body+=`[${i+1}] ${txt}\n\n`;});}
+  const boxes=(log.infoBoxes||[]).filter(b=>b&&b.trim());if(boxes.length){body+=`IMPORTANT INFORMATION\n${"-".repeat(30)}\n`;boxes.forEach((txt,i)=>{body+=`[${i+1}] ${txt}\n\n`;});}
   body+=`${"=".repeat(40)}\nThis is an auto-generated handover mail from LRP Support Shift Handover Tool.`;
   const nextNames=log.nextMembers.join(", ")||"Next Shift Team";
   const subject=`[LRP Support] Shift Handover – ${log.shift} | ${log.date}`;
   const greeting=`Hi ${nextNames},\n\nPlease find below the shift handover summary for ${log.shift} on ${log.date}.\n\n`;
   const sign=`\n\nRegards,\n${log.currentMembers.join(" & ")||"Current Shift Team"}\nLRP Support`;
   const fullBody=greeting+body+sign;
-  const mailWin=window.open("","_blank");
-  if(!mailWin){showToast("Pop-up blocked. Allow pop-ups and try again.","error");return;}
-  mailWin.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Send Handover Mail</title>
-<style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f6f9;color:#1a1a1a;padding:28px 32px;}
-h2{color:#185FA5;margin-bottom:6px;font-size:18px;}.sub{font-size:13px;color:#5f6b7a;margin-bottom:20px;}.field{margin-bottom:14px;}
-label{font-size:12px;font-weight:600;color:#5f6b7a;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px;}
-input{width:100%;padding:8px 12px;border:1px solid #d0d7df;border-radius:7px;font-size:13px;outline:none;}input:focus{border-color:#185FA5;}
-textarea{width:100%;padding:10px 12px;border:1px solid #d0d7df;border-radius:7px;font-size:12px;font-family:monospace;line-height:1.6;resize:vertical;outline:none;min-height:420px;}
-textarea:focus{border-color:#185FA5;}.actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
-.btn{padding:10px 22px;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer;}
-.btn-primary{background:#185FA5;color:#fff;}.btn-copy{background:#f0f4f8;color:#374151;border:1px solid #d0d7df;}
-.btn-close{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;}
-.note{font-size:12px;color:#9ca3af;margin-top:10px;background:#fff;border:1px solid #e0e4ea;border-radius:7px;padding:10px 14px;line-height:1.7;}
-.copied{color:#065f46;font-size:12px;font-weight:600;display:none;margin-top:6px;}</style></head><body>
-<h2>✉ Send Shift Handover Mail</h2><div class="sub">Fill in the To address, copy the body, then click Open in Mail.</div>
-<div class="field"><label>Subject</label><input id="subj" value="${subject.replace(/"/g,'&quot;')}"/></div>
-<div class="field"><label>Mail Body (copy this)</label><textarea id="mailBody">${fullBody.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</textarea></div>
-<div class="actions">
-  <button class="btn btn-copy" onclick="copyBody()">📋 Copy Body</button>
-  <button class="btn btn-primary" onclick="openMail()">📨 Open in Mail App</button>
-  <button class="btn btn-close" onclick="window.close()">✕ Close</button>
-</div>
-<div class="copied" id="copiedMsg">✅ Copied to clipboard!</div>
-<div class="note"><strong>How to send:</strong><br>1. Click <strong>Copy Body</strong>.<br>2. Click <strong>Open in Mail App</strong>.<br>3. Paste body and add recipients.<br>4. Hit Send!</div>
-<script>
-function copyBody(){const ta=document.getElementById('mailBody');ta.select();try{document.execCommand('copy');}catch(e){navigator.clipboard.writeText(ta.value).catch(()=>{});}const msg=document.getElementById('copiedMsg');msg.style.display='block';setTimeout(()=>msg.style.display='none',2500);}
-function openMail(){const subj=encodeURIComponent(document.getElementById('subj').value);const hint=encodeURIComponent('(Please paste the copied mail body here)');window.location.href='mailto:?subject='+subj+'&body='+hint;}
-<\/script></body></html>`);
+  const mailWin=window.open("","_blank");if(!mailWin){showToast("Pop-up blocked. Allow pop-ups and try again.","error");return;}
+  mailWin.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Send Handover Mail</title><style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f6f9;color:#1a1a1a;padding:28px 32px;}h2{color:#185FA5;margin-bottom:6px;font-size:18px;}.sub{font-size:13px;color:#5f6b7a;margin-bottom:20px;}.field{margin-bottom:14px;}label{font-size:12px;font-weight:600;color:#5f6b7a;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px;}input{width:100%;padding:8px 12px;border:1px solid #d0d7df;border-radius:7px;font-size:13px;outline:none;}input:focus{border-color:#185FA5;}textarea{width:100%;padding:10px 12px;border:1px solid #d0d7df;border-radius:7px;font-size:12px;font-family:monospace;line-height:1.6;resize:vertical;outline:none;min-height:420px;}textarea:focus{border-color:#185FA5;}.actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}.btn{padding:10px 22px;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer;}.btn-primary{background:#185FA5;color:#fff;}.btn-copy{background:#f0f4f8;color:#374151;border:1px solid #d0d7df;}.btn-close{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;}.note{font-size:12px;color:#9ca3af;margin-top:10px;background:#fff;border:1px solid #e0e4ea;border-radius:7px;padding:10px 14px;line-height:1.7;}.copied{color:#065f46;font-size:12px;font-weight:600;display:none;margin-top:6px;}</style></head><body><h2>✉ Send Shift Handover Mail</h2><div class="sub">Fill in the To address, copy the body, then click Open in Mail.</div><div class="field"><label>Subject</label><input id="subj" value="${subject.replace(/"/g,'&quot;')}"/></div><div class="field"><label>Mail Body (copy this)</label><textarea id="mailBody">${fullBody.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</textarea></div><div class="actions"><button class="btn btn-copy" onclick="copyBody()">📋 Copy Body</button><button class="btn btn-primary" onclick="openMail()">📨 Open in Mail App</button><button class="btn btn-close" onclick="window.close()">✕ Close</button></div><div class="copied" id="copiedMsg">✅ Copied to clipboard!</div><div class="note"><strong>How to send:</strong><br>1. Click <strong>Copy Body</strong>.<br>2. Click <strong>Open in Mail App</strong>.<br>3. Paste body and add recipients.<br>4. Hit Send!</div><script>function copyBody(){const ta=document.getElementById('mailBody');ta.select();try{document.execCommand('copy');}catch(e){navigator.clipboard.writeText(ta.value).catch(()=>{});}const msg=document.getElementById('copiedMsg');msg.style.display='block';setTimeout(()=>msg.style.display='none',2500);}function openMail(){const subj=encodeURIComponent(document.getElementById('subj').value);const hint=encodeURIComponent('(Please paste the copied mail body here)');window.location.href='mailto:?subject='+subj+'&body='+hint;}<\/script></body></html>`);
   mailWin.document.close();showToast("Mail composer opened in new tab!","info");
 }
 
 function openFullLog(){
   if(!currentLog)return;const log=currentLog;
   document.getElementById("flHeaderMeta").textContent=log.date+" | Shift "+log.shift+" | Submitted "+new Date(log.submittedAt).toLocaleTimeString();
-  document.getElementById("flTop").innerHTML=`
-    <div class="fl-info-box"><div class="fl-info-label">Date</div><div class="fl-info-val">${log.date}</div></div>
-    <div class="fl-info-box"><div class="fl-info-label">Shift</div><div class="fl-info-val">${log.shift}</div></div>
-    <div class="fl-info-box" style="flex:2"><div class="fl-info-label">Current Shift Members</div><div class="fl-members">${log.currentMembers.join(" &nbsp;·&nbsp; ")||"—"}</div></div>
-    <div class="fl-info-box" style="flex:2"><div class="fl-info-label">Next Shift Members</div><div class="fl-members">${log.nextMembers.join(" &nbsp;·&nbsp; ")||"—"}</div></div>
-    <div class="fl-info-box" style="flex:1.5"><div class="fl-info-label">Mails Handled By</div><div class="fl-members">${log.mailsHandledBy||"—"}</div></div>
-    <div class="fl-info-box" style="flex:1.5"><div class="fl-info-label">Jira Handled By</div><div class="fl-members">${log.jiraHandledBy||"—"}</div></div>`;
+  document.getElementById("flTop").innerHTML=`<div class="fl-info-box"><div class="fl-info-label">Date</div><div class="fl-info-val">${log.date}</div></div><div class="fl-info-box"><div class="fl-info-label">Shift</div><div class="fl-info-val">${log.shift}</div></div><div class="fl-info-box" style="flex:2"><div class="fl-info-label">Current Shift Members</div><div class="fl-members">${log.currentMembers.join(" &nbsp;·&nbsp; ")||"—"}</div></div><div class="fl-info-box" style="flex:2"><div class="fl-info-label">Next Shift Members</div><div class="fl-members">${log.nextMembers.join(" &nbsp;·&nbsp; ")||"—"}</div></div><div class="fl-info-box" style="flex:1.5"><div class="fl-info-label">Mails Handled By</div><div class="fl-members">${log.mailsHandledBy||"—"}</div></div><div class="fl-info-box" style="flex:1.5"><div class="fl-info-label">Jira Handled By</div><div class="fl-members">${log.jiraHandledBy||"—"}</div></div>`;
   const all=Object.values(log.tickets).flat();const pend=all.filter(t=>t.status==="Pending").length;
-  document.getElementById("flStats").innerHTML=`
-    <div class="fl-stat" style="background:#dbeafe;"><div class="fl-stat-num" style="color:#185FA5;">${all.length}</div><div class="fl-stat-lbl" style="color:#185FA5;">Total Tickets</div></div>
-    <div class="fl-stat" style="background:#fee2e2;"><div class="fl-stat-num" style="color:#a32d2d;">${pend}</div><div class="fl-stat-lbl" style="color:#a32d2d;">Pending</div></div>
-    <div class="fl-stat" style="background:#d1fae5;"><div class="fl-stat-num" style="color:#065f46;">${all.length-pend}</div><div class="fl-stat-lbl" style="color:#065f46;">Completed</div></div>`;
+  document.getElementById("flStats").innerHTML=`<div class="fl-stat" style="background:#dbeafe;"><div class="fl-stat-num" style="color:#185FA5;">${all.length}</div><div class="fl-stat-lbl" style="color:#185FA5;">Total Tickets</div></div><div class="fl-stat" style="background:#fee2e2;"><div class="fl-stat-num" style="color:#a32d2d;">${pend}</div><div class="fl-stat-lbl" style="color:#a32d2d;">Pending</div></div><div class="fl-stat" style="background:#d1fae5;"><div class="fl-stat-num" style="color:#065f46;">${all.length-pend}</div><div class="fl-stat-lbl" style="color:#065f46;">Completed</div></div>`;
   const flInfoBoxes=document.getElementById("flInfoBoxes");flInfoBoxes.innerHTML="";
-  (log.infoBoxes||[]).forEach(txt=>{
-    if(!txt||!txt.trim())return;
-    const box=document.createElement("div");box.className="fl-info-note-box";
-    box.innerHTML=`<div class="fl-info-note-label"><span>📢</span> Important Information</div><div class="fl-info-note-text">${esc(txt).replace(/\n/g,'<br>')}</div>`;
-    flInfoBoxes.appendChild(box);
-  });
+  (log.infoBoxes||[]).forEach(txt=>{if(!txt||!txt.trim())return;const box=document.createElement("div");box.className="fl-info-note-box";box.innerHTML=`<div class="fl-info-note-label"><span>📢</span> Important Information</div><div class="fl-info-note-text">${esc(txt).replace(/\n/g,'<br>')}</div>`;flInfoBoxes.appendChild(box);});
   const flCats=document.getElementById("flCats");flCats.innerHTML="";
   CATS.forEach(cat=>{
-    const tix=log.tickets[cat.key]||[];
-    const card=document.createElement("div");card.className="fl-cat-card";
+    const tix=log.tickets[cat.key]||[];const card=document.createElement("div");card.className="fl-cat-card";
     const head=document.createElement("div");head.className="fl-cat-head";head.style.background=cat.bg;
     head.innerHTML=`<span class="fl-cat-dot" style="background:${cat.color};"></span><span class="fl-cat-title" style="color:${cat.color};">${cat.label}</span><span class="fl-cat-count" style="background:${cat.color};">${tix.length}</span>`;
     card.appendChild(head);
     if(!tix.length){const em=document.createElement("div");em.className="fl-empty";em.textContent="No tickets.";card.appendChild(em);}
-    else{tix.forEach(t=>{
-      const age=calcAge(t.createdDate);const ageDays=t.createdDate?Math.floor((new Date()-new Date(t.createdDate))/86400000):0;
-      const isOld=t.status==="Pending"&&ageDays>10,isComp=t.status==="Completed";
-      const row=document.createElement("div");row.className="fl-ticket";
-      if(isOld){row.style.background="#FFF0F0";row.style.borderLeft="3px solid #E24B4A";}
-      row.innerHTML=`<div class="fl-t-row"><span class="fl-t-id" ${isOld?'style="color:#991b1b;"':''}>${esc(t.ticketId)||"—"}</span>
-        <div style="display:flex;align-items:center;gap:6px;">${isOld?`<span style="font-size:11px;font-weight:700;color:#991b1b;background:#FECACA;border-radius:5px;padding:1px 7px;">${ageDays}d overdue</span>`:age?`<span class="fl-t-age">${age}</span>`:""}
-        <span class="status-pill ${isComp?'status-completed':'status-pending'}">${t.status}</span></div></div>
-        <div class="fl-t-client">${esc(t.client)}</div><div class="fl-t-desc">${esc(t.desc)}</div>
-        ${t.assignedTo?`<div class="fl-t-meta">Assigned: ${esc(t.assignedTo)}</div>`:""}
-        ${t.nextAction?`<div class="fl-t-next">&#8594; ${esc(t.nextAction)}</div>`:""}`;
-      card.appendChild(row);
-    });}
+    else{tix.forEach(t=>{const age=calcAge(t.createdDate);const ageDays=t.createdDate?Math.floor((new Date()-new Date(t.createdDate))/86400000):0;const isOld=t.status==="Pending"&&ageDays>10,isComp=t.status==="Completed";const row=document.createElement("div");row.className="fl-ticket";if(isOld){row.style.background="#FFF0F0";row.style.borderLeft="3px solid #E24B4A";}row.innerHTML=`<div class="fl-t-row"><span class="fl-t-id" ${isOld?'style="color:#991b1b;"':''}>${esc(t.ticketId)||"—"}</span><div style="display:flex;align-items:center;gap:6px;">${isOld?`<span style="font-size:11px;font-weight:700;color:#991b1b;background:#FECACA;border-radius:5px;padding:1px 7px;">${ageDays}d overdue</span>`:age?`<span class="fl-t-age">${age}</span>`:""}<span class="status-pill ${isComp?'status-completed':'status-pending'}">${t.status}</span></div></div><div class="fl-t-client">${esc(t.client)}</div><div class="fl-t-desc">${esc(t.desc)}</div>${t.assignedTo?`<div class="fl-t-meta">Assigned: ${esc(t.assignedTo)}</div>`:""}${t.nextAction?`<div class="fl-t-next">&#8594; ${esc(t.nextAction)}</div>`:""}`;card.appendChild(row);});}
     flCats.appendChild(card);
   });
   document.getElementById("fulllogOverlay").classList.add("open");
@@ -901,64 +755,17 @@ function printHandover(){
   const log=currentLog;if(!log)return;
   const all=Object.values(log.tickets).flat();const pend=all.filter(t=>t.status==="Pending").length,comp=all.length-pend;
   const catStyles={showstopper:{color:"#E24B4A",bg:"#FCEBEB",label:"Showstopper"},high:{color:"#BA7517",bg:"#FAEEDA",label:"High Priority"},escalated:{color:"#7C3AED",bg:"#F3E8FF",label:"Customer Escalated"},longpending:{color:"#888780",bg:"#F1EFE8",label:"Long Pending"}};
-  function escH(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  function escH(s){return(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
   let catHTML="";
   CATS.forEach(cat=>{
     const tix=log.tickets[cat.key]||[],cs=catStyles[cat.key];let rows="";
     if(!tix.length){rows=`<tr><td colspan="7" style="text-align:center;color:#9ca3af;padding:10px;font-size:12px;">No tickets in this category.</td></tr>`;}
-    else{tix.forEach((t,i)=>{
-      const age=calcAge(t.createdDate),ageDays=t.createdDate?Math.floor((new Date()-new Date(t.createdDate))/86400000):0;
-      const isOld=t.status==="Pending"&&ageDays>10,isComp=t.status==="Completed";
-      const rowBg=isOld?"#FFF0F0":i%2===0?"#fafafa":"#fff";
-      const statusBg=isComp?"#d1fae5":"#fee2e2",statusColor=isComp?"#065f46":"#991b1b";
-      rows+=`<tr style="background:${rowBg};"><td style="padding:7px 10px;font-weight:700;color:${isOld?'#991b1b':'#1a1a1a'};border-bottom:1px solid #f0f0f0;">${escH(t.ticketId)||"—"}</td>
-        <td style="padding:7px 10px;color:#5f6b7a;border-bottom:1px solid #f0f0f0;">${escH(t.client)}</td>
-        <td style="padding:7px 10px;color:#374151;border-bottom:1px solid #f0f0f0;">${escH(t.desc)}</td>
-        <td style="padding:7px 10px;color:#374151;border-bottom:1px solid #f0f0f0;">${escH(t.assignedTo)}</td>
-        <td style="padding:7px 10px;color:#374151;border-bottom:1px solid #f0f0f0;">${escH(t.nextAction)}</td>
-        <td style="padding:7px 10px;text-align:center;border-bottom:1px solid #f0f0f0;">${isOld?`<span style="font-size:11px;font-weight:700;color:#991b1b;background:#FECACA;border-radius:4px;padding:2px 6px;">${ageDays}d overdue</span>`:`<span style="font-size:11px;color:#854F0B;background:#FAEEDA;border-radius:4px;padding:2px 6px;">${age||"—"}</span>`}</td>
-        <td style="padding:7px 10px;text-align:center;border-bottom:1px solid #f0f0f0;"><span style="font-size:11px;font-weight:600;color:${statusColor};background:${statusBg};border-radius:5px;padding:2px 8px;">${t.status}</span></td></tr>`;
-    });}
-    catHTML+=`<div style="margin-bottom:20px;border-radius:8px;overflow:hidden;border:1px solid #e0e4ea;">
-      <div style="background:${cs.bg};padding:10px 14px;display:flex;align-items:center;gap:8px;">
-        <span style="width:11px;height:11px;border-radius:50%;background:${cs.color};display:inline-block;"></span>
-        <span style="font-size:13px;font-weight:700;color:${cs.color};">${cs.label}</span>
-        <span style="font-size:11px;color:#fff;background:${cs.color};border-radius:9px;padding:1px 8px;margin-left:4px;">${tix.length}</span>
-      </div>
-      <table style="width:100%;border-collapse:collapse;font-size:12px;"><thead>
-        <tr style="background:#374151;"><th style="padding:7px 10px;color:#fff;text-align:left;font-weight:600;">Ticket ID</th><th style="padding:7px 10px;color:#fff;text-align:left;font-weight:600;">Client</th>
-        <th style="padding:7px 10px;color:#fff;text-align:left;font-weight:600;">Description</th><th style="padding:7px 10px;color:#fff;text-align:left;font-weight:600;">Assigned To</th>
-        <th style="padding:7px 10px;color:#fff;text-align:left;font-weight:600;">Next Action</th><th style="padding:7px 10px;color:#fff;text-align:center;font-weight:600;">Age</th>
-        <th style="padding:7px 10px;color:#fff;text-align:center;font-weight:600;">Status</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+    else{tix.forEach((t,i)=>{const age=calcAge(t.createdDate),ageDays=t.createdDate?Math.floor((new Date()-new Date(t.createdDate))/86400000):0;const isOld=t.status==="Pending"&&ageDays>10,isComp=t.status==="Completed";const rowBg=isOld?"#FFF0F0":i%2===0?"#fafafa":"#fff";const statusBg=isComp?"#d1fae5":"#fee2e2",statusColor=isComp?"#065f46":"#991b1b";rows+=`<tr style="background:${rowBg};"><td style="padding:7px 10px;font-weight:700;color:${isOld?'#991b1b':'#1a1a1a'};border-bottom:1px solid #f0f0f0;">${escH(t.ticketId)||"—"}</td><td style="padding:7px 10px;color:#5f6b7a;border-bottom:1px solid #f0f0f0;">${escH(t.client)}</td><td style="padding:7px 10px;color:#374151;border-bottom:1px solid #f0f0f0;">${escH(t.desc)}</td><td style="padding:7px 10px;color:#374151;border-bottom:1px solid #f0f0f0;">${escH(t.assignedTo)}</td><td style="padding:7px 10px;color:#374151;border-bottom:1px solid #f0f0f0;">${escH(t.nextAction)}</td><td style="padding:7px 10px;text-align:center;border-bottom:1px solid #f0f0f0;">${isOld?`<span style="font-size:11px;font-weight:700;color:#991b1b;background:#FECACA;border-radius:4px;padding:2px 6px;">${ageDays}d overdue</span>`:`<span style="font-size:11px;color:#854F0B;background:#FAEEDA;border-radius:4px;padding:2px 6px;">${age||"—"}</span>`}</td><td style="padding:7px 10px;text-align:center;border-bottom:1px solid #f0f0f0;"><span style="font-size:11px;font-weight:600;color:${statusColor};background:${statusBg};border-radius:5px;padding:2px 8px;">${t.status}</span></td></tr>`;});}
+    catHTML+=`<div style="margin-bottom:20px;border-radius:8px;overflow:hidden;border:1px solid #e0e4ea;"><div style="background:${cs.bg};padding:10px 14px;display:flex;align-items:center;gap:8px;"><span style="width:11px;height:11px;border-radius:50%;background:${cs.color};display:inline-block;"></span><span style="font-size:13px;font-weight:700;color:${cs.color};">${cs.label}</span><span style="font-size:11px;color:#fff;background:${cs.color};border-radius:9px;padding:1px 8px;margin-left:4px;">${tix.length}</span></div><table style="width:100%;border-collapse:collapse;font-size:12px;"><thead><tr style="background:#374151;"><th style="padding:7px 10px;color:#fff;text-align:left;font-weight:600;">Ticket ID</th><th style="padding:7px 10px;color:#fff;text-align:left;font-weight:600;">Client</th><th style="padding:7px 10px;color:#fff;text-align:left;font-weight:600;">Description</th><th style="padding:7px 10px;color:#fff;text-align:left;font-weight:600;">Assigned To</th><th style="padding:7px 10px;color:#fff;text-align:left;font-weight:600;">Next Action</th><th style="padding:7px 10px;color:#fff;text-align:center;font-weight:600;">Age</th><th style="padding:7px 10px;color:#fff;text-align:center;font-weight:600;">Status</th></tr></thead><tbody>${rows}</tbody></table></div>`;
   });
   const boxes2=(log.infoBoxes||[]).filter(b=>b&&b.trim());let infoHTML="";
   if(boxes2.length){infoHTML=`<div style="margin-top:24px;"><div style="font-size:13px;font-weight:700;color:#92400e;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;">📢 Important Information</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">${boxes2.map(txt=>`<div style="background:#fffbeb;border:1.5px solid #f59e0b;border-radius:8px;padding:12px 14px;"><div style="font-size:11px;font-weight:700;color:#92400e;margin-bottom:6px;">📢 Important Information</div><div style="font-size:12px;color:#374151;white-space:pre-wrap;line-height:1.6;">${escH(txt)}</div></div>`).join("")}</div></div>`;}
-  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Shift Handover - ${log.date} ${log.shift}</title>
-<style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#1a1a1a;font-size:13px;background:#fff;}
-@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}.no-print{display:none!important;}@page{margin:15mm 12mm;size:A4 landscape;}}</style>
-</head><body style="padding:28px 32px;max-width:1100px;margin:0 auto;">
-<div class="no-print" style="text-align:right;margin-bottom:16px;">
-  <button onclick="window.print()" style="background:#185FA5;color:#fff;border:none;border-radius:7px;padding:9px 22px;font-size:13px;font-weight:600;cursor:pointer;">🖨 Print / Save as PDF</button>
-  <button onclick="window.close()" style="margin-left:8px;background:#e5e7eb;color:#374151;border:none;border-radius:7px;padding:9px 18px;font-size:13px;cursor:pointer;">✕ Close</button>
-</div>
-<div style="background:#185FA5;border-radius:10px;padding:16px 22px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;">
-  <div><div style="color:#fff;font-size:20px;font-weight:700;">LRP Support Shift Handover</div><div style="color:rgba(255,255,255,.75);font-size:12px;margin-top:3px;">IT Support Team  |  Generated: ${new Date().toLocaleString()}</div></div>
-  <div style="text-align:right;"><div style="color:#fff;font-size:22px;font-weight:700;">${log.shift}</div><div style="color:rgba(255,255,255,.75);font-size:12px;">${log.date}</div></div>
-</div>
-<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;">
-  <div style="background:#f0f4f8;border-radius:8px;padding:10px 14px;"><div style="font-size:10px;color:#5f6b7a;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">Current Shift</div><div style="font-size:12px;font-weight:600;color:#1a1a1a;line-height:1.6;">${log.currentMembers.join("<br>")||"—"}</div></div>
-  <div style="background:#f0f4f8;border-radius:8px;padding:10px 14px;"><div style="font-size:10px;color:#5f6b7a;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">Next Shift</div><div style="font-size:12px;font-weight:600;color:#1a1a1a;line-height:1.6;">${log.nextMembers.join("<br>")||"—"}</div></div>
-  <div style="background:#f0f4f8;border-radius:8px;padding:10px 14px;"><div style="font-size:10px;color:#5f6b7a;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">Mails Handled By</div><div style="font-size:13px;font-weight:600;color:#1a1a1a;">${escH(log.mailsHandledBy)||"—"}</div></div>
-  <div style="background:#f0f4f8;border-radius:8px;padding:10px 14px;"><div style="font-size:10px;color:#5f6b7a;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">Jira Handled By</div><div style="font-size:13px;font-weight:600;color:#1a1a1a;">${escH(log.jiraHandledBy)||"—"}</div></div>
-</div>
-<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;">
-  <div style="background:#dbeafe;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:26px;font-weight:700;color:#185FA5;">${all.length}</div><div style="font-size:11px;color:#185FA5;">Total Tickets</div></div>
-  <div style="background:#fee2e2;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:26px;font-weight:700;color:#991b1b;">${pend}</div><div style="font-size:11px;color:#991b1b;">Pending</div></div>
-  <div style="background:#d1fae5;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:26px;font-weight:700;color:#065f46;">${comp}</div><div style="font-size:11px;color:#065f46;">Completed</div></div>
-</div>
-${catHTML}${infoHTML}
-<div style="margin-top:28px;border-top:1px solid #e0e4ea;padding-top:10px;text-align:center;font-size:11px;color:#9ca3af;">LRP Support · Shift Handover · ${log.date} ${log.shift} · Submitted ${new Date(log.submittedAt).toLocaleTimeString()}</div>
-<script>window.onload=function(){window.print();}<\/script></body></html>`;
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Shift Handover - ${log.date} ${log.shift}</title><style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#1a1a1a;font-size:13px;background:#fff;}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}.no-print{display:none!important;}@page{margin:15mm 12mm;size:A4 landscape;}}</style></head><body style="padding:28px 32px;max-width:1100px;margin:0 auto;"><div class="no-print" style="text-align:right;margin-bottom:16px;"><button onclick="window.print()" style="background:#185FA5;color:#fff;border:none;border-radius:7px;padding:9px 22px;font-size:13px;font-weight:600;cursor:pointer;">🖨 Print / Save as PDF</button><button onclick="window.close()" style="margin-left:8px;background:#e5e7eb;color:#374151;border:none;border-radius:7px;padding:9px 18px;font-size:13px;cursor:pointer;">✕ Close</button></div><div style="background:#185FA5;border-radius:10px;padding:16px 22px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;"><div><div style="color:#fff;font-size:20px;font-weight:700;">LRP Support Shift Handover</div><div style="color:rgba(255,255,255,.75);font-size:12px;margin-top:3px;">IT Support Team  |  Generated: ${new Date().toLocaleString()}</div></div><div style="text-align:right;"><div style="color:#fff;font-size:22px;font-weight:700;">${log.shift}</div><div style="color:rgba(255,255,255,.75);font-size:12px;">${log.date}</div></div></div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;"><div style="background:#f0f4f8;border-radius:8px;padding:10px 14px;"><div style="font-size:10px;color:#5f6b7a;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">Current Shift</div><div style="font-size:12px;font-weight:600;color:#1a1a1a;line-height:1.6;">${log.currentMembers.join("<br>")||"—"}</div></div><div style="background:#f0f4f8;border-radius:8px;padding:10px 14px;"><div style="font-size:10px;color:#5f6b7a;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">Next Shift</div><div style="font-size:12px;font-weight:600;color:#1a1a1a;line-height:1.6;">${log.nextMembers.join("<br>")||"—"}</div></div><div style="background:#f0f4f8;border-radius:8px;padding:10px 14px;"><div style="font-size:10px;color:#5f6b7a;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">Mails Handled By</div><div style="font-size:13px;font-weight:600;color:#1a1a1a;">${escH(log.mailsHandledBy)||"—"}</div></div><div style="background:#f0f4f8;border-radius:8px;padding:10px 14px;"><div style="font-size:10px;color:#5f6b7a;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">Jira Handled By</div><div style="font-size:13px;font-weight:600;color:#1a1a1a;">${escH(log.jiraHandledBy)||"—"}</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;"><div style="background:#dbeafe;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:26px;font-weight:700;color:#185FA5;">${all.length}</div><div style="font-size:11px;color:#185FA5;">Total Tickets</div></div><div style="background:#fee2e2;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:26px;font-weight:700;color:#991b1b;">${pend}</div><div style="font-size:11px;color:#991b1b;">Pending</div></div><div style="background:#d1fae5;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:26px;font-weight:700;color:#065f46;">${comp}</div><div style="font-size:11px;color:#065f46;">Completed</div></div></div>${catHTML}${infoHTML}<div style="margin-top:28px;border-top:1px solid #e0e4ea;padding-top:10px;text-align:center;font-size:11px;color:#9ca3af;">LRP Support · Shift Handover · ${log.date} ${log.shift} · Submitted ${new Date(log.submittedAt).toLocaleTimeString()}</div><script>window.onload=function(){window.print();}<\/script></body></html>`;
   const win=window.open("","_blank");win.document.write(html);win.document.close();
 }
 
@@ -966,25 +773,14 @@ function updateImportBtn(){document.getElementById("importBtn").textContent="Imp
 function importPending(){
   const prev=prevShift(getShift());const raw=localStorage.getItem(shiftKey(getDate(),prev));
   if(!raw){showToast("No saved data for "+prev,"warn");return;}
-  try{
-    const data=JSON.parse(raw);let total=0;
-    CATS.forEach(c=>{(data.tickets[c.key]||[]).filter(t=>t.status==="Pending").forEach(t=>{tickets[c.key].push({...t,_id:uid()});total++;});});
-    if(data.infoBoxes&&data.infoBoxes.some(b=>b&&b.trim())){setInfoBoxes(data.infoBoxes);showToast(`Imported ${total} pending ticket(s) + info notes from ${prev}`);}
-    else{if(!total){showToast("No pending tickets in "+prev,"warn");return;}showToast(`Imported ${total} pending ticket(s) from ${prev}`);}
-    CATS.forEach(c=>renderCatBody(c.key));updateStats();
-  }catch(e){showToast("Failed to import","error");}
+  try{const data=JSON.parse(raw);let total=0;CATS.forEach(c=>{(data.tickets[c.key]||[]).filter(t=>t.status==="Pending").forEach(t=>{tickets[c.key].push({...t,_id:uid()});total++;});});if(data.infoBoxes&&data.infoBoxes.some(b=>b&&b.trim())){setInfoBoxes(data.infoBoxes);showToast(`Imported ${total} pending ticket(s) + info notes from ${prev}`);}else{if(!total){showToast("No pending tickets in "+prev,"warn");return;}showToast(`Imported ${total} pending ticket(s) from ${prev}`);}CATS.forEach(c=>renderCatBody(c.key));updateStats();}catch(e){showToast("Failed to import","error");}
 }
 
 function renderSaved(){
   const list=document.getElementById("savedList");list.innerHTML="";
   const keys=Object.keys(localStorage).filter(k=>k.startsWith("shift:")).sort().slice(-15);
   if(!keys.length){list.innerHTML=`<span style="font-size:12px;color:#c0c4cc;">No shifts saved yet.</span>`;return;}
-  keys.forEach(k=>{const parts=k.split(":"),d=parts[1],s=parts[2];
-    const btn=document.createElement("button");btn.className="saved-btn"+(getDate()===d&&getShift()===s?" active":"");
-    btn.textContent=`${d} ${s}`;
-    btn.onclick=()=>{document.getElementById("shiftDate").value=d;document.getElementById("shiftSelect").value=s;onShiftChange();};
-    list.appendChild(btn);
-  });
+  keys.forEach(k=>{const parts=k.split(":"),d=parts[1],s=parts[2];const btn=document.createElement("button");btn.className="saved-btn"+(getDate()===d&&getShift()===s?" active":"");btn.textContent=`${d} ${s}`;btn.onclick=()=>{document.getElementById("shiftDate").value=d;document.getElementById("shiftSelect").value=s;onShiftChange();};list.appendChild(btn);});
 }
 
 function exportCSV(){
@@ -1005,46 +801,20 @@ function exportCSV(){
   const sAge={font:{bold:true,sz:10,color:{rgb:"854F0B"}},fill:{fgColor:{rgb:"FAEEDA"}},alignment:{horizontal:"center"}};
   const sCatColors={showstopper:{head:{font:{bold:true,sz:11,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:"E24B4A"}},alignment:{horizontal:"left"}}},high:{head:{font:{bold:true,sz:11,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:"BA7517"}},alignment:{horizontal:"left"}}},escalated:{head:{font:{bold:true,sz:11,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:"7C3AED"}},alignment:{horizontal:"left"}}},longpending:{head:{font:{bold:true,sz:11,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:"888780"}},alignment:{horizontal:"left"}}}};
   const TOTAL_COLS=9;
-  function mergeRow(row,style,value,fromCol=0,toCol=TOTAL_COLS-1){
-    setCell(row,fromCol,value,style);for(let c=fromCol+1;c<=toCol;c++)setCell(row,c,"",style);
-    if(!ws['!merges'])ws['!merges']=[];ws['!merges'].push({s:{r:row,c:fromCol},e:{r:row,c:toCol}});
-  }
-  mergeRow(r,sTitle,"LRP Support Shift Handover");r++;
-  mergeRow(r,sSubtitle,"IT Support Team  |  Generated: "+new Date().toLocaleString());r++;r++;
+  function mergeRow(row,style,value,fromCol=0,toCol=TOTAL_COLS-1){setCell(row,fromCol,value,style);for(let c=fromCol+1;c<=toCol;c++)setCell(row,c,"",style);if(!ws['!merges'])ws['!merges']=[];ws['!merges'].push({s:{r:row,c:fromCol},e:{r:row,c:toCol}});}
+  mergeRow(r,sTitle,"LRP Support Shift Handover");r++;mergeRow(r,sSubtitle,"IT Support Team  |  Generated: "+new Date().toLocaleString());r++;r++;
   mergeRow(r,sSectionHead,"  SHIFT DETAILS");r++;
-  [["Date",getDate()],["Shift",getShift()],["Current Shift Members",selected["ms-current"].join(", ")||"—"],["Next Shift Members",selected["ms-next"].join(", ")||"—"],["Mails Handled By",ssSelected["ss-mails"]||"—"],["Jira Handled By",ssSelected["ss-jira"]||"—"]].forEach(([label,val])=>{
-    setCell(r,0,label,sInfoLabel);setCell(r,1,"",sInfoLabel);ws['!merges']=ws['!merges']||[];ws['!merges'].push({s:{r,c:0},e:{r,c:1}});
-    setCell(r,2,val,sInfoVal);for(let c=3;c<TOTAL_COLS;c++)setCell(r,c,"",sInfoVal);ws['!merges'].push({s:{r,c:2},e:{r,c:TOTAL_COLS-1}});r++;
-  });r++;
+  [["Date",getDate()],["Shift",getShift()],["Current Shift Members",selected["ms-current"].join(", ")||"—"],["Next Shift Members",selected["ms-next"].join(", ")||"—"],["Mails Handled By",ssSelected["ss-mails"]||"—"],["Jira Handled By",ssSelected["ss-jira"]||"—"]].forEach(([label,val])=>{setCell(r,0,label,sInfoLabel);setCell(r,1,"",sInfoLabel);ws['!merges']=ws['!merges']||[];ws['!merges'].push({s:{r,c:0},e:{r,c:1}});setCell(r,2,val,sInfoVal);for(let c=3;c<TOTAL_COLS;c++)setCell(r,c,"",sInfoVal);ws['!merges'].push({s:{r,c:2},e:{r,c:TOTAL_COLS-1}});r++;});r++;
   const infoBoxes=getInfoBoxes();
-  if(infoBoxes.some(b=>b&&b.trim())){
-    mergeRow(r,sSectionHead,"  IMPORTANT INFORMATION");r++;
-    infoBoxes.forEach((txt,idx)=>{
-      if(!txt||!txt.trim())return;
-      setCell(r,0,"📢 Box "+(idx+1),sNoteHead);setCell(r,1,"",sNoteHead);ws['!merges']=ws['!merges']||[];ws['!merges'].push({s:{r,c:0},e:{r,c:1}});
-      setCell(r,2,txt,sNoteVal);for(let c=3;c<TOTAL_COLS;c++)setCell(r,c,"",sNoteVal);ws['!merges'].push({s:{r,c:2},e:{r,c:TOTAL_COLS-1}});r++;
-    });r++;
-  }
+  if(infoBoxes.some(b=>b&&b.trim())){mergeRow(r,sSectionHead,"  IMPORTANT INFORMATION");r++;infoBoxes.forEach((txt,idx)=>{if(!txt||!txt.trim())return;setCell(r,0,"📢 Box "+(idx+1),sNoteHead);setCell(r,1,"",sNoteHead);ws['!merges']=ws['!merges']||[];ws['!merges'].push({s:{r,c:0},e:{r,c:1}});setCell(r,2,txt,sNoteVal);for(let c=3;c<TOTAL_COLS;c++)setCell(r,c,"",sNoteVal);ws['!merges'].push({s:{r,c:2},e:{r,c:TOTAL_COLS-1}});r++;});r++;}
   const allTix=Object.values(tickets).flat();const pendCount=allTix.filter(t=>t.status==="Pending").length;
   mergeRow(r,sSectionHead,"  TICKET SUMMARY");r++;
-  [["Total Tickets",allTix.length],["Pending",pendCount],["Completed",allTix.length-pendCount]].forEach(([label,val])=>{
-    setCell(r,0,label,sInfoLabel);setCell(r,1,"",sInfoLabel);ws['!merges']=ws['!merges']||[];ws['!merges'].push({s:{r,c:0},e:{r,c:1}});
-    setCell(r,2,val,sInfoVal);for(let c=3;c<TOTAL_COLS;c++)setCell(r,c,"",sInfoVal);ws['!merges'].push({s:{r,c:2},e:{r,c:TOTAL_COLS-1}});r++;
-  });r++;
+  [["Total Tickets",allTix.length],["Pending",pendCount],["Completed",allTix.length-pendCount]].forEach(([label,val])=>{setCell(r,0,label,sInfoLabel);setCell(r,1,"",sInfoLabel);ws['!merges']=ws['!merges']||[];ws['!merges'].push({s:{r,c:0},e:{r,c:1}});setCell(r,2,val,sInfoVal);for(let c=3;c<TOTAL_COLS;c++)setCell(r,c,"",sInfoVal);ws['!merges'].push({s:{r,c:2},e:{r,c:TOTAL_COLS-1}});r++;});r++;
   const tblHeaders=["#","Ticket ID","Client","Description","Status","Assigned To","Next Action","Created Date","Age"];
   CATS.forEach(cat=>{
     const tix=tickets[cat.key]||[];mergeRow(r,sCatColors[cat.key].head,"  "+cat.label.toUpperCase()+" ("+tix.length+" tickets)");r++;
     if(!tix.length){mergeRow(r,sTblOdd,"  No tickets in this category.");r++;}
-    else{
-      tblHeaders.forEach((h,c)=>setCell(r,c,h,sTblHeader));r++;
-      tix.forEach((t,idx)=>{
-        const base=idx%2===0?sTblEven:sTblOdd;
-        setCell(r,0,idx+1,base);setCell(r,1,t.ticketId||"",base);setCell(r,2,t.client||"",base);
-        setCell(r,3,t.desc||"",base);setCell(r,4,t.status,t.status==="Completed"?sCompleted:sPending);
-        setCell(r,5,t.assignedTo||"",base);setCell(r,6,t.nextAction||"",base);
-        setCell(r,7,t.createdDate||"",base);setCell(r,8,calcAge(t.createdDate)||"—",sAge);r++;
-      });
-    }
+    else{tblHeaders.forEach((h,c)=>setCell(r,c,h,sTblHeader));r++;tix.forEach((t,idx)=>{const base=idx%2===0?sTblEven:sTblOdd;setCell(r,0,idx+1,base);setCell(r,1,t.ticketId||"",base);setCell(r,2,t.client||"",base);setCell(r,3,t.desc||"",base);setCell(r,4,t.status,t.status==="Completed"?sCompleted:sPending);setCell(r,5,t.assignedTo||"",base);setCell(r,6,t.nextAction||"",base);setCell(r,7,t.createdDate||"",base);setCell(r,8,calcAge(t.createdDate)||"—",sAge);r++;});}
     r++;
   });
   ws['!cols']=[{wch:4},{wch:14},{wch:14},{wch:30},{wch:12},{wch:20},{wch:28},{wch:14},{wch:8}];
