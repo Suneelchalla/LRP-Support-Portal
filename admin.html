@@ -393,8 +393,26 @@ let adminToken=null;
 let allUsers=[],allCreds=[],allLogs=[],filteredLogs=[],allHandovers=[],filteredHandovers=[];
 let selectedAgent=null,currentTab='agents';
 
-window.addEventListener('load',()=>{const t=sessionStorage.getItem('admin_token');if(t)verifyToken(t);});
-async function verifyToken(token){try{const res=await fetch(API_URL+'?action=verifyAdminToken&token='+encodeURIComponent(token));const data=await res.json();if(data.valid){adminToken=token;showDashboard();}else sessionStorage.removeItem('admin_token');}catch{sessionStorage.removeItem('admin_token');}}
+window.addEventListener('load',()=>{
+  const savedToken=sessionStorage.getItem('admin_token');
+  const savedTime=sessionStorage.getItem('admin_token_time');
+  if(savedToken&&savedTime){
+    const ageHours=(Date.now()-parseInt(savedTime,10))/(1000*60*60);
+    if(ageHours<7){adminToken=savedToken;showDashboard();return;}
+    verifyToken(savedToken);
+  }
+});
+async function verifyToken(token){
+  try{
+    const res=await fetch(API_URL+'?action=verifyAdminToken&token='+encodeURIComponent(token));
+    const data=await res.json();
+    if(data.valid){adminToken=token;sessionStorage.setItem('admin_token_time',Date.now().toString());showDashboard();}
+    else{sessionStorage.removeItem('admin_token');sessionStorage.removeItem('admin_token_time');sessionStorage.removeItem('admin_user');}
+  }catch(err){
+    console.warn('Token verify failed (network):',err);
+    adminToken=token;showDashboard();
+  }
+}
 async function adminLogin(){
   const u=document.getElementById('adm-user').value.trim(),p=document.getElementById('adm-pass').value;
   const err=document.getElementById('adm-err'),btn=document.getElementById('adm-btn');
@@ -404,14 +422,30 @@ async function adminLogin(){
   try{
     const res=await fetch(API_URL+'?'+new URLSearchParams({action:'adminLogin',username:u,password:p}));
     const data=await res.json();
-    if(data.success&&data.token){adminToken=data.token;sessionStorage.setItem('admin_token',adminToken);showDashboard();}
-    else if(data.error==='ADMIN_NOT_CONFIGURED'){err.textContent='⚠ Admin not configured. Set ADMIN_USER and ADMIN_PASS in Script Properties.';err.style.display='block';}
+    if(data.success&&data.token){
+      adminToken=data.token;
+      sessionStorage.setItem('admin_token',adminToken);
+      sessionStorage.setItem('admin_token_time',Date.now().toString());
+      sessionStorage.setItem('admin_user',u);
+      showDashboard();
+    }else if(data.error==='ADMIN_NOT_CONFIGURED'){err.textContent='⚠ Admin not configured. Set ADMIN_USER and ADMIN_PASS in Script Properties.';err.style.display='block';}
     else{err.textContent='⚠ Invalid admin credentials.';err.style.display='block';}
   }catch{err.textContent='⚠ Connection error. Try again.';err.style.display='block';}
   btn.disabled=false;btn.textContent='⚓ Sign In';
 }
 function showDashboard(){document.getElementById('loginScreen').style.display='none';document.getElementById('dashboard').style.display='block';document.getElementById('adm-pass').value='';loadUsers();}
-function adminLogout(){if(!confirm('Are you sure you want to sign out?'))return;adminToken=null;sessionStorage.removeItem('admin_token');document.getElementById('loginScreen').style.display='flex';document.getElementById('dashboard').style.display='none';document.getElementById('adm-user').value='';document.getElementById('adm-pass').value='';document.getElementById('adm-err').style.display='none';}
+function adminLogout(){
+  if(!confirm('Are you sure you want to sign out?'))return;
+  adminToken=null;
+  sessionStorage.removeItem('admin_token');
+  sessionStorage.removeItem('admin_token_time');
+  sessionStorage.removeItem('admin_user');
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('dashboard').style.display='none';
+  document.getElementById('adm-user').value='';
+  document.getElementById('adm-pass').value='';
+  document.getElementById('adm-err').style.display='none';
+}
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('loginScreen').style.display!=='none')adminLogin();});
 function switchTab(tab){currentTab=tab;['agents','creds','tracker','handover','planner'].forEach(t=>{document.getElementById('atab-'+t).classList.toggle('active',t===tab);document.getElementById('panel-'+t).classList.toggle('active',t===tab);});if(tab==='creds')loadCreds();if(tab==='tracker')loadTracker();if(tab==='handover')loadHandovers();if(tab==='planner')loadPlanner();document.getElementById('lastRefreshed').textContent='';}
 function refreshCurrent(){if(currentTab==='agents')loadUsers();else if(currentTab==='creds')loadCreds();else if(currentTab==='tracker')loadTracker();else if(currentTab==='handover')loadHandovers();else if(currentTab==='planner')loadPlanner();}
