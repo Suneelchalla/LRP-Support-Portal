@@ -375,6 +375,23 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
           <span class="planner-unsaved-badge" id="planner-unsaved-badge">● Unsaved changes</span>
           <span style="font-size:11px;color:#1a8c5c;font-weight:600;" id="planner-saved-label"></span>
           <span style="font-size:11px;color:#3a7aaa;font-weight:600;" id="planner-today-label"></span>
+          <!-- Hidden file input for Excel import -->
+          <input type="file" id="planner-excel-input" accept=".xlsx,.xls" style="display:none;" onchange="importPlannerExcel(this)"/>
+          <button onclick="downloadPlannerTemplate()"
+            style="padding:10px 16px;background:linear-gradient(135deg,#1a5a90,#0a3d78);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;"
+            title="Download Excel template to fill in shifts">
+            ⬇ Template
+          </button>
+          <button onclick="document.getElementById('planner-excel-input').click()"
+            style="padding:10px 16px;background:linear-gradient(135deg,#d07020,#a05010);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;"
+            title="Import shifts from filled Excel template">
+            ⬆ Import Excel
+          </button>
+          <button onclick="exportPlannerExcel()"
+            style="padding:10px 16px;background:linear-gradient(135deg,#185FA5,#0a3d78);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;"
+            title="Export current planner to Excel">
+            ⬇ Export Excel
+          </button>
           <button onclick="publishPlanner()" id="planner-publish-btn"
             style="padding:10px 22px;background:linear-gradient(135deg,#1a8c5c,#138048);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:13px;font-weight:700;letter-spacing:1px;">
             📤 Submit to Agents
@@ -915,6 +932,162 @@ async function publishPlanner(){
   }
   btn.disabled=false;
   updatePlannerDirtyBadge();
+}
+
+// ── PLANNER EXCEL EXPORT ────────────────────────────────
+function exportPlannerExcel(){
+  if(!plannerMembers.length){showToast('⚠ No planner data to export.',false);return;}
+  const wb=XLSX.utils.book_new();
+  const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const days=getDaysInViewMonth();
+  const monthLabel=MONTH_NAMES[plannerViewMonth]+' '+plannerViewYear;
+
+  // Header rows
+  const hdr1=['Name','ID','Primary',...days.map(d=>d.day+'/'+String(plannerViewMonth+1).padStart(2,'0'))];
+  const hdr2=['','','',...days.map(d=>d.dayName)];
+  const rows=plannerMembers.map(m=>{
+    const shifts=plannerData[m.id]||{};
+    return[m.name, m.id, m.primary, ...days.map(d=>shifts[d.iso]||'')];
+  });
+
+  const ws=XLSX.utils.aoa_to_sheet([hdr1,hdr2,...rows]);
+  // Column widths
+  ws['!cols']=[{wch:24},{wch:10},{wch:18},...days.map(()=>({wch:8}))];
+  // Style header
+  [0,1].forEach(ri=>{
+    hdr1.forEach((_,ci)=>{
+      const addr=XLSX.utils.encode_cell({r:ri,c:ci});
+      if(ws[addr]) ws[addr].s={font:{bold:true,color:{rgb:'FFFFFF'}},fill:{fgColor:{rgb:'185FA5'}},alignment:{horizontal:'center'}};
+    });
+  });
+  XLSX.utils.book_append_sheet(wb,ws,monthLabel.replace(' ','_'));
+  XLSX.writeFile(wb,'ShiftPlanner_'+monthLabel.replace(' ','_')+'.xlsx');
+  showToast('✅ Planner exported to Excel!');
+}
+
+// ── PLANNER EXCEL TEMPLATE DOWNLOAD ─────────────────────
+function downloadPlannerTemplate(){
+  if(!plannerMembers.length){showToast('⚠ Load planner first.',false);return;}
+  const wb=XLSX.utils.book_new();
+  const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  // Create sheets for current month + next 2 months
+  for(let offset=0;offset<3;offset++){
+    let m=plannerViewMonth+offset, y=plannerViewYear;
+    if(m>11){m-=12;y++;}
+    const daysInMonth=new Date(y,m+1,0).getDate();
+    const DAY_NAMES=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const days=[];
+    for(let d=1;d<=daysInMonth;d++){
+      const dt=new Date(y,m,d);
+      const iso=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+      days.push({iso,day:String(d).padStart(2,'0'),dayName:DAY_NAMES[dt.getDay()]});
+    }
+    const monthLabel=MONTH_NAMES[m]+' '+y;
+    const hdr1=['Name','ID','Primary',...days.map(d=>d.day+'/'+String(m+1).padStart(2,'0'))];
+    const hdr2=['','','',...days.map(d=>d.dayName)];
+    const shiftOpts=['D1','D2','D3','D4','D5','N','W/OFF','Holiday','Compff'];
+    const noteRow=['← Fill shifts using: '+shiftOpts.join(', '),'','',''];
+    const rows=plannerMembers.map(mem=>{
+      const shifts=plannerData[mem.id]||{};
+      return[mem.name,mem.id,mem.primary,...days.map(d=>shifts[d.iso]||'')];
+    });
+    const ws=XLSX.utils.aoa_to_sheet([hdr1,hdr2,noteRow,...rows]);
+    ws['!cols']=[{wch:24},{wch:10},{wch:18},...days.map(()=>({wch:8}))];
+    hdr1.forEach((_,ci)=>{
+      const addr=XLSX.utils.encode_cell({r:0,c:ci});
+      if(ws[addr]) ws[addr].s={font:{bold:true,color:{rgb:'FFFFFF'}},fill:{fgColor:{rgb:'0A3D78'}},alignment:{horizontal:'center'}};
+    });
+    XLSX.utils.book_append_sheet(wb,ws,monthLabel.replace(' ','_'));
+  }
+  XLSX.writeFile(wb,'ShiftPlanner_Template.xlsx');
+  showToast('✅ Template downloaded! Fill shifts and import back.');
+}
+
+// ── PLANNER EXCEL IMPORT ─────────────────────────────────
+function importPlannerExcel(input){
+  const file=input.files[0];
+  if(!file){return;}
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const data=new Uint8Array(e.target.result);
+      const wb=XLSX.read(data,{type:'array'});
+      let totalImported=0;
+      const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
+      const SHIFT_VALID=new Set(['D1','D2','D3','D4','D5','N','W/OFF','HOLIDAY','COMPFF']);
+
+      wb.SheetNames.forEach(sheetName=>{
+        const ws=wb.Sheets[sheetName];
+        const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+        if(rows.length<3)return;
+
+        // Row 0: header with dates like "05/04"
+        const hdr=rows[0];
+        // Row 1: day names (skip)
+        // Row 2: note row (skip)
+        // Row 3+: member data
+
+        // Parse date columns from header (col index 3+)
+        // Try to detect year from sheet name e.g. "April_2026"
+        let sheetYear=plannerViewYear;
+        let sheetMonth=-1;
+        MONTH_NAMES.forEach((mn,mi)=>{
+          if(sheetName.toLowerCase().includes(mn.toLowerCase())){sheetMonth=mi;}
+        });
+        const yearMatch=sheetName.match(/(\d{4})/);
+        if(yearMatch)sheetYear=parseInt(yearMatch[1]);
+
+        // Build date keys from header columns
+        const dateCols=[];
+        for(let ci=3;ci<hdr.length;ci++){
+          const cell=(hdr[ci]||'').toString().trim();
+          if(!cell)continue;
+          // Format: "05/04" => day/month
+          const parts=cell.split('/');
+          if(parts.length===2){
+            const day=parts[0].padStart(2,'0');
+            const mo=sheetMonth>=0?String(sheetMonth+1).padStart(2,'0'):parts[1].padStart(2,'0');
+            const iso=sheetYear+'-'+mo+'-'+day;
+            dateCols.push({ci,iso});
+          }
+        }
+
+        // Process member rows (skip first 3 rows: hdr, daynames, note)
+        for(let ri=3;ri<rows.length;ri++){
+          const row=rows[ri];
+          const memberId=(row[1]||'').toString().trim();
+          if(!memberId)continue;
+          // Find member
+          const member=plannerMembers.find(m=>m.id===memberId);
+          if(!member)continue;
+          if(!plannerData[memberId])plannerData[memberId]={};
+          dateCols.forEach(({ci,iso})=>{
+            const val=(row[ci]||'').toString().trim().toUpperCase();
+            if(!val){
+              // empty = clear
+              delete plannerData[memberId][iso];
+            } else if(SHIFT_VALID.has(val)){
+              // normalize
+              const normalized={'HOLIDAY':'Holiday','COMPFF':'Compff','W/OFF':'W/OFF'}[val]||val;
+              plannerData[memberId][iso]=normalized;
+              totalImported++;
+            }
+          });
+        }
+      });
+
+      plannerDirty=true;
+      updatePlannerDirtyBadge();
+      renderPlanner();
+      showToast('✅ Imported '+totalImported+' shifts! Review then click Submit to Agents.');
+    }catch(err){
+      console.error(err);
+      showToast('⚠ Import failed — check file format.',false);
+    }
+    input.value='';
+  };
+  reader.readAsArrayBuffer(file);
 }
 
 // ═══════════════════════════════════════════════════════
