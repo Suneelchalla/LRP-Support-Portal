@@ -23,7 +23,6 @@
   .star{position:absolute;background:#fff;border-radius:50%;animation:twinkle linear infinite;}
   @keyframes twinkle{0%,100%{opacity:.2;}50%{opacity:1;}}
   .cloud{transition:opacity .8s;}
-  .ocean-bg.dark .cloud{opacity:.06;}
   .wave1,.wave2,.wave3{transition:background .8s;}
   .ocean-bg.dark .wave1{background:rgba(100,140,255,.18);}
   .ocean-bg.dark .wave2{background:rgba(80,120,220,.12);}
@@ -39,17 +38,6 @@
   .panel.dark .btn-primary{background:linear-gradient(135deg,#2a5aaa,#1a3a7a);}
   .panel.dark .access-note{color:#4a7ab0;}
   .panel.dark .divider{background:linear-gradient(90deg,transparent,#2a4a80,transparent);}
-  .cloud{position:absolute;background:rgba(255,255,255,.82);border-radius:50px;animation:cloudDrift linear infinite;}
-  .cloud::before,.cloud::after{content:'';position:absolute;background:rgba(255,255,255,.82);border-radius:50%;}
-  .cloud1{width:120px;height:32px;top:20px;left:-140px;animation-duration:28s;}
-  .cloud1::before{width:60px;height:48px;top:-22px;left:20px;}
-  .cloud1::after{width:44px;height:36px;top:-16px;left:56px;}
-  .cloud2{width:90px;height:24px;top:56px;left:-110px;animation-duration:36s;animation-delay:-14s;}
-  .cloud2::before{width:44px;height:36px;top:-18px;left:14px;}
-  .cloud2::after{width:34px;height:28px;top:-12px;left:44px;}
-  .cloud3{width:110px;height:28px;top:12px;left:-130px;animation-duration:44s;animation-delay:-22s;}
-  .cloud3::before{width:52px;height:42px;top:-20px;left:18px;}
-  @keyframes cloudDrift{from{left:-160px;}to{left:110%;}}
   .ocean-surface{position:absolute;bottom:0;left:0;right:0;height:55%;}
   .wave{position:absolute;width:200%;height:80px;left:-50%;}
   .wave1{bottom:46%;background:rgba(255,255,255,.22);border-radius:50% 50% 0 0/40px 40px 0 0;animation:waveDrift 7s ease-in-out infinite;}
@@ -96,9 +84,6 @@
   <div class="ocean-bg" id="loginOceanBg">
     <div class="stars" id="loginStars"></div>
     <div class="sky-sun sun-mode" id="loginSun" onclick="toggleLoginDark()" title="Toggle dark mode"></div>
-    <div class="cloud cloud1"></div>
-    <div class="cloud cloud2"></div>
-    <div class="cloud cloud3"></div>
     <div class="ocean-surface">
       <div class="wave wave1"></div><div class="wave wave2"></div><div class="wave wave3"></div>
     </div>
