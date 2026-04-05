@@ -20,16 +20,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .ocean-bg.dark .stars{opacity:1;}
 .star{position:absolute;background:#fff;border-radius:50%;animation:twinkle linear infinite;}
 @keyframes twinkle{0%,100%{opacity:.2;}50%{opacity:1;}}
-.cloud{position:absolute;background:rgba(255,255,255,.82);border-radius:50px;animation:cloudDrift linear infinite;transition:opacity .8s;}
-.cloud::before,.cloud::after{content:'';position:absolute;background:rgba(255,255,255,.82);border-radius:50%;}
-.cloud1{width:120px;height:32px;top:20px;left:-140px;animation-duration:28s;}
-.cloud1::before{width:60px;height:48px;top:-22px;left:20px;}.cloud1::after{width:44px;height:36px;top:-16px;left:56px;}
-.cloud2{width:90px;height:24px;top:56px;left:-110px;animation-duration:36s;animation-delay:-14s;}
-.cloud2::before{width:44px;height:36px;top:-18px;left:14px;}.cloud2::after{width:34px;height:28px;top:-12px;left:44px;}
-.cloud3{width:110px;height:28px;top:12px;left:-130px;animation-duration:44s;animation-delay:-22s;}
-.cloud3::before{width:52px;height:42px;top:-20px;left:18px;}
-@keyframes cloudDrift{from{left:-160px;}to{left:110%;}}
-.ocean-bg.dark .cloud{opacity:.08;}
 .ocean-bg.dark .wave1{background:rgba(100,140,255,.18);}
 .ocean-bg.dark .wave2{background:rgba(80,120,220,.12);}
 .ocean-bg.dark .wave3{background:rgba(60,100,200,.07);}
@@ -188,7 +178,6 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
   <div class="ocean-bg" id="oceanBg">
     <div class="stars" id="stars"></div>
     <div class="sky-sun sun-mode" id="skySun" onclick="toggleDarkMode()" title="Click to toggle dark mode"></div>
-    <div class="cloud cloud1"></div><div class="cloud cloud2"></div><div class="cloud cloud3"></div>
     <div class="ocean-surface">
       <div class="wave wave1"></div><div class="wave wave2"></div><div class="wave wave3"></div>
     </div>
