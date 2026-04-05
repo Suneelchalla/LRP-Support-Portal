@@ -491,7 +491,7 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
 </div>
 
 <script>
-const API_URL='https://script.google.com/macros/s/AKfycbxHeMgaV389GYgDf8CeFMUVRnC5uuBe9x60e4_wBLuoCjE83158t6AIuapJoTy6TyfzcA/exec';
+const API_URL='https://script.google.com/macros/s/AKfycbyenGVPixxjpCX06QeS8po56fr0XG7co2wVwRvzhaLOGaKSdh4NWAZzG7q9c1aB6v1eSw/exec';
 let adminToken=null;
 let allUsers=[],allCreds=[],allLogs=[],filteredLogs=[],allHandovers=[],filteredHandovers=[];
 let allWNSTickets=[],filteredWNSTickets=[];
@@ -908,14 +908,20 @@ document.addEventListener('click',e=>{
 async function publishPlanner(){
   const btn=document.getElementById('planner-publish-btn');
   btn.disabled=true;btn.textContent='⏳ Submitting...';
-  // Serialize: [{id,name,primary,shifts:{dateKey:shift}}]
   const payload=plannerMembers.map(m=>({
     id:m.id, name:m.name, primary:m.primary,
     shifts:Object.assign({},plannerData[m.id]||{})
   }));
   try{
-    const res=await fetch(API_URL+'?'+new URLSearchParams({action:'savePlanner',payload:JSON.stringify(payload)}));
-    const data=await res.json();
+    // Use POST to avoid URL length limits with large payloads
+    const formData=new FormData();
+    formData.append('action','savePlanner');
+    formData.append('payload',JSON.stringify(payload));
+    const res=await fetch(API_URL, {method:'POST', body:formData});
+    const text=await res.text();
+    let data;
+    try{ data=JSON.parse(text); }
+    catch{ throw new Error('Invalid response: '+text.slice(0,100)); }
     if(data.success){
       plannerDirty=false;
       updatePlannerDirtyBadge();
@@ -925,10 +931,28 @@ async function publishPlanner(){
         ' '+now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
       showToast('📤 Shift planner submitted to agents!');
     } else {
-      showToast('⚠ Submit failed. Try again.',false);
+      showToast('⚠ Submit failed: '+(data.error||'Unknown error'),false);
     }
-  } catch{
-    showToast('⚠ Connection error.',false);
+  } catch(err){
+    console.error('publishPlanner error:',err);
+    // Fallback: try GET with chunked approach
+    try{
+      const res2=await fetch(API_URL+'?'+new URLSearchParams({action:'savePlanner',payload:JSON.stringify(payload)}));
+      const data2=await res2.json();
+      if(data2.success){
+        plannerDirty=false;
+        updatePlannerDirtyBadge();
+        const now=new Date();
+        document.getElementById('planner-saved-label').textContent=
+          '✅ Published: '+now.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+
+          ' '+now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+        showToast('📤 Shift planner submitted to agents!');
+      } else {
+        showToast('⚠ Submit failed. Try again.',false);
+      }
+    } catch{
+      showToast('⚠ Connection error. Check network and try again.',false);
+    }
   }
   btn.disabled=false;
   updatePlannerDirtyBadge();
