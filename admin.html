@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>LRP Admin Dashboard</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚢</text></svg>">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#eef5fc;color:#1a3a5c;min-height:100vh;}
@@ -151,6 +152,14 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
 .ho-overlay{display:none;position:fixed;inset:0;background:rgba(10,50,100,.5);z-index:9999;align-items:center;justify-content:center;padding:20px;}
 .ho-overlay.open{display:flex;}
 .ho-box{background:#fff;border:1.5px solid #c8dff0;border-radius:12px;width:100%;max-width:720px;max-height:88vh;overflow-y:auto;padding:28px 32px;position:relative;box-shadow:0 12px 40px rgba(10,50,100,.2);}
+
+/* ── SHIFT PLANNER STYLES ── */
+.planner-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
+.planner-month-nav{display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #c8dff0;border-radius:8px;padding:6px 12px;}
+.planner-month-nav button{background:none;border:none;color:#1a7db5;cursor:pointer;font-size:16px;font-weight:700;padding:0 4px;line-height:1;transition:color .15s;}
+.planner-month-nav button:hover{color:#0a3d78;}
+.planner-month-label{font-size:14px;font-weight:800;color:#0a3d78;letter-spacing:1px;min-width:120px;text-align:center;}
+.planner-year-select{background:#f4f9ff;border:1.5px solid #b8d4ee;border-radius:6px;padding:6px 10px;font-size:13px;color:#1a3a5c;outline:none;cursor:pointer;}
 .planner-filter-btn{padding:5px 14px;font-size:11px;font-weight:700;letter-spacing:1px;background:#eef5fc;border:1.5px solid #b8d4ee;border-radius:5px;color:#1a5a90;cursor:pointer;transition:all .2s;}
 .planner-filter-btn:hover{background:#d0e8f8;}
 .planner-filter-btn.active{background:#1a7db5;border-color:#1a7db5;color:#fff;}
@@ -167,7 +176,22 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
 .sp-D5{background:#d8f5e0;border:1px solid #60d088;color:#0a5020;}.sp-N{background:#dde0f8;border:1px solid #8090d8;color:#202870;}
 .sp-WOFF{background:#f0f0f0;border:1px solid #c0c0c0;color:#606060;}.sp-HOL{background:#fff8d8;border:1px solid #e8d040;color:#705010;}
 .sp-COMP{background:#ffe8d8;border:1px solid #e09050;color:#703010;}
+.sp-empty{background:#f8f8f8;border:1px dashed #d0d0d0;color:#b0b0b0;font-style:italic;font-size:10px;}
 .sp-TODAY{outline:2.5px solid #1a7db5!important;outline-offset:-2px;}.col-today{background:#eef8ff!important;}
+.planner-unsaved-badge{display:none;background:#fff3d8;border:1.5px solid #f5c840;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;color:#8a6010;}
+.planner-unsaved-badge.visible{display:inline-block;}
+
+/* cell editor */
+#planner-cell-editor{display:none;position:fixed;z-index:9999;background:#fff;border:1.5px solid #b8d4ee;border-radius:10px;padding:14px 16px;box-shadow:0 8px 32px rgba(26,90,160,.14);min-width:200px;}
+.pce-shift-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px;}
+.pce-chip{padding:7px 4px;border:1.5px solid #c8dff0;border-radius:8px;font-size:11px;font-weight:700;text-align:center;cursor:pointer;transition:all .15s;background:#f4f9ff;}
+.pce-chip:hover{border-color:#1a7db5;background:#ddeeff;}
+.pce-chip.selected{border-color:#1a7db5;background:#1a7db5;color:#fff;}
+.pce-chip-empty{padding:7px 4px;border:1.5px dashed #c0c0c0;border-radius:8px;font-size:10px;font-weight:600;text-align:center;cursor:pointer;transition:all .15s;background:#f8f8f8;color:#909090;}
+.pce-chip-empty:hover,.pce-chip-empty.selected{border-color:#a0a0a0;background:#e8e8e8;color:#606060;}
+
+.wns-export-btn{padding:9px 20px;background:linear-gradient(135deg,#1a8c5c,#138048);border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;display:inline-flex;align-items:center;gap:8px;transition:opacity .2s;box-shadow:0 4px 14px rgba(26,140,92,.3);}
+.wns-export-btn:hover{opacity:.88;}
 </style>
 </head>
 <body>
@@ -331,11 +355,30 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
       </div>
     </div>
 
-    <!-- PLANNER -->
+    <!-- ══════════════════════════════════════════════════════════════
+         SHIFT PLANNER — REDESIGNED
+    ══════════════════════════════════════════════════════════════ -->
     <div class="tab-panel" id="panel-planner">
-      <div class="page-title">SHIFT PLANNER</div><div class="page-sub">Edit shift cells below, then click <strong style="color:#1a8c5c;">Submit to Agents</strong> to publish</div>
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
-        <input type="text" id="planner-search" placeholder="🔍  Search by name or role..." style="background:#f4f9ff;border:1.5px solid #b8d4ee;border-radius:6px;padding:7px 12px;font-size:13px;color:#1a3a5c;outline:none;width:240px;" oninput="renderPlanner()"/>
+      <div class="page-title">SHIFT PLANNER</div>
+      <div class="page-sub">Navigate by month, click any cell to assign a shift, then <strong style="color:#1a8c5c;">Submit to Agents</strong> to publish.</div>
+
+      <div class="planner-toolbar">
+        <!-- Month navigation -->
+        <div class="planner-month-nav">
+          <button onclick="plannerPrevMonth()" title="Previous month">‹</button>
+          <span class="planner-month-label" id="planner-month-label">April 2026</span>
+          <button onclick="plannerNextMonth()" title="Next month">›</button>
+        </div>
+
+        <!-- Year jump -->
+        <select class="planner-year-select" id="planner-year-select" onchange="plannerJumpYear(this.value)"></select>
+
+        <!-- Search -->
+        <input type="text" id="planner-search" placeholder="🔍  Search name or ID..."
+          style="background:#f4f9ff;border:1.5px solid #b8d4ee;border-radius:6px;padding:7px 12px;font-size:13px;color:#1a3a5c;outline:none;width:210px;"
+          oninput="renderPlanner()"/>
+
+        <!-- Shift filter pills -->
         <div style="display:flex;gap:6px;flex-wrap:wrap;">
           <button class="planner-filter-btn active" data-shift="ALL" onclick="setPlannerFilter(this)">All</button>
           <button class="planner-filter-btn" data-shift="D1" onclick="setPlannerFilter(this)">D1</button>
@@ -345,26 +388,35 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
           <button class="planner-filter-btn" data-shift="N" onclick="setPlannerFilter(this)">Night</button>
           <button class="planner-filter-btn" data-shift="W/OFF" onclick="setPlannerFilter(this)">W/OFF</button>
         </div>
+
         <div style="margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-          <span style="font-size:11px;color:#3a7aaa;font-weight:600;" id="planner-today-label"></span>
+          <span class="planner-unsaved-badge" id="planner-unsaved-badge">● Unsaved changes</span>
           <span style="font-size:11px;color:#1a8c5c;font-weight:600;" id="planner-saved-label"></span>
-          <button onclick="publishPlanner()" id="planner-publish-btn" style="padding:10px 22px;background:linear-gradient(135deg,#1a8c5c,#138048);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:13px;font-weight:700;letter-spacing:1px;">📤 Submit to Agents</button>
+          <span style="font-size:11px;color:#3a7aaa;font-weight:600;" id="planner-today-label"></span>
+          <button onclick="publishPlanner()" id="planner-publish-btn"
+            style="padding:10px 22px;background:linear-gradient(135deg,#1a8c5c,#138048);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:13px;font-weight:700;letter-spacing:1px;">
+            📤 Submit to Agents
+          </button>
         </div>
       </div>
-      <div style="font-size:11px;color:#3a7aaa;font-weight:600;margin-bottom:10px;">✏️ Click any shift cell to edit &nbsp;|&nbsp; Unsaved changes shown until you click <strong style="color:#1a8c5c;">Submit to Agents</strong></div>
+
+      <!-- Legend -->
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;" id="planner-legend"></div>
-      <div style="overflow-x:auto;border:1.5px solid #c8dff0;border-radius:10px;background:#fff;">
-        <div id="planner-table-container" style="min-width:1200px;"><div class="loading">⏳ LOADING...</div></div>
+      <div style="font-size:11px;color:#3a7aaa;font-weight:600;margin-bottom:10px;">
+        ✏️ Click any cell to assign a shift &nbsp;|&nbsp; Empty = not yet planned &nbsp;|&nbsp; Click an assigned cell to change or clear it
       </div>
-      <div id="planner-cell-editor" style="display:none;position:fixed;z-index:9999;background:#fff;border:1.5px solid #b8d4ee;border-radius:10px;padding:14px 16px;box-shadow:0 8px 32px rgba(26,90,160,.14);min-width:200px;">
-        <div style="font-size:10px;color:#1a7db5;letter-spacing:1px;margin-bottom:8px;font-weight:700;" id="pce-label">EDIT SHIFT</div>
-        <select id="pce-select" style="width:100%;background:#f4f9ff;border:1.5px solid #b8d4ee;border-radius:6px;padding:8px 10px;font-size:13px;color:#1a3a5c;outline:none;margin-bottom:10px;">
-          <option>D1</option><option>D2</option><option>D3</option><option>D4</option><option>D5</option><option>N</option><option>W/OFF</option><option>Holiday</option><option>Compff</option>
-        </select>
-        <div style="display:flex;gap:8px;">
-          <button onclick="applyPlannerCellEdit()" style="flex:1;padding:7px;background:#1a7db5;border:none;border-radius:5px;color:#fff;cursor:pointer;font-size:12px;font-weight:700;">✓ Apply</button>
-          <button onclick="closePlannerEditor()" style="padding:7px 12px;background:#eef0f5;border:1.5px solid #c0cce0;border-radius:5px;color:#5a6a80;cursor:pointer;font-size:12px;">✕</button>
-        </div>
+
+      <div style="overflow-x:auto;border:1.5px solid #c8dff0;border-radius:10px;background:#fff;box-shadow:0 2px 8px rgba(26,90,160,.05);">
+        <div id="planner-table-container" style="min-width:900px;"><div class="loading">⏳ LOADING...</div></div>
+      </div>
+    </div>
+
+    <!-- Cell editor popup -->
+    <div id="planner-cell-editor">
+      <div style="font-size:10px;color:#1a7db5;letter-spacing:1px;margin-bottom:8px;font-weight:700;" id="pce-label">ASSIGN SHIFT</div>
+      <div class="pce-shift-grid" id="pce-grid"></div>
+      <div style="display:flex;gap:8px;margin-top:4px;">
+        <button onclick="closePlannerEditor()" style="flex:1;padding:6px;background:#eef0f5;border:1.5px solid #c0cce0;border-radius:5px;color:#5a6a80;cursor:pointer;font-size:12px;font-weight:700;">✕ Close</button>
       </div>
     </div>
 
@@ -402,7 +454,15 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
         <div class="stat-card"><div class="stat-num green"  id="wns-s-completed">—</div><div class="stat-lbl">Completed</div></div>
         <div class="stat-card"><div class="stat-num" style="color:#6030a0;" id="wns-s-agents">—</div><div class="stat-lbl">Agents Reviewed</div></div>
       </div>
-      <div class="section-title">📋 All Assigned Tickets</div>
+
+      <!-- ── WNS SECTION TITLE + EXPORT BUTTON ── -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:10px;">
+        <div class="section-title" style="margin-bottom:0;">📋 All Assigned Tickets</div>
+        <button class="wns-export-btn" onclick="exportWNSExcel()">
+          ⬇ Export to Excel
+        </button>
+      </div>
+
       <div class="table-wrap">
         <div class="search-bar">
           <input type="text" id="wnsSearchInput" placeholder="🔍  Search by ticket ID, agent, summary..." oninput="filterWNSTable()"/>
@@ -438,6 +498,9 @@ let allUsers=[],allCreds=[],allLogs=[],filteredLogs=[],allHandovers=[],filteredH
 let allWNSTickets=[],filteredWNSTickets=[];
 let selectedAgent=null,currentTab='agents';
 
+// ═══════════════════════════════════════════════════════
+//  LOGIN / AUTH
+// ═══════════════════════════════════════════════════════
 window.addEventListener('load',()=>{
   const savedToken=sessionStorage.getItem('admin_token');
   const savedTime=sessionStorage.getItem('admin_token_time');
@@ -452,8 +515,8 @@ async function verifyToken(token){
     const res=await fetch(API_URL+'?action=verifyAdminToken&token='+encodeURIComponent(token));
     const data=await res.json();
     if(data.valid){adminToken=token;sessionStorage.setItem('admin_token_time',Date.now().toString());showDashboard();}
-    else{sessionStorage.removeItem('admin_token');sessionStorage.removeItem('admin_token_time');sessionStorage.removeItem('admin_user');}
-  }catch(err){adminToken=token;showDashboard();}
+    else{sessionStorage.removeItem('admin_token');sessionStorage.removeItem('admin_token_time');}
+  }catch{adminToken=token;showDashboard();}
 }
 async function adminLogin(){
   const u=document.getElementById('adm-user').value.trim(),p=document.getElementById('adm-pass').value;
@@ -468,23 +531,25 @@ async function adminLogin(){
       adminToken=data.token;
       sessionStorage.setItem('admin_token',adminToken);
       sessionStorage.setItem('admin_token_time',Date.now().toString());
-      sessionStorage.setItem('admin_user',u);
       showDashboard();
-    }else if(data.error==='ADMIN_NOT_CONFIGURED'){err.textContent='⚠ Admin not configured. Set ADMIN_USER and ADMIN_PASS in Script Properties.';err.style.display='block';}
+    }else if(data.error==='ADMIN_NOT_CONFIGURED'){err.textContent='⚠ Admin not configured.';err.style.display='block';}
     else{err.textContent='⚠ Invalid admin credentials.';err.style.display='block';}
-  }catch{err.textContent='⚠ Connection error. Try again.';err.style.display='block';}
+  }catch{err.textContent='⚠ Connection error.';err.style.display='block';}
   btn.disabled=false;btn.textContent='⚓ Sign In';
 }
 function showDashboard(){document.getElementById('loginScreen').style.display='none';document.getElementById('dashboard').style.display='block';document.getElementById('adm-pass').value='';loadUsers();}
 function adminLogout(){
-  if(!confirm('Are you sure you want to sign out?'))return;
+  if(!confirm('Sign out?'))return;
   adminToken=null;
-  sessionStorage.removeItem('admin_token');sessionStorage.removeItem('admin_token_time');sessionStorage.removeItem('admin_user');
+  sessionStorage.removeItem('admin_token');sessionStorage.removeItem('admin_token_time');
   document.getElementById('loginScreen').style.display='flex';document.getElementById('dashboard').style.display='none';
   document.getElementById('adm-user').value='';document.getElementById('adm-pass').value='';document.getElementById('adm-err').style.display='none';
 }
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('loginScreen').style.display!=='none')adminLogin();});
 
+// ═══════════════════════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════════════════════
 function switchTab(tab){
   currentTab=tab;
   ['agents','creds','tracker','handover','planner','wns'].forEach(t=>{
@@ -514,7 +579,9 @@ function getStatus(lastLogin){if(!lastLogin)return{label:'NEVER',cls:'badge-offl
 function envClass(e){const v=(e||'').toLowerCase();if(v==='production')return'env-prod';if(v==='uat')return'env-uat';if(v==='development')return'env-dev';if(v==='staging')return'env-staging';if(v==='train 2')return'env-train2';if(v==='train')return'env-train';if(v==='ecom')return'env-ecom';if(v==='testing')return'env-testing';return'env-default';}
 function normalizeDateToClient(val){if(!val)return'';var s=val.toString().trim();if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;if(/^\d{2}-\d{2}-\d{4}$/.test(s)){var p=s.split('-');return p[2]+'-'+p[1]+'-'+p[0];}try{var d=new Date(s);if(!isNaN(d.getTime()))return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}catch(e){}return s;}
 
-// ── AGENTS ──
+// ═══════════════════════════════════════════════════════
+//  AGENTS
+// ═══════════════════════════════════════════════════════
 async function loadUsers(){document.getElementById('tableContainer').innerHTML='<div class="loading">⏳ FETCHING AGENT DATA...</div>';try{const res=await fetch(API_URL+'?action=getUsers&t='+Date.now());const data=await res.json();if(data.success){allUsers=data.users||[];updateStats(allUsers);renderTable(allUsers);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}else document.getElementById('tableContainer').innerHTML='<div class="error-msg">⚠ Failed to load data.</div>';}catch{document.getElementById('tableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}}
 function updateStats(users){const today=users.filter(u=>u.lastLogin&&(new Date()-new Date(u.lastLogin))/3600000<24).length;const week=users.filter(u=>{if(!u.lastLogin)return false;const h=(new Date()-new Date(u.lastLogin))/3600000;return h>=24&&h<168;}).length;const never=users.filter(u=>!u.lastLogin).length;document.getElementById('s-total').textContent=users.length;document.getElementById('s-online').textContent=today;document.getElementById('s-recent').textContent=week;document.getElementById('s-inactive').textContent=never;}
 function renderTable(users){if(!users.length){document.getElementById('tableContainer').innerHTML='<div class="loading" style="color:#3a7aaa;">No agents found.</div>';document.getElementById('filterCount').textContent='';return;}document.getElementById('filterCount').textContent=users.length+' agents';const rows=users.map((u,i)=>{const st=getStatus(u.lastLogin);const defBadge=u.isDefault?'<span style="background:#fff8d8;border:1px solid #e8d040;border-radius:3px;padding:2px 7px;font-size:10px;font-weight:700;color:#705010;margin-left:6px;">TEMP PW</span>':'';return'<tr><td style="color:#3a7aaa;font-size:12px;font-weight:600;">'+(i+1)+'</td><td style="font-weight:700;color:#0a3d78;">👤 '+u.username+defBadge+'</td><td>'+(u.email||'—')+'</td><td><span style="background:#eef5fc;border:1px solid #a8cce8;border-radius:4px;padding:2px 8px;font-size:11px;color:#1a5a90;">⚓ '+(u.team||'—')+'</span></td><td><span class="badge '+st.cls+'">'+st.label+'</span></td><td style="font-size:11px;color:#3a7aaa;font-weight:600;">'+formatDate(u.lastLogin)+'</td><td style="font-size:11px;color:#3a7aaa;font-weight:600;">'+formatDate(u.registeredAt)+'</td><td><button class="edit-btn" onclick="editAgent('+i+')">✏ Edit</button><button class="reset-btn" id="rbtn_'+i+'" onclick="resetPassword(\''+u.username+'\','+i+')">🔑 Reset PW</button><button class="delete-btn" id="dbtn_'+i+'" onclick="deleteUser(\''+u.username+'\','+i+')">🗑 Delete</button></td></tr>';}).join('');document.getElementById('tableContainer').innerHTML='<table><thead><tr><th>#</th><th>Username</th><th>Email</th><th>Team</th><th>Status</th><th>Last Login</th><th>Created</th><th>Actions</th></tr></thead><tbody>'+rows+'</tbody></table>';}
@@ -523,11 +590,13 @@ async function submitAgent(){const orig=document.getElementById('edit-agent-orig
 function editAgent(i){const u=allUsers[i];document.getElementById('edit-agent-original-username').value=u.username;document.getElementById('ag-name').value=u.username;document.getElementById('ag-email').value=u.email||'';document.getElementById('ag-team').value=u.team||'';document.getElementById('ag-username').value=u.username;document.getElementById('ag-password').value='';document.getElementById('agentFormTitle').textContent='✏ Edit Agent: '+u.username;document.getElementById('ag-submit-btn').textContent='💾 Update Agent';document.getElementById('ag-cancel-btn').style.display='inline-block';document.getElementById('agentFormTitle').scrollIntoView({behavior:'smooth'});}
 function cancelAgentEdit(){clearAgentForm();}
 function clearAgentForm(){['edit-agent-original-username','ag-name','ag-email','ag-team','ag-username','ag-password'].forEach(id=>document.getElementById(id).value='');document.getElementById('agentFormTitle').textContent='➕ Create New Agent Login';document.getElementById('ag-submit-btn').textContent='💾 Create Agent Login';document.getElementById('ag-cancel-btn').style.display='none';document.getElementById('ag-msg').style.display='none';}
-async function resetPassword(username,idx){if(!confirm('Reset password for "'+username+'" to a temporary password?'))return;const btn=document.getElementById('rbtn_'+idx);btn.textContent='⏳...';btn.disabled=true;try{const res=await fetch(API_URL+'?'+new URLSearchParams({action:'resetPassword',username}));const data=await res.json();if(data.success){btn.textContent='✅ Done';btn.classList.add('done');showToast('✅ Password reset for '+username+'. Temp: LRP@1234');setTimeout(loadUsers,2000);}else{btn.textContent='🔑 Reset PW';btn.disabled=false;showToast('⚠ Reset failed.',false);}}catch{btn.textContent='🔑 Reset PW';btn.disabled=false;showToast('⚠ Connection error.',false);}}
+async function resetPassword(username,idx){if(!confirm('Reset password for "'+username+'" to a temporary password?'))return;const btn=document.getElementById('rbtn_'+idx);btn.textContent='⏳...';btn.disabled=true;try{const res=await fetch(API_URL+'?'+new URLSearchParams({action:'resetPassword',username}));const data=await res.json();if(data.success){btn.textContent='✅ Done';btn.classList.add('done');showToast('✅ Password reset for '+username);setTimeout(loadUsers,2000);}else{btn.textContent='🔑 Reset PW';btn.disabled=false;showToast('⚠ Reset failed.',false);}}catch{btn.textContent='🔑 Reset PW';btn.disabled=false;showToast('⚠ Connection error.',false);}}
 async function deleteUser(username,idx){if(!confirm('⚠ Permanently delete agent "'+username+'"?\n\nThis cannot be undone!'))return;const btn=document.getElementById('dbtn_'+idx);btn.textContent='⏳...';btn.disabled=true;try{const res=await fetch(API_URL+'?'+new URLSearchParams({action:'deleteUser',username}));const data=await res.json();if(data.success){showToast('🗑 Agent "'+username+'" deleted.');setTimeout(loadUsers,800);}else{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Delete failed.',false);}}catch{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Connection error.',false);}}
 
-// ── CREDENTIALS ──
-async function loadCreds(){document.getElementById('credTableContainer').innerHTML='<div class="loading">⏳ LOADING CREDENTIALS...</div>';try{const res=await fetch(API_URL+'?action=getCredentials&t='+Date.now());const data=await res.json();if(data.success){allCreds=data.credentials||[];renderCredTable(allCreds);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}else document.getElementById('credTableContainer').innerHTML='<div class="error-msg">⚠ Failed to load credentials.</div>';}catch{document.getElementById('credTableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}}
+// ═══════════════════════════════════════════════════════
+//  CREDENTIALS
+// ═══════════════════════════════════════════════════════
+async function loadCreds(){document.getElementById('credTableContainer').innerHTML='<div class="loading">⏳ LOADING CREDENTIALS...</div>';try{const res=await fetch(API_URL+'?action=getCredentials&t='+Date.now());const data=await res.json();if(data.success){allCreds=data.credentials||[];renderCredTable(allCreds);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}else document.getElementById('credTableContainer').innerHTML='<div class="error-msg">⚠ Failed.</div>';}catch{document.getElementById('credTableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}}
 function renderCredTable(list){document.getElementById('cred-count').textContent=list.length+' records';if(!list.length){document.getElementById('credTableContainer').innerHTML='<div class="loading" style="color:#3a7aaa;">No credentials yet.</div>';return;}const rows=list.map((c,i)=>'<tr><td style="color:#3a7aaa;font-size:12px;font-weight:600;">'+(i+1)+'</td><td style="font-weight:700;color:#0a3d78;">🏢 '+(c.clientName||'—')+'</td><td style="font-size:11px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+(c.appUrl?'<a href="'+c.appUrl+'" target="_blank" style="color:#1a7db5;text-decoration:none;">🔗 '+c.appUrl+'</a>':'—')+'</td><td><span class="env-badge '+envClass(c.environment)+'">'+(c.environment||'—')+'</span></td><td style="font-size:12px;">'+(c.userId||'—')+'</td><td><span id="adm-pw-'+i+'" style="font-size:12px;">••••••••</span><button class="pw-toggle-sm" onclick="admTogglePw('+i+',\''+encodeURIComponent(c.password||'')+'\')">👁</button></td><td><button class="edit-btn" onclick="editCred('+i+')">✏ Edit</button><button class="delete-btn" id="cdel-'+i+'" onclick="deleteCred(\''+c.id+'\','+i+')">🗑 Delete</button></td></tr>').join('');document.getElementById('credTableContainer').innerHTML='<table><thead><tr><th>#</th><th>Client Name</th><th>App URL</th><th>Environment</th><th>User ID</th><th>Password</th><th>Actions</th></tr></thead><tbody>'+rows+'</tbody></table>';}
 function filterCredTable(){const q=document.getElementById('credSearchInput').value.toLowerCase();renderCredTable(allCreds.filter(c=>(c.clientName||'').toLowerCase().includes(q)));}
 function admTogglePw(i,encoded){const el=document.getElementById('adm-pw-'+i);el.textContent=el.textContent==='••••••••'?decodeURIComponent(encoded):'••••••••';}
@@ -535,46 +604,340 @@ async function submitCredential(){const id=document.getElementById('edit-cred-id
 function editCred(i){const c=allCreds[i];document.getElementById('edit-cred-id').value=c.id||'';document.getElementById('cred-client').value=c.clientName||'';document.getElementById('cred-env').value=c.environment||'';document.getElementById('cred-url').value=c.appUrl||'';document.getElementById('cred-userid').value=c.userId||'';document.getElementById('cred-pass').value=c.password||'';document.getElementById('credFormTitle').textContent='✏ Edit: '+c.clientName;document.getElementById('cred-cancel-btn').style.display='inline-block';document.getElementById('credFormTitle').scrollIntoView({behavior:'smooth'});}
 function cancelCredEdit(){clearCredForm();}
 function clearCredForm(){['edit-cred-id','cred-client','cred-url','cred-userid','cred-pass'].forEach(id=>document.getElementById(id).value='');document.getElementById('cred-env').value='';document.getElementById('credFormTitle').textContent='➕ Add New Client Credential';document.getElementById('cred-cancel-btn').style.display='none';document.getElementById('cred-msg').style.display='none';}
-async function deleteCred(credId,i){const name=allCreds[i]?.clientName||credId;if(!confirm('⚠ Delete credential for "'+name+'"?\n\nThis cannot be undone!'))return;const btn=document.getElementById('cdel-'+i);btn.textContent='⏳...';btn.disabled=true;try{const res=await fetch(API_URL+'?'+new URLSearchParams({action:'deleteCredential',id:credId}));const data=await res.json();if(data.success){showToast('🗑 "'+name+'" deleted.');loadCreds();}else{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Delete failed.',false);}}catch{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Connection error.',false);}}
+async function deleteCred(credId,i){const name=allCreds[i]?.clientName||credId;if(!confirm('⚠ Delete credential for "'+name+'"?'))return;const btn=document.getElementById('cdel-'+i);btn.textContent='⏳...';btn.disabled=true;try{const res=await fetch(API_URL+'?'+new URLSearchParams({action:'deleteCredential',id:credId}));const data=await res.json();if(data.success){showToast('🗑 "'+name+'" deleted.');loadCreds();}else{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Delete failed.',false);}}catch{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Connection error.',false);}}
 
-// ── TRACKER ──
-async function loadTracker(){document.getElementById('tracker-date-from').value='';document.getElementById('tracker-date-to').value='';document.getElementById('tracker-filter-label').textContent='';selectedAgent=null;document.getElementById('tracker-cards').innerHTML='<div class="loading">⏳ LOADING TRACKER DATA...</div>';document.getElementById('trackerTableContainer').innerHTML='<div class="loading" style="color:#3a7aaa;">Loading...</div>';try{const res=await fetch(API_URL+'?action=getTicketLogs&t='+Date.now());const data=await res.json();if(data.success){allLogs=data.logs||[];filteredLogs=[...allLogs];renderTrackerCards(filteredLogs);renderTrackerTable(filteredLogs);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}else document.getElementById('tracker-cards').innerHTML='<div class="error-msg">⚠ Failed to load tracker data.</div>';}catch{document.getElementById('tracker-cards').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}}
+// ═══════════════════════════════════════════════════════
+//  TRACKER
+// ═══════════════════════════════════════════════════════
+async function loadTracker(){document.getElementById('tracker-date-from').value='';document.getElementById('tracker-date-to').value='';document.getElementById('tracker-filter-label').textContent='';selectedAgent=null;document.getElementById('tracker-cards').innerHTML='<div class="loading">⏳ LOADING...</div>';document.getElementById('trackerTableContainer').innerHTML='<div class="loading" style="color:#3a7aaa;">Loading...</div>';try{const res=await fetch(API_URL+'?action=getTicketLogs&t='+Date.now());const data=await res.json();if(data.success){allLogs=data.logs||[];filteredLogs=[...allLogs];renderTrackerCards(filteredLogs);renderTrackerTable(filteredLogs);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}else document.getElementById('tracker-cards').innerHTML='<div class="error-msg">⚠ Failed.</div>';}catch{document.getElementById('tracker-cards').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}}
 function applyTrackerFilter(){const from=document.getElementById('tracker-date-from').value,to=document.getElementById('tracker-date-to').value;if(!from&&!to){filteredLogs=[...allLogs];document.getElementById('tracker-filter-label').textContent='';}else{filteredLogs=allLogs.filter(l=>{if(!l.dateKey)return true;if(from&&l.dateKey<from)return false;if(to&&l.dateKey>to)return false;return true;});document.getElementById('tracker-filter-label').textContent='Showing: '+(from||'…')+' → '+(to||'…')+' · '+filteredLogs.length+' tickets';}selectedAgent=null;renderTrackerCards(filteredLogs);renderTrackerTable(filteredLogs);}
 function renderTrackerCards(logs){const container=document.getElementById('tracker-cards');if(!logs.length){container.innerHTML='<div class="no-data-msg">📭 No ticket data found.</div>';return;}const agentMap={};logs.forEach(l=>{const a=l.agentName||'Unknown';if(!agentMap[a])agentMap[a]={tickets:[],totalSecs:0};agentMap[a].tickets.push(l);agentMap[a].totalSecs+=Number(l.durationSecs)||0;});container.innerHTML='';Object.entries(agentMap).sort((a,b)=>b[1].tickets.length-a[1].tickets.length).forEach(([name,data])=>{const count=data.tickets.length,avgSecs=count>0?Math.round(data.totalSecs/count):0;const lastDate=data.tickets[data.tickets.length-1]?.date||'—',lastShift=data.tickets[data.tickets.length-1]?.shiftId||'—';const compCount={};data.tickets.forEach(t=>{if(t.component)compCount[t.component]=(compCount[t.component]||0)+1;});const topComp=Object.entries(compCount).sort((a,b)=>b[1]-a[1])[0];const card=document.createElement('div');card.className='agent-card'+(selectedAgent===name?' selected':'');card.innerHTML='<div class="agent-card-name">👤 '+name+'</div><div class="agent-card-stats"><div class="agent-stat"><div class="agent-stat-val blue">'+count+'</div><div class="agent-stat-lbl">Tickets</div></div><div class="agent-stat"><div class="agent-stat-val green" style="font-size:15px;">'+formatDur(avgSecs)+'</div><div class="agent-stat-lbl">Avg Time</div></div><div class="agent-stat"><div class="agent-stat-val orange" style="font-size:15px;">'+formatDur(data.totalSecs)+'</div><div class="agent-stat-lbl">Total Time</div></div><div class="agent-stat"><div class="agent-stat-val" style="font-size:13px;color:#6030a0;">'+(topComp?topComp[0]:'—')+'</div><div class="agent-stat-lbl">Top Component</div></div></div><div class="agent-card-footer"><span>Last active: '+lastDate+'</span><span>Shift: '+lastShift+'</span></div>';card.addEventListener('click',()=>{selectedAgent=selectedAgent===name?null:name;renderTrackerCards(filteredLogs);const toShow=selectedAgent?filteredLogs.filter(l=>l.agentName===selectedAgent):filteredLogs;document.getElementById('tracker-breakdown-label').textContent=selectedAgent?'— '+selectedAgent:'';document.getElementById('trackerSearchInput').value='';renderTrackerTable(toShow);});container.appendChild(card);});}
 function renderTrackerTable(logs){const container=document.getElementById('trackerTableContainer');if(!logs.length){container.innerHTML='<div class="no-data-msg">No tickets to display.</div>';return;}const rows=[...logs].reverse().map((l,i)=>'<tr><td style="color:#3a7aaa;font-size:11px;font-weight:600;">'+(i+1)+'</td><td style="font-size:11px;color:#1a5a90;">👤 '+(l.agentName||'—')+'</td><td style="font-weight:700;color:#0a3d78;">'+(l.ticketId||'—')+'</td><td style="font-weight:700;color:#1a8c5c;">'+(l.duration||'—')+'</td><td style="font-size:11px;color:#2a4a6a;">'+(l.date||'—')+' <span style="color:#3a7aaa;font-weight:600;">'+(l.time||'')+'</span></td><td><span style="background:#eef5fc;border:1px solid #a8cce8;border-radius:3px;padding:2px 8px;font-size:10px;color:#1a5a90;">'+(l.shiftId||'—')+'</span></td><td>'+(l.component?'<span style="font-size:10px;font-weight:700;color:#6030a0;background:#f0e8ff;border:1px solid #c0a0e0;border-radius:12px;padding:2px 8px;">'+l.component+'</span>':'—')+'</td><td style="font-size:11px;color:#2a4a6a;max-width:200px;word-break:break-word;">'+(l.description||'—')+'</td><td style="font-size:11px;color:#2a4a6a;max-width:200px;word-break:break-word;">'+(l.remarks||'—')+'</td></tr>').join('');container.innerHTML='<table><thead><tr><th>#</th><th>Agent</th><th>Ticket ID</th><th>Duration</th><th>Date / Time</th><th>Shift</th><th>Component</th><th>Description</th><th>Remarks</th></tr></thead><tbody>'+rows+'</tbody></table>';}
 function filterTrackerTable(){const q=document.getElementById('trackerSearchInput').value.toLowerCase();const base=selectedAgent?filteredLogs.filter(l=>l.agentName===selectedAgent):filteredLogs;renderTrackerTable(q?base.filter(l=>(l.agentName||'').toLowerCase().includes(q)||(l.ticketId||'').toLowerCase().includes(q)||(l.component||'').toLowerCase().includes(q)||(l.shiftId||'').toLowerCase().includes(q)):base);}
 
-// ── HANDOVER ──
-async function loadHandovers(){document.getElementById('ho-date-from').value='';document.getElementById('ho-date-to').value='';document.getElementById('ho-shift-filter').value='';document.getElementById('ho-filter-label').textContent='';document.getElementById('hoTableContainer').innerHTML='<div class="loading">⏳ LOADING HANDOVER DATA...</div>';try{const res=await fetch(API_URL+'?action=getHandovers&t='+Date.now());const data=await res.json();if(data.success){allHandovers=data.handovers||[];filteredHandovers=[...allHandovers];renderHandoverStats(filteredHandovers);renderHandoverTable(filteredHandovers);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}else document.getElementById('hoTableContainer').innerHTML='<div class="error-msg">⚠ Failed to load data.</div>';}catch{document.getElementById('hoTableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}}
+// ═══════════════════════════════════════════════════════
+//  HANDOVER
+// ═══════════════════════════════════════════════════════
+async function loadHandovers(){document.getElementById('ho-date-from').value='';document.getElementById('ho-date-to').value='';document.getElementById('ho-shift-filter').value='';document.getElementById('ho-filter-label').textContent='';document.getElementById('hoTableContainer').innerHTML='<div class="loading">⏳ LOADING...</div>';try{const res=await fetch(API_URL+'?action=getHandovers&t='+Date.now());const data=await res.json();if(data.success){allHandovers=data.handovers||[];filteredHandovers=[...allHandovers];renderHandoverStats(filteredHandovers);renderHandoverTable(filteredHandovers);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}else document.getElementById('hoTableContainer').innerHTML='<div class="error-msg">⚠ Failed.</div>';}catch{document.getElementById('hoTableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}}
 function applyHandoverFilter(){const from=document.getElementById('ho-date-from').value,to=document.getElementById('ho-date-to').value,shift=document.getElementById('ho-shift-filter').value;filteredHandovers=allHandovers.filter(h=>{const hd=normalizeDateToClient(h.date);if(from&&hd<from)return false;if(to&&hd>to)return false;if(shift&&h.shift!==shift)return false;return true;});const parts=[];if(from||to)parts.push((from||'…')+' → '+(to||'…'));if(shift)parts.push('Shift: '+shift);document.getElementById('ho-filter-label').textContent=parts.length?parts.join(' · ')+' · '+filteredHandovers.length+' records':'';renderHandoverStats(filteredHandovers);renderHandoverTable(filteredHandovers);}
 function renderHandoverStats(list){document.getElementById('ho-s-total').textContent=list.length;document.getElementById('ho-s-pending').textContent=list.reduce((a,h)=>a+(h.pendingTickets||0),0);document.getElementById('ho-s-completed').textContent=list.reduce((a,h)=>a+(h.completedTickets||0),0);document.getElementById('ho-s-showstopper').textContent=list.reduce((a,h)=>a+(h.showstopperCount||0),0);}
 function renderHandoverTable(list){document.getElementById('ho-count-label').textContent=list.length+' records';if(!list.length){document.getElementById('hoTableContainer').innerHTML='<div class="no-data-msg">📭 No handover submissions found.</div>';return;}const tbody=document.createElement('tbody');[...list].map((h,origIdx)=>({h,origIdx})).reverse().forEach(({h,origIdx},displayIdx)=>{const safeDate=normalizeDateToClient(h.date);const safeShift=(h.shift||'').trim();const submittedAt=h.submittedAt?new Date(h.submittedAt).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'—';const sc={D1:'env-dev',D2:'env-uat',D3:'env-staging'}[safeShift]||'env-default';const tr=document.createElement('tr');tr.innerHTML='<td style="color:#3a7aaa;font-size:11px;font-weight:600;">'+(displayIdx+1)+'</td><td style="font-weight:700;color:#0a3d78;">'+(safeDate||'—')+'</td><td><span class="env-badge '+sc+'">'+(safeShift||'—')+'</span></td><td style="font-size:12px;color:#2a4a6a;max-width:180px;">'+(h.currentMembers||'—')+'</td><td style="font-size:12px;color:#2a4a6a;max-width:180px;">'+(h.nextMembers||'—')+'</td><td style="text-align:center;"><span style="font-size:16px;font-weight:800;color:#1a7db5;">'+(h.totalTickets||0)+'</span></td><td style="text-align:center;"><span style="font-size:14px;font-weight:700;color:#c0392b;">'+(h.pendingTickets||0)+'</span></td><td style="text-align:center;"><span style="font-size:14px;font-weight:700;color:#1a8c5c;">'+(h.completedTickets||0)+'</span></td><td style="text-align:center;">'+(h.showstopperCount>0?'<span style="background:#fde8e8;border:1px solid #f0aaaa;border-radius:12px;padding:2px 8px;font-size:11px;font-weight:700;color:#a02020;">🔴 '+h.showstopperCount+'</span>':'<span style="color:#3a7aaa;font-size:12px;font-weight:600;">—</span>')+'</td><td style="font-size:11px;color:#3a7aaa;font-weight:600;">'+submittedAt+'</td><td style="white-space:nowrap;"></td>';const actionTd=tr.querySelector('td:last-child');const viewBtn=document.createElement('button');viewBtn.className='view-btn';viewBtn.textContent='👁 View';viewBtn.onclick=()=>openHoDetail(origIdx);actionTd.appendChild(viewBtn);actionTd.appendChild(document.createTextNode(' '));const delBtn=document.createElement('button');delBtn.className='delete-btn';delBtn.style.marginLeft='4px';delBtn.textContent='🗑 Delete';delBtn.onclick=()=>deleteHandover(origIdx,safeDate,safeShift);actionTd.appendChild(delBtn);tbody.appendChild(tr);});const table=document.createElement('table');table.innerHTML='<thead><tr><th>#</th><th>Date</th><th>Shift</th><th>Current Members</th><th>Next Members</th><th style="text-align:center;">Total</th><th style="text-align:center;">Pending</th><th style="text-align:center;">Done</th><th style="text-align:center;">Showstopper</th><th>Submitted At</th><th>Actions</th></tr></thead>';table.appendChild(tbody);document.getElementById('hoTableContainer').innerHTML='';document.getElementById('hoTableContainer').appendChild(table);}
 function filterHandoverTable(){const q=document.getElementById('hoSearchInput').value.toLowerCase();renderHandoverTable(q?filteredHandovers.filter(h=>{const d=normalizeDateToClient(h.date);return d.includes(q)||(h.shift||'').toLowerCase().includes(q)||(h.currentMembers||'').toLowerCase().includes(q)||(h.nextMembers||'').toLowerCase().includes(q);}):filteredHandovers);}
 function openHoDetail(origIdx){const h=filteredHandovers[origIdx];if(!h)return;const submittedAt=h.submittedAt?new Date(h.submittedAt).toLocaleString():'—';const safeDate=normalizeDateToClient(h.date);const catRow=(label,color,bg,border,count,pending,ids)=>'<div style="background:'+bg+';border:1px solid '+border+';border-radius:8px;padding:12px 14px;margin-bottom:8px;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;"><span style="font-size:12px;font-weight:700;color:'+color+';">'+label+'</span><div style="display:flex;gap:8px;"><span style="font-size:11px;border-radius:10px;padding:2px 8px;color:'+color+';background:rgba(0,0,0,.05);">'+count+' total</span>'+(pending>0?'<span style="font-size:11px;background:#fde8e8;border-radius:10px;padding:2px 8px;color:#a02020;">'+pending+' pending</span>':'')+'</div></div>'+(ids?'<div style="font-size:11px;color:#1a5a90;line-height:1.8;">'+ids+'</div>':'<div style="font-size:11px;color:#3a7aaa;">No tickets</div>')+'</div>';const infoBoxes=[h.infoBox1,h.infoBox2,h.infoBox3,h.infoBox4].filter(b=>b&&b.trim());const infoHtml=infoBoxes.length?'<div style="margin-top:16px;"><div style="font-size:11px;font-weight:700;color:#1a7db5;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">📢 Important Information</div>'+infoBoxes.map(b=>'<div style="background:#fffbec;border:1px solid #f0d840;border-radius:6px;padding:10px 12px;font-size:12px;color:#2a4a6a;line-height:1.6;margin-bottom:8px;white-space:pre-wrap;">'+b+'</div>').join('')+'</div>':'';document.getElementById('hoDetailContent').innerHTML='<div style="font-size:20px;font-weight:800;color:#0a3d78;letter-spacing:2px;margin-bottom:4px;">'+safeDate+' — '+(h.shift||'—')+'</div><div style="font-size:11px;color:#3a7aaa;font-weight:600;margin-bottom:20px;">Submitted: '+submittedAt+'</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;"><div style="background:#f4f9ff;border:1px solid #c8dff0;border-radius:8px;padding:12px;"><div style="font-size:10px;color:#1a7db5;letter-spacing:1px;font-weight:700;margin-bottom:5px;">CURRENT SHIFT</div><div style="font-size:13px;color:#0a3d78;line-height:1.7;">'+(h.currentMembers||'—')+'</div></div><div style="background:#f4f9ff;border:1px solid #c8dff0;border-radius:8px;padding:12px;"><div style="font-size:10px;color:#1a7db5;letter-spacing:1px;font-weight:700;margin-bottom:5px;">NEXT SHIFT</div><div style="font-size:13px;color:#0a3d78;line-height:1.7;">'+(h.nextMembers||'—')+'</div></div><div style="background:#f4f9ff;border:1px solid #c8dff0;border-radius:8px;padding:10px 12px;"><div style="font-size:10px;color:#1a7db5;letter-spacing:1px;font-weight:700;margin-bottom:4px;">MAILS HANDLED BY</div><div style="font-size:13px;color:#1a5a90;">'+(h.mailsHandledBy||'—')+'</div></div><div style="background:#f4f9ff;border:1px solid #c8dff0;border-radius:8px;padding:10px 12px;"><div style="font-size:10px;color:#1a7db5;letter-spacing:1px;font-weight:700;margin-bottom:4px;">JIRA HANDLED BY</div><div style="font-size:13px;color:#1a5a90;">'+(h.jiraHandledBy||'—')+'</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;"><div style="background:#eef5fc;border:1.5px solid #c8dff0;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#1a7db5;">'+(h.totalTickets||0)+'</div><div style="font-size:10px;color:#3a7aaa;letter-spacing:1px;font-weight:600;">TOTAL</div></div><div style="background:#fde8e8;border:1.5px solid #f0aaaa;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#c0392b;">'+(h.pendingTickets||0)+'</div><div style="font-size:10px;color:#c0392b;letter-spacing:1px;opacity:.7;">PENDING</div></div><div style="background:#d4f5e4;border:1.5px solid #6cd4a0;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#1a7050;">'+(h.completedTickets||0)+'</div><div style="font-size:10px;color:#1a7050;letter-spacing:1px;opacity:.7;">COMPLETED</div></div></div><div style="font-size:11px;font-weight:700;color:#1a7db5;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">📋 Ticket Breakdown</div>'+catRow('🔴 Showstopper','#a02020','#fde8e8','#f0aaaa',h.showstopperCount||0,h.showstopperPending||0,h.showstopperIds||'')+catRow('🟠 High Priority','#8a5010','#fff3d8','#f5c840',h.highCount||0,h.highPending||0,h.highIds||'')+catRow('🟣 Customer Escalated','#5020a0','#f0e8ff','#c0a0e0',h.escalatedCount||0,h.escalatedPending||0,h.escalatedIds||'')+catRow('⚫ Long Pending','#404040','#f0f0f0','#c0c0c0',h.longpendingCount||0,h.longpendingPending||0,h.longpendingIds||'')+infoHtml;document.getElementById('hoDetailOverlay').classList.add('open');}
 function closeHoDetail(){document.getElementById('hoDetailOverlay').classList.remove('open');}
-async function deleteHandover(origIdx,safeDate,safeShift){const h=filteredHandovers[origIdx];if(!h){showToast('⚠ Record not found.',false);return;}if(!confirm('⚠ Delete handover record for "'+safeDate+' — '+safeShift+'"?\n\nThis cannot be undone!'))return;showToast('⏳ Deleting...',true);try{const params=new URLSearchParams({action:'deleteHandover',date:safeDate,shift:safeShift});const res=await fetch(API_URL+'?'+params.toString());const text=await res.text();let data;try{data=JSON.parse(text);}catch(pe){showToast('⚠ Server error — redeploy Apps Script as new version.',false);return;}if(data.success){showToast('🗑 Handover "'+safeDate+' '+safeShift+'" deleted.');const gi=allHandovers.indexOf(h);if(gi>-1)allHandovers.splice(gi,1);filteredHandovers.splice(origIdx,1);renderHandoverStats(filteredHandovers);renderHandoverTable(filteredHandovers);}else{showToast('⚠ Delete failed: '+(data.error||'Unknown'),false);}}catch(err){showToast('⚠ Connection error: '+err.message,false);}}
+async function deleteHandover(origIdx,safeDate,safeShift){const h=filteredHandovers[origIdx];if(!h){showToast('⚠ Record not found.',false);return;}if(!confirm('⚠ Delete handover record for "'+safeDate+' — '+safeShift+'"?'))return;showToast('⏳ Deleting...',true);try{const params=new URLSearchParams({action:'deleteHandover',date:safeDate,shift:safeShift});const res=await fetch(API_URL+'?'+params.toString());const text=await res.text();let data;try{data=JSON.parse(text);}catch{showToast('⚠ Server error — redeploy Apps Script.',false);return;}if(data.success){showToast('🗑 Handover deleted.');const gi=allHandovers.indexOf(h);if(gi>-1)allHandovers.splice(gi,1);filteredHandovers.splice(origIdx,1);renderHandoverStats(filteredHandovers);renderHandoverTable(filteredHandovers);}else{showToast('⚠ Delete failed: '+(data.error||'Unknown'),false);}}catch(err){showToast('⚠ Connection error.',false);}}
 
-// ── PLANNER ──
-const PLANNER_DATES=['30-03-2026','31-03-2026','01-04-2026','02-04-2026','03-04-2026','04-04-2026','05-04-2026','06-04-2026','07-04-2026','08-04-2026','09-04-2026','10-04-2026','11-04-2026','12-04-2026','13-04-2026','14-04-2026','15-04-2026','16-04-2026','17-04-2026','18-04-2026','19-04-2026','20-04-2026','21-04-2026','22-04-2026','23-04-2026','24-04-2026','25-04-2026','26-04-2026','27-04-2026','28-04-2026','29-04-2026','30-04-2026','01-05-2026','02-05-2026','03-05-2026'];
-const PLANNER_DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-const PLANNER_DEFAULT=[{sl:1,id:'SM1658',name:'Vignesh Maharajan',group:'G2',primary:'Customer Service',shifts:['D5','D5','D5','D5','Holiday','W/OFF','W/OFF','D5','D5','D5','D5','D5','W/OFF','W/OFF','D5','Holiday','D5','D5','D5','W/OFF','W/OFF','D5','D5','D5','D5','D5','W/OFF','W/OFF','D5','D5','D5','D5','D5','W/OFF','W/OFF']},{sl:2,id:'SM2045',name:'Akash Nagarathinam',group:'G3',primary:'EMS/EDI',shifts:['D2','D2','D2','D2','D2','W/OFF','W/OFF','Compff','D1','D1','D1','D1','W/OFF','W/OFF','D1','Holiday','D1','D1','D1','W/OFF','W/OFF','D2','D2','D2','D2','D2','W/OFF','W/OFF','D2','D2','D2','D2','D2','W/OFF','W/OFF']},{sl:3,id:'SM1638',name:'Challa Venkat Suneel',group:'G1',primary:'Operations',shifts:['D4','D4','D4','D4','Holiday','W/OFF','W/OFF','D4','D4','D4','D4','D4','W/OFF','W/OFF','D4','Holiday','D4','D4','D4','W/OFF','W/OFF','D4','D4','D4','D4','D4','W/OFF','W/OFF','D4','D4','D4','D4','D4','W/OFF','W/OFF']},{sl:4,id:'SM2197',name:'Vinoth Bhoopathy',group:'G1',primary:'Operations',shifts:['D1','D1','D1','D1','Holiday','W/OFF','W/OFF','D2','D2','D2','D2','D2','W/OFF','W/OFF','D2','Holiday','D2','D2','D2','W/OFF','W/OFF','D1','D1','D1','W/OFF','D1','D1','D1','W/OFF','D1','D1','D1','D1','W/OFF','W/OFF']},{sl:5,id:'SM2335',name:'Vignesh Rajapandi',group:'G2',primary:'Operations',shifts:['D4','D4','D4','D4','Holiday','W/OFF','W/OFF','D4','D4','D4','D4','D4','W/OFF','W/OFF','D4','Holiday','D4','D4','D4','W/OFF','W/OFF','D4','D4','D4','D4','D4','W/OFF','W/OFF','D4','D4','D4','D4','D4','W/OFF','W/OFF']},{sl:6,id:'SM2145',name:'Rene Claret A',group:'G2',primary:'Customer Service',shifts:['D2','D2','W/OFF','W/OFF','Holiday','D2','D2','W/OFF','N','N','N','N','W/OFF','W/OFF','D1','D1','D1','D1','D1','W/OFF','W/OFF','Compff','N','N','N','N','N','W/OFF','D2','D2','D2','D2','D2','W/OFF','W/OFF']},{sl:7,id:'SM2333',name:'Kulasekar Baskar',group:'G1',primary:'Operations',shifts:['N','N','W/OFF','W/OFF','Holiday','N','N','N','W/OFF','D2','D2','W/OFF','D2','D2','D2','D2','D2','W/OFF','W/OFF','D1','D1','Compff','W/OFF','D1','D1','W/OFF','W/OFF','N','N','N','N','N','W/OFF','D1','D1']},{sl:8,id:'SM2332',name:'Seenivasan Lakshmipathy',group:'G2',primary:'Customer Service',shifts:['D1','D1','W/OFF','W/OFF','D1','D1','D1','D1','D1','Compff','W/OFF','W/OFF','N','N','N','N','N','W/OFF','W/OFF','D2','D2','Compff','W/OFF','D2','D2','D2','W/OFF','W/OFF','D1','D1','D1','W/OFF','N','N','N']},{sl:9,id:'SM2331',name:'Vinothraj Vijayakumar',group:'G2',primary:'Customer Service',shifts:['N','N','N','N','N','W/OFF','W/OFF','D2','D2','Compff','W/OFF','D1','D1','D1','W/OFF','Holiday','W/OFF','N','N','N','N','N','W/OFF','D2','D2','W/OFF','D2','D2','D2','D2','W/OFF','W/OFF','D2','D2','D2']}];
-const SHIFT_LEGEND=[{key:'D1',label:'D1 — Morning',cls:'sp-D1'},{key:'D2',label:'D2 — Afternoon',cls:'sp-D2'},{key:'D4',label:'D4 — Day',cls:'sp-D4'},{key:'D5',label:'D5 — Evening',cls:'sp-D5'},{key:'N',label:'Night',cls:'sp-N'},{key:'W/OFF',label:'Week Off',cls:'sp-WOFF'},{key:'Holiday',label:'Holiday',cls:'sp-HOL'},{key:'Compff',label:'Comp Off',cls:'sp-COMP'}];
+// ═══════════════════════════════════════════════════════
+//  SHIFT PLANNER — DYNAMIC MULTI-MONTH
+// ═══════════════════════════════════════════════════════
+const SHIFT_OPTIONS = ['D1','D2','D3','D4','D5','N','W/OFF','Holiday','Compff'];
+const SHIFT_LEGEND  = [
+  {key:'D1',label:'D1 — Morning',cls:'sp-D1'},{key:'D2',label:'D2 — Afternoon',cls:'sp-D2'},
+  {key:'D4',label:'D4 — Day',cls:'sp-D4'},{key:'D5',label:'D5 — Evening',cls:'sp-D5'},
+  {key:'N',label:'Night',cls:'sp-N'},{key:'W/OFF',label:'Week Off',cls:'sp-WOFF'},
+  {key:'Holiday',label:'Holiday',cls:'sp-HOL'},{key:'Compff',label:'Comp Off',cls:'sp-COMP'}
+];
+const SHIFT_CLS_MAP = {
+  D1:'sp-D1',D2:'sp-D2',D3:'sp-D3',D4:'sp-D4',D5:'sp-D5',
+  N:'sp-N','W/OFF':'sp-WOFF',HOLIDAY:'sp-HOL',COMPFF:'sp-COMP'
+};
+
+const DEFAULT_MEMBERS = [
+  {id:'SM1658',name:'Vignesh Maharajan',  primary:'Customer Service'},
+  {id:'SM2045',name:'Akash Nagarathinam', primary:'EMS/EDI'},
+  {id:'SM1638',name:'Challa Venkat Suneel',primary:'Operations'},
+  {id:'SM2197',name:'Vinoth Bhoopathy',   primary:'Operations'},
+  {id:'SM2335',name:'Vignesh Rajapandi',  primary:'Operations'},
+  {id:'SM2145',name:'Rene Claret A',      primary:'Customer Service'},
+  {id:'SM2333',name:'Kulasekar Baskar',   primary:'Operations'},
+  {id:'SM2332',name:'Seenivasan Lakshmipathy',primary:'Customer Service'},
+  {id:'SM2331',name:'Vinothraj Vijayakumar',  primary:'Customer Service'}
+];
+
+// plannerData[memberIdx][dateKey] = shiftString | ''
+let plannerData     = {};   // { memberId: { 'yyyy-mm-dd': 'D1' } }
+let plannerMembers  = [];   // array of {id, name, primary}
+let plannerViewYear = new Date().getFullYear();
+let plannerViewMonth= new Date().getMonth(); // 0-based
 let plannerShiftFilter='ALL';
-let PLANNER_TEAM=JSON.parse(JSON.stringify(PLANNER_DEFAULT));
-let plannerDirty=false,pceTarget=null;
-async function loadPlanner(){document.getElementById('planner-table-container').innerHTML='<div class="loading">⏳ LOADING PLANNER...</div>';try{const res=await fetch(API_URL+'?action=getPlanner&t='+Date.now());const data=await res.json();if(data.success&&data.planner&&Array.isArray(data.planner)&&data.planner.length){PLANNER_TEAM=data.planner;if(data.updatedAt){const d=new Date(data.updatedAt);document.getElementById('planner-saved-label').textContent='✅ Last published: '+d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}}else{PLANNER_TEAM=JSON.parse(JSON.stringify(PLANNER_DEFAULT));}}catch{PLANNER_TEAM=JSON.parse(JSON.stringify(PLANNER_DEFAULT));}plannerDirty=false;resetPublishBtn();renderPlanner();}
-function resetPublishBtn(){const btn=document.getElementById('planner-publish-btn');btn.textContent='📤 Submit to Agents';btn.style.background='linear-gradient(135deg,#1a8c5c,#138048)';btn.disabled=false;}
-async function publishPlanner(){const btn=document.getElementById('planner-publish-btn');btn.disabled=true;btn.textContent='⏳ Submitting...';try{const res=await fetch(API_URL+'?'+new URLSearchParams({action:'savePlanner',payload:JSON.stringify(PLANNER_TEAM)}));const data=await res.json();if(data.success){plannerDirty=false;const now=new Date();document.getElementById('planner-saved-label').textContent='✅ Published: '+now.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+' '+now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});showToast('📤 Shift planner submitted to agents successfully!');resetPublishBtn();}else{showToast('⚠ Submit failed. Try again.',false);btn.textContent='📤 Submit to Agents';btn.disabled=false;}}catch{showToast('⚠ Connection error.',false);btn.textContent='📤 Submit to Agents';btn.disabled=false;}}
-function getPlannerTodayIndex(){const d=new Date(),pad=n=>String(n).padStart(2,'0');return PLANNER_DATES.indexOf(pad(d.getDate())+'-'+pad(d.getMonth()+1)+'-'+d.getFullYear());}
-function shiftPillClass(s){const v=(s||'').trim().toUpperCase();if(v==='D1')return'sp-D1';if(v==='D2')return'sp-D2';if(v==='D3')return'sp-D3';if(v==='D4')return'sp-D4';if(v==='D5')return'sp-D5';if(v==='N')return'sp-N';if(v==='W/OFF')return'sp-WOFF';if(v==='HOLIDAY')return'sp-HOL';if(v==='COMPFF')return'sp-COMP';return'sp-WOFF';}
-function setPlannerFilter(btn){plannerShiftFilter=btn.dataset.shift;document.querySelectorAll('.planner-filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderPlanner();}
-function openPlannerEditor(memberIdx,dateIdx,currentVal,cellEl){pceTarget={memberIdx,dateIdx};document.getElementById('pce-select').value=currentVal||'W/OFF';document.getElementById('pce-label').textContent=PLANNER_TEAM[memberIdx].name+' — '+PLANNER_DATES[dateIdx];const editor=document.getElementById('planner-cell-editor');editor.style.display='block';const rect=cellEl.getBoundingClientRect();let top=rect.bottom+window.scrollY+4,left=rect.left+window.scrollX;if(left+210>window.innerWidth)left=window.innerWidth-220;editor.style.top=top+'px';editor.style.left=left+'px';}
-function closePlannerEditor(){document.getElementById('planner-cell-editor').style.display='none';pceTarget=null;}
-function applyPlannerCellEdit(){if(!pceTarget)return;PLANNER_TEAM[pceTarget.memberIdx].shifts[pceTarget.dateIdx]=document.getElementById('pce-select').value;plannerDirty=true;const btn=document.getElementById('planner-publish-btn');btn.textContent='📤 Submit to Agents *';btn.style.background='linear-gradient(135deg,#c07010,#a05008)';closePlannerEditor();renderPlanner();}
-document.addEventListener('click',function(e){const ed=document.getElementById('planner-cell-editor');if(ed&&ed.style.display!=='none'&&!ed.contains(e.target)&&!e.target.closest('td'))closePlannerEditor();});
-function renderPlanner(){const ti=getPlannerTodayIndex();const search=(document.getElementById('planner-search')?.value||'').toLowerCase();const lbl=document.getElementById('planner-today-label');if(ti>=0)lbl.textContent='Today: '+PLANNER_DATES[ti]+' ('+PLANNER_DAYS[ti]+')';else lbl.textContent='';document.getElementById('planner-legend').innerHTML=SHIFT_LEGEND.map(l=>'<span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#2a6090;font-weight:600;"><span class="shift-pill '+l.cls+'">'+l.key+'</span>'+l.label+'</span>').join('');let team=PLANNER_TEAM;if(search)team=team.filter(m=>m.name.toLowerCase().includes(search)||m.primary.toLowerCase().includes(search)||m.id.toLowerCase().includes(search));if(plannerShiftFilter!=='ALL')team=team.filter(m=>m.shifts.some(s=>s.trim().toUpperCase()===plannerShiftFilter.toUpperCase()));if(!team.length){document.getElementById('planner-table-container').innerHTML='<div style="padding:40px;text-align:center;color:#3a7aaa;font-size:14px;">No team members found.</div>';return;}let hdr='<tr><th class="col-name" rowspan="2">Name</th><th style="text-align:left;min-width:120px;background:#eef5fc;border:1px solid #c8dff0;padding:8px 10px;font-size:10px;font-weight:700;color:#1a7db5;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;position:sticky;top:0;z-index:2;" rowspan="2">Primary Role</th>';PLANNER_DATES.forEach((d,i)=>{const isT=i===ti,isW=PLANNER_DAYS[i]==='Sat'||PLANNER_DAYS[i]==='Sun',p=d.split('-');hdr+='<th style="padding:8px 10px;text-align:center;font-size:10px;font-weight:700;white-space:nowrap;border:1px solid #c8dff0;background:'+(isT?'#d8eeff':'#eef5fc')+';color:'+(isT?'#1a7db5':isW?'#3a7aaa':'#1a7db5')+';">'+p[0]+'/'+p[1]+'</th>';});hdr+='</tr><tr>';PLANNER_DAYS.forEach((d,i)=>{const isT=i===ti,isW=d==='Sat'||d==='Sun';hdr+='<th style="font-size:9px;padding:8px 10px;text-align:center;font-weight:700;white-space:nowrap;border:1px solid #c8dff0;background:'+(isT?'#d8eeff':'#eef5fc')+';color:'+(isT?'#1a7db5':isW?'#3a7aaa':'#1a7db5')+';">'+d+'</th>';});hdr+='</tr>';const bodyRows=team.map(m=>{const ri=PLANNER_TEAM.indexOf(m);let cells='';m.shifts.forEach((s,i)=>{const isT=i===ti,pill=shiftPillClass(s),hl=plannerShiftFilter!=='ALL'&&s.trim().toUpperCase()===plannerShiftFilter.toUpperCase();cells+='<td class="'+(isT?'col-today':'')+'" style="cursor:pointer;" title="Click to edit" onclick="openPlannerEditor('+ri+','+i+',\''+s+'\',this)"><span class="shift-pill '+pill+(isT?' sp-TODAY':'')+'"'+(hl?' style="box-shadow:0 0 6px rgba(26,125,181,.3);"':'')+'>'+s+'</span></td>';});return'<tr><td class="col-name"><div>'+m.name+'</div><div style="font-size:10px;color:#3a7aaa;margin-top:2px;font-weight:600;">'+m.id+'</div></td><td class="col-primary">'+m.primary+'</td>'+cells+'</tr>';}).join('');document.getElementById('planner-table-container').innerHTML='<table class="planner-tbl"><thead>'+hdr+'</thead><tbody>'+bodyRows+'</tbody></table>';}
+let plannerDirty   = false;
+let pceTarget       = null; // {memberId, dateKey}
 
-// ── WHY NOT SOLVED ──
+// Generate year options: current-1 to current+3
+function buildYearSelect(){
+  const sel=document.getElementById('planner-year-select');
+  sel.innerHTML='';
+  const cy=new Date().getFullYear();
+  for(let y=cy-1;y<=cy+3;y++){
+    const o=document.createElement('option');
+    o.value=y;o.textContent=y;
+    if(y===plannerViewYear)o.selected=true;
+    sel.appendChild(o);
+  }
+}
+function plannerJumpYear(y){plannerViewYear=parseInt(y);renderPlanner();}
+function plannerPrevMonth(){
+  plannerViewMonth--;
+  if(plannerViewMonth<0){plannerViewMonth=11;plannerViewYear--;}
+  document.getElementById('planner-year-select').value=plannerViewYear;
+  renderPlanner();
+}
+function plannerNextMonth(){
+  plannerViewMonth++;
+  if(plannerViewMonth>11){plannerViewMonth=0;plannerViewYear++;}
+  document.getElementById('planner-year-select').value=plannerViewYear;
+  renderPlanner();
+}
+function setPlannerFilter(btn){
+  plannerShiftFilter=btn.dataset.shift;
+  document.querySelectorAll('.planner-filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPlanner();
+}
+
+// Get all days in the current view month
+function getDaysInViewMonth(){
+  const days=[];
+  const daysInMonth=new Date(plannerViewYear,plannerViewMonth+1,0).getDate();
+  const DAY_NAMES=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  for(let d=1;d<=daysInMonth;d++){
+    const dt=new Date(plannerViewYear,plannerViewMonth,d);
+    const iso=plannerViewYear+'-'+String(plannerViewMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    days.push({iso, day:String(d).padStart(2,'0'), dayName:DAY_NAMES[dt.getDay()]});
+  }
+  return days;
+}
+
+function shiftPillCls(s){
+  if(!s||!s.trim())return'sp-empty';
+  return SHIFT_CLS_MAP[s.trim().toUpperCase()]||'sp-D1';
+}
+
+function getTodayISO(){
+  const d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+async function loadPlanner(){
+  document.getElementById('planner-table-container').innerHTML='<div class="loading">⏳ LOADING PLANNER...</div>';
+  buildYearSelect();
+
+  try{
+    const res=await fetch(API_URL+'?action=getPlanner&t='+Date.now());
+    const data=await res.json();
+    if(data.success&&data.planner&&Array.isArray(data.planner)&&data.planner.length){
+      // New format: [{id,name,primary,shifts:{dateKey:shift}}]
+      const raw=data.planner;
+      if(raw[0]&&raw[0].shifts&&typeof raw[0].shifts==='object'&&!Array.isArray(raw[0].shifts)){
+        // New date-keyed format
+        plannerMembers=raw.map(m=>({id:m.id,name:m.name,primary:m.primary}));
+        plannerData={};
+        raw.forEach(m=>{ plannerData[m.id]=Object.assign({},m.shifts||{}); });
+      } else {
+        // Legacy array format — migrate
+        plannerMembers=raw.map(m=>({id:m.id||m.sl,name:m.name,primary:m.primary||''}));
+        plannerData={};
+        plannerMembers.forEach(m=>{ plannerData[m.id]={}; });
+      }
+      if(data.updatedAt){
+        const d=new Date(data.updatedAt);
+        document.getElementById('planner-saved-label').textContent=
+          '✅ Last published: '+d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+
+          ' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      }
+    } else {
+      // Use defaults, empty shifts
+      plannerMembers=DEFAULT_MEMBERS.map(m=>({...m}));
+      plannerData={};
+      plannerMembers.forEach(m=>{ plannerData[m.id]={}; });
+    }
+  } catch{
+    plannerMembers=DEFAULT_MEMBERS.map(m=>({...m}));
+    plannerData={};
+    plannerMembers.forEach(m=>{ plannerData[m.id]={}; });
+  }
+  plannerDirty=false;
+  updatePlannerDirtyBadge();
+  renderPlanner();
+}
+
+function renderPlanner(){
+  const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('planner-month-label').textContent=MONTH_NAMES[plannerViewMonth]+' '+plannerViewYear;
+
+  // Legend
+  document.getElementById('planner-legend').innerHTML=SHIFT_LEGEND.map(l=>
+    `<span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#2a6090;font-weight:600;">
+      <span class="shift-pill ${l.cls}">${l.key}</span>${l.label}
+    </span>`).join('');
+
+  // Today
+  const todayISO=getTodayISO();
+  const todayMonth=todayISO.slice(0,7); // yyyy-mm
+  const viewMonth=plannerViewYear+'-'+String(plannerViewMonth+1).padStart(2,'0');
+  document.getElementById('planner-today-label').textContent=
+    todayMonth===viewMonth?'Today: '+todayISO.slice(8)+' '+new Date().toLocaleDateString('en-GB',{weekday:'short'}):'';
+
+  const days=getDaysInViewMonth();
+  const sq=(document.getElementById('planner-search').value||'').toLowerCase();
+
+  let members=plannerMembers;
+  if(sq) members=members.filter(m=>(m.name||'').toLowerCase().includes(sq)||(m.id||'').toLowerCase().includes(sq));
+  if(plannerShiftFilter!=='ALL'){
+    members=members.filter(m=>{
+      const shifts=plannerData[m.id]||{};
+      return days.some(d=>(shifts[d.iso]||'').trim().toUpperCase()===plannerShiftFilter.toUpperCase());
+    });
+  }
+
+  if(!members.length){
+    document.getElementById('planner-table-container').innerHTML='<div style="padding:40px;text-align:center;color:#3a7aaa;font-size:14px;">No team members match your search.</div>';
+    return;
+  }
+
+  // Build header
+  let hdr='<tr><th class="col-name" rowspan="2">Name</th>';
+  days.forEach(d=>{
+    const isT=d.iso===todayISO, isW=d.dayName==='Sat'||d.dayName==='Sun';
+    hdr+=`<th style="padding:7px 6px;text-align:center;font-size:10px;font-weight:700;white-space:nowrap;border:1px solid #c8dff0;background:${isT?'#d8eeff':'#eef5fc'};color:${isT?'#1a7db5':isW?'#888':'#1a7db5'};">${d.day}</th>`;
+  });
+  hdr+='</tr><tr>';
+  days.forEach(d=>{
+    const isT=d.iso===todayISO, isW=d.dayName==='Sat'||d.dayName==='Sun';
+    hdr+=`<th style="font-size:9px;padding:6px;text-align:center;font-weight:700;white-space:nowrap;border:1px solid #c8dff0;background:${isT?'#d8eeff':'#eef5fc'};color:${isT?'#1a7db5':isW?'#888':'#1a7db5'};">${d.dayName}</th>`;
+  });
+  hdr+='</tr>';
+
+  const bodyRows=members.map(m=>{
+    const shifts=plannerData[m.id]||{};
+    let cells='';
+    days.forEach(d=>{
+      const s=shifts[d.iso]||'';
+      const isT=d.iso===todayISO;
+      const cls=shiftPillCls(s);
+      const hl=plannerShiftFilter!=='ALL'&&s.trim().toUpperCase()===plannerShiftFilter.toUpperCase();
+      const pillContent=s||'<span style="font-size:9px;color:#c0c0c0;">—</span>';
+      cells+=`<td class="${isT?'col-today':''}" style="cursor:pointer;" title="Click to assign" onclick="openPlannerEditor('${m.id}','${d.iso}',this)">
+        <span class="shift-pill ${cls}${s?'':' sp-empty'}${isT?' sp-TODAY':''}"${hl?' style="box-shadow:0 0 6px rgba(26,125,181,.3);"':''}>
+          ${s||'—'}
+        </span>
+      </td>`;
+    });
+    return`<tr>
+      <td class="col-name">
+        <div style="font-weight:700;color:#0a3d78;">${m.name}</div>
+        <div style="font-size:10px;color:#3a7aaa;margin-top:1px;font-weight:600;">${m.id} &nbsp;·&nbsp; ${m.primary}</div>
+      </td>${cells}
+    </tr>`;
+  }).join('');
+
+  document.getElementById('planner-table-container').innerHTML=
+    `<table class="planner-tbl"><thead>${hdr}</thead><tbody>${bodyRows}</tbody></table>`;
+}
+
+function openPlannerEditor(memberId, dateKey, cellEl){
+  pceTarget={memberId, dateKey};
+  const shifts=plannerData[memberId]||{};
+  const current=shifts[dateKey]||'';
+  const m=plannerMembers.find(x=>x.id===memberId);
+  const [y,mo,d]=dateKey.split('-');
+  document.getElementById('pce-label').textContent=(m?m.name:memberId)+' — '+d+'/'+mo+'/'+y;
+
+  // Build chip grid
+  const grid=document.getElementById('pce-grid');
+  grid.innerHTML='';
+  // Clear option
+  const clearChip=document.createElement('div');
+  clearChip.className='pce-chip-empty'+(current===''?' selected':'');
+  clearChip.textContent='Clear';
+  clearChip.onclick=()=>applyPlannerCellEdit('');
+  grid.appendChild(clearChip);
+
+  SHIFT_OPTIONS.forEach(s=>{
+    const chip=document.createElement('div');
+    const cls=SHIFT_CLS_MAP[s.toUpperCase()]||'sp-D1';
+    chip.className='pce-chip'+(current===s?' selected':'');
+    chip.textContent=s;
+    chip.style.color=current===s?'#fff':'';
+    chip.onclick=()=>applyPlannerCellEdit(s);
+    grid.appendChild(chip);
+  });
+
+  // Position popup
+  const editor=document.getElementById('planner-cell-editor');
+  editor.style.display='block';
+  const rect=cellEl.getBoundingClientRect();
+  let top=rect.bottom+window.scrollY+4;
+  let left=rect.left+window.scrollX;
+  if(left+220>window.innerWidth)left=window.innerWidth-230;
+  editor.style.top=top+'px';
+  editor.style.left=left+'px';
+}
+function applyPlannerCellEdit(shift){
+  if(!pceTarget)return;
+  if(!plannerData[pceTarget.memberId])plannerData[pceTarget.memberId]={};
+  if(shift===''){
+    delete plannerData[pceTarget.memberId][pceTarget.dateKey];
+  } else {
+    plannerData[pceTarget.memberId][pceTarget.dateKey]=shift;
+  }
+  plannerDirty=true;
+  updatePlannerDirtyBadge();
+  closePlannerEditor();
+  renderPlanner();
+}
+function closePlannerEditor(){
+  document.getElementById('planner-cell-editor').style.display='none';
+  pceTarget=null;
+}
+function updatePlannerDirtyBadge(){
+  document.getElementById('planner-unsaved-badge').classList.toggle('visible',plannerDirty);
+  const btn=document.getElementById('planner-publish-btn');
+  if(plannerDirty){
+    btn.style.background='linear-gradient(135deg,#c07010,#a05008)';
+    btn.textContent='📤 Submit to Agents *';
+  } else {
+    btn.style.background='linear-gradient(135deg,#1a8c5c,#138048)';
+    btn.textContent='📤 Submit to Agents';
+  }
+}
+document.addEventListener('click',e=>{
+  const ed=document.getElementById('planner-cell-editor');
+  if(ed&&ed.style.display!=='none'&&!ed.contains(e.target)&&!e.target.closest('td'))closePlannerEditor();
+});
+
+async function publishPlanner(){
+  const btn=document.getElementById('planner-publish-btn');
+  btn.disabled=true;btn.textContent='⏳ Submitting...';
+  // Serialize: [{id,name,primary,shifts:{dateKey:shift}}]
+  const payload=plannerMembers.map(m=>({
+    id:m.id, name:m.name, primary:m.primary,
+    shifts:Object.assign({},plannerData[m.id]||{})
+  }));
+  try{
+    const res=await fetch(API_URL+'?'+new URLSearchParams({action:'savePlanner',payload:JSON.stringify(payload)}));
+    const data=await res.json();
+    if(data.success){
+      plannerDirty=false;
+      updatePlannerDirtyBadge();
+      const now=new Date();
+      document.getElementById('planner-saved-label').textContent=
+        '✅ Published: '+now.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+
+        ' '+now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      showToast('📤 Shift planner submitted to agents!');
+    } else {
+      showToast('⚠ Submit failed. Try again.',false);
+    }
+  } catch{
+    showToast('⚠ Connection error.',false);
+  }
+  btn.disabled=false;
+  updatePlannerDirtyBadge();
+}
+
+// ═══════════════════════════════════════════════════════
+//  WHY NOT SOLVED
+// ═══════════════════════════════════════════════════════
 async function loadWNSAgentList(){
   if(!allUsers.length){
     try{const res=await fetch(API_URL+'?action=getUsers&t='+Date.now());const data=await res.json();if(data.success)allUsers=data.users||[];}catch{}
@@ -594,7 +957,7 @@ async function loadWNSTickets(){
       allWNSTickets=data.tickets||[];filteredWNSTickets=[...allWNSTickets];
       renderWNSStats(allWNSTickets);renderWNSTable(filteredWNSTickets);
       document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();
-    }else document.getElementById('wnsTableContainer').innerHTML='<div class="error-msg">⚠ Failed to load.</div>';
+    }else document.getElementById('wnsTableContainer').innerHTML='<div class="error-msg">⚠ Failed.</div>';
   }catch{document.getElementById('wnsTableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}
 }
 function renderWNSStats(list){
@@ -615,15 +978,7 @@ function renderWNSTable(list){
   const tbody=document.createElement('tbody');
   [...list].reverse().forEach((t,i)=>{
     const tr=document.createElement('tr');
-    tr.innerHTML=
-      '<td style="color:#3a7aaa;font-size:11px;font-weight:600;">'+(i+1)+'</td>'+
-      '<td style="font-weight:700;color:#0a3d78;">🎫 '+(t.ticketId||'—')+'</td>'+
-      '<td style="font-size:12px;color:#2a4a6a;">👤 '+(t.agentName||'—')+'</td>'+
-      '<td style="font-size:12px;color:#2a4a6a;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="'+(t.summary||'')+'">'+(t.summary||'—')+'</td>'+
-      '<td style="font-size:11px;color:#3a7aaa;">'+(t.assignedAt||'').slice(0,10)+'</td>'+
-      '<td>'+statusBadge(t.status)+'</td>'+
-      '<td style="font-size:11px;color:#3a7aaa;">'+(t.status==='Completed'?(t.submittedAt||'').slice(0,10)||'—':'—')+'</td>'+
-      '<td style="white-space:nowrap;"></td>';
+    tr.innerHTML='<td style="color:#3a7aaa;font-size:11px;font-weight:600;">'+(i+1)+'</td><td style="font-weight:700;color:#0a3d78;">🎫 '+(t.ticketId||'—')+'</td><td style="font-size:12px;color:#2a4a6a;">👤 '+(t.agentName||'—')+'</td><td style="font-size:12px;color:#2a4a6a;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="'+(t.summary||'')+'">'+(t.summary||'—')+'</td><td style="font-size:11px;color:#3a7aaa;">'+(t.assignedAt||'').slice(0,10)+'</td><td>'+statusBadge(t.status)+'</td><td style="font-size:11px;color:#3a7aaa;">'+(t.status==='Completed'?(t.submittedAt||'').slice(0,10)||'—':'—')+'</td><td style="white-space:nowrap;"></td>';
     const actionTd=tr.querySelector('td:last-child');
     const viewBtn=document.createElement('button');viewBtn.className='view-btn';viewBtn.textContent='👁 View';viewBtn.onclick=()=>openWNSDetail(t);actionTd.appendChild(viewBtn);
     if(t.status==='Pending'){
@@ -657,50 +1012,16 @@ async function submitWNSAssign(){
     const params=new URLSearchParams({action:editId?'updateWNSTicket':'assignWNSTicket',id:editId,ticketId,agentName:agent,summary,assignedAt:new Date().toISOString()});
     const res=await fetch(API_URL+'?'+params.toString());
     const data=await res.json();
-    if(data.success){showFormMsg('wns-msg',editId?'✅ Updated!':'✅ Ticket assigned to agent!','success');clearWNSForm();loadWNSTickets();}
+    if(data.success){showFormMsg('wns-msg',editId?'✅ Updated!':'✅ Ticket assigned!','success');clearWNSForm();loadWNSTickets();}
     else showFormMsg('wns-msg','⚠ '+(data.error||'Failed'),'error');
   }catch{showFormMsg('wns-msg','⚠ Connection error.','error');}
   btn.disabled=false;
 }
-function editWNSTicket(t){
-  document.getElementById('wns-edit-id').value=t.id||'';
-  document.getElementById('wns-ticketId').value=t.ticketId||'';
-  document.getElementById('wns-agent').value=t.agentName||'';
-  document.getElementById('wns-summary').value=t.summary||'';
-  document.getElementById('wnsFormTitle').textContent='✏ Edit: '+t.ticketId;
-  document.getElementById('wns-submit-btn').textContent='💾 Update';
-  document.getElementById('wns-cancel-btn').style.display='inline-block';
-  document.getElementById('wnsFormTitle').scrollIntoView({behavior:'smooth'});
-}
+function editWNSTicket(t){document.getElementById('wns-edit-id').value=t.id||'';document.getElementById('wns-ticketId').value=t.ticketId||'';document.getElementById('wns-agent').value=t.agentName||'';document.getElementById('wns-summary').value=t.summary||'';document.getElementById('wnsFormTitle').textContent='✏ Edit: '+t.ticketId;document.getElementById('wns-submit-btn').textContent='💾 Update';document.getElementById('wns-cancel-btn').style.display='inline-block';document.getElementById('wnsFormTitle').scrollIntoView({behavior:'smooth'});}
 function cancelWNSEdit(){clearWNSForm();}
-function clearWNSForm(){
-  ['wns-edit-id','wns-ticketId','wns-summary'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('wns-agent').value='';
-  document.getElementById('wnsFormTitle').textContent='➕ Assign Ticket for Review';
-  document.getElementById('wns-submit-btn').textContent='💾 Assign Ticket';
-  document.getElementById('wns-cancel-btn').style.display='none';
-  document.getElementById('wns-msg').style.display='none';
-}
-async function deleteWNSTicket(t){
-  if(!confirm('⚠ Delete ticket "'+t.ticketId+'" assigned to "'+t.agentName+'"?\n\nThis cannot be undone!'))return;
-  showToast('⏳ Deleting...',true);
-  try{
-    const res=await fetch(API_URL+'?'+new URLSearchParams({action:'deleteWNSTicket',id:t.id}));
-    const data=await res.json();
-    if(data.success){showToast('🗑 Ticket deleted.');loadWNSTickets();}
-    else showToast('⚠ Delete failed.',false);
-  }catch{showToast('⚠ Connection error.',false);}
-}
-async function reOpenWNSTicket(t){
-  if(!confirm('Re-open ticket "'+t.ticketId+'" for "'+t.agentName+'"?\n\nTheir completed submission will be cleared.'))return;
-  showToast('⏳ Re-opening...',true);
-  try{
-    const res=await fetch(API_URL+'?'+new URLSearchParams({action:'reOpenWNSTicket',id:t.id}));
-    const data=await res.json();
-    if(data.success){showToast('↩ Ticket re-opened.');loadWNSTickets();}
-    else showToast('⚠ Failed.',false);
-  }catch{showToast('⚠ Connection error.',false);}
-}
+function clearWNSForm(){['wns-edit-id','wns-ticketId','wns-summary'].forEach(id=>document.getElementById(id).value='');document.getElementById('wns-agent').value='';document.getElementById('wnsFormTitle').textContent='➕ Assign Ticket for Review';document.getElementById('wns-submit-btn').textContent='💾 Assign Ticket';document.getElementById('wns-cancel-btn').style.display='none';document.getElementById('wns-msg').style.display='none';}
+async function deleteWNSTicket(t){if(!confirm('⚠ Delete ticket "'+t.ticketId+'" assigned to "'+t.agentName+'"?'))return;showToast('⏳ Deleting...',true);try{const res=await fetch(API_URL+'?'+new URLSearchParams({action:'deleteWNSTicket',id:t.id}));const data=await res.json();if(data.success){showToast('🗑 Ticket deleted.');loadWNSTickets();}else showToast('⚠ Delete failed.',false);}catch{showToast('⚠ Connection error.',false);}}
+async function reOpenWNSTicket(t){if(!confirm('Re-open ticket "'+t.ticketId+'" for "'+t.agentName+'"?'))return;showToast('⏳ Re-opening...',true);try{const res=await fetch(API_URL+'?'+new URLSearchParams({action:'reOpenWNSTicket',id:t.id}));const data=await res.json();if(data.success){showToast('↩ Ticket re-opened.');loadWNSTickets();}else showToast('⚠ Failed.',false);}catch{showToast('⚠ Connection error.',false);}}
 function openWNSDetail(t){
   const sandboxStr=t.sandboxTried==='Yes'?'✅ Yes':t.sandboxTried==='No'?'❌ No':'⚪ N/A';
   const pairs=[['Ticket ID',t.ticketId],['Assigned Agent',t.agentName],['Client',t.client||'—'],['Component',t.component||'—'],['Priority',t.priority||'—'],['Root Cause',t.rootCause||'—'],['Ticket Date',t.ticketDate||'—'],['Engg Resolution Time',t.engResolutionTime||'—'],['Sandbox Tried',sandboxStr],['Status',t.status],['Assigned At',(t.assignedAt||'').slice(0,10)||'—'],['Submitted At',t.status==='Completed'?(t.submittedAt||'').slice(0,10)||'—':'—']];
@@ -719,7 +1040,103 @@ function openWNSDetail(t){
 }
 function closeWNSDetail(){document.getElementById('wnsDetailOverlay').classList.remove('open');}
 
-// ── DARK MODE ──
+// ── WNS EXCEL EXPORT ──────────────────────────────────────────
+function exportWNSExcel(){
+  if(!allWNSTickets.length){showToast('⚠ No WNS data to export.',false);return;}
+  const wb=XLSX.utils.book_new();
+
+  // ── Sheet 1: Summary ──
+  const now=new Date();
+  const sumData=[
+    ['LRP Support — Why Not Solved by HD'],
+    ['Exported: '+now.toLocaleString()],
+    [],
+    ['Metric','Value'],
+    ['Total Assigned',allWNSTickets.length],
+    ['Pending Review',allWNSTickets.filter(t=>t.status==='Pending').length],
+    ['Completed',allWNSTickets.filter(t=>t.status==='Completed').length],
+    ['Agents Reviewed',new Set(allWNSTickets.filter(t=>t.status==='Completed').map(t=>t.agentName)).size]
+  ];
+  const ws1=XLSX.utils.aoa_to_sheet(sumData);
+  ws1['!cols']=[{wch:28},{wch:20}];
+  // Style title
+  if(ws1['A1']) ws1['A1'].s={font:{bold:true,sz:16,color:{rgb:'0A3D78'}},fill:{fgColor:{rgb:'C8DFF0'}}};
+  XLSX.utils.book_append_sheet(wb,ws1,'Summary');
+
+  // ── Sheet 2: All Tickets ──
+  const headers=['#','Ticket ID','Assigned Agent','Status','Summary','Assigned Date','Submitted Date',
+    'Client','Component','Priority','Root Cause','Ticket Date',
+    'Primary Reason','Why Not Solved','What Was Learned','How to Solve Next Time',
+    'Engg Resolution Time','Sandbox Tried','Sandbox Result','Reference / Notes'];
+
+  const rows=allWNSTickets.map((t,i)=>[
+    i+1,
+    t.ticketId||'',
+    t.agentName||'',
+    t.status||'',
+    t.summary||'',
+    (t.assignedAt||'').slice(0,10),
+    t.status==='Completed'?(t.submittedAt||'').slice(0,10):'',
+    t.client||'',
+    t.component||'',
+    t.priority||'',
+    t.rootCause||'',
+    t.ticketDate||'',
+    t.primaryReason||'',
+    t.whyNotSolved||'',
+    t.whatLearned||'',
+    t.howSolveNext||'',
+    t.engResolutionTime||'',
+    t.sandboxTried||'',
+    t.sandboxResult||'',
+    t.reference||''
+  ]);
+
+  const ws2=XLSX.utils.aoa_to_sheet([headers,...rows]);
+  ws2['!cols']=[
+    {wch:4},{wch:16},{wch:22},{wch:12},{wch:40},{wch:14},{wch:14},
+    {wch:14},{wch:14},{wch:12},{wch:16},{wch:14},
+    {wch:28},{wch:50},{wch:50},{wch:50},
+    {wch:20},{wch:14},{wch:30},{wch:30}
+  ];
+  // Header style
+  headers.forEach((_,ci)=>{
+    const addr=XLSX.utils.encode_cell({r:0,c:ci});
+    if(ws2[addr]) ws2[addr].s={font:{bold:true,color:{rgb:'FFFFFF'}},fill:{fgColor:{rgb:'0A3D78'}},alignment:{horizontal:'center'}};
+  });
+  XLSX.utils.book_append_sheet(wb,ws2,'All Tickets');
+
+  // ── Sheet 3: Completed Only ──
+  const completed=allWNSTickets.filter(t=>t.status==='Completed');
+  if(completed.length){
+    const cRows=completed.map((t,i)=>[
+      i+1, t.ticketId||'', t.agentName||'', t.summary||'',
+      (t.assignedAt||'').slice(0,10), (t.submittedAt||'').slice(0,10),
+      t.client||'', t.component||'', t.priority||'', t.rootCause||'',
+      t.primaryReason||'', t.whyNotSolved||'', t.whatLearned||'',
+      t.howSolveNext||'', t.engResolutionTime||'', t.sandboxTried||''
+    ]);
+    const cHdr=['#','Ticket ID','Agent','Summary','Assigned','Submitted',
+      'Client','Component','Priority','Root Cause',
+      'Primary Reason','Why Not Solved','Learned','How Next Time','Engg Time','Sandbox'];
+    const ws3=XLSX.utils.aoa_to_sheet([cHdr,...cRows]);
+    ws3['!cols']=[{wch:4},{wch:16},{wch:20},{wch:38},{wch:13},{wch:13},
+      {wch:14},{wch:14},{wch:12},{wch:16},{wch:28},{wch:48},{wch:48},{wch:48},{wch:18},{wch:12}];
+    cHdr.forEach((_,ci)=>{
+      const addr=XLSX.utils.encode_cell({r:0,c:ci});
+      if(ws3[addr]) ws3[addr].s={font:{bold:true,color:{rgb:'FFFFFF'}},fill:{fgColor:{rgb:'6030A0'}},alignment:{horizontal:'center'}};
+    });
+    XLSX.utils.book_append_sheet(wb,ws3,'Completed Reviews');
+  }
+
+  const fname='WNS_Export_'+now.getFullYear()+String(now.getMonth()+1).padStart(2,'0')+String(now.getDate()).padStart(2,'0')+'.xlsx';
+  XLSX.writeFile(wb,fname);
+  showToast('✅ WNS data exported to Excel!');
+}
+
+// ═══════════════════════════════════════════════════════
+//  DARK MODE
+// ═══════════════════════════════════════════════════════
 let darkMode=false;
 (function createStars(){const container=document.getElementById('stars');if(!container)return;for(let i=0;i<120;i++){const s=document.createElement('div');s.className='star';const size=Math.random()*2.5+0.8;s.style.cssText=`width:${size}px;height:${size}px;top:${Math.random()*65}%;left:${Math.random()*100}%;animation-duration:${2+Math.random()*3}s;animation-delay:${Math.random()*4}s;`;container.appendChild(s);}})();
 function toggleDarkMode(){darkMode=!darkMode;const sun=document.getElementById('skySun'),bg=document.getElementById('oceanBg'),box=document.querySelector('.login-box');if(darkMode){sun.classList.remove('sun-mode');sun.classList.add('moon-mode');bg.classList.add('dark');box.classList.add('dark');}else{sun.classList.remove('moon-mode');sun.classList.add('sun-mode');bg.classList.remove('dark');box.classList.remove('dark');}}
