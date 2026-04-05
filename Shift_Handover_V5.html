@@ -342,7 +342,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const API_URL='https://script.google.com/macros/s/AKfycbzAZLBRc6I7iG3xBQ0BH496JqtKyGKaJH5gF9epdnmv5gxZ4bKbglvjnZrObFm5JeUZEw/exec';
+const API_URL='https://script.google.com/macros/s/AKfycbyenGVPixxjpCX06QeS8po56fr0XG7co2wVwRvzhaLOGaKSdh4NWAZzG7q9c1aB6v1eSw/exec';
 
 const CLIENT_MAP={"SWIPHX":"SWIRE","SWI":"SWIRE","HSL":"HSL","MILAHA":"MILAHA","MIL":"MILAHA","TASLI":"TASLI","TAS":"TASLI","ESLGEN":"ESL","ESL":"ESL","LSCSAIL":"LSCSAIL","LSC":"LSCSAIL","VCL":"VCL","NFR":"NFR","VSS":"VSS","LRP":"LRP"};
 function resolveClient(id){if(!id)return"";const p=id.split("-");if(p.length<2)return"";const pfx=p[0].toUpperCase();const keys=Object.keys(CLIENT_MAP).sort((a,b)=>b.length-a.length);for(const k of keys){if(pfx===k)return CLIENT_MAP[k];}return pfx;}
