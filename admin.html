@@ -512,7 +512,7 @@ function renderHandoverTable(list){
       // ★ FIX: pass origIdx directly — no reverse confusion
       '<td style="white-space:nowrap;">'+
         '<button class="view-btn" onclick="openHoDetail('+origIdx+')">👁 View</button> '+
-        '<button class="delete-btn" style="margin-left:4px;" onclick="deleteHandover('+origIdx+',\''+esc(h.date)+'\',\''+esc(h.shift)+'\')">🗑 Delete</button>'+
+        '<button class="delete-btn" style="margin-left:4px;" onclick="deleteHandover('+origIdx+')">🗑 Delete</button>'+
       '</td>'+
     '</tr>';
   }).join('');
@@ -564,18 +564,50 @@ function openHoDetail(origIdx){
 function closeHoDetail(){document.getElementById('hoDetailOverlay').classList.remove('open');}
 
 // ★ NEW: Delete handover record
-async function deleteHandover(origIdx, date, shift){
-  if(!confirm('⚠ Delete handover record for "'+date+' — '+shift+'"?\n\nThis will also allow agents to re-submit this shift. Cannot be undone!'))return;
-  try{
-    const res=await fetch(API_URL+'?'+new URLSearchParams({action:'deleteHandover',date,shift}));
-    const data=await res.json();
-    if(data.success){
-      showToast('🗑 Handover "'+date+' '+shift+'" deleted.');
-      loadHandovers();
-    }else{showToast('⚠ Delete failed: '+(data.error||'Unknown error'),false);}
-  }catch{showToast('⚠ Connection error.',false);}
-}
+async function deleteHandover(origIdx, date, shift) {
+  if (!confirm('⚠ Delete handover record for "' + date + ' — ' + shift + '"?\n\nThis will also allow agents to re-submit this shift. Cannot be undone!')) return;
 
+  // Find the button and disable it
+  // We use origIdx to get the record from filteredHandovers for display only
+  const h = filteredHandovers[origIdx];
+  if (!h) { showToast('⚠ Record not found.', false); return; }
+
+  showToast('⏳ Deleting...', true);
+
+  try {
+    const params = new URLSearchParams({
+      action: 'deleteHandover',
+      date:   h.date,    // already yyyy-mm-dd from server
+      shift:  h.shift
+    });
+
+    const res  = await fetch(API_URL + '?' + params.toString());
+    const text = await res.text(); // read as text first to catch HTML error pages
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (parseErr) {
+      console.error('Apps Script returned non-JSON:', text);
+      showToast('⚠ Server error. Check Apps Script deployment.', false);
+      return;
+    }
+
+    if (data.success) {
+      showToast('🗑 Handover "' + h.date + ' ' + h.shift + '" deleted.');
+      // Remove from local arrays immediately so UI updates without a full reload
+      const globalIdx = allHandovers.indexOf(h);
+      if (globalIdx > -1) allHandovers.splice(globalIdx, 1);
+      filteredHandovers.splice(origIdx, 1);
+      renderHandoverStats(filteredHandovers);
+      renderHandoverTable(filteredHandovers);
+    } else {
+      showToast('⚠ Delete failed: ' + (data.error || 'Unknown error'), false);
+    }
+  } catch (err) {
+    console.error('deleteHandover error:', err);
+    showToast('⚠ Connection error: ' + err.message, false);
+  }
+}
 // ── SHIFT PLANNER ──
 const PLANNER_DATES=['30-03-2026','31-03-2026','01-04-2026','02-04-2026','03-04-2026','04-04-2026','05-04-2026','06-04-2026','07-04-2026','08-04-2026','09-04-2026','10-04-2026','11-04-2026','12-04-2026','13-04-2026','14-04-2026','15-04-2026','16-04-2026','17-04-2026','18-04-2026','19-04-2026','20-04-2026','21-04-2026','22-04-2026','23-04-2026','24-04-2026','25-04-2026','26-04-2026','27-04-2026','28-04-2026','29-04-2026','30-04-2026','01-05-2026','02-05-2026','03-05-2026'];
 const PLANNER_DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
