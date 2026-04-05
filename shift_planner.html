@@ -16,13 +16,10 @@ html,body{width:100%;height:100%;font-family:-apple-system,BlinkMacSystemFont,'S
 .btn-back{font-size:12px;font-weight:700;letter-spacing:1.5px;padding:7px 16px;background:#eef5fc;border:1.5px solid #b8d4ee;border-radius:6px;color:#1a5a90;cursor:pointer;text-transform:uppercase;text-decoration:none;display:inline-block;}
 .btn-back:hover{background:#d0e8f8;}
 .body{flex:1;overflow:auto;padding:14px 22px;}
-
-/* Month nav */
 .month-nav{display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #c8dff0;border-radius:8px;padding:6px 12px;margin-right:4px;}
 .month-nav button{background:none;border:none;color:#1a7db5;cursor:pointer;font-size:18px;font-weight:700;line-height:1;padding:0 2px;transition:color .15s;}
 .month-nav button:hover{color:#0a3d78;}
 .month-label{font-size:14px;font-weight:800;color:#0a3d78;min-width:130px;text-align:center;}
-
 .sp-pill{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.5px;min-width:44px;text-align:center;}
 .sp-D1{background:#ddeeff;border:1px solid #7ab8e8;color:#0a4070;}
 .sp-D2{background:#d8eeff;border:1px solid #60a0d8;color:#083860;}
@@ -33,7 +30,7 @@ html,body{width:100%;height:100%;font-family:-apple-system,BlinkMacSystemFont,'S
 .sp-WOFF{background:#f0f0f0;border:1px solid #c0c0c0;color:#606060;}
 .sp-HOL{background:#fff8d8;border:1px solid #e8d040;color:#705010;}
 .sp-COMP{background:#ffe8d8;border:1px solid #e09050;color:#703010;}
-.sp-empty{background:#f4f4f4;border:1px dashed #d0d0d0;color:#c0c0c0;font-style:italic;}
+.sp-empty{background:#f4f4f4;border:1px dashed #d0d0d0;color:#c0c0c0;}
 .sp-today-col{background:#eef8ff!important;}
 .sp-today-pill{outline:2.5px solid #1a7db5!important;outline-offset:-2px;}
 .ap-tbl{width:100%;border-collapse:collapse;font-size:12px;}
@@ -46,6 +43,7 @@ html,body{width:100%;height:100%;font-family:-apple-system,BlinkMacSystemFont,'S
 </style>
 </head>
 <body>
+
 <div class="topbar">
   <div class="brand">
     <div class="brand-icon">🚢</div>
@@ -61,21 +59,17 @@ html,body{width:100%;height:100%;font-family:-apple-system,BlinkMacSystemFont,'S
 <div class="body">
   <!-- Toolbar -->
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
-    <!-- Month nav -->
     <div class="month-nav">
-      <button onclick="prevMonth()" title="Previous month">‹</button>
-      <span class="month-label" id="ap-month-label">April 2026</span>
-      <button onclick="nextMonth()" title="Next month">›</button>
+      <button onclick="prevMonth()" title="Previous month">&#8249;</button>
+      <span class="month-label" id="ap-month-label">Loading...</span>
+      <button onclick="nextMonth()" title="Next month">&#8250;</button>
     </div>
-
-    <!-- Search -->
     <div style="position:relative;">
       <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:14px;">🔍</span>
       <input id="ap-search" type="text" placeholder="Search name or ID..."
         style="background:#fff;border:1.5px solid #b8d4ee;border-radius:6px;padding:8px 12px 8px 34px;font-size:13px;color:#1a3a5c;outline:none;width:200px;"
         oninput="buildTable()"/>
     </div>
-
     <span id="ap-today-lbl" style="font-size:12px;color:#1a7db5;font-weight:700;white-space:nowrap;"></span>
     <span id="ap-updated-lbl" style="font-size:11px;color:#1a8c5c;font-weight:600;white-space:nowrap;"></span>
   </div>
@@ -103,6 +97,7 @@ const LGND=[
   {key:'Holiday',label:'Holiday',cls:'sp-HOL'},
   {key:'Compff',label:'Comp Off',cls:'sp-COMP'}
 ];
+
 document.getElementById('ap-legend').innerHTML=LGND.map(l=>
   `<span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#2a6090;font-weight:600;">
     <span class="sp-pill ${l.cls}">${l.key}</span>${l.label}
@@ -113,28 +108,30 @@ const SHIFT_CLS={
   N:'sp-N','W/OFF':'sp-WOFF',HOLIDAY:'sp-HOL',COMPFF:'sp-COMP'
 };
 
-// State
-let plannerTeam  = [];          // [{id,name,primary,shifts:{dateKey:val}}]
-let viewYear     = new Date().getFullYear();
-let viewMonth    = new Date().getMonth(); // 0-based
+const MONTH_NAMES=['January','February','March','April','May','June',
+                   'July','August','September','October','November','December'];
+const DAY_NAMES=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
-const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
-const DAY_NAMES  =['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+let plannerTeam=[];
+let viewYear=new Date().getFullYear();
+let viewMonth=new Date().getMonth();
 
 function getTodayISO(){
   const d=new Date();
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
+
 function getDaysInMonth(y,m){
   const count=new Date(y,m+1,0).getDate();
   const days=[];
   for(let d=1;d<=count;d++){
     const dt=new Date(y,m,d);
     const iso=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-    days.push({iso, day:String(d).padStart(2,'0'), dayName:DAY_NAMES[dt.getDay()]});
+    days.push({iso,day:String(d).padStart(2,'0'),dayName:DAY_NAMES[dt.getDay()]});
   }
   return days;
 }
+
 function spCls(s){
   if(!s||!s.trim())return'sp-empty';
   return SHIFT_CLS[s.trim().toUpperCase()]||'sp-D1';
@@ -143,46 +140,69 @@ function spCls(s){
 function updateMonthLabel(){
   document.getElementById('ap-month-label').textContent=MONTH_NAMES[viewMonth]+' '+viewYear;
 }
+
 function prevMonth(){
-  viewMonth--;if(viewMonth<0){viewMonth=11;viewYear--;}
-  updateMonthLabel();buildTable();
+  viewMonth--;
+  if(viewMonth<0){viewMonth=11;viewYear--;}
+  updateMonthLabel();
+  buildTable();
 }
+
 function nextMonth(){
-  viewMonth++;if(viewMonth>11){viewMonth=0;viewYear++;}
-  updateMonthLabel();buildTable();
+  viewMonth++;
+  if(viewMonth>11){viewMonth=0;viewYear++;}
+  updateMonthLabel();
+  buildTable();
 }
 
 function buildTable(){
   if(!plannerTeam.length){
-    document.getElementById('ap-table').innerHTML='<div style="padding:40px;text-align:center;color:#3a7aaa;">No data available.</div>';
+    document.getElementById('ap-table').innerHTML=
+      '<div style="padding:40px;text-align:center;color:#3a7aaa;font-size:14px;">No planner data published yet. Please check back later.</div>';
     return;
   }
 
-  const days    = getDaysInMonth(viewYear,viewMonth);
-  const todayISO= getTodayISO();
-  const todayMo = todayISO.slice(0,7);
-  const viewMo  = viewYear+'-'+String(viewMonth+1).padStart(2,'0');
+  const days=getDaysInMonth(viewYear,viewMonth);
+  const todayISO=getTodayISO();
+  const todayMo=todayISO.slice(0,7);
+  const viewMo=viewYear+'-'+String(viewMonth+1).padStart(2,'0');
 
-  // Today label
   document.getElementById('ap-today-lbl').textContent=
     todayMo===viewMo?'Today: '+todayISO.slice(8)+' ('+DAY_NAMES[new Date().getDay()]+')':'';
 
   const sq=(document.getElementById('ap-search').value||'').toLowerCase();
-  const filtered=sq?plannerTeam.filter(m=>(m.name||'').toLowerCase().includes(sq)||(m.id||'').toLowerCase().includes(sq)):plannerTeam;
+  const filtered=sq
+    ?plannerTeam.filter(m=>(m.name||'').toLowerCase().includes(sq)||(m.id||'').toLowerCase().includes(sq))
+    :plannerTeam;
 
-  // Header
+  if(!filtered.length){
+    document.getElementById('ap-table').innerHTML=
+      '<div style="padding:40px;text-align:center;color:#3a7aaa;font-size:14px;">No members match your search.</div>';
+    return;
+  }
+
+  // Header row 1 — dates
   let hdr='<tr><th class="ap-col-name" rowspan="2">Name</th>';
   days.forEach(d=>{
-    const isT=d.iso===todayISO, isW=d.dayName==='Sat'||d.dayName==='Sun';
-    hdr+=`<th style="padding:7px 6px;text-align:center;font-size:10px;font-weight:700;white-space:nowrap;border:1px solid #c8dff0;background:${isT?'#d8eeff':'#eef5fc'};color:${isT?'#1a7db5':isW?'#888':'#1a7db5'};">${d.day}</th>`;
+    const isT=d.iso===todayISO,isW=d.dayName==='Sat'||d.dayName==='Sun';
+    hdr+=`<th style="padding:7px 6px;text-align:center;font-size:10px;font-weight:700;
+      white-space:nowrap;border:1px solid #c8dff0;
+      background:${isT?'#d8eeff':'#eef5fc'};
+      color:${isT?'#1a7db5':isW?'#888':'#1a7db5'};">${d.day}</th>`;
   });
   hdr+='</tr><tr>';
+
+  // Header row 2 — day names
   days.forEach(d=>{
-    const isT=d.iso===todayISO, isW=d.dayName==='Sat'||d.dayName==='Sun';
-    hdr+=`<th style="font-size:9px;padding:6px;text-align:center;font-weight:700;border:1px solid #c8dff0;background:${isT?'#d8eeff':'#eef5fc'};color:${isT?'#1a7db5':isW?'#888':'#1a7db5'};">${d.dayName}</th>`;
+    const isT=d.iso===todayISO,isW=d.dayName==='Sat'||d.dayName==='Sun';
+    hdr+=`<th style="font-size:9px;padding:6px;text-align:center;font-weight:700;
+      border:1px solid #c8dff0;
+      background:${isT?'#d8eeff':'#eef5fc'};
+      color:${isT?'#1a7db5':isW?'#888':'#1a7db5'};">${d.dayName}</th>`;
   });
   hdr+='</tr>';
 
+  // Body rows
   const rows=filtered.map(m=>{
     const shifts=m.shifts||{};
     let cells='';
@@ -190,37 +210,51 @@ function buildTable(){
       const s=shifts[d.iso]||'';
       const isT=d.iso===todayISO;
       const cls=spCls(s);
-      cells+=`<td class="${isT?'ap-today-col':''}">
+      cells+=`<td class="${isT?'sp-today-col':''}">
         <span class="sp-pill ${cls}${isT?' sp-today-pill':''}">${s||'—'}</span>
       </td>`;
     });
     return`<tr>
       <td class="ap-col-name">
-        <div>${m.name}</div>
+        <div style="font-weight:700;color:#0a3d78;">${m.name}</div>
         <div style="font-size:10px;color:#3a7aaa;margin-top:1px;font-weight:600;">${m.id}</div>
       </td>${cells}
     </tr>`;
   }).join('');
 
-  document.getElementById('ap-table').innerHTML=`<table class="ap-tbl"><thead>${hdr}</thead><tbody>${rows}</tbody></table>`;
+  document.getElementById('ap-table').innerHTML=
+    `<table class="ap-tbl"><thead>${hdr}</thead><tbody>${rows}</tbody></table>`;
 }
 
 // Load from server
 (async function(){
   try{
-    const res  = await fetch(API_URL+'?action=getPlanner&t='+Date.now());
-    const data = await res.json();
+    const res=await fetch(API_URL+'?action=getPlanner&t='+Date.now());
+    const data=await res.json();
     if(data.success&&data.planner&&data.planner.length){
       const raw=data.planner;
-      // Detect format
+      // Detect new date-keyed format vs old array format
       if(raw[0]&&raw[0].shifts&&typeof raw[0].shifts==='object'&&!Array.isArray(raw[0].shifts)){
-        // New date-keyed format
-        plannerTeam=raw.map(m=>({id:m.id,name:m.name,primary:m.primary||'',shifts:m.shifts||{}}));
+        // New format: {id, name, primary, shifts: {'yyyy-mm-dd': 'D1'}}
+        plannerTeam=raw.map(m=>({
+          id:m.id,
+          name:m.name,
+          primary:m.primary||'',
+          shifts:m.shifts||{}
+        }));
       } else {
-        // Legacy array-indexed format — show empty (admin needs to re-publish)
-        plannerTeam=raw.map(m=>({id:m.id||String(m.sl),name:m.name,primary:m.primary||'',shifts:{}}));
+        // Old array format — load members but with empty shifts
+        // Admin needs to re-publish from the new Shift Planner
+        plannerTeam=raw.map(m=>({
+          id:m.id||String(m.sl||''),
+          name:m.name,
+          primary:m.primary||'',
+          shifts:{}
+        }));
+        document.getElementById('ap-updated-lbl').textContent=
+          '⚠ Old format detected — admin please re-publish planner.';
       }
-      if(data.updatedAt){
+      if(data.updatedAt&&plannerTeam[0]&&plannerTeam[0].shifts&&typeof plannerTeam[0].shifts==='object'&&!Array.isArray(plannerTeam[0].shifts)){
         const d=new Date(data.updatedAt);
         document.getElementById('ap-updated-lbl').textContent=
           '✅ Updated: '+d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+
@@ -229,8 +263,9 @@ function buildTable(){
     } else {
       document.getElementById('ap-updated-lbl').textContent='ℹ No planner data published yet.';
     }
-  } catch{
+  } catch(err){
     document.getElementById('ap-updated-lbl').textContent='⚠ Could not load — check connection.';
+    console.error(err);
   }
   updateMonthLabel();
   buildTable();
