@@ -188,6 +188,7 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
   <div class="ocean-bg" id="oceanBg">
     <div class="stars" id="stars"></div>
     <div class="sky-sun sun-mode" id="skySun" onclick="toggleDarkMode()" title="Click to toggle dark mode"></div>
+    <div class="cloud cloud1"></div><div class="cloud cloud2"></div><div class="cloud cloud3"></div>
     <div class="ocean-surface">
       <div class="wave wave1"></div><div class="wave wave2"></div><div class="wave wave3"></div>
     </div>
@@ -222,11 +223,12 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
   </div>
   <div class="main">
     <div class="admin-tabs">
-      <button class="admin-tab active" id="atab-agents" onclick="switchTab('agents')">🧑‍✈️ AGENTS</button>
-      <button class="admin-tab" id="atab-creds" onclick="switchTab('creds')">🔐 CLIENT CREDENTIALS</button>
-      <button class="admin-tab" id="atab-tracker" onclick="switchTab('tracker')">📊 AGENT TRACKER</button>
+      <button class="admin-tab active" id="atab-agents"   onclick="switchTab('agents')">🧑‍✈️ AGENTS</button>
+      <button class="admin-tab" id="atab-creds"    onclick="switchTab('creds')">🔐 CLIENT CREDENTIALS</button>
+      <button class="admin-tab" id="atab-tracker"  onclick="switchTab('tracker')">📊 AGENT TRACKER</button>
       <button class="admin-tab" id="atab-handover" onclick="switchTab('handover')">📂 SHIFT HANDOVER</button>
-      <button class="admin-tab" id="atab-planner" onclick="switchTab('planner')">📅 SHIFT PLANNER</button>
+      <button class="admin-tab" id="atab-planner"  onclick="switchTab('planner')">📅 SHIFT PLANNER</button>
+      <button class="admin-tab" id="atab-wns"      onclick="switchTab('wns')">🧠 WHY NOT SOLVED</button>
     </div>
 
     <!-- AGENTS -->
@@ -376,8 +378,53 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
         </div>
       </div>
     </div>
-  </div>
-</div>
+
+    <!-- WHY NOT SOLVED -->
+    <div class="tab-panel" id="panel-wns">
+      <div class="page-title">WHY NOT SOLVED BY HD</div>
+      <div class="page-sub">Assign tickets to agents for self-review and monitor all submissions</div>
+      <div class="form-panel" style="border:1.5px solid #c0a0e0;">
+        <div class="form-panel-title purple" id="wnsFormTitle">➕ Assign Ticket for Review</div>
+        <input type="hidden" id="wns-edit-id"/>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Jira Ticket ID *</label>
+            <input type="text" id="wns-ticketId" placeholder="e.g. SWIPHX-1234" oninput="this.value=this.value.toUpperCase()"/>
+          </div>
+          <div class="form-field">
+            <label>Assign To Agent *</label>
+            <select id="wns-agent"><option value="">— Select Agent —</option></select>
+          </div>
+        </div>
+        <div class="form-field" style="margin-bottom:14px;">
+          <label style="display:block;font-size:10px;font-weight:700;letter-spacing:1.5px;color:#1a7db5;text-transform:uppercase;margin-bottom:4px;">Issue Summary / Description *</label>
+          <textarea id="wns-summary" placeholder="Paste the Jira ticket summary here so the agent understands what this ticket is about…"
+            style="width:100%;background:#f4f9ff;border:1.5px solid #b8d4ee;border-radius:6px;padding:9px 12px;font-size:13px;color:#1a3a5c;outline:none;resize:vertical;min-height:80px;font-family:inherit;transition:border-color .2s;"></textarea>
+        </div>
+        <div class="form-actions">
+          <button class="btn-purple" id="wns-submit-btn" onclick="submitWNSAssign()">💾 Assign Ticket</button>
+          <button class="btn-cancel" id="wns-cancel-btn" onclick="cancelWNSEdit()" style="display:none;">✕ Cancel</button>
+          <span class="form-msg" id="wns-msg"></span>
+        </div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-num blue"   id="wns-s-total">—</div><div class="stat-lbl">Total Assigned</div></div>
+        <div class="stat-card"><div class="stat-num orange" id="wns-s-pending">—</div><div class="stat-lbl">Pending Review</div></div>
+        <div class="stat-card"><div class="stat-num green"  id="wns-s-completed">—</div><div class="stat-lbl">Completed</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:#6030a0;" id="wns-s-agents">—</div><div class="stat-lbl">Agents Reviewed</div></div>
+      </div>
+      <div class="section-title">📋 All Assigned Tickets</div>
+      <div class="table-wrap">
+        <div class="search-bar">
+          <input type="text" id="wnsSearchInput" placeholder="🔍  Search by ticket ID, agent, summary..." oninput="filterWNSTable()"/>
+          <span style="font-size:11px;color:#3a7aaa;font-weight:600;" id="wns-count"></span>
+        </div>
+        <div id="wnsTableContainer"><div class="loading">⏳ LOADING...</div></div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /dashboard -->
 
 <!-- HANDOVER DETAIL OVERLAY -->
 <div class="ho-overlay" id="hoDetailOverlay">
@@ -387,10 +434,19 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
+<!-- WNS DETAIL OVERLAY -->
+<div class="ho-overlay" id="wnsDetailOverlay">
+  <div class="ho-box">
+    <button onclick="closeWNSDetail()" style="position:absolute;top:14px;right:16px;background:#fde8e8;border:1.5px solid #f0aaaa;border-radius:6px;color:#a02020;cursor:pointer;font-size:13px;font-weight:700;padding:5px 12px;">✕ Close</button>
+    <div id="wnsDetailContent"></div>
+  </div>
+</div>
+
 <script>
-const API_URL='https://script.google.com/macros/s/AKfycbzAZLBRc6I7iG3xBQ0BH496JqtKyGKaJH5gF9epdnmv5gxZ4bKbglvjnZrObFm5JeUZEw/exec';
+const API_URL='https://script.google.com/macros/s/AKfycbxHeMgaV389GYgDf8CeFMUVRnC5uuBe9x60e4_wBLuoCjE83158t6AIuapJoTy6TyfzcA/exec';
 let adminToken=null;
 let allUsers=[],allCreds=[],allLogs=[],filteredLogs=[],allHandovers=[],filteredHandovers=[];
+let allWNSTickets=[],filteredWNSTickets=[];
 let selectedAgent=null,currentTab='agents';
 
 window.addEventListener('load',()=>{
@@ -408,10 +464,7 @@ async function verifyToken(token){
     const data=await res.json();
     if(data.valid){adminToken=token;sessionStorage.setItem('admin_token_time',Date.now().toString());showDashboard();}
     else{sessionStorage.removeItem('admin_token');sessionStorage.removeItem('admin_token_time');sessionStorage.removeItem('admin_user');}
-  }catch(err){
-    console.warn('Token verify failed (network):',err);
-    adminToken=token;showDashboard();
-  }
+  }catch(err){adminToken=token;showDashboard();}
 }
 async function adminLogin(){
   const u=document.getElementById('adm-user').value.trim(),p=document.getElementById('adm-pass').value;
@@ -437,34 +490,40 @@ function showDashboard(){document.getElementById('loginScreen').style.display='n
 function adminLogout(){
   if(!confirm('Are you sure you want to sign out?'))return;
   adminToken=null;
-  sessionStorage.removeItem('admin_token');
-  sessionStorage.removeItem('admin_token_time');
-  sessionStorage.removeItem('admin_user');
-  document.getElementById('loginScreen').style.display='flex';
-  document.getElementById('dashboard').style.display='none';
-  document.getElementById('adm-user').value='';
-  document.getElementById('adm-pass').value='';
-  document.getElementById('adm-err').style.display='none';
+  sessionStorage.removeItem('admin_token');sessionStorage.removeItem('admin_token_time');sessionStorage.removeItem('admin_user');
+  document.getElementById('loginScreen').style.display='flex';document.getElementById('dashboard').style.display='none';
+  document.getElementById('adm-user').value='';document.getElementById('adm-pass').value='';document.getElementById('adm-err').style.display='none';
 }
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('loginScreen').style.display!=='none')adminLogin();});
-function switchTab(tab){currentTab=tab;['agents','creds','tracker','handover','planner'].forEach(t=>{document.getElementById('atab-'+t).classList.toggle('active',t===tab);document.getElementById('panel-'+t).classList.toggle('active',t===tab);});if(tab==='creds')loadCreds();if(tab==='tracker')loadTracker();if(tab==='handover')loadHandovers();if(tab==='planner')loadPlanner();document.getElementById('lastRefreshed').textContent='';}
-function refreshCurrent(){if(currentTab==='agents')loadUsers();else if(currentTab==='creds')loadCreds();else if(currentTab==='tracker')loadTracker();else if(currentTab==='handover')loadHandovers();else if(currentTab==='planner')loadPlanner();}
+
+function switchTab(tab){
+  currentTab=tab;
+  ['agents','creds','tracker','handover','planner','wns'].forEach(t=>{
+    document.getElementById('atab-'+t)?.classList.toggle('active',t===tab);
+    document.getElementById('panel-'+t)?.classList.toggle('active',t===tab);
+  });
+  if(tab==='creds')loadCreds();
+  if(tab==='tracker')loadTracker();
+  if(tab==='handover')loadHandovers();
+  if(tab==='planner')loadPlanner();
+  if(tab==='wns'){loadWNSAgentList();loadWNSTickets();}
+  document.getElementById('lastRefreshed').textContent='';
+}
+function refreshCurrent(){
+  if(currentTab==='agents')loadUsers();
+  else if(currentTab==='creds')loadCreds();
+  else if(currentTab==='tracker')loadTracker();
+  else if(currentTab==='handover')loadHandovers();
+  else if(currentTab==='planner')loadPlanner();
+  else if(currentTab==='wns')loadWNSTickets();
+}
 function showToast(msg,success=true){const t=document.getElementById('toast');t.textContent=msg;t.style.borderColor=success?'#6cd4a0':'#f0aaaa';t.style.color=success?'#1a7050':'#a02020';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
 function showFormMsg(id,text,type){const el=document.getElementById(id);el.textContent=text;el.className='form-msg '+type;el.style.display='inline-block';if(type!=='loading')setTimeout(()=>{el.style.display='none';},3000);}
 function formatDate(iso){if(!iso)return'—';const d=new Date(iso);return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}
 function formatDur(secs){const h=Math.floor(secs/3600),m=Math.floor((secs%3600)/60),s=secs%60;return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
 function getStatus(lastLogin){if(!lastLogin)return{label:'NEVER',cls:'badge-offline'};const diff=(new Date()-new Date(lastLogin))/3600000;if(diff<24)return{label:'TODAY',cls:'badge-online'};if(diff<168)return{label:'THIS WEEK',cls:'badge-recent'};return{label:'INACTIVE',cls:'badge-offline'};}
 function envClass(e){const v=(e||'').toLowerCase();if(v==='production')return'env-prod';if(v==='uat')return'env-uat';if(v==='development')return'env-dev';if(v==='staging')return'env-staging';if(v==='train 2')return'env-train2';if(v==='train')return'env-train';if(v==='ecom')return'env-ecom';if(v==='testing')return'env-testing';return'env-default';}
-
-// ── Date helpers ──
-function normalizeDateToClient(val){
-  if(!val)return'';
-  var s=val.toString().trim();
-  if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
-  if(/^\d{2}-\d{2}-\d{4}$/.test(s)){var p=s.split('-');return p[2]+'-'+p[1]+'-'+p[0];}
-  try{var d=new Date(s);if(!isNaN(d.getTime()))return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}catch(e){}
-  return s;
-}
+function normalizeDateToClient(val){if(!val)return'';var s=val.toString().trim();if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;if(/^\d{2}-\d{2}-\d{4}$/.test(s)){var p=s.split('-');return p[2]+'-'+p[1]+'-'+p[0];}try{var d=new Date(s);if(!isNaN(d.getTime()))return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}catch(e){}return s;}
 
 // ── AGENTS ──
 async function loadUsers(){document.getElementById('tableContainer').innerHTML='<div class="loading">⏳ FETCHING AGENT DATA...</div>';try{const res=await fetch(API_URL+'?action=getUsers&t='+Date.now());const data=await res.json();if(data.success){allUsers=data.users||[];updateStats(allUsers);renderTable(allUsers);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}else document.getElementById('tableContainer').innerHTML='<div class="error-msg">⚠ Failed to load data.</div>';}catch{document.getElementById('tableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}}
@@ -497,168 +556,19 @@ function renderTrackerTable(logs){const container=document.getElementById('track
 function filterTrackerTable(){const q=document.getElementById('trackerSearchInput').value.toLowerCase();const base=selectedAgent?filteredLogs.filter(l=>l.agentName===selectedAgent):filteredLogs;renderTrackerTable(q?base.filter(l=>(l.agentName||'').toLowerCase().includes(q)||(l.ticketId||'').toLowerCase().includes(q)||(l.component||'').toLowerCase().includes(q)||(l.shiftId||'').toLowerCase().includes(q)):base);}
 
 // ── HANDOVER ──
-async function loadHandovers(){
-  document.getElementById('ho-date-from').value='';document.getElementById('ho-date-to').value='';
-  document.getElementById('ho-shift-filter').value='';document.getElementById('ho-filter-label').textContent='';
-  document.getElementById('hoTableContainer').innerHTML='<div class="loading">⏳ LOADING HANDOVER DATA...</div>';
-  try{
-    const res=await fetch(API_URL+'?action=getHandovers&t='+Date.now());
-    const data=await res.json();
-    if(data.success){
-      allHandovers=data.handovers||[];
-      filteredHandovers=[...allHandovers];
-      renderHandoverStats(filteredHandovers);
-      renderHandoverTable(filteredHandovers);
-      document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();
-    }else document.getElementById('hoTableContainer').innerHTML='<div class="error-msg">⚠ Failed to load data.</div>';
-  }catch{document.getElementById('hoTableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}
-}
-function applyHandoverFilter(){
-  const from=document.getElementById('ho-date-from').value,to=document.getElementById('ho-date-to').value,shift=document.getElementById('ho-shift-filter').value;
-  filteredHandovers=allHandovers.filter(h=>{
-    const hd=normalizeDateToClient(h.date);
-    if(from&&hd<from)return false;
-    if(to&&hd>to)return false;
-    if(shift&&h.shift!==shift)return false;
-    return true;
-  });
-  const parts=[];if(from||to)parts.push((from||'…')+' → '+(to||'…'));if(shift)parts.push('Shift: '+shift);
-  document.getElementById('ho-filter-label').textContent=parts.length?parts.join(' · ')+' · '+filteredHandovers.length+' records':'';
-  renderHandoverStats(filteredHandovers);renderHandoverTable(filteredHandovers);
-}
-function renderHandoverStats(list){
-  document.getElementById('ho-s-total').textContent=list.length;
-  document.getElementById('ho-s-pending').textContent=list.reduce((a,h)=>a+(h.pendingTickets||0),0);
-  document.getElementById('ho-s-completed').textContent=list.reduce((a,h)=>a+(h.completedTickets||0),0);
-  document.getElementById('ho-s-showstopper').textContent=list.reduce((a,h)=>a+(h.showstopperCount||0),0);
-}
-
-// ── renderHandoverTable: uses DOM createElement — no string interpolation on dates ──
-function renderHandoverTable(list){
-  document.getElementById('ho-count-label').textContent=list.length+' records';
-  if(!list.length){document.getElementById('hoTableContainer').innerHTML='<div class="no-data-msg">📭 No handover submissions found.</div>';return;}
-
-  const tbody=document.createElement('tbody');
-  [...list].map((h,origIdx)=>({h,origIdx})).reverse().forEach(({h,origIdx},displayIdx)=>{
-    const safeDate  = normalizeDateToClient(h.date);
-    const safeShift = (h.shift||'').trim();
-    const submittedAt=h.submittedAt?new Date(h.submittedAt).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'—';
-    const sc={D1:'env-dev',D2:'env-uat',D3:'env-staging'}[safeShift]||'env-default';
-
-    const tr=document.createElement('tr');
-    tr.innerHTML=
-      '<td style="color:#3a7aaa;font-size:11px;font-weight:600;">'+(displayIdx+1)+'</td>'+
-      '<td style="font-weight:700;color:#0a3d78;">'+(safeDate||'—')+'</td>'+
-      '<td><span class="env-badge '+sc+'">'+(safeShift||'—')+'</span></td>'+
-      '<td style="font-size:12px;color:#2a4a6a;max-width:180px;">'+(h.currentMembers||'—')+'</td>'+
-      '<td style="font-size:12px;color:#2a4a6a;max-width:180px;">'+(h.nextMembers||'—')+'</td>'+
-      '<td style="text-align:center;"><span style="font-size:16px;font-weight:800;color:#1a7db5;">'+(h.totalTickets||0)+'</span></td>'+
-      '<td style="text-align:center;"><span style="font-size:14px;font-weight:700;color:#c0392b;">'+(h.pendingTickets||0)+'</span></td>'+
-      '<td style="text-align:center;"><span style="font-size:14px;font-weight:700;color:#1a8c5c;">'+(h.completedTickets||0)+'</span></td>'+
-      '<td style="text-align:center;">'+(h.showstopperCount>0?'<span style="background:#fde8e8;border:1px solid #f0aaaa;border-radius:12px;padding:2px 8px;font-size:11px;font-weight:700;color:#a02020;">🔴 '+h.showstopperCount+'</span>':'<span style="color:#3a7aaa;font-size:12px;font-weight:600;">—</span>')+'</td>'+
-      '<td style="font-size:11px;color:#3a7aaa;font-weight:600;">'+submittedAt+'</td>'+
-      '<td style="white-space:nowrap;"></td>';
-
-    // ★ Event listeners attached directly — no string escaping issues ever
-    const actionTd=tr.querySelector('td:last-child');
-    const viewBtn=document.createElement('button');
-    viewBtn.className='view-btn';viewBtn.textContent='👁 View';
-    viewBtn.onclick=()=>openHoDetail(origIdx);
-    actionTd.appendChild(viewBtn);
-    actionTd.appendChild(document.createTextNode(' '));
-    const delBtn=document.createElement('button');
-    delBtn.className='delete-btn';delBtn.style.marginLeft='4px';delBtn.textContent='🗑 Delete';
-    delBtn.onclick=()=>deleteHandover(origIdx,safeDate,safeShift);
-    actionTd.appendChild(delBtn);
-    tbody.appendChild(tr);
-  });
-
-  const table=document.createElement('table');
-  table.innerHTML='<thead><tr><th>#</th><th>Date</th><th>Shift</th><th>Current Members</th><th>Next Members</th><th style="text-align:center;">Total</th><th style="text-align:center;">Pending</th><th style="text-align:center;">Done</th><th style="text-align:center;">Showstopper</th><th>Submitted At</th><th>Actions</th></tr></thead>';
-  table.appendChild(tbody);
-  document.getElementById('hoTableContainer').innerHTML='';
-  document.getElementById('hoTableContainer').appendChild(table);
-}
-
-function filterHandoverTable(){
-  const q=document.getElementById('hoSearchInput').value.toLowerCase();
-  renderHandoverTable(q?filteredHandovers.filter(h=>{
-    const d=normalizeDateToClient(h.date);
-    return d.includes(q)||(h.shift||'').toLowerCase().includes(q)||(h.currentMembers||'').toLowerCase().includes(q)||(h.nextMembers||'').toLowerCase().includes(q);
-  }):filteredHandovers);
-}
-
-// ★ View fix: reads directly from filteredHandovers[origIdx]
-function openHoDetail(origIdx){
-  const h=filteredHandovers[origIdx];if(!h)return;
-  const submittedAt=h.submittedAt?new Date(h.submittedAt).toLocaleString():'—';
-  const safeDate=normalizeDateToClient(h.date);
-  const catRow=(label,color,bg,border,count,pending,ids)=>
-    '<div style="background:'+bg+';border:1px solid '+border+';border-radius:8px;padding:12px 14px;margin-bottom:8px;">'+
-    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;"><span style="font-size:12px;font-weight:700;color:'+color+';">'+label+'</span>'+
-    '<div style="display:flex;gap:8px;"><span style="font-size:11px;border-radius:10px;padding:2px 8px;color:'+color+';background:rgba(0,0,0,.05);">'+count+' total</span>'+
-    (pending>0?'<span style="font-size:11px;background:#fde8e8;border-radius:10px;padding:2px 8px;color:#a02020;">'+pending+' pending</span>':'')+
-    '</div></div>'+(ids?'<div style="font-size:11px;color:#1a5a90;line-height:1.8;">'+ids+'</div>':'<div style="font-size:11px;color:#3a7aaa;">No tickets</div>')+'</div>';
-  const infoBoxes=[h.infoBox1,h.infoBox2,h.infoBox3,h.infoBox4].filter(b=>b&&b.trim());
-  const infoHtml=infoBoxes.length?'<div style="margin-top:16px;"><div style="font-size:11px;font-weight:700;color:#1a7db5;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">📢 Important Information</div>'+infoBoxes.map(b=>'<div style="background:#fffbec;border:1px solid #f0d840;border-radius:6px;padding:10px 12px;font-size:12px;color:#2a4a6a;line-height:1.6;margin-bottom:8px;white-space:pre-wrap;">'+b+'</div>').join('')+'</div>':'';
-  document.getElementById('hoDetailContent').innerHTML=
-    '<div style="font-size:20px;font-weight:800;color:#0a3d78;letter-spacing:2px;margin-bottom:4px;">'+safeDate+' — '+(h.shift||'—')+'</div>'+
-    '<div style="font-size:11px;color:#3a7aaa;font-weight:600;margin-bottom:20px;">Submitted: '+submittedAt+'</div>'+
-    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">'+
-    '<div style="background:#f4f9ff;border:1px solid #c8dff0;border-radius:8px;padding:12px;"><div style="font-size:10px;color:#1a7db5;letter-spacing:1px;font-weight:700;margin-bottom:5px;">CURRENT SHIFT</div><div style="font-size:13px;color:#0a3d78;line-height:1.7;">'+(h.currentMembers||'—')+'</div></div>'+
-    '<div style="background:#f4f9ff;border:1px solid #c8dff0;border-radius:8px;padding:12px;"><div style="font-size:10px;color:#1a7db5;letter-spacing:1px;font-weight:700;margin-bottom:5px;">NEXT SHIFT</div><div style="font-size:13px;color:#0a3d78;line-height:1.7;">'+(h.nextMembers||'—')+'</div></div>'+
-    '<div style="background:#f4f9ff;border:1px solid #c8dff0;border-radius:8px;padding:10px 12px;"><div style="font-size:10px;color:#1a7db5;letter-spacing:1px;font-weight:700;margin-bottom:4px;">MAILS HANDLED BY</div><div style="font-size:13px;color:#1a5a90;">'+(h.mailsHandledBy||'—')+'</div></div>'+
-    '<div style="background:#f4f9ff;border:1px solid #c8dff0;border-radius:8px;padding:10px 12px;"><div style="font-size:10px;color:#1a7db5;letter-spacing:1px;font-weight:700;margin-bottom:4px;">JIRA HANDLED BY</div><div style="font-size:13px;color:#1a5a90;">'+(h.jiraHandledBy||'—')+'</div></div></div>'+
-    '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;">'+
-    '<div style="background:#eef5fc;border:1.5px solid #c8dff0;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#1a7db5;">'+(h.totalTickets||0)+'</div><div style="font-size:10px;color:#3a7aaa;letter-spacing:1px;font-weight:600;">TOTAL</div></div>'+
-    '<div style="background:#fde8e8;border:1.5px solid #f0aaaa;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#c0392b;">'+(h.pendingTickets||0)+'</div><div style="font-size:10px;color:#c0392b;letter-spacing:1px;opacity:.7;">PENDING</div></div>'+
-    '<div style="background:#d4f5e4;border:1.5px solid #6cd4a0;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#1a7050;">'+(h.completedTickets||0)+'</div><div style="font-size:10px;color:#1a7050;letter-spacing:1px;opacity:.7;">COMPLETED</div></div></div>'+
-    '<div style="font-size:11px;font-weight:700;color:#1a7db5;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">📋 Ticket Breakdown</div>'+
-    catRow('🔴 Showstopper','#a02020','#fde8e8','#f0aaaa',h.showstopperCount||0,h.showstopperPending||0,h.showstopperIds||'')+
-    catRow('🟠 High Priority','#8a5010','#fff3d8','#f5c840',h.highCount||0,h.highPending||0,h.highIds||'')+
-    catRow('🟣 Customer Escalated','#5020a0','#f0e8ff','#c0a0e0',h.escalatedCount||0,h.escalatedPending||0,h.escalatedIds||'')+
-    catRow('⚫ Long Pending','#404040','#f0f0f0','#c0c0c0',h.longpendingCount||0,h.longpendingPending||0,h.longpendingIds||'')+
-    infoHtml;
-  document.getElementById('hoDetailOverlay').classList.add('open');
-}
+async function loadHandovers(){document.getElementById('ho-date-from').value='';document.getElementById('ho-date-to').value='';document.getElementById('ho-shift-filter').value='';document.getElementById('ho-filter-label').textContent='';document.getElementById('hoTableContainer').innerHTML='<div class="loading">⏳ LOADING HANDOVER DATA...</div>';try{const res=await fetch(API_URL+'?action=getHandovers&t='+Date.now());const data=await res.json();if(data.success){allHandovers=data.handovers||[];filteredHandovers=[...allHandovers];renderHandoverStats(filteredHandovers);renderHandoverTable(filteredHandovers);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}else document.getElementById('hoTableContainer').innerHTML='<div class="error-msg">⚠ Failed to load data.</div>';}catch{document.getElementById('hoTableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}}
+function applyHandoverFilter(){const from=document.getElementById('ho-date-from').value,to=document.getElementById('ho-date-to').value,shift=document.getElementById('ho-shift-filter').value;filteredHandovers=allHandovers.filter(h=>{const hd=normalizeDateToClient(h.date);if(from&&hd<from)return false;if(to&&hd>to)return false;if(shift&&h.shift!==shift)return false;return true;});const parts=[];if(from||to)parts.push((from||'…')+' → '+(to||'…'));if(shift)parts.push('Shift: '+shift);document.getElementById('ho-filter-label').textContent=parts.length?parts.join(' · ')+' · '+filteredHandovers.length+' records':'';renderHandoverStats(filteredHandovers);renderHandoverTable(filteredHandovers);}
+function renderHandoverStats(list){document.getElementById('ho-s-total').textContent=list.length;document.getElementById('ho-s-pending').textContent=list.reduce((a,h)=>a+(h.pendingTickets||0),0);document.getElementById('ho-s-completed').textContent=list.reduce((a,h)=>a+(h.completedTickets||0),0);document.getElementById('ho-s-showstopper').textContent=list.reduce((a,h)=>a+(h.showstopperCount||0),0);}
+function renderHandoverTable(list){document.getElementById('ho-count-label').textContent=list.length+' records';if(!list.length){document.getElementById('hoTableContainer').innerHTML='<div class="no-data-msg">📭 No handover submissions found.</div>';return;}const tbody=document.createElement('tbody');[...list].map((h,origIdx)=>({h,origIdx})).reverse().forEach(({h,origIdx},displayIdx)=>{const safeDate=normalizeDateToClient(h.date);const safeShift=(h.shift||'').trim();const submittedAt=h.submittedAt?new Date(h.submittedAt).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'—';const sc={D1:'env-dev',D2:'env-uat',D3:'env-staging'}[safeShift]||'env-default';const tr=document.createElement('tr');tr.innerHTML='<td style="color:#3a7aaa;font-size:11px;font-weight:600;">'+(displayIdx+1)+'</td><td style="font-weight:700;color:#0a3d78;">'+(safeDate||'—')+'</td><td><span class="env-badge '+sc+'">'+(safeShift||'—')+'</span></td><td style="font-size:12px;color:#2a4a6a;max-width:180px;">'+(h.currentMembers||'—')+'</td><td style="font-size:12px;color:#2a4a6a;max-width:180px;">'+(h.nextMembers||'—')+'</td><td style="text-align:center;"><span style="font-size:16px;font-weight:800;color:#1a7db5;">'+(h.totalTickets||0)+'</span></td><td style="text-align:center;"><span style="font-size:14px;font-weight:700;color:#c0392b;">'+(h.pendingTickets||0)+'</span></td><td style="text-align:center;"><span style="font-size:14px;font-weight:700;color:#1a8c5c;">'+(h.completedTickets||0)+'</span></td><td style="text-align:center;">'+(h.showstopperCount>0?'<span style="background:#fde8e8;border:1px solid #f0aaaa;border-radius:12px;padding:2px 8px;font-size:11px;font-weight:700;color:#a02020;">🔴 '+h.showstopperCount+'</span>':'<span style="color:#3a7aaa;font-size:12px;font-weight:600;">—</span>')+'</td><td style="font-size:11px;color:#3a7aaa;font-weight:600;">'+submittedAt+'</td><td style="white-space:nowrap;"></td>';const actionTd=tr.querySelector('td:last-child');const viewBtn=document.createElement('button');viewBtn.className='view-btn';viewBtn.textContent='👁 View';viewBtn.onclick=()=>openHoDetail(origIdx);actionTd.appendChild(viewBtn);actionTd.appendChild(document.createTextNode(' '));const delBtn=document.createElement('button');delBtn.className='delete-btn';delBtn.style.marginLeft='4px';delBtn.textContent='🗑 Delete';delBtn.onclick=()=>deleteHandover(origIdx,safeDate,safeShift);actionTd.appendChild(delBtn);tbody.appendChild(tr);});const table=document.createElement('table');table.innerHTML='<thead><tr><th>#</th><th>Date</th><th>Shift</th><th>Current Members</th><th>Next Members</th><th style="text-align:center;">Total</th><th style="text-align:center;">Pending</th><th style="text-align:center;">Done</th><th style="text-align:center;">Showstopper</th><th>Submitted At</th><th>Actions</th></tr></thead>';table.appendChild(tbody);document.getElementById('hoTableContainer').innerHTML='';document.getElementById('hoTableContainer').appendChild(table);}
+function filterHandoverTable(){const q=document.getElementById('hoSearchInput').value.toLowerCase();renderHandoverTable(q?filteredHandovers.filter(h=>{const d=normalizeDateToClient(h.date);return d.includes(q)||(h.shift||'').toLowerCase().includes(q)||(h.currentMembers||'').toLowerCase().includes(q)||(h.nextMembers||'').toLowerCase().includes(q);}):filteredHandovers);}
+function openHoDetail(origIdx){const h=filteredHandovers[origIdx];if(!h)return;const submittedAt=h.submittedAt?new Date(h.submittedAt).toLocaleString():'—';const safeDate=normalizeDateToClient(h.date);const catRow=(label,color,bg,border,count,pending,ids)=>'<div style="background:'+bg+';border:1px solid '+border+';border-radius:8px;padding:12px 14px;margin-bottom:8px;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;"><span style="font-size:12px;font-weight:700;color:'+color+';">'+label+'</span><div style="display:flex;gap:8px;"><span style="font-size:11px;border-radius:10px;padding:2px 8px;color:'+color+';background:rgba(0,0,0,.05);">'+count+' total</span>'+(pending>0?'<span style="font-size:11px;background:#fde8e8;border-radius:10px;padding:2px 8px;color:#a02020;">'+pending+' pending</span>':'')+'</div></div>'+(ids?'<div style="font-size:11px;color:#1a5a90;line-height:1.8;">'+ids+'</div>':'<div style="font-size:11px;color:#3a7aaa;">No tickets</div>')+'</div>';const infoBoxes=[h.infoBox1,h.infoBox2,h.infoBox3,h.infoBox4].filter(b=>b&&b.trim());const infoHtml=infoBoxes.length?'<div style="margin-top:16px;"><div style="font-size:11px;font-weight:700;color:#1a7db5;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">📢 Important Information</div>'+infoBoxes.map(b=>'<div style="background:#fffbec;border:1px solid #f0d840;border-radius:6px;padding:10px 12px;font-size:12px;color:#2a4a6a;line-height:1.6;margin-bottom:8px;white-space:pre-wrap;">'+b+'</div>').join('')+'</div>':'';document.getElementById('hoDetailContent').innerHTML='<div style="font-size:20px;font-weight:800;color:#0a3d78;letter-spacing:2px;margin-bottom:4px;">'+safeDate+' — '+(h.shift||'—')+'</div><div style="font-size:11px;color:#3a7aaa;font-weight:600;margin-bottom:20px;">Submitted: '+submittedAt+'</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;"><div style="background:#f4f9ff;border:1px solid #c8dff0;border-radius:8px;padding:12px;"><div style="font-size:10px;color:#1a7db5;letter-spacing:1px;font-weight:700;margin-bottom:5px;">CURRENT SHIFT</div><div style="font-size:13px;color:#0a3d78;line-height:1.7;">'+(h.currentMembers||'—')+'</div></div><div style="background:#f4f9ff;border:1px solid #c8dff0;border-radius:8px;padding:12px;"><div style="font-size:10px;color:#1a7db5;letter-spacing:1px;font-weight:700;margin-bottom:5px;">NEXT SHIFT</div><div style="font-size:13px;color:#0a3d78;line-height:1.7;">'+(h.nextMembers||'—')+'</div></div><div style="background:#f4f9ff;border:1px solid #c8dff0;border-radius:8px;padding:10px 12px;"><div style="font-size:10px;color:#1a7db5;letter-spacing:1px;font-weight:700;margin-bottom:4px;">MAILS HANDLED BY</div><div style="font-size:13px;color:#1a5a90;">'+(h.mailsHandledBy||'—')+'</div></div><div style="background:#f4f9ff;border:1px solid #c8dff0;border-radius:8px;padding:10px 12px;"><div style="font-size:10px;color:#1a7db5;letter-spacing:1px;font-weight:700;margin-bottom:4px;">JIRA HANDLED BY</div><div style="font-size:13px;color:#1a5a90;">'+(h.jiraHandledBy||'—')+'</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;"><div style="background:#eef5fc;border:1.5px solid #c8dff0;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#1a7db5;">'+(h.totalTickets||0)+'</div><div style="font-size:10px;color:#3a7aaa;letter-spacing:1px;font-weight:600;">TOTAL</div></div><div style="background:#fde8e8;border:1.5px solid #f0aaaa;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#c0392b;">'+(h.pendingTickets||0)+'</div><div style="font-size:10px;color:#c0392b;letter-spacing:1px;opacity:.7;">PENDING</div></div><div style="background:#d4f5e4;border:1.5px solid #6cd4a0;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#1a7050;">'+(h.completedTickets||0)+'</div><div style="font-size:10px;color:#1a7050;letter-spacing:1px;opacity:.7;">COMPLETED</div></div></div><div style="font-size:11px;font-weight:700;color:#1a7db5;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">📋 Ticket Breakdown</div>'+catRow('🔴 Showstopper','#a02020','#fde8e8','#f0aaaa',h.showstopperCount||0,h.showstopperPending||0,h.showstopperIds||'')+catRow('🟠 High Priority','#8a5010','#fff3d8','#f5c840',h.highCount||0,h.highPending||0,h.highIds||'')+catRow('🟣 Customer Escalated','#5020a0','#f0e8ff','#c0a0e0',h.escalatedCount||0,h.escalatedPending||0,h.escalatedIds||'')+catRow('⚫ Long Pending','#404040','#f0f0f0','#c0c0c0',h.longpendingCount||0,h.longpendingPending||0,h.longpendingIds||'')+infoHtml;document.getElementById('hoDetailOverlay').classList.add('open');}
 function closeHoDetail(){document.getElementById('hoDetailOverlay').classList.remove('open');}
-
-// ★ deleteHandover: receives safeDate & safeShift already cleaned
-async function deleteHandover(origIdx,safeDate,safeShift){
-  const h=filteredHandovers[origIdx];
-  if(!h){showToast('⚠ Record not found.',false);return;}
-  if(!confirm('⚠ Delete handover record for "'+safeDate+' — '+safeShift+'"?\n\nThis will also allow agents to re-submit this shift. Cannot be undone!'))return;
-  showToast('⏳ Deleting...',true);
-  try{
-    const params=new URLSearchParams({action:'deleteHandover',date:safeDate,shift:safeShift});
-    const res=await fetch(API_URL+'?'+params.toString());
-    const text=await res.text();
-    let data;
-    try{data=JSON.parse(text);}
-    catch(pe){console.error('Non-JSON:',text.slice(0,300));showToast('⚠ Server error — redeploy Apps Script as new version.',false);return;}
-    if(data.success){
-      showToast('🗑 Handover "'+safeDate+' '+safeShift+'" deleted.');
-      const gi=allHandovers.indexOf(h);if(gi>-1)allHandovers.splice(gi,1);
-      filteredHandovers.splice(origIdx,1);
-      renderHandoverStats(filteredHandovers);renderHandoverTable(filteredHandovers);
-    }else{showToast('⚠ Delete failed: '+(data.error||'Unknown'),false);}
-  }catch(err){showToast('⚠ Connection error: '+err.message,false);}
-}
+async function deleteHandover(origIdx,safeDate,safeShift){const h=filteredHandovers[origIdx];if(!h){showToast('⚠ Record not found.',false);return;}if(!confirm('⚠ Delete handover record for "'+safeDate+' — '+safeShift+'"?\n\nThis cannot be undone!'))return;showToast('⏳ Deleting...',true);try{const params=new URLSearchParams({action:'deleteHandover',date:safeDate,shift:safeShift});const res=await fetch(API_URL+'?'+params.toString());const text=await res.text();let data;try{data=JSON.parse(text);}catch(pe){showToast('⚠ Server error — redeploy Apps Script as new version.',false);return;}if(data.success){showToast('🗑 Handover "'+safeDate+' '+safeShift+'" deleted.');const gi=allHandovers.indexOf(h);if(gi>-1)allHandovers.splice(gi,1);filteredHandovers.splice(origIdx,1);renderHandoverStats(filteredHandovers);renderHandoverTable(filteredHandovers);}else{showToast('⚠ Delete failed: '+(data.error||'Unknown'),false);}}catch(err){showToast('⚠ Connection error: '+err.message,false);}}
 
 // ── PLANNER ──
 const PLANNER_DATES=['30-03-2026','31-03-2026','01-04-2026','02-04-2026','03-04-2026','04-04-2026','05-04-2026','06-04-2026','07-04-2026','08-04-2026','09-04-2026','10-04-2026','11-04-2026','12-04-2026','13-04-2026','14-04-2026','15-04-2026','16-04-2026','17-04-2026','18-04-2026','19-04-2026','20-04-2026','21-04-2026','22-04-2026','23-04-2026','24-04-2026','25-04-2026','26-04-2026','27-04-2026','28-04-2026','29-04-2026','30-04-2026','01-05-2026','02-05-2026','03-05-2026'];
 const PLANNER_DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-const PLANNER_DEFAULT=[
-  {sl:1,id:'SM1658',name:'Vignesh Maharajan',group:'G2',primary:'Customer Service',shifts:['D5','D5','D5','D5','Holiday','W/OFF','W/OFF','D5','D5','D5','D5','D5','W/OFF','W/OFF','D5','Holiday','D5','D5','D5','W/OFF','W/OFF','D5','D5','D5','D5','D5','W/OFF','W/OFF','D5','D5','D5','D5','D5','W/OFF','W/OFF']},
-  {sl:2,id:'SM2045',name:'Akash Nagarathinam',group:'G3',primary:'EMS/EDI',shifts:['D2','D2','D2','D2','D2','W/OFF','W/OFF','Compff','D1','D1','D1','D1','W/OFF','W/OFF','D1','Holiday','D1','D1','D1','W/OFF','W/OFF','D2','D2','D2','D2','D2','W/OFF','W/OFF','D2','D2','D2','D2','D2','W/OFF','W/OFF']},
-  {sl:3,id:'SM1638',name:'Challa Venkat Suneel',group:'G1',primary:'Operations',shifts:['D4','D4','D4','D4','Holiday','W/OFF','W/OFF','D4','D4','D4','D4','D4','W/OFF','W/OFF','D4','Holiday','D4','D4','D4','W/OFF','W/OFF','D4','D4','D4','D4','D4','W/OFF','W/OFF','D4','D4','D4','D4','D4','W/OFF','W/OFF']},
-  {sl:4,id:'SM2197',name:'Vinoth Bhoopathy',group:'G1',primary:'Operations',shifts:['D1','D1','D1','D1','Holiday','W/OFF','W/OFF','D2','D2','D2','D2','D2','W/OFF','W/OFF','D2','Holiday','D2','D2','D2','W/OFF','W/OFF','D1','D1','D1','W/OFF','D1','D1','D1','W/OFF','D1','D1','D1','D1','W/OFF','W/OFF']},
-  {sl:5,id:'SM2335',name:'Vignesh Rajapandi',group:'G2',primary:'Operations',shifts:['D4','D4','D4','D4','Holiday','W/OFF','W/OFF','D4','D4','D4','D4','D4','W/OFF','W/OFF','D4','Holiday','D4','D4','D4','W/OFF','W/OFF','D4','D4','D4','D4','D4','W/OFF','W/OFF','D4','D4','D4','D4','D4','W/OFF','W/OFF']},
-  {sl:6,id:'SM2145',name:'Rene Claret A',group:'G2',primary:'Customer Service',shifts:['D2','D2','W/OFF','W/OFF','Holiday','D2','D2','W/OFF','N','N','N','N','W/OFF','W/OFF','D1','D1','D1','D1','D1','W/OFF','W/OFF','Compff','N','N','N','N','N','W/OFF','D2','D2','D2','D2','D2','W/OFF','W/OFF']},
-  {sl:7,id:'SM2333',name:'Kulasekar Baskar',group:'G1',primary:'Operations',shifts:['N','N','W/OFF','W/OFF','Holiday','N','N','N','W/OFF','D2','D2','W/OFF','D2','D2','D2','D2','D2','W/OFF','W/OFF','D1','D1','Compff','W/OFF','D1','D1','W/OFF','W/OFF','N','N','N','N','N','W/OFF','D1','D1']},
-  {sl:8,id:'SM2332',name:'Seenivasan Lakshmipathy',group:'G2',primary:'Customer Service',shifts:['D1','D1','W/OFF','W/OFF','D1','D1','D1','D1','D1','Compff','W/OFF','W/OFF','N','N','N','N','N','W/OFF','W/OFF','D2','D2','Compff','W/OFF','D2','D2','D2','W/OFF','W/OFF','D1','D1','D1','W/OFF','N','N','N']},
-  {sl:9,id:'SM2331',name:'Vinothraj Vijayakumar',group:'G2',primary:'Customer Service',shifts:['N','N','N','N','N','W/OFF','W/OFF','D2','D2','Compff','W/OFF','D1','D1','D1','W/OFF','Holiday','W/OFF','N','N','N','N','N','W/OFF','D2','D2','W/OFF','D2','D2','D2','D2','W/OFF','W/OFF','D2','D2','D2']}
-];
+const PLANNER_DEFAULT=[{sl:1,id:'SM1658',name:'Vignesh Maharajan',group:'G2',primary:'Customer Service',shifts:['D5','D5','D5','D5','Holiday','W/OFF','W/OFF','D5','D5','D5','D5','D5','W/OFF','W/OFF','D5','Holiday','D5','D5','D5','W/OFF','W/OFF','D5','D5','D5','D5','D5','W/OFF','W/OFF','D5','D5','D5','D5','D5','W/OFF','W/OFF']},{sl:2,id:'SM2045',name:'Akash Nagarathinam',group:'G3',primary:'EMS/EDI',shifts:['D2','D2','D2','D2','D2','W/OFF','W/OFF','Compff','D1','D1','D1','D1','W/OFF','W/OFF','D1','Holiday','D1','D1','D1','W/OFF','W/OFF','D2','D2','D2','D2','D2','W/OFF','W/OFF','D2','D2','D2','D2','D2','W/OFF','W/OFF']},{sl:3,id:'SM1638',name:'Challa Venkat Suneel',group:'G1',primary:'Operations',shifts:['D4','D4','D4','D4','Holiday','W/OFF','W/OFF','D4','D4','D4','D4','D4','W/OFF','W/OFF','D4','Holiday','D4','D4','D4','W/OFF','W/OFF','D4','D4','D4','D4','D4','W/OFF','W/OFF','D4','D4','D4','D4','D4','W/OFF','W/OFF']},{sl:4,id:'SM2197',name:'Vinoth Bhoopathy',group:'G1',primary:'Operations',shifts:['D1','D1','D1','D1','Holiday','W/OFF','W/OFF','D2','D2','D2','D2','D2','W/OFF','W/OFF','D2','Holiday','D2','D2','D2','W/OFF','W/OFF','D1','D1','D1','W/OFF','D1','D1','D1','W/OFF','D1','D1','D1','D1','W/OFF','W/OFF']},{sl:5,id:'SM2335',name:'Vignesh Rajapandi',group:'G2',primary:'Operations',shifts:['D4','D4','D4','D4','Holiday','W/OFF','W/OFF','D4','D4','D4','D4','D4','W/OFF','W/OFF','D4','Holiday','D4','D4','D4','W/OFF','W/OFF','D4','D4','D4','D4','D4','W/OFF','W/OFF','D4','D4','D4','D4','D4','W/OFF','W/OFF']},{sl:6,id:'SM2145',name:'Rene Claret A',group:'G2',primary:'Customer Service',shifts:['D2','D2','W/OFF','W/OFF','Holiday','D2','D2','W/OFF','N','N','N','N','W/OFF','W/OFF','D1','D1','D1','D1','D1','W/OFF','W/OFF','Compff','N','N','N','N','N','W/OFF','D2','D2','D2','D2','D2','W/OFF','W/OFF']},{sl:7,id:'SM2333',name:'Kulasekar Baskar',group:'G1',primary:'Operations',shifts:['N','N','W/OFF','W/OFF','Holiday','N','N','N','W/OFF','D2','D2','W/OFF','D2','D2','D2','D2','D2','W/OFF','W/OFF','D1','D1','Compff','W/OFF','D1','D1','W/OFF','W/OFF','N','N','N','N','N','W/OFF','D1','D1']},{sl:8,id:'SM2332',name:'Seenivasan Lakshmipathy',group:'G2',primary:'Customer Service',shifts:['D1','D1','W/OFF','W/OFF','D1','D1','D1','D1','D1','Compff','W/OFF','W/OFF','N','N','N','N','N','W/OFF','W/OFF','D2','D2','Compff','W/OFF','D2','D2','D2','W/OFF','W/OFF','D1','D1','D1','W/OFF','N','N','N']},{sl:9,id:'SM2331',name:'Vinothraj Vijayakumar',group:'G2',primary:'Customer Service',shifts:['N','N','N','N','N','W/OFF','W/OFF','D2','D2','Compff','W/OFF','D1','D1','D1','W/OFF','Holiday','W/OFF','N','N','N','N','N','W/OFF','D2','D2','W/OFF','D2','D2','D2','D2','W/OFF','W/OFF','D2','D2','D2']}];
 const SHIFT_LEGEND=[{key:'D1',label:'D1 — Morning',cls:'sp-D1'},{key:'D2',label:'D2 — Afternoon',cls:'sp-D2'},{key:'D4',label:'D4 — Day',cls:'sp-D4'},{key:'D5',label:'D5 — Evening',cls:'sp-D5'},{key:'N',label:'Night',cls:'sp-N'},{key:'W/OFF',label:'Week Off',cls:'sp-WOFF'},{key:'Holiday',label:'Holiday',cls:'sp-HOL'},{key:'Compff',label:'Comp Off',cls:'sp-COMP'}];
 let plannerShiftFilter='ALL';
 let PLANNER_TEAM=JSON.parse(JSON.stringify(PLANNER_DEFAULT));
@@ -674,6 +584,151 @@ function closePlannerEditor(){document.getElementById('planner-cell-editor').sty
 function applyPlannerCellEdit(){if(!pceTarget)return;PLANNER_TEAM[pceTarget.memberIdx].shifts[pceTarget.dateIdx]=document.getElementById('pce-select').value;plannerDirty=true;const btn=document.getElementById('planner-publish-btn');btn.textContent='📤 Submit to Agents *';btn.style.background='linear-gradient(135deg,#c07010,#a05008)';closePlannerEditor();renderPlanner();}
 document.addEventListener('click',function(e){const ed=document.getElementById('planner-cell-editor');if(ed&&ed.style.display!=='none'&&!ed.contains(e.target)&&!e.target.closest('td'))closePlannerEditor();});
 function renderPlanner(){const ti=getPlannerTodayIndex();const search=(document.getElementById('planner-search')?.value||'').toLowerCase();const lbl=document.getElementById('planner-today-label');if(ti>=0)lbl.textContent='Today: '+PLANNER_DATES[ti]+' ('+PLANNER_DAYS[ti]+')';else lbl.textContent='';document.getElementById('planner-legend').innerHTML=SHIFT_LEGEND.map(l=>'<span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#2a6090;font-weight:600;"><span class="shift-pill '+l.cls+'">'+l.key+'</span>'+l.label+'</span>').join('');let team=PLANNER_TEAM;if(search)team=team.filter(m=>m.name.toLowerCase().includes(search)||m.primary.toLowerCase().includes(search)||m.id.toLowerCase().includes(search));if(plannerShiftFilter!=='ALL')team=team.filter(m=>m.shifts.some(s=>s.trim().toUpperCase()===plannerShiftFilter.toUpperCase()));if(!team.length){document.getElementById('planner-table-container').innerHTML='<div style="padding:40px;text-align:center;color:#3a7aaa;font-size:14px;">No team members found.</div>';return;}let hdr='<tr><th class="col-name" rowspan="2">Name</th><th style="text-align:left;min-width:120px;background:#eef5fc;border:1px solid #c8dff0;padding:8px 10px;font-size:10px;font-weight:700;color:#1a7db5;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;position:sticky;top:0;z-index:2;" rowspan="2">Primary Role</th>';PLANNER_DATES.forEach((d,i)=>{const isT=i===ti,isW=PLANNER_DAYS[i]==='Sat'||PLANNER_DAYS[i]==='Sun',p=d.split('-');hdr+='<th style="padding:8px 10px;text-align:center;font-size:10px;font-weight:700;white-space:nowrap;border:1px solid #c8dff0;background:'+(isT?'#d8eeff':'#eef5fc')+';color:'+(isT?'#1a7db5':isW?'#3a7aaa':'#1a7db5')+';">'+p[0]+'/'+p[1]+'</th>';});hdr+='</tr><tr>';PLANNER_DAYS.forEach((d,i)=>{const isT=i===ti,isW=d==='Sat'||d==='Sun';hdr+='<th style="font-size:9px;padding:8px 10px;text-align:center;font-weight:700;white-space:nowrap;border:1px solid #c8dff0;background:'+(isT?'#d8eeff':'#eef5fc')+';color:'+(isT?'#1a7db5':isW?'#3a7aaa':'#1a7db5')+';">'+d+'</th>';});hdr+='</tr>';const bodyRows=team.map(m=>{const ri=PLANNER_TEAM.indexOf(m);let cells='';m.shifts.forEach((s,i)=>{const isT=i===ti,pill=shiftPillClass(s),hl=plannerShiftFilter!=='ALL'&&s.trim().toUpperCase()===plannerShiftFilter.toUpperCase();cells+='<td class="'+(isT?'col-today':'')+'" style="cursor:pointer;" title="Click to edit" onclick="openPlannerEditor('+ri+','+i+',\''+s+'\',this)"><span class="shift-pill '+pill+(isT?' sp-TODAY':'')+'"'+(hl?' style="box-shadow:0 0 6px rgba(26,125,181,.3);"':'')+'>'+s+'</span></td>';});return'<tr><td class="col-name"><div>'+m.name+'</div><div style="font-size:10px;color:#3a7aaa;margin-top:2px;font-weight:600;">'+m.id+'</div></td><td class="col-primary">'+m.primary+'</td>'+cells+'</tr>';}).join('');document.getElementById('planner-table-container').innerHTML='<table class="planner-tbl"><thead>'+hdr+'</thead><tbody>'+bodyRows+'</tbody></table>';}
+
+// ── WHY NOT SOLVED ──
+async function loadWNSAgentList(){
+  if(!allUsers.length){
+    try{const res=await fetch(API_URL+'?action=getUsers&t='+Date.now());const data=await res.json();if(data.success)allUsers=data.users||[];}catch{}
+  }
+  const sel=document.getElementById('wns-agent');
+  const cur=sel.value;
+  sel.innerHTML='<option value="">— Select Agent —</option>';
+  allUsers.forEach(u=>{const o=document.createElement('option');o.value=u.username;o.textContent=u.username+(u.team?' ('+u.team+')':'');sel.appendChild(o);});
+  if(cur)sel.value=cur;
+}
+async function loadWNSTickets(){
+  document.getElementById('wnsTableContainer').innerHTML='<div class="loading">⏳ LOADING...</div>';
+  try{
+    const res=await fetch(API_URL+'?action=getWNSTickets&t='+Date.now());
+    const data=await res.json();
+    if(data.success){
+      allWNSTickets=data.tickets||[];filteredWNSTickets=[...allWNSTickets];
+      renderWNSStats(allWNSTickets);renderWNSTable(filteredWNSTickets);
+      document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();
+    }else document.getElementById('wnsTableContainer').innerHTML='<div class="error-msg">⚠ Failed to load.</div>';
+  }catch{document.getElementById('wnsTableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}
+}
+function renderWNSStats(list){
+  const pending=list.filter(t=>t.status==='Pending').length;
+  const completed=list.filter(t=>t.status==='Completed').length;
+  const agents=new Set(list.filter(t=>t.status==='Completed').map(t=>t.agentName)).size;
+  document.getElementById('wns-s-total').textContent=list.length;
+  document.getElementById('wns-s-pending').textContent=pending;
+  document.getElementById('wns-s-completed').textContent=completed;
+  document.getElementById('wns-s-agents').textContent=agents;
+}
+function renderWNSTable(list){
+  document.getElementById('wns-count').textContent=list.length+' records';
+  if(!list.length){document.getElementById('wnsTableContainer').innerHTML='<div class="loading" style="color:#3a7aaa;">No tickets found.</div>';return;}
+  const statusBadge=s=>s==='Completed'
+    ?'<span style="background:#d4f5e4;border:1px solid #6cd4a0;border-radius:12px;padding:2px 9px;font-size:10px;font-weight:700;color:#1a7050;">✅ COMPLETED</span>'
+    :'<span style="background:#fff3d8;border:1px solid #f5c840;border-radius:12px;padding:2px 9px;font-size:10px;font-weight:700;color:#8a6010;">⏳ PENDING</span>';
+  const tbody=document.createElement('tbody');
+  [...list].reverse().forEach((t,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=
+      '<td style="color:#3a7aaa;font-size:11px;font-weight:600;">'+(i+1)+'</td>'+
+      '<td style="font-weight:700;color:#0a3d78;">🎫 '+(t.ticketId||'—')+'</td>'+
+      '<td style="font-size:12px;color:#2a4a6a;">👤 '+(t.agentName||'—')+'</td>'+
+      '<td style="font-size:12px;color:#2a4a6a;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="'+(t.summary||'')+'">'+(t.summary||'—')+'</td>'+
+      '<td style="font-size:11px;color:#3a7aaa;">'+(t.assignedAt||'').slice(0,10)+'</td>'+
+      '<td>'+statusBadge(t.status)+'</td>'+
+      '<td style="font-size:11px;color:#3a7aaa;">'+(t.status==='Completed'?(t.submittedAt||'').slice(0,10)||'—':'—')+'</td>'+
+      '<td style="white-space:nowrap;"></td>';
+    const actionTd=tr.querySelector('td:last-child');
+    const viewBtn=document.createElement('button');viewBtn.className='view-btn';viewBtn.textContent='👁 View';viewBtn.onclick=()=>openWNSDetail(t);actionTd.appendChild(viewBtn);
+    if(t.status==='Pending'){
+      const editBtn=document.createElement('button');editBtn.className='edit-btn';editBtn.style.marginLeft='5px';editBtn.textContent='✏ Edit';editBtn.onclick=()=>editWNSTicket(t);actionTd.appendChild(editBtn);
+      const delBtn=document.createElement('button');delBtn.className='delete-btn';delBtn.style.marginLeft='5px';delBtn.textContent='🗑 Delete';delBtn.onclick=()=>deleteWNSTicket(t);actionTd.appendChild(delBtn);
+    }else{
+      const reBtn=document.createElement('button');reBtn.className='reset-btn';reBtn.style.marginLeft='5px';reBtn.textContent='↩ Re-open';reBtn.onclick=()=>reOpenWNSTicket(t);actionTd.appendChild(reBtn);
+      const delBtn2=document.createElement('button');delBtn2.className='delete-btn';delBtn2.style.marginLeft='5px';delBtn2.textContent='🗑 Delete';delBtn2.onclick=()=>deleteWNSTicket(t);actionTd.appendChild(delBtn2);
+    }
+    tbody.appendChild(tr);
+  });
+  const table=document.createElement('table');
+  table.innerHTML='<thead><tr><th>#</th><th>Ticket ID</th><th>Assigned Agent</th><th>Summary</th><th>Assigned Date</th><th>Status</th><th>Submitted</th><th>Actions</th></tr></thead>';
+  table.appendChild(tbody);
+  document.getElementById('wnsTableContainer').innerHTML='';
+  document.getElementById('wnsTableContainer').appendChild(table);
+}
+function filterWNSTable(){
+  const q=document.getElementById('wnsSearchInput').value.toLowerCase();
+  filteredWNSTickets=q?allWNSTickets.filter(t=>(t.ticketId||'').toLowerCase().includes(q)||(t.agentName||'').toLowerCase().includes(q)||(t.summary||'').toLowerCase().includes(q)):[...allWNSTickets];
+  renderWNSTable(filteredWNSTickets);
+}
+async function submitWNSAssign(){
+  const editId=document.getElementById('wns-edit-id').value;
+  const ticketId=document.getElementById('wns-ticketId').value.trim();
+  const agent=document.getElementById('wns-agent').value;
+  const summary=document.getElementById('wns-summary').value.trim();
+  if(!ticketId||!agent||!summary){showFormMsg('wns-msg','⚠ All three fields are required.','error');return;}
+  const btn=document.getElementById('wns-submit-btn');btn.disabled=true;showFormMsg('wns-msg','⏳ Saving...','loading');
+  try{
+    const params=new URLSearchParams({action:editId?'updateWNSTicket':'assignWNSTicket',id:editId,ticketId,agentName:agent,summary,assignedAt:new Date().toISOString()});
+    const res=await fetch(API_URL+'?'+params.toString());
+    const data=await res.json();
+    if(data.success){showFormMsg('wns-msg',editId?'✅ Updated!':'✅ Ticket assigned to agent!','success');clearWNSForm();loadWNSTickets();}
+    else showFormMsg('wns-msg','⚠ '+(data.error||'Failed'),'error');
+  }catch{showFormMsg('wns-msg','⚠ Connection error.','error');}
+  btn.disabled=false;
+}
+function editWNSTicket(t){
+  document.getElementById('wns-edit-id').value=t.id||'';
+  document.getElementById('wns-ticketId').value=t.ticketId||'';
+  document.getElementById('wns-agent').value=t.agentName||'';
+  document.getElementById('wns-summary').value=t.summary||'';
+  document.getElementById('wnsFormTitle').textContent='✏ Edit: '+t.ticketId;
+  document.getElementById('wns-submit-btn').textContent='💾 Update';
+  document.getElementById('wns-cancel-btn').style.display='inline-block';
+  document.getElementById('wnsFormTitle').scrollIntoView({behavior:'smooth'});
+}
+function cancelWNSEdit(){clearWNSForm();}
+function clearWNSForm(){
+  ['wns-edit-id','wns-ticketId','wns-summary'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('wns-agent').value='';
+  document.getElementById('wnsFormTitle').textContent='➕ Assign Ticket for Review';
+  document.getElementById('wns-submit-btn').textContent='💾 Assign Ticket';
+  document.getElementById('wns-cancel-btn').style.display='none';
+  document.getElementById('wns-msg').style.display='none';
+}
+async function deleteWNSTicket(t){
+  if(!confirm('⚠ Delete ticket "'+t.ticketId+'" assigned to "'+t.agentName+'"?\n\nThis cannot be undone!'))return;
+  showToast('⏳ Deleting...',true);
+  try{
+    const res=await fetch(API_URL+'?'+new URLSearchParams({action:'deleteWNSTicket',id:t.id}));
+    const data=await res.json();
+    if(data.success){showToast('🗑 Ticket deleted.');loadWNSTickets();}
+    else showToast('⚠ Delete failed.',false);
+  }catch{showToast('⚠ Connection error.',false);}
+}
+async function reOpenWNSTicket(t){
+  if(!confirm('Re-open ticket "'+t.ticketId+'" for "'+t.agentName+'"?\n\nTheir completed submission will be cleared.'))return;
+  showToast('⏳ Re-opening...',true);
+  try{
+    const res=await fetch(API_URL+'?'+new URLSearchParams({action:'reOpenWNSTicket',id:t.id}));
+    const data=await res.json();
+    if(data.success){showToast('↩ Ticket re-opened.');loadWNSTickets();}
+    else showToast('⚠ Failed.',false);
+  }catch{showToast('⚠ Connection error.',false);}
+}
+function openWNSDetail(t){
+  const sandboxStr=t.sandboxTried==='Yes'?'✅ Yes':t.sandboxTried==='No'?'❌ No':'⚪ N/A';
+  const pairs=[['Ticket ID',t.ticketId],['Assigned Agent',t.agentName],['Client',t.client||'—'],['Component',t.component||'—'],['Priority',t.priority||'—'],['Root Cause',t.rootCause||'—'],['Ticket Date',t.ticketDate||'—'],['Engg Resolution Time',t.engResolutionTime||'—'],['Sandbox Tried',sandboxStr],['Status',t.status],['Assigned At',(t.assignedAt||'').slice(0,10)||'—'],['Submitted At',t.status==='Completed'?(t.submittedAt||'').slice(0,10)||'—':'—']];
+  const sections=[['📋 Issue Summary',t.summary],['🤔 Primary Reason',t.primaryReason],['🔍 Why Not Solved by HD',t.whyNotSolved],['💡 What Was Learned',t.whatLearned],['🚀 How to Solve Next Time',t.howSolveNext],['🧪 Sandbox Result',t.sandboxResult],['🔗 Reference / Notes',t.reference]].filter(([,v])=>v&&v.trim());
+  document.getElementById('wnsDetailContent').innerHTML=
+    '<div style="font-size:20px;font-weight:800;color:#0a3d78;letter-spacing:2px;margin-bottom:4px;">🎫 '+(t.ticketId||'—')+'</div>'+
+    '<div style="font-size:11px;color:#3a7aaa;font-weight:600;margin-bottom:20px;">Agent: '+(t.agentName||'—')+' · Status: '+(t.status||'—')+'</div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;">'+
+    pairs.map(([l,v])=>'<div style="background:#f4f9ff;border:1px solid #c8dff0;border-radius:7px;padding:10px 13px;"><div style="font-size:10px;font-weight:700;color:#1a7db5;letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;">'+l+'</div><div style="font-size:13px;color:#0a3d78;font-weight:600;">'+(v||'—')+'</div></div>').join('')+
+    '</div>'+
+    (t.status==='Pending'
+      ?'<div style="background:#fff8e8;border:1.5px solid #f5c840;border-radius:8px;padding:14px;text-align:center;color:#8a6010;font-size:13px;font-weight:600;">⏳ Agent has not submitted their review yet.</div>'
+      :sections.map(([l,v])=>'<div style="margin-bottom:13px;"><div style="font-size:10px;font-weight:700;color:#3a7aaa;letter-spacing:2px;text-transform:uppercase;margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid #ddeeff;">'+l+'</div><div style="font-size:13px;color:#2a4a6a;line-height:1.7;white-space:pre-wrap;background:#f8fbff;border:1px solid #ddeeff;border-radius:7px;padding:11px 13px;">'+v+'</div></div>').join('')
+    );
+  document.getElementById('wnsDetailOverlay').classList.add('open');
+}
+function closeWNSDetail(){document.getElementById('wnsDetailOverlay').classList.remove('open');}
 
 // ── DARK MODE ──
 let darkMode=false;
