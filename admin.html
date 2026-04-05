@@ -30,18 +30,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .wave2{bottom:44%;background:rgba(255,255,255,.14);border-radius:50% 50% 0 0/30px 30px 0 0;animation:waveDrift 9s ease-in-out infinite reverse;}
 .wave3{bottom:40%;background:rgba(255,255,255,.08);border-radius:50% 50% 0 0/20px 20px 0 0;animation:waveDrift 11s ease-in-out infinite;}
 @keyframes waveDrift{0%,100%{transform:translateX(0);}50%{transform:translateX(5%);}}
-.boat{position:absolute;bottom:46.5%;left:50%;transform:translateX(-50%);animation:boatBob 3.5s ease-in-out infinite;}
-@keyframes boatBob{0%,100%{transform:translateX(-50%) translateY(0) rotate(-1deg);}50%{transform:translateX(-50%) translateY(-6px) rotate(1.5deg);}}
-.boat-hull{width:160px;height:30px;background:linear-gradient(180deg,#e8a020,#c07010);border-radius:0 0 50% 50%/0 0 20px 20px;position:relative;box-shadow:0 4px 12px rgba(0,0,0,.25);}
-.boat-deck{width:160px;height:10px;background:#f5c040;border-radius:4px 4px 0 0;}
-.boat-cabin{width:48px;height:24px;background:#fff;border:2px solid #d0d0d0;border-radius:4px 4px 0 0;position:absolute;top:-34px;left:56px;}
-.boat-cabin-window{width:12px;height:10px;background:#7ec8e3;border-radius:2px;position:absolute;top:6px;left:8px;}
-.boat-cabin-window2{width:12px;height:10px;background:#7ec8e3;border-radius:2px;position:absolute;top:6px;right:8px;}
-.boat-mast{width:3px;height:60px;background:#8b5e3c;position:absolute;top:-94px;left:78px;}
-.boat-flag{width:20px;height:12px;background:#e03030;clip-path:polygon(0 0,100% 20%,0 100%);position:absolute;top:-94px;left:81px;}
-.containers{position:absolute;top:-52px;left:8px;display:flex;gap:2px;}
-.cbox{width:22px;height:18px;border-radius:2px;border:1.5px solid rgba(0,0,0,.15);}
-.cb1{background:#e53935;}.cb2{background:#1e88e5;}.cb3{background:#43a047;}.cb4{background:#fb8c00;}.cb5{background:#8e24aa;}
+.ship-wrap{position:absolute;bottom:44%;animation:shipSail 28s linear infinite;}
+@keyframes shipSail{0%{left:-320px;}100%{left:calc(100% + 320px)}}
+.ship-bob{animation:shipBob 3s ease-in-out infinite;}
+@keyframes shipBob{0%,100%{transform:translateY(0) rotate(-.6deg);}50%{transform:translateY(-7px) rotate(.8deg);}}
+
 .login-box{position:relative;z-index:2;background:rgba(255,255,255,.92);border:1px solid rgba(255,255,255,.7);border-radius:16px;padding:36px 32px 32px;width:360px;text-align:center;backdrop-filter:blur(14px);box-shadow:0 12px 40px rgba(10,60,120,.2);transition:background .8s,border-color .8s,box-shadow .8s;}
 .login-box.dark{background:rgba(10,18,40,.92);border:1px solid rgba(80,120,255,.3);box-shadow:0 12px 40px rgba(0,0,80,.6);}
 .login-box.dark h2{color:#a0c4ff;}.login-box.dark p{color:#6080b0;}
@@ -205,12 +198,81 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
     <div class="ocean-surface">
       <div class="wave wave1"></div><div class="wave wave2"></div><div class="wave wave3"></div>
     </div>
-    <div class="boat">
-      <div style="position:relative;">
-        <div class="boat-mast"></div><div class="boat-flag"></div>
-        <div class="boat-cabin"><div class="boat-cabin-window"></div><div class="boat-cabin-window2"></div></div>
-        <div class="containers"><div class="cbox cb1"></div><div class="cbox cb2"></div><div class="cbox cb3"></div><div class="cbox cb4"></div><div class="cbox cb5"></div></div>
-        <div class="boat-deck"></div><div class="boat-hull"></div>
+    <div class="ship-wrap" id="shipWrap">
+      <div class="ship-bob">
+        <svg width="320" height="130" viewBox="0 0 320 130" xmlns="http://www.w3.org/2000/svg">
+          <!-- Wake lines behind ship -->
+          <g opacity="0.35">
+            <ellipse cx="10" cy="112" rx="28" ry="4" fill="#fff"/>
+            <ellipse cx="30" cy="116" rx="18" ry="3" fill="#fff"/>
+          </g>
+          <!-- Hull -->
+          <path d="M18,90 L302,90 L288,118 Q160,126 32,118 Z" fill="#c07010"/>
+          <path d="M18,90 L302,90 L295,98 Q160,104 25,98 Z" fill="#e8a020"/>
+          <!-- Hull stripe -->
+          <rect x="20" y="90" width="282" height="5" rx="1" fill="#f5c040"/>
+          <!-- Deck -->
+          <rect x="30" y="78" width="260" height="13" rx="3" fill="#f5c040"/>
+          <!-- Superstructure / Bridge -->
+          <rect x="200" y="42" width="72" height="37" rx="4" fill="#e8e8e8" stroke="#c0c0c0" stroke-width="1.5"/>
+          <!-- Bridge windows -->
+          <rect x="206" y="50" width="14" height="11" rx="2" fill="#7ec8e3" stroke="#a0d8ef" stroke-width="1"/>
+          <rect x="224" y="50" width="14" height="11" rx="2" fill="#7ec8e3" stroke="#a0d8ef" stroke-width="1"/>
+          <rect x="242" y="50" width="14" height="11" rx="2" fill="#7ec8e3" stroke="#a0d8ef" stroke-width="1"/>
+          <rect x="260" y="50" width="6" height="11" rx="2" fill="#7ec8e3" stroke="#a0d8ef" stroke-width="1"/>
+          <!-- Bridge roof -->
+          <rect x="196" y="38" width="80" height="6" rx="2" fill="#c8c8c8"/>
+          <!-- Funnel / chimney -->
+          <rect x="248" y="18" width="20" height="24" rx="3" fill="#c0392b"/>
+          <rect x="245" y="14" width="26" height="6" rx="2" fill="#a02020"/>
+          <!-- Funnel smoke puffs -->
+          <circle cx="258" cy="10" r="5" fill="rgba(200,200,200,0.6)">
+            <animate attributeName="cy" values="10;2;10" dur="2.5s" repeatCount="indefinite"/>
+            <animate attributeName="r" values="5;8;5" dur="2.5s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.6;0;0.6" dur="2.5s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="262" cy="5" r="4" fill="rgba(210,210,210,0.5)">
+            <animate attributeName="cy" values="5;-4;5" dur="2s" repeatCount="indefinite"/>
+            <animate attributeName="r" values="4;7;4" dur="2s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.5;0;0.5" dur="2s" repeatCount="indefinite"/>
+          </circle>
+          <!-- Mast -->
+          <line x1="230" y1="38" x2="230" y2="8" stroke="#8b5e3c" stroke-width="3"/>
+          <!-- Flag -->
+          <polygon points="230,8 250,14 230,20" fill="#e03030"/>
+          <!-- Radar dish -->
+          <circle cx="228" cy="36" r="5" fill="none" stroke="#888" stroke-width="1.5"/>
+          <line x1="228" y1="36" x2="228" y2="28" stroke="#888" stroke-width="1.5"/>
+          <!-- Crane arm -->
+          <line x1="160" y1="78" x2="160" y2="40" stroke="#8b8b8b" stroke-width="3"/>
+          <line x1="160" y1="40" x2="120" y2="55" stroke="#8b8b8b" stroke-width="2"/>
+          <line x1="120" y1="55" x2="120" y2="78" stroke="#8b8b8b" stroke-width="1.5" stroke-dasharray="3,3"/>
+          <!-- CONTAINERS - stack on deck -->
+          <!-- Row 1 (bottom) -->
+          <rect x="36"  y="60" width="36" height="19" rx="2" fill="#e53935" stroke="#c0392b" stroke-width="1"/>
+          <rect x="74"  y="60" width="36" height="19" rx="2" fill="#1e88e5" stroke="#1565c0" stroke-width="1"/>
+          <rect x="112" y="60" width="36" height="19" rx="2" fill="#43a047" stroke="#2e7d32" stroke-width="1"/>
+          <rect x="166" y="63" width="30" height="16" rx="2" fill="#fb8c00" stroke="#e65100" stroke-width="1"/>
+          <!-- Row 2 (top) -->
+          <rect x="36"  y="42" width="36" height="19" rx="2" fill="#8e24aa" stroke="#6a1b9a" stroke-width="1"/>
+          <rect x="74"  y="42" width="36" height="19" rx="2" fill="#fb8c00" stroke="#e65100" stroke-width="1"/>
+          <rect x="112" y="42" width="36" height="19" rx="2" fill="#e53935" stroke="#c0392b" stroke-width="1"/>
+          <!-- Row 3 (topmost - partial) -->
+          <rect x="44"  y="30" width="30" height="13" rx="2" fill="#00897b" stroke="#00695c" stroke-width="1"/>
+          <rect x="76"  y="30" width="30" height="13" rx="2" fill="#e53935" stroke="#c0392b" stroke-width="1"/>
+          <!-- Container ridge lines -->
+          <line x1="54"  y1="60" x2="54"  y2="79" stroke="rgba(0,0,0,.18)" stroke-width="1"/>
+          <line x1="92"  y1="60" x2="92"  y2="79" stroke="rgba(0,0,0,.18)" stroke-width="1"/>
+          <line x1="130" y1="60" x2="130" y2="79" stroke="rgba(0,0,0,.18)" stroke-width="1"/>
+          <line x1="54"  y1="42" x2="54"  y2="61" stroke="rgba(0,0,0,.18)" stroke-width="1"/>
+          <line x1="92"  y1="42" x2="92"  y2="61" stroke="rgba(0,0,0,.18)" stroke-width="1"/>
+          <line x1="130" y1="42" x2="130" y2="61" stroke="rgba(0,0,0,.18)" stroke-width="1"/>
+          <!-- Anchor chain hint -->
+          <circle cx="32" cy="95" r="3.5" fill="#8b8b8b"/>
+          <!-- Bow wave foam -->
+          <path d="M295,104 Q310,100 318,108 Q308,112 295,110 Z" fill="rgba(255,255,255,0.55)"/>
+          <path d="M290,112 Q308,108 316,116 Q304,119 290,117 Z" fill="rgba(255,255,255,0.35)"/>
+        </svg>
       </div>
     </div>
   </div>
