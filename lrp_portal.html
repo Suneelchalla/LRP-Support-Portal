@@ -110,7 +110,7 @@
   </div>
 </div>
 <script>
-const API_URL='https://script.google.com/macros/s/AKfycbxDf5IEEgL5eYY_-vYGAfZgPvAVfjgbGYceUu_lP3lnwrZpb2fO9xYxvgSvzM0D3oP2ZA/exec';
+const API_URL='https://script.google.com/macros/s/AKfycbxhLoo7EDwZoNg0doTt3IZ5F_dsK5kLJ4w0sWj0BmeA6j1V8gpdYAJZ-aiqWgAHDkytew/exec';
 
 const AGENT_QUOTES=[
   {text:"Every customer interaction is a chance to turn a problem into loyalty.",author:"LRP Wisdom"},
@@ -158,16 +158,33 @@ window.addEventListener('load',function(){
   }
 });
 
+// FIX #11: Removed hardcoded client-side admin bypass (was: admin / admin@lrp).
+// Admin login now goes through the server-side adminLogin action.
 async function handleLogin(){
   const u=document.getElementById('login-user').value.trim();
   const p=document.getElementById('login-pass').value;
   if(!u||!p){showMsg('login-msg','⚠ Enter username and password.','error');return;}
-  if(u.toLowerCase()==='admin'&&p==='admin@lrp'){
-    showMsg('login-msg','✅ Admin access granted','success');
-    setTimeout(()=>{window.location.href='admin.html';},1000);return;
-  }
+
   const btn=document.getElementById('login-btn');
-  btn.disabled=true;showMsg('login-msg','⏳ Verifying...','loading');
+  btn.disabled=true;
+  showMsg('login-msg','⏳ Verifying...','loading');
+
+  // Check admin login first (server-side only — no client bypass)
+  try{
+    const adminRes=await fetch(API_URL+'?'+new URLSearchParams({action:'adminLogin',username:u,password:p}));
+    const adminData=await adminRes.json();
+    if(adminData.success&&adminData.token){
+      sessionStorage.setItem('admin_token',adminData.token);
+      sessionStorage.setItem('admin_token_time',Date.now().toString());
+      showMsg('login-msg','✅ Admin access granted','success');
+      setTimeout(()=>{window.location.href='admin.html';},1000);
+      return;
+    }
+  }catch{
+    // Network error on admin check — fall through to agent login
+  }
+
+  // Regular agent login
   try{
     const res=await fetch(API_URL+'?'+new URLSearchParams({action:'login',username:u,password:p}));
     const data=await res.json();
@@ -289,7 +306,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 <div class="db-body">
   <div class="db-cards-row">
-
     <a class="db-card" href="Shift_Handover_V6.html">
       <span class="db-card-badge badge-ops">OPERATIONS</span>
       <span class="db-card-icon">📋</span>
@@ -297,9 +313,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="db-card-desc">Manage shift transitions, track ticket statuses, and generate handover reports for your team.</div>
       <div class="db-card-btn">OPEN MODULE →</div>
     </a>
-
     <div class="db-divider"></div>
-
     <a class="db-card" href="Support Ticket Logger_V7.html">
       <span class="db-card-badge badge-log">TRACKING</span>
       <span class="db-card-icon">⏱️</span>
@@ -307,9 +321,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="db-card-desc">Track ticket resolution times, follow the checklist, and log your shift summary.</div>
       <div class="db-card-btn">OPEN MODULE →</div>
     </a>
-
     <div class="db-divider"></div>
-
     <a class="db-card" href="credentials.html">
       <span class="db-card-badge badge-cred">SECURE</span>
       <span class="db-card-icon">🔐</span>
@@ -317,9 +329,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="db-card-desc">Access client login credentials — App URLs, User IDs and passwords for all environments.</div>
       <div class="db-card-btn">OPEN MODULE →</div>
     </a>
-
     <div class="db-divider"></div>
-
     <a class="db-card" href="shift_planner.html">
       <span class="db-card-badge badge-plan">SCHEDULE</span>
       <span class="db-card-icon">📅</span>
@@ -327,9 +337,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="db-card-desc">View your team shift schedule. Today's date is highlighted automatically.</div>
       <div class="db-card-btn">OPEN MODULE →</div>
     </a>
-
     <div class="db-divider"></div>
-
     <a class="db-card" href="Why_Not_Solved_HD_V1.html">
       <span class="db-card-badge badge-wns">LEARNING</span>
       <span class="db-card-icon">🧠</span>
@@ -337,7 +345,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="db-card-desc">Review escalation tickets assigned by admin. Submit your learning and how you'll solve it next time.</div>
       <div class="db-card-btn">OPEN MODULE →</div>
     </a>
-
   </div>
 </div>
 <div class="quote-bar">
