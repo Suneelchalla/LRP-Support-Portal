@@ -105,9 +105,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </style>
 </head>
 <body>
-
 <div class="toast" id="toast"></div>
-
 <div class="topbar">
   <div class="brand">
     <div class="brand-icon">🧠</div>
@@ -118,7 +116,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
   <div class="agent-lbl" id="agentLbl">👤 Loading...</div>
 </div>
-
 <div class="tab-row">
   <button class="tab-btn active" id="tbtn-pending" onclick="switchTab('pending')">
     ⚠️ ACTION REQUIRED <span class="badge" id="pendingBadge" style="display:none">0</span>
@@ -126,18 +123,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <button class="tab-btn" id="tbtn-completed" onclick="switchTab('completed')">✅ COMPLETED</button>
   <button class="tab-btn" id="tbtn-kb" onclick="switchTab('kb')">📚 KNOWLEDGE BASE</button>
 </div>
-
-<!-- PENDING -->
 <div class="tab-panel active" id="panel-pending">
   <div id="pendingContainer"><div class="loading">⏳ Loading assigned tickets...</div></div>
 </div>
-
-<!-- COMPLETED -->
 <div class="tab-panel" id="panel-completed">
   <div id="completedContainer"><div class="loading">⏳ Loading...</div></div>
 </div>
-
-<!-- KNOWLEDGE BASE -->
 <div class="tab-panel" id="panel-kb">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
     <input type="text" id="kbSearch" placeholder="🔍  Search by ticket, component, client, keyword..."
@@ -164,15 +155,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <div class="ib-id" id="fill-ticketId-display"></div>
         <div class="ib-summary" id="fill-summary-display"></div>
       </div>
-
       <div class="fs">
         <div class="fs-title">🎫 Ticket Details</div>
         <div class="form-grid g3">
-          <div class="field"><label>Client / Customer <span class="req">*</span></label>
-            <input type="text" id="f-client" placeholder="e.g. SWIRE"/></div>
+          <div class="field"><label>Client / Customer <span class="req">*</span></label><input type="text" id="f-client" placeholder="e.g. SWIRE"/></div>
           <div class="field"><label>Component <span class="req">*</span></label>
-            <select id="f-component">
-              <option value="">— Select —</option>
+            <select id="f-component"><option value="">— Select —</option>
               <option>Exports</option><option>Imports</option><option>Operations</option>
               <option>VSS</option><option>EMS</option><option>Cost</option>
               <option>Finance</option><option>Feeder Ops</option><option>CMR</option>
@@ -180,24 +168,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
               <option>Devops</option><option>Helpdesk</option>
             </select></div>
           <div class="field"><label>Priority <span class="req">*</span></label>
-            <select id="f-priority">
-              <option value="">— Select —</option>
+            <select id="f-priority"><option value="">— Select —</option>
               <option>Showstopper</option><option>Critical</option>
               <option>High</option><option>Medium</option><option>Low</option>
             </select></div>
         </div>
         <div class="form-grid">
           <div class="field"><label>Root Cause (as per Engg) <span class="req">*</span></label>
-            <select id="f-rootCause">
-              <option value="">— Select —</option>
+            <select id="f-rootCause"><option value="">— Select —</option>
               <option>Clarification</option><option>Bug Fix</option>
               <option>Data Correction</option><option>Config Change</option><option>Other</option>
             </select></div>
-          <div class="field"><label>Ticket Date <span class="req">*</span></label>
-            <input type="date" id="f-ticketDate"/></div>
+          <div class="field"><label>Ticket Date <span class="req">*</span></label><input type="date" id="f-ticketDate"/></div>
         </div>
       </div>
-
       <div class="fs">
         <div class="fs-title">🤔 Why Was It Not Solved by HD?</div>
         <div class="field" style="margin-bottom:10px;">
@@ -218,7 +202,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <textarea id="f-why" placeholder="Explain in detail why you escalated to engineering instead of resolving it yourself…"></textarea>
         </div>
       </div>
-
       <div class="fs">
         <div class="fs-title">💡 Learning & Future Action</div>
         <div class="field" style="margin-bottom:10px;">
@@ -230,7 +213,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <textarea id="f-nextTime" placeholder="Describe the exact steps you will take if you receive the same or similar case in future…"></textarea>
         </div>
       </div>
-
       <div class="fs">
         <div class="fs-title">⏱ Engineering Resolution Time</div>
         <div class="field">
@@ -245,7 +227,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           </div>
         </div>
       </div>
-
       <div class="fs">
         <div class="fs-title">🧪 Sandbox Verification</div>
         <div class="field" style="margin-bottom:10px;">
@@ -261,12 +242,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <textarea id="f-sandboxResult" placeholder="Describe what happened when you reproduced in sandbox…" style="min-height:60px;"></textarea>
         </div>
       </div>
-
       <div class="field" style="margin-bottom:16px;">
         <label>Reference Link / Notes (Optional)</label>
         <textarea id="f-reference" placeholder="Paste any Confluence page, document link, or notes shared by engineering…" style="min-height:55px;"></textarea>
       </div>
-
       <div class="submit-row">
         <button class="btn-submit" id="submitBtn" onclick="submitReview()">✅ Submit Review</button>
         <button class="btn-cancel" onclick="closeFill()">Cancel</button>
@@ -291,78 +270,69 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <script>
-const API = 'https://script.google.com/macros/s/AKfycbxDf5IEEgL5eYY_-vYGAfZgPvAVfjgbGYceUu_lP3lnwrZpb2fO9xYxvgSvzM0D3oP2ZA/exec';
+const API='https://script.google.com/macros/s/AKfycbxhLoo7EDwZoNg0doTt3IZ5F_dsK5kLJ4w0sWj0BmeA6j1V8gpdYAJZ-aiqWgAHDkytew/exec';
 
-const AGENT = (function(){
-  try{const s=localStorage.getItem('lrp_session');if(s){const p=JSON.parse(s);return p.username||'';}}catch(e){}
+// FIX #6: Read agent name from portal session (lrp_session) first,
+// fall back to supportDesk_currentUser for standalone use.
+const AGENT=(function(){
+  try{
+    const s=localStorage.getItem('lrp_session');
+    if(s){const p=JSON.parse(s);if(p&&p.username)return p.username;}
+  }catch(e){}
+  try{
+    const u=localStorage.getItem('supportDesk_currentUser');
+    if(u&&u.trim())return u.trim();
+  }catch(e){}
   return '';
 })();
-document.getElementById('agentLbl').textContent = '👤 ' + (AGENT||'Agent').toUpperCase();
 
-let allPending=[], allCompleted=[], allKB=[], currentTicket=null;
+document.getElementById('agentLbl').textContent='👤 '+(AGENT||'Agent').toUpperCase();
 
-// ── TAB ──
+let allPending=[],allCompleted=[],allKB=[],currentTicket=null;
+
 function switchTab(t){
   ['pending','completed','kb'].forEach(x=>{
     document.getElementById('tbtn-'+x).classList.toggle('active',x===t);
     document.getElementById('panel-'+x).classList.toggle('active',x===t);
   });
-  if(t==='completed' && !allCompleted.length) loadCompleted();
-  if(t==='kb') loadKB();
+  if(t==='completed'&&!allCompleted.length)loadCompleted();
+  if(t==='kb')loadKB();
 }
 
-// ── TOAST ──
 function toast(msg,type='ok'){const el=document.getElementById('toast');el.textContent=msg;el.className='toast show '+type;setTimeout(()=>el.className='toast',3000);}
 
-// ── RADIO PILLS ──
 function initRadios(){
   document.querySelectorAll('.rpill input').forEach(r=>{
     r.addEventListener('change',()=>{
       const grp=r.name;
-      document.querySelectorAll('input[name="'+grp+'"]').forEach(x=>{
-        x.closest('.rpill').classList.remove('ck-green','ck-red','ck-blue');
-      });
+      document.querySelectorAll('input[name="'+grp+'"]').forEach(x=>{x.closest('.rpill').classList.remove('ck-green','ck-red','ck-blue');});
       const lbl=r.closest('.rpill');
       if(grp==='sandbox'){
         if(r.value==='Yes')lbl.classList.add('ck-green');
         else if(r.value==='No')lbl.classList.add('ck-red');
         else lbl.classList.add('ck-blue');
         document.getElementById('sandboxResultField').style.display=(r.value==='Yes')?'block':'none';
-      } else {
-        lbl.classList.add('ck-blue');
-      }
+      }else{lbl.classList.add('ck-blue');}
     });
   });
 }
 initRadios();
 
-function getRadioVal(name){
-  const el=document.querySelector('input[name="'+name+'"]:checked');
-  return el?el.value:'';
-}
+function getRadioVal(name){const el=document.querySelector('input[name="'+name+'"]:checked');return el?el.value:'';}
 
-// ── PILLS ──
-function priorityPill(p){
-  const m={Showstopper:'pill-red',Critical:'pill-red',High:'pill-orange',Medium:'pill-blue',Low:'pill-gray'};
-  return p?`<span class="pill ${m[p]||'pill-gray'}">${p}</span>`:'';
-}
+function priorityPill(p){const m={Showstopper:'pill-red',Critical:'pill-red',High:'pill-orange',Medium:'pill-blue',Low:'pill-gray'};return p?`<span class="pill ${m[p]||'pill-gray'}">${p}</span>`:'';}
 function compPill(c){return c?`<span class="pill pill-purple">${c}</span>`:'—';}
 function clientPill(c){return c?`<span class="pill pill-blue">${c}</span>`:'—';}
 
-// ── FORMAT DURATION ──
 function buildDurStr(){
   const d=parseInt(document.getElementById('f-dur-days').value)||0;
   const h=parseInt(document.getElementById('f-dur-hours').value)||0;
   const m=parseInt(document.getElementById('f-dur-mins').value)||0;
   if(!d&&!h&&!m)return'';
-  let parts=[];
-  if(d)parts.push(d+'d');
-  if(h)parts.push(h+'h');
-  if(m)parts.push(m+'m');
+  let parts=[];if(d)parts.push(d+'d');if(h)parts.push(h+'h');if(m)parts.push(m+'m');
   return parts.join(' ');
 }
 
-// ── LOAD PENDING ──
 async function loadPending(){
   if(!AGENT){document.getElementById('pendingContainer').innerHTML='<div class="loading">⚠️ Agent session not found. Please log in from the portal.</div>';return;}
   try{
@@ -396,7 +366,6 @@ function renderPending(){
     </div>`).join('')+'</div>';
 }
 
-// ── LOAD COMPLETED ──
 async function loadCompleted(){
   if(!AGENT){document.getElementById('completedContainer').innerHTML='<div class="loading">⚠️ Agent session not found.</div>';return;}
   try{
@@ -417,9 +386,7 @@ function renderCompleted(){
     <div class="ticket-card completed">
       <div class="tc-top">
         <div class="tc-id">🎫 ${t.ticketId||'—'}</div>
-        <div class="tc-pills">${priorityPill(t.priority)||''}${t.component?compPill(t.component):''}
-          <span class="completed-badge">✅ COMPLETED</span>
-        </div>
+        <div class="tc-pills">${priorityPill(t.priority)||''}${t.component?compPill(t.component):''}<span class="completed-badge">✅ COMPLETED</span></div>
       </div>
       <div class="tc-summary">${t.summary||'—'}</div>
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
@@ -433,7 +400,6 @@ function renderCompleted(){
     </div>`).join('')+'</div>';
 }
 
-// ── LOAD KB ──
 async function loadKB(){
   document.getElementById('kbContainer').innerHTML='<div class="loading">⏳ Loading...</div>';
   try{
@@ -479,7 +445,6 @@ function renderKB(list){
     </div>`).join('')+'</div>';
 }
 
-// ── FILL OVERLAY ──
 function openFill(i){
   currentTicket=allPending[i];
   document.getElementById('fill-ticketId-display').textContent='🎫 '+currentTicket.ticketId;
@@ -498,7 +463,6 @@ function openFill(i){
 }
 function closeFill(){document.getElementById('fillOverlay').classList.remove('open');}
 
-// ── SUBMIT ──
 async function submitReview(){
   const client=document.getElementById('f-client').value.trim();
   const component=document.getElementById('f-component').value;
@@ -511,7 +475,6 @@ async function submitReview(){
   const next=document.getElementById('f-nextTime').value.trim();
   const sandbox=getRadioVal('sandbox');
   const durStr=buildDurStr();
-
   if(!client){showMsg('⚠ Client / Customer is required.','error');return;}
   if(!component){showMsg('⚠ Please select a component.','error');return;}
   if(!priority){showMsg('⚠ Please select a priority.','error');return;}
@@ -523,7 +486,6 @@ async function submitReview(){
   if(!next){showMsg('⚠ Please fill in how you will solve it next time.','error');return;}
   if(!durStr){showMsg('⚠ Please enter how long engineering took to resolve.','error');return;}
   if(!sandbox){showMsg('⚠ Please select the sandbox option.','error');return;}
-
   const btn=document.getElementById('submitBtn');btn.disabled=true;
   showMsg('⏳ Submitting...','loading');
   try{
@@ -532,12 +494,8 @@ async function submitReview(){
       ticketId:currentTicket.ticketId,
       agentName:AGENT,
       client,component,priority,rootCause,ticketDate,
-      primaryReason:reason,
-      whyNotSolved:why,
-      whatLearned:learned,
-      howSolveNext:next,
-      engResolutionTime:durStr,
-      sandboxTried:sandbox,
+      primaryReason:reason,whyNotSolved:why,whatLearned:learned,howSolveNext:next,
+      engResolutionTime:durStr,sandboxTried:sandbox,
       sandboxResult:document.getElementById('f-sandboxResult').value.trim(),
       reference:document.getElementById('f-reference').value.trim(),
       submittedAt:new Date().toISOString()
@@ -546,19 +504,13 @@ async function submitReview(){
     const data=await res.json();
     if(data.success){
       toast('✅ Review submitted successfully!','ok');
-      closeFill();
-      allCompleted=[];
-      loadPending();
-    } else {
-      showMsg('⚠ Failed: '+(data.error||'Unknown error'),'error');
-      btn.disabled=false;
-    }
+      closeFill();allCompleted=[];loadPending();
+    }else{showMsg('⚠ Failed: '+(data.error||'Unknown error'),'error');btn.disabled=false;}
   }catch{showMsg('⚠ Connection error. Please try again.','error');btn.disabled=false;}
 }
 
 function showMsg(txt,type){const el=document.getElementById('fillMsg');el.textContent=txt;el.className='msg '+type;}
 
-// ── VIEW OVERLAY ──
 function openView(t){
   document.getElementById('viewTitle').textContent='🎫 '+t.ticketId;
   document.getElementById('viewSubtitle').textContent=(t.agentName||'Agent')+' · '+(t.ticketDate||'');
@@ -588,13 +540,10 @@ function closeView(){document.getElementById('viewOverlay').classList.remove('op
 
 ['fillOverlay','viewOverlay'].forEach(id=>{
   document.getElementById(id).addEventListener('click',e=>{
-    if(e.target===document.getElementById(id)){
-      id==='fillOverlay'?closeFill():closeView();
-    }
+    if(e.target===document.getElementById(id)){id==='fillOverlay'?closeFill():closeView();}
   });
 });
 
-// ── INIT ──
 loadPending();
 document.getElementById('tbtn-completed').addEventListener('click',()=>{if(!allCompleted.length)loadCompleted();});
 </script>
