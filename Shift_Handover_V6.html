@@ -126,7 +126,6 @@
   .field-tooltip .tt-label { font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
   .f-tooltip-wrap:hover .field-tooltip, .f-tooltip-wrap input:focus + .field-tooltip { display: block; }
   .f-tooltip-wrap.empty .field-tooltip { display: none !important; }
-  /* ── Single submit button styles ── */
   .btn-submit { width: 100%; background: linear-gradient(135deg,#0f766e,#0d9488); color: #fff; border: none; border-radius: 8px; padding: 12px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 14px; transition: opacity .2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
   .btn-submit:hover { opacity: .88; }
   .btn-submit:disabled { opacity: .5; cursor: not-allowed; }
@@ -189,11 +188,9 @@
 
 <div class="layout">
   <div class="left-panel">
-
     <div class="server-loaded-banner" id="serverLoadedBanner">
       ✅ This shift handover is live on the server — all agents can see it.
     </div>
-
     <div class="section-card">
       <div class="section-label">Shift Details</div>
       <div class="grid-2">
@@ -205,7 +202,6 @@
         </div>
       </div>
     </div>
-
     <div class="section-card">
       <div class="section-label">Team Members</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
@@ -294,13 +290,11 @@
       </div>
     </div>
 
-    <!-- SINGLE SUBMIT BUTTON — no more two-step flow -->
     <button class="btn-submit" id="btnSubmitHandover" onclick="submitHandover()">
       ✔ Submit Handover
     </button>
     <div class="submit-status" id="submitStatus"></div>
-
-  </div><!-- /left-panel -->
+  </div>
 
   <div class="right-panel">
     <div class="section-label" style="margin-bottom:10px;">Handover Summary</div>
@@ -352,8 +346,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ── CONFIG ──────────────────────────────────────────────────────────────────
-const API_URL = 'https://script.google.com/macros/s/AKfycbxDf5IEEgL5eYY_-vYGAfZgPvAVfjgbGYceUu_lP3lnwrZpb2fO9xYxvgSvzM0D3oP2ZA/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxhLoo7EDwZoNg0doTt3IZ5F_dsK5kLJ4w0sWj0BmeA6j1V8gpdYAJZ-aiqWgAHDkytew/exec';
 
 const CLIENT_MAP = {
   "SWIPHX":"SWIRE","SWI":"SWIRE","HSL":"HSL","MILAHA":"MILAHA","MIL":"MILAHA",
@@ -389,7 +382,7 @@ let selected      = {"ms-current":[],"ms-next":[]};
 let ssSelected    = {"ss-mails":"","ss-jira":""};
 let ticketCounter = 0;
 
-// ── INIT ──────────────────────────────────────────────────────────────────────
+// FIX #3: buildDropdowns() completes before loadShift() is called
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("shiftDate").value = todayStr();
   buildDropdowns();
@@ -402,7 +395,6 @@ document.addEventListener("click", e => {
     document.querySelectorAll(".ms-dropdown,.ss-dropdown").forEach(d => d.classList.remove("open"));
 });
 
-// ── UTILS ─────────────────────────────────────────────────────────────────────
 function todayStr() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
@@ -458,7 +450,6 @@ function buildTicketStubs(idsStr, count, pendingCount) {
   }));
 }
 
-// ── DROPDOWNS ─────────────────────────────────────────────────────────────────
 function buildDropdowns() {
   ["ms-current","ms-next"].forEach(id => {
     const dd = document.getElementById(id+"-dd");
@@ -609,7 +600,6 @@ function setSSValues(mailsVal, jiraVal) {
   if(!disabled&&!solo){buildSSDropdown("ss-mails");buildSSDropdown("ss-jira");}
 }
 
-// ── TICKET MANAGEMENT ─────────────────────────────────────────────────────────
 const catColorMap = {showstopper:"#E24B4A",high:"#BA7517",escalated:"#7C3AED",longpending:"#888780"};
 
 function addTicket(cat, data={}) {
@@ -726,10 +716,8 @@ function updateStats() {
   document.getElementById("statCompleted").textContent=all.length-pend;
 }
 
-// ── SHIFT CHANGE ──────────────────────────────────────────────────────────────
 function onShiftChange() { updateImportBtn(); loadShift(); }
 
-// ── LOAD SHIFT: server first → localStorage fallback ─────────────────────────
 async function loadShift() {
   tickets={showstopper:[],high:[],escalated:[],longpending:[]};
   setDropdown("ms-current",[]); setDropdown("ms-next",[]);
@@ -739,19 +727,16 @@ async function loadShift() {
   CATS.forEach(c=>renderCatBody(c.key));
   updateStats();
   currentLog=null;
-
   document.getElementById("logEmpty").style.display="";
   document.getElementById("logContent").style.display="none";
   document.getElementById("btnFullLog").style.display="none";
   document.getElementById("submitStatus").className="submit-status";
   document.getElementById("serverLoadedBanner").classList.remove("visible");
-
   const btn=document.getElementById("btnSubmitHandover");
   btn.disabled=false;
   btn.textContent="✔ Submit Handover";
 
-  // ── STEP 1: Try server (shared across all agents) ──
-  try {
+  try{
     const res=await fetch(API_URL+"?action=getHandovers&t="+Date.now());
     const data=await res.json();
     if(data.success&&data.handovers&&data.handovers.length){
@@ -801,10 +786,8 @@ async function loadShift() {
     showToast("Could not reach server — checking local data.","warn");
   }
 
-  // ── STEP 2: localStorage fallback ──
   const raw=localStorage.getItem(shiftKey(getDate(),getShift()));
   if(!raw){
-    // Pre-fill current members from previous shift's nextMembers
     const prev=prevShift(getShift());
     const prevRaw=localStorage.getItem(shiftKey(getDate(),prev));
     if(prevRaw){
@@ -844,7 +827,6 @@ async function loadShift() {
   }catch(e){}
 }
 
-// ── SAVE TO LOCALSTORAGE ──────────────────────────────────────────────────────
 function saveShift(log) {
   localStorage.setItem(shiftKey(getDate(),getShift()), JSON.stringify({
     currentMembers:selected["ms-current"],
@@ -857,11 +839,9 @@ function saveShift(log) {
   renderSaved();
 }
 
-// ── SINGLE SUBMIT HANDOVER ────────────────────────────────────────────────────
 async function submitHandover() {
   const date=getDate(), shift=getShift();
   if(!date||!shift){showToast("Please set date and shift.","warn");return;}
-
   const all=Object.values(tickets).flat();
   const pending=all.filter(t=>t.status==="Pending").length;
   const completed=all.length-pending;
@@ -883,40 +863,25 @@ async function submitHandover() {
     tickets:JSON.parse(JSON.stringify(tickets)),
     submittedAt
   };
-
-  // Save locally first (resilience)
   saveShift(log);
   currentLog=log;
   showSummary(log);
-
   const btn=document.getElementById("btnSubmitHandover");
   btn.disabled=true;
   btn.textContent="⏳ Submitting...";
   showSubmitStatus("⏳ Submitting to server...","loading");
-
   try{
     const params=new URLSearchParams({
-      action:"saveHandover",
-      date, shift,
+      action:"saveHandover",date,shift,
       currentMembers:log.currentMembers.join(", "),
       nextMembers:log.nextMembers.join(", "),
       mailsHandledBy:log.mailsHandledBy||"",
       jiraHandledBy:log.jiraHandledBy||"",
-      totalTickets:all.length,
-      pendingTickets:pending,
-      completedTickets:completed,
-      showstopperCount:cs.showstopperCount,
-      showstopperPending:cs.showstopperPending,
-      showstopperIds:cs.showstopperIds,
-      highCount:cs.highCount,
-      highPending:cs.highPending,
-      highIds:cs.highIds,
-      escalatedCount:cs.escalatedCount,
-      escalatedPending:cs.escalatedPending,
-      escalatedIds:cs.escalatedIds,
-      longpendingCount:cs.longpendingCount,
-      longpendingPending:cs.longpendingPending,
-      longpendingIds:cs.longpendingIds,
+      totalTickets:all.length,pendingTickets:pending,completedTickets:completed,
+      showstopperCount:cs.showstopperCount,showstopperPending:cs.showstopperPending,showstopperIds:cs.showstopperIds,
+      highCount:cs.highCount,highPending:cs.highPending,highIds:cs.highIds,
+      escalatedCount:cs.escalatedCount,escalatedPending:cs.escalatedPending,escalatedIds:cs.escalatedIds,
+      longpendingCount:cs.longpendingCount,longpendingPending:cs.longpendingPending,longpendingIds:cs.longpendingIds,
       infoBox1:(log.infoBoxes&&log.infoBoxes[0])||"",
       infoBox2:(log.infoBoxes&&log.infoBoxes[1])||"",
       infoBox3:(log.infoBoxes&&log.infoBoxes[2])||"",
@@ -942,11 +907,9 @@ async function submitHandover() {
   }
 }
 
-// ── IMPORT PENDING: server first → localStorage fallback ──────────────────────
+// FIX #4: importPending no longer overwrites info boxes if current shift has content
 async function importPending() {
   const prev=prevShift(getShift());
-
-  // Try server first
   try{
     const res=await fetch(API_URL+"?action=getHandovers&t="+Date.now());
     const data=await res.json();
@@ -969,8 +932,13 @@ async function importPending() {
             tickets[c.key].push({...t,_id:uid()}); total++;
           });
         });
-        const infoBoxVals=[rec.infoBox1||"",rec.infoBox2||"",rec.infoBox3||"",rec.infoBox4||""];
-        if(infoBoxVals.some(b=>b&&b.trim())) setInfoBoxes(infoBoxVals);
+        // FIX #4: Only import info boxes if the current shift's boxes are all empty
+        const currentBoxes=getInfoBoxes();
+        const currentHasNotes=currentBoxes.some(b=>b&&b.trim());
+        if(!currentHasNotes){
+          const infoBoxVals=[rec.infoBox1||"",rec.infoBox2||"",rec.infoBox3||"",rec.infoBox4||""];
+          if(infoBoxVals.some(b=>b&&b.trim())) setInfoBoxes(infoBoxVals);
+        }
         if(!total){showToast("No pending tickets in "+prev+" shift (server)","warn");return;}
         CATS.forEach(c=>renderCatBody(c.key));
         updateStats();
@@ -978,9 +946,8 @@ async function importPending() {
         return;
       }
     }
-  }catch(err){/* fall through to localStorage */}
+  }catch(err){}
 
-  // localStorage fallback
   const raw=localStorage.getItem(shiftKey(getDate(),prev));
   if(!raw){showToast("No saved data for "+prev,"warn");return;}
   try{
@@ -991,19 +958,19 @@ async function importPending() {
         tickets[c.key].push({...t,_id:uid()}); total++;
       });
     });
-    if(savedData.infoBoxes&&savedData.infoBoxes.some(b=>b&&b.trim())){
+    // FIX #4: Same guard for localStorage path
+    const currentBoxes=getInfoBoxes();
+    const currentHasNotes=currentBoxes.some(b=>b&&b.trim());
+    if(!currentHasNotes&&savedData.infoBoxes&&savedData.infoBoxes.some(b=>b&&b.trim())){
       setInfoBoxes(savedData.infoBoxes);
-      showToast(`Imported ${total} pending ticket(s) + info notes from ${prev} (local)`);
-    } else {
-      if(!total){showToast("No pending tickets in "+prev,"warn");return;}
-      showToast(`Imported ${total} pending ticket(s) from ${prev} (local)`);
     }
+    if(!total){showToast("No pending tickets in "+prev,"warn");return;}
+    showToast(`Imported ${total} pending ticket(s) from ${prev} (local)`);
     CATS.forEach(c=>renderCatBody(c.key));
     updateStats();
   }catch(e){showToast("Failed to import","error");}
 }
 
-// ── SHOW SUMMARY ──────────────────────────────────────────────────────────────
 function showSummary(log) {
   document.getElementById("logEmpty").style.display="none";
   document.getElementById("logContent").style.display="block";
@@ -1044,7 +1011,6 @@ function showSummary(log) {
   });
 }
 
-// ── MISC ──────────────────────────────────────────────────────────────────────
 function updateImportBtn() {
   document.getElementById("importBtn").textContent="⬇ Import Pending from "+prevShift(getShift());
 }
@@ -1063,7 +1029,6 @@ function renderSaved() {
   });
 }
 
-// ── FULL LOG OVERLAY ──────────────────────────────────────────────────────────
 function openFullLog() {
   if(!currentLog) return;
   const log=currentLog;
@@ -1130,7 +1095,6 @@ function openFullLog() {
 }
 function closeFullLog() { document.getElementById("fulllogOverlay").classList.remove("open"); }
 
-// ── MAIL HANDOVER ─────────────────────────────────────────────────────────────
 function mailHandover() {
   const log=currentLog; if(!log) return;
   const all=Object.values(log.tickets).flat();
@@ -1196,7 +1160,6 @@ function mailHandover() {
   showToast("Mail composer opened in new tab!","info");
 }
 
-// ── PRINT / PDF ───────────────────────────────────────────────────────────────
 function printHandover() {
   const log=currentLog; if(!log) return;
   const all=Object.values(log.tickets).flat();
@@ -1301,7 +1264,6 @@ function printHandover() {
   const win=window.open("","_blank"); win.document.write(html); win.document.close();
 }
 
-// ── EXPORT EXCEL ──────────────────────────────────────────────────────────────
 function exportCSV() {
   const wb=XLSX.utils.book_new();const ws={};let r=0;
   function setCell(row,col,value,style){const addr=XLSX.utils.encode_cell({r:row,c:col});ws[addr]={v:value,t:typeof value==='number'?'n':'s',s:style||{}};}
