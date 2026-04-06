@@ -30,7 +30,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .wave2{bottom:44%;background:rgba(255,255,255,.14);border-radius:50% 50% 0 0/30px 30px 0 0;animation:waveDrift 9s ease-in-out infinite reverse;}
 .wave3{bottom:40%;background:rgba(255,255,255,.08);border-radius:50% 50% 0 0/20px 20px 0 0;animation:waveDrift 11s ease-in-out infinite;}
 @keyframes waveDrift{0%,100%{transform:translateX(0);}50%{transform:translateX(5%);}}
-
 .login-box{position:relative;z-index:2;background:rgba(255,255,255,.92);border:1px solid rgba(255,255,255,.7);border-radius:16px;padding:36px 32px 32px;width:360px;text-align:center;backdrop-filter:blur(14px);box-shadow:0 12px 40px rgba(10,60,120,.2);transition:background .8s,border-color .8s,box-shadow .8s;}
 .login-box.dark{background:rgba(10,18,40,.92);border:1px solid rgba(80,120,255,.3);box-shadow:0 12px 40px rgba(0,0,80,.6);}
 .login-box.dark h2{color:#a0c4ff;}.login-box.dark p{color:#6080b0;}
@@ -141,7 +140,6 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
 .ho-overlay{display:none;position:fixed;inset:0;background:rgba(10,50,100,.5);z-index:9999;align-items:center;justify-content:center;padding:20px;}
 .ho-overlay.open{display:flex;}
 .ho-box{background:#fff;border:1.5px solid #c8dff0;border-radius:12px;width:100%;max-width:720px;max-height:88vh;overflow-y:auto;padding:28px 32px;position:relative;box-shadow:0 12px 40px rgba(10,50,100,.2);}
-
 /* ── SHIFT PLANNER STYLES ── */
 .planner-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
 .planner-month-nav{display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #c8dff0;border-radius:8px;padding:6px 12px;}
@@ -169,8 +167,6 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
 .sp-TODAY{outline:2.5px solid #1a7db5!important;outline-offset:-2px;}.col-today{background:#eef8ff!important;}
 .planner-unsaved-badge{display:none;background:#fff3d8;border:1.5px solid #f5c840;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;color:#8a6010;}
 .planner-unsaved-badge.visible{display:inline-block;}
-
-/* cell editor */
 #planner-cell-editor{display:none;position:fixed;z-index:9999;background:#fff;border:1.5px solid #b8d4ee;border-radius:10px;padding:14px 16px;box-shadow:0 8px 32px rgba(26,90,160,.14);min-width:200px;}
 .pce-shift-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px;}
 .pce-chip{padding:7px 4px;border:1.5px solid #c8dff0;border-radius:8px;font-size:11px;font-weight:700;text-align:center;cursor:pointer;transition:all .15s;background:#f4f9ff;}
@@ -178,7 +174,6 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
 .pce-chip.selected{border-color:#1a7db5;background:#1a7db5;color:#fff;}
 .pce-chip-empty{padding:7px 4px;border:1.5px dashed #c0c0c0;border-radius:8px;font-size:10px;font-weight:600;text-align:center;cursor:pointer;transition:all .15s;background:#f8f8f8;color:#909090;}
 .pce-chip-empty:hover,.pce-chip-empty.selected{border-color:#a0a0a0;background:#e8e8e8;color:#606060;}
-
 .wns-export-btn{padding:9px 20px;background:linear-gradient(135deg,#1a8c5c,#138048);border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;display:inline-flex;align-items:center;gap:8px;transition:opacity .2s;box-shadow:0 4px 14px rgba(26,140,92,.3);}
 .wns-export-btn:hover{opacity:.88;}
 </style>
@@ -194,7 +189,6 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
     <div class="ocean-surface">
       <div class="wave wave1"></div><div class="wave wave2"></div><div class="wave wave3"></div>
     </div>
-
   </div>
   <div class="login-box">
     <div class="login-logo">🚢</div>
@@ -337,30 +331,20 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
       </div>
     </div>
 
-    <!-- ══════════════════════════════════════════════════════════════
-         SHIFT PLANNER — REDESIGNED
-    ══════════════════════════════════════════════════════════════ -->
+    <!-- SHIFT PLANNER -->
     <div class="tab-panel" id="panel-planner">
       <div class="page-title">SHIFT PLANNER</div>
       <div class="page-sub">Navigate by month, click any cell to assign a shift, then <strong style="color:#1a8c5c;">Submit to Agents</strong> to publish.</div>
-
       <div class="planner-toolbar">
-        <!-- Month navigation -->
         <div class="planner-month-nav">
           <button onclick="plannerPrevMonth()" title="Previous month">‹</button>
           <span class="planner-month-label" id="planner-month-label">April 2026</span>
           <button onclick="plannerNextMonth()" title="Next month">›</button>
         </div>
-
-        <!-- Year jump -->
         <select class="planner-year-select" id="planner-year-select" onchange="plannerJumpYear(this.value)"></select>
-
-        <!-- Search -->
         <input type="text" id="planner-search" placeholder="🔍  Search name or ID..."
           style="background:#f4f9ff;border:1.5px solid #b8d4ee;border-radius:6px;padding:7px 12px;font-size:13px;color:#1a3a5c;outline:none;width:210px;"
           oninput="renderPlanner()"/>
-
-        <!-- Shift filter pills -->
         <div style="display:flex;gap:6px;flex-wrap:wrap;">
           <button class="planner-filter-btn active" data-shift="ALL" onclick="setPlannerFilter(this)">All</button>
           <button class="planner-filter-btn" data-shift="D1" onclick="setPlannerFilter(this)">D1</button>
@@ -370,41 +354,19 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
           <button class="planner-filter-btn" data-shift="N" onclick="setPlannerFilter(this)">Night</button>
           <button class="planner-filter-btn" data-shift="W/OFF" onclick="setPlannerFilter(this)">W/OFF</button>
         </div>
-
         <div style="margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
           <span class="planner-unsaved-badge" id="planner-unsaved-badge">● Unsaved changes</span>
           <span style="font-size:11px;color:#1a8c5c;font-weight:600;" id="planner-saved-label"></span>
           <span style="font-size:11px;color:#3a7aaa;font-weight:600;" id="planner-today-label"></span>
-          <!-- Hidden file input for Excel import -->
           <input type="file" id="planner-excel-input" accept=".xlsx,.xls" style="display:none;" onchange="importPlannerExcel(this)"/>
-          <button onclick="downloadPlannerTemplate()"
-            style="padding:10px 16px;background:linear-gradient(135deg,#1a5a90,#0a3d78);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;"
-            title="Download Excel template to fill in shifts">
-            ⬇ Template
-          </button>
-          <button onclick="document.getElementById('planner-excel-input').click()"
-            style="padding:10px 16px;background:linear-gradient(135deg,#d07020,#a05010);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;"
-            title="Import shifts from filled Excel template">
-            ⬆ Import Excel
-          </button>
-          <button onclick="exportPlannerExcel()"
-            style="padding:10px 16px;background:linear-gradient(135deg,#185FA5,#0a3d78);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;"
-            title="Export current planner to Excel">
-            ⬇ Export Excel
-          </button>
-          <button onclick="publishPlanner()" id="planner-publish-btn"
-            style="padding:10px 22px;background:linear-gradient(135deg,#1a8c5c,#138048);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:13px;font-weight:700;letter-spacing:1px;">
-            📤 Submit to Agents
-          </button>
+          <button onclick="downloadPlannerTemplate()" style="padding:10px 16px;background:linear-gradient(135deg,#1a5a90,#0a3d78);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;" title="Download Excel template to fill in shifts">⬇ Template</button>
+          <button onclick="document.getElementById('planner-excel-input').click()" style="padding:10px 16px;background:linear-gradient(135deg,#d07020,#a05010);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;" title="Import shifts from filled Excel template">⬆ Import Excel</button>
+          <button onclick="exportPlannerExcel()" style="padding:10px 16px;background:linear-gradient(135deg,#185FA5,#0a3d78);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;" title="Export current planner to Excel">⬇ Export Excel</button>
+          <button onclick="publishPlanner()" id="planner-publish-btn" style="padding:10px 22px;background:linear-gradient(135deg,#1a8c5c,#138048);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:13px;font-weight:700;letter-spacing:1px;">📤 Submit to Agents</button>
         </div>
       </div>
-
-      <!-- Legend -->
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;" id="planner-legend"></div>
-      <div style="font-size:11px;color:#3a7aaa;font-weight:600;margin-bottom:10px;">
-        ✏️ Click any cell to assign a shift &nbsp;|&nbsp; Empty = not yet planned &nbsp;|&nbsp; Click an assigned cell to change or clear it
-      </div>
-
+      <div style="font-size:11px;color:#3a7aaa;font-weight:600;margin-bottom:10px;">✏️ Click any cell to assign a shift &nbsp;|&nbsp; Empty = not yet planned &nbsp;|&nbsp; Click an assigned cell to change or clear it</div>
       <div style="overflow-x:auto;border:1.5px solid #c8dff0;border-radius:10px;background:#fff;box-shadow:0 2px 8px rgba(26,90,160,.05);">
         <div id="planner-table-container" style="min-width:900px;"><div class="loading">⏳ LOADING...</div></div>
       </div>
@@ -427,19 +389,12 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
         <div class="form-panel-title purple" id="wnsFormTitle">➕ Assign Ticket for Review</div>
         <input type="hidden" id="wns-edit-id"/>
         <div class="form-grid">
-          <div class="form-field">
-            <label>Jira Ticket ID *</label>
-            <input type="text" id="wns-ticketId" placeholder="e.g. SWIPHX-1234" oninput="this.value=this.value.toUpperCase()"/>
-          </div>
-          <div class="form-field">
-            <label>Assign To Agent *</label>
-            <select id="wns-agent"><option value="">— Select Agent —</option></select>
-          </div>
+          <div class="form-field"><label>Jira Ticket ID *</label><input type="text" id="wns-ticketId" placeholder="e.g. SWIPHX-1234" oninput="this.value=this.value.toUpperCase()"/></div>
+          <div class="form-field"><label>Assign To Agent *</label><select id="wns-agent"><option value="">— Select Agent —</option></select></div>
         </div>
         <div class="form-field" style="margin-bottom:14px;">
           <label style="display:block;font-size:10px;font-weight:700;letter-spacing:1.5px;color:#1a7db5;text-transform:uppercase;margin-bottom:4px;">Issue Summary / Description *</label>
-          <textarea id="wns-summary" placeholder="Paste the Jira ticket summary here so the agent understands what this ticket is about…"
-            style="width:100%;background:#f4f9ff;border:1.5px solid #b8d4ee;border-radius:6px;padding:9px 12px;font-size:13px;color:#1a3a5c;outline:none;resize:vertical;min-height:80px;font-family:inherit;transition:border-color .2s;"></textarea>
+          <textarea id="wns-summary" placeholder="Paste the Jira ticket summary here so the agent understands what this ticket is about…" style="width:100%;background:#f4f9ff;border:1.5px solid #b8d4ee;border-radius:6px;padding:9px 12px;font-size:13px;color:#1a3a5c;outline:none;resize:vertical;min-height:80px;font-family:inherit;transition:border-color .2s;"></textarea>
         </div>
         <div class="form-actions">
           <button class="btn-purple" id="wns-submit-btn" onclick="submitWNSAssign()">💾 Assign Ticket</button>
@@ -448,20 +403,15 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
         </div>
       </div>
       <div class="stats-row">
-        <div class="stat-card"><div class="stat-num blue"   id="wns-s-total">—</div><div class="stat-lbl">Total Assigned</div></div>
+        <div class="stat-card"><div class="stat-num blue" id="wns-s-total">—</div><div class="stat-lbl">Total Assigned</div></div>
         <div class="stat-card"><div class="stat-num orange" id="wns-s-pending">—</div><div class="stat-lbl">Pending Review</div></div>
-        <div class="stat-card"><div class="stat-num green"  id="wns-s-completed">—</div><div class="stat-lbl">Completed</div></div>
+        <div class="stat-card"><div class="stat-num green" id="wns-s-completed">—</div><div class="stat-lbl">Completed</div></div>
         <div class="stat-card"><div class="stat-num" style="color:#6030a0;" id="wns-s-agents">—</div><div class="stat-lbl">Agents Reviewed</div></div>
       </div>
-
-      <!-- ── WNS SECTION TITLE + EXPORT BUTTON ── -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:10px;">
         <div class="section-title" style="margin-bottom:0;">📋 All Assigned Tickets</div>
-        <button class="wns-export-btn" onclick="exportWNSExcel()">
-          ⬇ Export to Excel
-        </button>
+        <button class="wns-export-btn" onclick="exportWNSExcel()">⬇ Export to Excel</button>
       </div>
-
       <div class="table-wrap">
         <div class="search-bar">
           <input type="text" id="wnsSearchInput" placeholder="🔍  Search by ticket ID, agent, summary..." oninput="filterWNSTable()"/>
@@ -491,15 +441,13 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
 </div>
 
 <script>
-const API_URL='https://script.google.com/macros/s/AKfycbyenGVPixxjpCX06QeS8po56fr0XG7co2wVwRvzhaLOGaKSdh4NWAZzG7q9c1aB6v1eSw/exec';
+const API_URL='https://script.google.com/macros/s/AKfycbxDf5IEEgL5eYY_-vYGAfZgPvAVfjgbGYceUu_lP3lnwrZpb2fO9xYxvgSvzM0D3oP2ZA/exec';
 let adminToken=null;
 let allUsers=[],allCreds=[],allLogs=[],filteredLogs=[],allHandovers=[],filteredHandovers=[];
 let allWNSTickets=[],filteredWNSTickets=[];
 let selectedAgent=null,currentTab='agents';
 
-// ═══════════════════════════════════════════════════════
-//  LOGIN / AUTH
-// ═══════════════════════════════════════════════════════
+// ── AUTH ──────────────────────────────────────────────────────────────────────
 window.addEventListener('load',()=>{
   const savedToken=sessionStorage.getItem('admin_token');
   const savedTime=sessionStorage.getItem('admin_token_time');
@@ -531,7 +479,7 @@ async function adminLogin(){
       sessionStorage.setItem('admin_token',adminToken);
       sessionStorage.setItem('admin_token_time',Date.now().toString());
       showDashboard();
-    }else if(data.error==='ADMIN_NOT_CONFIGURED'){err.textContent='⚠ Admin not configured.';err.style.display='block';}
+    }else if(data.error==='ADMIN_NOT_CONFIGURED'){err.textContent='⚠ Admin not configured in Script Properties.';err.style.display='block';}
     else{err.textContent='⚠ Invalid admin credentials.';err.style.display='block';}
   }catch{err.textContent='⚠ Connection error.';err.style.display='block';}
   btn.disabled=false;btn.textContent='⚓ Sign In';
@@ -546,9 +494,7 @@ function adminLogout(){
 }
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('loginScreen').style.display!=='none')adminLogin();});
 
-// ═══════════════════════════════════════════════════════
-//  UTILS
-// ═══════════════════════════════════════════════════════
+// ── UTILS ─────────────────────────────────────────────────────────────────────
 function switchTab(tab){
   currentTab=tab;
   ['agents','creds','tracker','handover','planner','wns'].forEach(t=>{
@@ -578,9 +524,7 @@ function getStatus(lastLogin){if(!lastLogin)return{label:'NEVER',cls:'badge-offl
 function envClass(e){const v=(e||'').toLowerCase();if(v==='production')return'env-prod';if(v==='uat')return'env-uat';if(v==='development')return'env-dev';if(v==='staging')return'env-staging';if(v==='train 2')return'env-train2';if(v==='train')return'env-train';if(v==='ecom')return'env-ecom';if(v==='testing')return'env-testing';return'env-default';}
 function normalizeDateToClient(val){if(!val)return'';var s=val.toString().trim();if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;if(/^\d{2}-\d{2}-\d{4}$/.test(s)){var p=s.split('-');return p[2]+'-'+p[1]+'-'+p[0];}try{var d=new Date(s);if(!isNaN(d.getTime()))return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}catch(e){}return s;}
 
-// ═══════════════════════════════════════════════════════
-//  AGENTS
-// ═══════════════════════════════════════════════════════
+// ── AGENTS ────────────────────────────────────────────────────────────────────
 async function loadUsers(){document.getElementById('tableContainer').innerHTML='<div class="loading">⏳ FETCHING AGENT DATA...</div>';try{const res=await fetch(API_URL+'?action=getUsers&t='+Date.now());const data=await res.json();if(data.success){allUsers=data.users||[];updateStats(allUsers);renderTable(allUsers);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}else document.getElementById('tableContainer').innerHTML='<div class="error-msg">⚠ Failed to load data.</div>';}catch{document.getElementById('tableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}}
 function updateStats(users){const today=users.filter(u=>u.lastLogin&&(new Date()-new Date(u.lastLogin))/3600000<24).length;const week=users.filter(u=>{if(!u.lastLogin)return false;const h=(new Date()-new Date(u.lastLogin))/3600000;return h>=24&&h<168;}).length;const never=users.filter(u=>!u.lastLogin).length;document.getElementById('s-total').textContent=users.length;document.getElementById('s-online').textContent=today;document.getElementById('s-recent').textContent=week;document.getElementById('s-inactive').textContent=never;}
 function renderTable(users){if(!users.length){document.getElementById('tableContainer').innerHTML='<div class="loading" style="color:#3a7aaa;">No agents found.</div>';document.getElementById('filterCount').textContent='';return;}document.getElementById('filterCount').textContent=users.length+' agents';const rows=users.map((u,i)=>{const st=getStatus(u.lastLogin);const defBadge=u.isDefault?'<span style="background:#fff8d8;border:1px solid #e8d040;border-radius:3px;padding:2px 7px;font-size:10px;font-weight:700;color:#705010;margin-left:6px;">TEMP PW</span>':'';return'<tr><td style="color:#3a7aaa;font-size:12px;font-weight:600;">'+(i+1)+'</td><td style="font-weight:700;color:#0a3d78;">👤 '+u.username+defBadge+'</td><td>'+(u.email||'—')+'</td><td><span style="background:#eef5fc;border:1px solid #a8cce8;border-radius:4px;padding:2px 8px;font-size:11px;color:#1a5a90;">⚓ '+(u.team||'—')+'</span></td><td><span class="badge '+st.cls+'">'+st.label+'</span></td><td style="font-size:11px;color:#3a7aaa;font-weight:600;">'+formatDate(u.lastLogin)+'</td><td style="font-size:11px;color:#3a7aaa;font-weight:600;">'+formatDate(u.registeredAt)+'</td><td><button class="edit-btn" onclick="editAgent('+i+')">✏ Edit</button><button class="reset-btn" id="rbtn_'+i+'" onclick="resetPassword(\''+u.username+'\','+i+')">🔑 Reset PW</button><button class="delete-btn" id="dbtn_'+i+'" onclick="deleteUser(\''+u.username+'\','+i+')">🗑 Delete</button></td></tr>';}).join('');document.getElementById('tableContainer').innerHTML='<table><thead><tr><th>#</th><th>Username</th><th>Email</th><th>Team</th><th>Status</th><th>Last Login</th><th>Created</th><th>Actions</th></tr></thead><tbody>'+rows+'</tbody></table>';}
@@ -592,9 +536,7 @@ function clearAgentForm(){['edit-agent-original-username','ag-name','ag-email','
 async function resetPassword(username,idx){if(!confirm('Reset password for "'+username+'" to a temporary password?'))return;const btn=document.getElementById('rbtn_'+idx);btn.textContent='⏳...';btn.disabled=true;try{const res=await fetch(API_URL+'?'+new URLSearchParams({action:'resetPassword',username}));const data=await res.json();if(data.success){btn.textContent='✅ Done';btn.classList.add('done');showToast('✅ Password reset for '+username);setTimeout(loadUsers,2000);}else{btn.textContent='🔑 Reset PW';btn.disabled=false;showToast('⚠ Reset failed.',false);}}catch{btn.textContent='🔑 Reset PW';btn.disabled=false;showToast('⚠ Connection error.',false);}}
 async function deleteUser(username,idx){if(!confirm('⚠ Permanently delete agent "'+username+'"?\n\nThis cannot be undone!'))return;const btn=document.getElementById('dbtn_'+idx);btn.textContent='⏳...';btn.disabled=true;try{const res=await fetch(API_URL+'?'+new URLSearchParams({action:'deleteUser',username}));const data=await res.json();if(data.success){showToast('🗑 Agent "'+username+'" deleted.');setTimeout(loadUsers,800);}else{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Delete failed.',false);}}catch{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Connection error.',false);}}
 
-// ═══════════════════════════════════════════════════════
-//  CREDENTIALS
-// ═══════════════════════════════════════════════════════
+// ── CREDENTIALS ───────────────────────────────────────────────────────────────
 async function loadCreds(){document.getElementById('credTableContainer').innerHTML='<div class="loading">⏳ LOADING CREDENTIALS...</div>';try{const res=await fetch(API_URL+'?action=getCredentials&t='+Date.now());const data=await res.json();if(data.success){allCreds=data.credentials||[];renderCredTable(allCreds);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}else document.getElementById('credTableContainer').innerHTML='<div class="error-msg">⚠ Failed.</div>';}catch{document.getElementById('credTableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}}
 function renderCredTable(list){document.getElementById('cred-count').textContent=list.length+' records';if(!list.length){document.getElementById('credTableContainer').innerHTML='<div class="loading" style="color:#3a7aaa;">No credentials yet.</div>';return;}const rows=list.map((c,i)=>'<tr><td style="color:#3a7aaa;font-size:12px;font-weight:600;">'+(i+1)+'</td><td style="font-weight:700;color:#0a3d78;">🏢 '+(c.clientName||'—')+'</td><td style="font-size:11px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+(c.appUrl?'<a href="'+c.appUrl+'" target="_blank" style="color:#1a7db5;text-decoration:none;">🔗 '+c.appUrl+'</a>':'—')+'</td><td><span class="env-badge '+envClass(c.environment)+'">'+(c.environment||'—')+'</span></td><td style="font-size:12px;">'+(c.userId||'—')+'</td><td><span id="adm-pw-'+i+'" style="font-size:12px;">••••••••</span><button class="pw-toggle-sm" onclick="admTogglePw('+i+',\''+encodeURIComponent(c.password||'')+'\')">👁</button></td><td><button class="edit-btn" onclick="editCred('+i+')">✏ Edit</button><button class="delete-btn" id="cdel-'+i+'" onclick="deleteCred(\''+c.id+'\','+i+')">🗑 Delete</button></td></tr>').join('');document.getElementById('credTableContainer').innerHTML='<table><thead><tr><th>#</th><th>Client Name</th><th>App URL</th><th>Environment</th><th>User ID</th><th>Password</th><th>Actions</th></tr></thead><tbody>'+rows+'</tbody></table>';}
 function filterCredTable(){const q=document.getElementById('credSearchInput').value.toLowerCase();renderCredTable(allCreds.filter(c=>(c.clientName||'').toLowerCase().includes(q)));}
@@ -605,18 +547,14 @@ function cancelCredEdit(){clearCredForm();}
 function clearCredForm(){['edit-cred-id','cred-client','cred-url','cred-userid','cred-pass'].forEach(id=>document.getElementById(id).value='');document.getElementById('cred-env').value='';document.getElementById('credFormTitle').textContent='➕ Add New Client Credential';document.getElementById('cred-cancel-btn').style.display='none';document.getElementById('cred-msg').style.display='none';}
 async function deleteCred(credId,i){const name=allCreds[i]?.clientName||credId;if(!confirm('⚠ Delete credential for "'+name+'"?'))return;const btn=document.getElementById('cdel-'+i);btn.textContent='⏳...';btn.disabled=true;try{const res=await fetch(API_URL+'?'+new URLSearchParams({action:'deleteCredential',id:credId}));const data=await res.json();if(data.success){showToast('🗑 "'+name+'" deleted.');loadCreds();}else{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Delete failed.',false);}}catch{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Connection error.',false);}}
 
-// ═══════════════════════════════════════════════════════
-//  TRACKER
-// ═══════════════════════════════════════════════════════
+// ── TRACKER ───────────────────────────────────────────────────────────────────
 async function loadTracker(){document.getElementById('tracker-date-from').value='';document.getElementById('tracker-date-to').value='';document.getElementById('tracker-filter-label').textContent='';selectedAgent=null;document.getElementById('tracker-cards').innerHTML='<div class="loading">⏳ LOADING...</div>';document.getElementById('trackerTableContainer').innerHTML='<div class="loading" style="color:#3a7aaa;">Loading...</div>';try{const res=await fetch(API_URL+'?action=getTicketLogs&t='+Date.now());const data=await res.json();if(data.success){allLogs=data.logs||[];filteredLogs=[...allLogs];renderTrackerCards(filteredLogs);renderTrackerTable(filteredLogs);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}else document.getElementById('tracker-cards').innerHTML='<div class="error-msg">⚠ Failed.</div>';}catch{document.getElementById('tracker-cards').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}}
 function applyTrackerFilter(){const from=document.getElementById('tracker-date-from').value,to=document.getElementById('tracker-date-to').value;if(!from&&!to){filteredLogs=[...allLogs];document.getElementById('tracker-filter-label').textContent='';}else{filteredLogs=allLogs.filter(l=>{if(!l.dateKey)return true;if(from&&l.dateKey<from)return false;if(to&&l.dateKey>to)return false;return true;});document.getElementById('tracker-filter-label').textContent='Showing: '+(from||'…')+' → '+(to||'…')+' · '+filteredLogs.length+' tickets';}selectedAgent=null;renderTrackerCards(filteredLogs);renderTrackerTable(filteredLogs);}
 function renderTrackerCards(logs){const container=document.getElementById('tracker-cards');if(!logs.length){container.innerHTML='<div class="no-data-msg">📭 No ticket data found.</div>';return;}const agentMap={};logs.forEach(l=>{const a=l.agentName||'Unknown';if(!agentMap[a])agentMap[a]={tickets:[],totalSecs:0};agentMap[a].tickets.push(l);agentMap[a].totalSecs+=Number(l.durationSecs)||0;});container.innerHTML='';Object.entries(agentMap).sort((a,b)=>b[1].tickets.length-a[1].tickets.length).forEach(([name,data])=>{const count=data.tickets.length,avgSecs=count>0?Math.round(data.totalSecs/count):0;const lastDate=data.tickets[data.tickets.length-1]?.date||'—',lastShift=data.tickets[data.tickets.length-1]?.shiftId||'—';const compCount={};data.tickets.forEach(t=>{if(t.component)compCount[t.component]=(compCount[t.component]||0)+1;});const topComp=Object.entries(compCount).sort((a,b)=>b[1]-a[1])[0];const card=document.createElement('div');card.className='agent-card'+(selectedAgent===name?' selected':'');card.innerHTML='<div class="agent-card-name">👤 '+name+'</div><div class="agent-card-stats"><div class="agent-stat"><div class="agent-stat-val blue">'+count+'</div><div class="agent-stat-lbl">Tickets</div></div><div class="agent-stat"><div class="agent-stat-val green" style="font-size:15px;">'+formatDur(avgSecs)+'</div><div class="agent-stat-lbl">Avg Time</div></div><div class="agent-stat"><div class="agent-stat-val orange" style="font-size:15px;">'+formatDur(data.totalSecs)+'</div><div class="agent-stat-lbl">Total Time</div></div><div class="agent-stat"><div class="agent-stat-val" style="font-size:13px;color:#6030a0;">'+(topComp?topComp[0]:'—')+'</div><div class="agent-stat-lbl">Top Component</div></div></div><div class="agent-card-footer"><span>Last active: '+lastDate+'</span><span>Shift: '+lastShift+'</span></div>';card.addEventListener('click',()=>{selectedAgent=selectedAgent===name?null:name;renderTrackerCards(filteredLogs);const toShow=selectedAgent?filteredLogs.filter(l=>l.agentName===selectedAgent):filteredLogs;document.getElementById('tracker-breakdown-label').textContent=selectedAgent?'— '+selectedAgent:'';document.getElementById('trackerSearchInput').value='';renderTrackerTable(toShow);});container.appendChild(card);});}
 function renderTrackerTable(logs){const container=document.getElementById('trackerTableContainer');if(!logs.length){container.innerHTML='<div class="no-data-msg">No tickets to display.</div>';return;}const rows=[...logs].reverse().map((l,i)=>'<tr><td style="color:#3a7aaa;font-size:11px;font-weight:600;">'+(i+1)+'</td><td style="font-size:11px;color:#1a5a90;">👤 '+(l.agentName||'—')+'</td><td style="font-weight:700;color:#0a3d78;">'+(l.ticketId||'—')+'</td><td style="font-weight:700;color:#1a8c5c;">'+(l.duration||'—')+'</td><td style="font-size:11px;color:#2a4a6a;">'+(l.date||'—')+' <span style="color:#3a7aaa;font-weight:600;">'+(l.time||'')+'</span></td><td><span style="background:#eef5fc;border:1px solid #a8cce8;border-radius:3px;padding:2px 8px;font-size:10px;color:#1a5a90;">'+(l.shiftId||'—')+'</span></td><td>'+(l.component?'<span style="font-size:10px;font-weight:700;color:#6030a0;background:#f0e8ff;border:1px solid #c0a0e0;border-radius:12px;padding:2px 8px;">'+l.component+'</span>':'—')+'</td><td style="font-size:11px;color:#2a4a6a;max-width:200px;word-break:break-word;">'+(l.description||'—')+'</td><td style="font-size:11px;color:#2a4a6a;max-width:200px;word-break:break-word;">'+(l.remarks||'—')+'</td></tr>').join('');container.innerHTML='<table><thead><tr><th>#</th><th>Agent</th><th>Ticket ID</th><th>Duration</th><th>Date / Time</th><th>Shift</th><th>Component</th><th>Description</th><th>Remarks</th></tr></thead><tbody>'+rows+'</tbody></table>';}
 function filterTrackerTable(){const q=document.getElementById('trackerSearchInput').value.toLowerCase();const base=selectedAgent?filteredLogs.filter(l=>l.agentName===selectedAgent):filteredLogs;renderTrackerTable(q?base.filter(l=>(l.agentName||'').toLowerCase().includes(q)||(l.ticketId||'').toLowerCase().includes(q)||(l.component||'').toLowerCase().includes(q)||(l.shiftId||'').toLowerCase().includes(q)):base);}
 
-// ═══════════════════════════════════════════════════════
-//  HANDOVER
-// ═══════════════════════════════════════════════════════
+// ── HANDOVER ──────────────────────────────────────────────────────────────────
 async function loadHandovers(){document.getElementById('ho-date-from').value='';document.getElementById('ho-date-to').value='';document.getElementById('ho-shift-filter').value='';document.getElementById('ho-filter-label').textContent='';document.getElementById('hoTableContainer').innerHTML='<div class="loading">⏳ LOADING...</div>';try{const res=await fetch(API_URL+'?action=getHandovers&t='+Date.now());const data=await res.json();if(data.success){allHandovers=data.handovers||[];filteredHandovers=[...allHandovers];renderHandoverStats(filteredHandovers);renderHandoverTable(filteredHandovers);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}else document.getElementById('hoTableContainer').innerHTML='<div class="error-msg">⚠ Failed.</div>';}catch{document.getElementById('hoTableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}}
 function applyHandoverFilter(){const from=document.getElementById('ho-date-from').value,to=document.getElementById('ho-date-to').value,shift=document.getElementById('ho-shift-filter').value;filteredHandovers=allHandovers.filter(h=>{const hd=normalizeDateToClient(h.date);if(from&&hd<from)return false;if(to&&hd>to)return false;if(shift&&h.shift!==shift)return false;return true;});const parts=[];if(from||to)parts.push((from||'…')+' → '+(to||'…'));if(shift)parts.push('Shift: '+shift);document.getElementById('ho-filter-label').textContent=parts.length?parts.join(' · ')+' · '+filteredHandovers.length+' records':'';renderHandoverStats(filteredHandovers);renderHandoverTable(filteredHandovers);}
 function renderHandoverStats(list){document.getElementById('ho-s-total').textContent=list.length;document.getElementById('ho-s-pending').textContent=list.reduce((a,h)=>a+(h.pendingTickets||0),0);document.getElementById('ho-s-completed').textContent=list.reduce((a,h)=>a+(h.completedTickets||0),0);document.getElementById('ho-s-showstopper').textContent=list.reduce((a,h)=>a+(h.showstopperCount||0),0);}
@@ -626,576 +564,41 @@ function openHoDetail(origIdx){const h=filteredHandovers[origIdx];if(!h)return;c
 function closeHoDetail(){document.getElementById('hoDetailOverlay').classList.remove('open');}
 async function deleteHandover(origIdx,safeDate,safeShift){const h=filteredHandovers[origIdx];if(!h){showToast('⚠ Record not found.',false);return;}if(!confirm('⚠ Delete handover record for "'+safeDate+' — '+safeShift+'"?'))return;showToast('⏳ Deleting...',true);try{const params=new URLSearchParams({action:'deleteHandover',date:safeDate,shift:safeShift});const res=await fetch(API_URL+'?'+params.toString());const text=await res.text();let data;try{data=JSON.parse(text);}catch{showToast('⚠ Server error — redeploy Apps Script.',false);return;}if(data.success){showToast('🗑 Handover deleted.');const gi=allHandovers.indexOf(h);if(gi>-1)allHandovers.splice(gi,1);filteredHandovers.splice(origIdx,1);renderHandoverStats(filteredHandovers);renderHandoverTable(filteredHandovers);}else{showToast('⚠ Delete failed: '+(data.error||'Unknown'),false);}}catch(err){showToast('⚠ Connection error.',false);}}
 
-// ═══════════════════════════════════════════════════════
-//  SHIFT PLANNER — DYNAMIC MULTI-MONTH
-// ═══════════════════════════════════════════════════════
-const SHIFT_OPTIONS = ['D1','D2','D3','D4','D5','N','W/OFF','Holiday','Compff'];
-const SHIFT_LEGEND  = [
-  {key:'D1',label:'D1 — Morning',cls:'sp-D1'},{key:'D2',label:'D2 — Afternoon',cls:'sp-D2'},
-  {key:'D4',label:'D4 — Day',cls:'sp-D4'},{key:'D5',label:'D5 — Evening',cls:'sp-D5'},
-  {key:'N',label:'Night',cls:'sp-N'},{key:'W/OFF',label:'Week Off',cls:'sp-WOFF'},
-  {key:'Holiday',label:'Holiday',cls:'sp-HOL'},{key:'Compff',label:'Comp Off',cls:'sp-COMP'}
-];
-const SHIFT_CLS_MAP = {
-  D1:'sp-D1',D2:'sp-D2',D3:'sp-D3',D4:'sp-D4',D5:'sp-D5',
-  N:'sp-N','W/OFF':'sp-WOFF',HOLIDAY:'sp-HOL',COMPFF:'sp-COMP'
-};
+// ── SHIFT PLANNER ─────────────────────────────────────────────────────────────
+const SHIFT_OPTIONS=['D1','D2','D3','D4','D5','N','W/OFF','Holiday','Compff'];
+const SHIFT_LEGEND=[{key:'D1',label:'D1 — Morning',cls:'sp-D1'},{key:'D2',label:'D2 — Afternoon',cls:'sp-D2'},{key:'D4',label:'D4 — Day',cls:'sp-D4'},{key:'D5',label:'D5 — Evening',cls:'sp-D5'},{key:'N',label:'Night',cls:'sp-N'},{key:'W/OFF',label:'Week Off',cls:'sp-WOFF'},{key:'Holiday',label:'Holiday',cls:'sp-HOL'},{key:'Compff',label:'Comp Off',cls:'sp-COMP'}];
+const SHIFT_CLS_MAP={D1:'sp-D1',D2:'sp-D2',D3:'sp-D3',D4:'sp-D4',D5:'sp-D5',N:'sp-N','W/OFF':'sp-WOFF',HOLIDAY:'sp-HOL',COMPFF:'sp-COMP'};
+const DEFAULT_MEMBERS=[{id:'SM1658',name:'Vignesh Maharajan',primary:'Customer Service'},{id:'SM2045',name:'Akash Nagarathinam',primary:'EMS/EDI'},{id:'SM1638',name:'Challa Venkat Suneel',primary:'Operations'},{id:'SM2197',name:'Vinoth Bhoopathy',primary:'Operations'},{id:'SM2335',name:'Vignesh Rajapandi',primary:'Operations'},{id:'SM2145',name:'Rene Claret A',primary:'Customer Service'},{id:'SM2333',name:'Kulasekar Baskar',primary:'Operations'},{id:'SM2332',name:'Seenivasan Lakshmipathy',primary:'Customer Service'},{id:'SM2331',name:'Vinothraj Vijayakumar',primary:'Customer Service'}];
+let plannerData={},plannerMembers=[],plannerViewYear=new Date().getFullYear(),plannerViewMonth=new Date().getMonth();
+let plannerShiftFilter='ALL',plannerDirty=false,pceTarget=null;
 
-const DEFAULT_MEMBERS = [
-  {id:'SM1658',name:'Vignesh Maharajan',  primary:'Customer Service'},
-  {id:'SM2045',name:'Akash Nagarathinam', primary:'EMS/EDI'},
-  {id:'SM1638',name:'Challa Venkat Suneel',primary:'Operations'},
-  {id:'SM2197',name:'Vinoth Bhoopathy',   primary:'Operations'},
-  {id:'SM2335',name:'Vignesh Rajapandi',  primary:'Operations'},
-  {id:'SM2145',name:'Rene Claret A',      primary:'Customer Service'},
-  {id:'SM2333',name:'Kulasekar Baskar',   primary:'Operations'},
-  {id:'SM2332',name:'Seenivasan Lakshmipathy',primary:'Customer Service'},
-  {id:'SM2331',name:'Vinothraj Vijayakumar',  primary:'Customer Service'}
-];
-
-// plannerData[memberIdx][dateKey] = shiftString | ''
-let plannerData     = {};   // { memberId: { 'yyyy-mm-dd': 'D1' } }
-let plannerMembers  = [];   // array of {id, name, primary}
-let plannerViewYear = new Date().getFullYear();
-let plannerViewMonth= new Date().getMonth(); // 0-based
-let plannerShiftFilter='ALL';
-let plannerDirty   = false;
-let pceTarget       = null; // {memberId, dateKey}
-
-// Generate year options: current-1 to current+3
-function buildYearSelect(){
-  const sel=document.getElementById('planner-year-select');
-  sel.innerHTML='';
-  const cy=new Date().getFullYear();
-  for(let y=cy-1;y<=cy+3;y++){
-    const o=document.createElement('option');
-    o.value=y;o.textContent=y;
-    if(y===plannerViewYear)o.selected=true;
-    sel.appendChild(o);
-  }
-}
+function buildYearSelect(){const sel=document.getElementById('planner-year-select');sel.innerHTML='';const cy=new Date().getFullYear();for(let y=cy-1;y<=cy+3;y++){const o=document.createElement('option');o.value=y;o.textContent=y;if(y===plannerViewYear)o.selected=true;sel.appendChild(o);}}
 function plannerJumpYear(y){plannerViewYear=parseInt(y);renderPlanner();}
-function plannerPrevMonth(){
-  plannerViewMonth--;
-  if(plannerViewMonth<0){plannerViewMonth=11;plannerViewYear--;}
-  document.getElementById('planner-year-select').value=plannerViewYear;
-  renderPlanner();
-}
-function plannerNextMonth(){
-  plannerViewMonth++;
-  if(plannerViewMonth>11){plannerViewMonth=0;plannerViewYear++;}
-  document.getElementById('planner-year-select').value=plannerViewYear;
-  renderPlanner();
-}
-function setPlannerFilter(btn){
-  plannerShiftFilter=btn.dataset.shift;
-  document.querySelectorAll('.planner-filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderPlanner();
-}
+function plannerPrevMonth(){plannerViewMonth--;if(plannerViewMonth<0){plannerViewMonth=11;plannerViewYear--;}document.getElementById('planner-year-select').value=plannerViewYear;renderPlanner();}
+function plannerNextMonth(){plannerViewMonth++;if(plannerViewMonth>11){plannerViewMonth=0;plannerViewYear++;}document.getElementById('planner-year-select').value=plannerViewYear;renderPlanner();}
+function setPlannerFilter(btn){plannerShiftFilter=btn.dataset.shift;document.querySelectorAll('.planner-filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderPlanner();}
+function getDaysInViewMonth(){const days=[],daysInMonth=new Date(plannerViewYear,plannerViewMonth+1,0).getDate();const DAY_NAMES=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];for(let d=1;d<=daysInMonth;d++){const dt=new Date(plannerViewYear,plannerViewMonth,d);const iso=plannerViewYear+'-'+String(plannerViewMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');days.push({iso,day:String(d).padStart(2,'0'),dayName:DAY_NAMES[dt.getDay()]});}return days;}
+function shiftPillCls(s){if(!s||!s.trim())return'sp-empty';return SHIFT_CLS_MAP[s.trim().toUpperCase()]||'sp-D1';}
+function getTodayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+async function loadPlanner(){document.getElementById('planner-table-container').innerHTML='<div class="loading">⏳ LOADING PLANNER...</div>';buildYearSelect();try{const res=await fetch(API_URL+'?action=getPlanner&t='+Date.now());const data=await res.json();if(data.success&&data.planner&&Array.isArray(data.planner)&&data.planner.length){const raw=data.planner;if(raw[0]&&raw[0].shifts&&typeof raw[0].shifts==='object'&&!Array.isArray(raw[0].shifts)){plannerMembers=raw.map(m=>({id:m.id,name:m.name,primary:m.primary}));plannerData={};raw.forEach(m=>{plannerData[m.id]=Object.assign({},m.shifts||{});});}else{plannerMembers=raw.map(m=>({id:m.id||m.sl,name:m.name,primary:m.primary||''}));plannerData={};plannerMembers.forEach(m=>{plannerData[m.id]={};});}if(data.updatedAt){const d=new Date(data.updatedAt);document.getElementById('planner-saved-label').textContent='✅ Last published: '+d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}}else{plannerMembers=DEFAULT_MEMBERS.map(m=>({...m}));plannerData={};plannerMembers.forEach(m=>{plannerData[m.id]={};});}}catch{plannerMembers=DEFAULT_MEMBERS.map(m=>({...m}));plannerData={};plannerMembers.forEach(m=>{plannerData[m.id]={};});}plannerDirty=false;updatePlannerDirtyBadge();renderPlanner();}
+function renderPlanner(){const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];document.getElementById('planner-month-label').textContent=MONTH_NAMES[plannerViewMonth]+' '+plannerViewYear;document.getElementById('planner-legend').innerHTML=SHIFT_LEGEND.map(l=>`<span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#2a6090;font-weight:600;"><span class="shift-pill ${l.cls}">${l.key}</span>${l.label}</span>`).join('');const todayISO=getTodayISO();const todayMonth=todayISO.slice(0,7);const viewMonth=plannerViewYear+'-'+String(plannerViewMonth+1).padStart(2,'0');document.getElementById('planner-today-label').textContent=todayMonth===viewMonth?'Today: '+todayISO.slice(8)+' '+new Date().toLocaleDateString('en-GB',{weekday:'short'}):'';const days=getDaysInViewMonth();const sq=(document.getElementById('planner-search').value||'').toLowerCase();let members=plannerMembers;if(sq)members=members.filter(m=>(m.name||'').toLowerCase().includes(sq)||(m.id||'').toLowerCase().includes(sq));if(plannerShiftFilter!=='ALL'){members=members.filter(m=>{const shifts=plannerData[m.id]||{};return days.some(d=>(shifts[d.iso]||'').trim().toUpperCase()===plannerShiftFilter.toUpperCase());});}if(!members.length){document.getElementById('planner-table-container').innerHTML='<div style="padding:40px;text-align:center;color:#3a7aaa;font-size:14px;">No team members match your search.</div>';return;}let hdr='<tr><th class="col-name" rowspan="2">Name</th>';days.forEach(d=>{const isT=d.iso===todayISO,isW=d.dayName==='Sat'||d.dayName==='Sun';hdr+=`<th style="padding:7px 6px;text-align:center;font-size:10px;font-weight:700;white-space:nowrap;border:1px solid #c8dff0;background:${isT?'#d8eeff':'#eef5fc'};color:${isT?'#1a7db5':isW?'#888':'#1a7db5'};">${d.day}</th>`;});hdr+='</tr><tr>';days.forEach(d=>{const isT=d.iso===todayISO,isW=d.dayName==='Sat'||d.dayName==='Sun';hdr+=`<th style="font-size:9px;padding:6px;text-align:center;font-weight:700;white-space:nowrap;border:1px solid #c8dff0;background:${isT?'#d8eeff':'#eef5fc'};color:${isT?'#1a7db5':isW?'#888':'#1a7db5'};">${d.dayName}</th>`;});hdr+='</tr>';const bodyRows=members.map(m=>{const shifts=plannerData[m.id]||{};let cells='';days.forEach(d=>{const s=shifts[d.iso]||'';const isT=d.iso===todayISO;const cls=shiftPillCls(s);const hl=plannerShiftFilter!=='ALL'&&s.trim().toUpperCase()===plannerShiftFilter.toUpperCase();cells+=`<td class="${isT?'col-today':''}" style="cursor:pointer;" title="Click to assign" onclick="openPlannerEditor('${m.id}','${d.iso}',this)"><span class="shift-pill ${cls}${s?'':' sp-empty'}${isT?' sp-TODAY':''}"${hl?' style="box-shadow:0 0 6px rgba(26,125,181,.3);"':''}>${s||'—'}</span></td>`;});return`<tr><td class="col-name"><div style="font-weight:700;color:#0a3d78;">${m.name}</div><div style="font-size:10px;color:#3a7aaa;margin-top:1px;font-weight:600;">${m.id} &nbsp;·&nbsp; ${m.primary}</div></td>${cells}</tr>`;}).join('');document.getElementById('planner-table-container').innerHTML=`<table class="planner-tbl"><thead>${hdr}</thead><tbody>${bodyRows}</tbody></table>`;}
+function openPlannerEditor(memberId,dateKey,cellEl){pceTarget={memberId,dateKey};const shifts=plannerData[memberId]||{};const current=shifts[dateKey]||'';const m=plannerMembers.find(x=>x.id===memberId);const[y,mo,d]=dateKey.split('-');document.getElementById('pce-label').textContent=(m?m.name:memberId)+' — '+d+'/'+mo+'/'+y;const grid=document.getElementById('pce-grid');grid.innerHTML='';const clearChip=document.createElement('div');clearChip.className='pce-chip-empty'+(current===''?' selected':'');clearChip.textContent='Clear';clearChip.onclick=()=>applyPlannerCellEdit('');grid.appendChild(clearChip);SHIFT_OPTIONS.forEach(s=>{const chip=document.createElement('div');const cls=SHIFT_CLS_MAP[s.toUpperCase()]||'sp-D1';chip.className='pce-chip'+(current===s?' selected':'');chip.textContent=s;chip.style.color=current===s?'#fff':'';chip.onclick=()=>applyPlannerCellEdit(s);grid.appendChild(chip);});const editor=document.getElementById('planner-cell-editor');editor.style.display='block';const rect=cellEl.getBoundingClientRect();let top=rect.bottom+window.scrollY+4,left=rect.left+window.scrollX;if(left+220>window.innerWidth)left=window.innerWidth-230;editor.style.top=top+'px';editor.style.left=left+'px';}
+function applyPlannerCellEdit(shift){if(!pceTarget)return;if(!plannerData[pceTarget.memberId])plannerData[pceTarget.memberId]={};if(shift===''){delete plannerData[pceTarget.memberId][pceTarget.dateKey];}else{plannerData[pceTarget.memberId][pceTarget.dateKey]=shift;}plannerDirty=true;updatePlannerDirtyBadge();closePlannerEditor();renderPlanner();}
+function closePlannerEditor(){document.getElementById('planner-cell-editor').style.display='none';pceTarget=null;}
+function updatePlannerDirtyBadge(){document.getElementById('planner-unsaved-badge').classList.toggle('visible',plannerDirty);const btn=document.getElementById('planner-publish-btn');if(plannerDirty){btn.style.background='linear-gradient(135deg,#c07010,#a05008)';btn.textContent='📤 Submit to Agents *';}else{btn.style.background='linear-gradient(135deg,#1a8c5c,#138048)';btn.textContent='📤 Submit to Agents';}}
+document.addEventListener('click',e=>{const ed=document.getElementById('planner-cell-editor');if(ed&&ed.style.display!=='none'&&!ed.contains(e.target)&&!e.target.closest('td'))closePlannerEditor();});
+async function publishPlanner(){const btn=document.getElementById('planner-publish-btn');btn.disabled=true;btn.textContent='⏳ Submitting...';const payload=plannerMembers.map(m=>({id:m.id,name:m.name,primary:m.primary,shifts:Object.assign({},plannerData[m.id]||{})}));try{const formData=new FormData();formData.append('action','savePlanner');formData.append('payload',JSON.stringify(payload));const res=await fetch(API_URL,{method:'POST',body:formData});const text=await res.text();let data;try{data=JSON.parse(text);}catch{throw new Error('Invalid response: '+text.slice(0,100));}if(data.success){plannerDirty=false;updatePlannerDirtyBadge();const now=new Date();document.getElementById('planner-saved-label').textContent='✅ Published: '+now.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+' '+now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});showToast('📤 Shift planner submitted to agents!');}else{showToast('⚠ Submit failed: '+(data.error||'Unknown error'),false);}}catch(err){try{const res2=await fetch(API_URL+'?'+new URLSearchParams({action:'savePlanner',payload:JSON.stringify(payload)}));const data2=await res2.json();if(data2.success){plannerDirty=false;updatePlannerDirtyBadge();const now=new Date();document.getElementById('planner-saved-label').textContent='✅ Published: '+now.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+' '+now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});showToast('📤 Shift planner submitted to agents!');}else{showToast('⚠ Submit failed. Try again.',false);}}catch{showToast('⚠ Connection error. Check network and try again.',false);}}btn.disabled=false;updatePlannerDirtyBadge();}
+function exportPlannerExcel(){if(!plannerMembers.length){showToast('⚠ No planner data to export.',false);return;}const wb=XLSX.utils.book_new();const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];const days=getDaysInViewMonth();const monthLabel=MONTH_NAMES[plannerViewMonth]+' '+plannerViewYear;const hdr1=['Name','ID','Primary',...days.map(d=>d.day+'/'+String(plannerViewMonth+1).padStart(2,'0'))];const hdr2=['','','',...days.map(d=>d.dayName)];const rows=plannerMembers.map(m=>{const shifts=plannerData[m.id]||{};return[m.name,m.id,m.primary,...days.map(d=>shifts[d.iso]||'')];});const ws=XLSX.utils.aoa_to_sheet([hdr1,hdr2,...rows]);ws['!cols']=[{wch:24},{wch:10},{wch:18},...days.map(()=>({wch:8}))];[0,1].forEach(ri=>{hdr1.forEach((_,ci)=>{const addr=XLSX.utils.encode_cell({r:ri,c:ci});if(ws[addr])ws[addr].s={font:{bold:true,color:{rgb:'FFFFFF'}},fill:{fgColor:{rgb:'185FA5'}},alignment:{horizontal:'center'}};});});XLSX.utils.book_append_sheet(wb,ws,monthLabel.replace(' ','_'));XLSX.writeFile(wb,'ShiftPlanner_'+monthLabel.replace(' ','_')+'.xlsx');showToast('✅ Planner exported to Excel!');}
+function downloadPlannerTemplate(){if(!plannerMembers.length){showToast('⚠ Load planner first.',false);return;}const wb=XLSX.utils.book_new();const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];for(let offset=0;offset<3;offset++){let m=plannerViewMonth+offset,y=plannerViewYear;if(m>11){m-=12;y++;}const daysInMonth=new Date(y,m+1,0).getDate();const DAY_NAMES=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];const days=[];for(let d=1;d<=daysInMonth;d++){const dt=new Date(y,m,d);const iso=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');days.push({iso,day:String(d).padStart(2,'0'),dayName:DAY_NAMES[dt.getDay()]});}const monthLabel=MONTH_NAMES[m]+' '+y;const hdr1=['Name','ID','Primary',...days.map(d=>d.day+'/'+String(m+1).padStart(2,'0'))];const hdr2=['','','',...days.map(d=>d.dayName)];const shiftOpts=['D1','D2','D3','D4','D5','N','W/OFF','Holiday','Compff'];const noteRow=['← Fill shifts using: '+shiftOpts.join(', '),'','',''];const rows=plannerMembers.map(mem=>{const shifts=plannerData[mem.id]||{};return[mem.name,mem.id,mem.primary,...days.map(d=>shifts[d.iso]||'')];});const ws=XLSX.utils.aoa_to_sheet([hdr1,hdr2,noteRow,...rows]);ws['!cols']=[{wch:24},{wch:10},{wch:18},...days.map(()=>({wch:8}))];hdr1.forEach((_,ci)=>{const addr=XLSX.utils.encode_cell({r:0,c:ci});if(ws[addr])ws[addr].s={font:{bold:true,color:{rgb:'FFFFFF'}},fill:{fgColor:{rgb:'0A3D78'}},alignment:{horizontal:'center'}};});XLSX.utils.book_append_sheet(wb,ws,monthLabel.replace(' ','_'));}XLSX.writeFile(wb,'ShiftPlanner_Template.xlsx');showToast('✅ Template downloaded! Fill shifts and import back.');}
+function importPlannerExcel(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=function(e){try{const data=new Uint8Array(e.target.result);const wb=XLSX.read(data,{type:'array'});let totalImported=0;const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];const SHIFT_VALID=new Set(['D1','D2','D3','D4','D5','N','W/OFF','HOLIDAY','COMPFF']);wb.SheetNames.forEach(sheetName=>{const ws=wb.Sheets[sheetName];const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});if(rows.length<3)return;const hdr=rows[0];let sheetYear=plannerViewYear,sheetMonth=-1;MONTH_NAMES.forEach((mn,mi)=>{if(sheetName.toLowerCase().includes(mn.toLowerCase()))sheetMonth=mi;});const yearMatch=sheetName.match(/(\d{4})/);if(yearMatch)sheetYear=parseInt(yearMatch[1]);const dateCols=[];for(let ci=3;ci<hdr.length;ci++){const cell=(hdr[ci]||'').toString().trim();if(!cell)continue;const parts=cell.split('/');if(parts.length===2){const day=parts[0].padStart(2,'0');const mo=sheetMonth>=0?String(sheetMonth+1).padStart(2,'0'):parts[1].padStart(2,'0');const iso=sheetYear+'-'+mo+'-'+day;dateCols.push({ci,iso});}}for(let ri=3;ri<rows.length;ri++){const row=rows[ri];const memberId=(row[1]||'').toString().trim();if(!memberId)continue;const member=plannerMembers.find(m=>m.id===memberId);if(!member)continue;if(!plannerData[memberId])plannerData[memberId]={};dateCols.forEach(({ci,iso})=>{const val=(row[ci]||'').toString().trim().toUpperCase();if(!val){delete plannerData[memberId][iso];}else if(SHIFT_VALID.has(val)){const normalized={'HOLIDAY':'Holiday','COMPFF':'Compff','W/OFF':'W/OFF'}[val]||val;plannerData[memberId][iso]=normalized;totalImported++;}});}});plannerDirty=true;updatePlannerDirtyBadge();renderPlanner();showToast('✅ Imported '+totalImported+' shifts! Review then click Submit to Agents.');}catch(err){showToast('⚠ Import failed — check file format.',false);}input.value='';};reader.readAsArrayBuffer(file);}
 
-// Get all days in the current view month
-function getDaysInViewMonth(){
-  const days=[];
-  const daysInMonth=new Date(plannerViewYear,plannerViewMonth+1,0).getDate();
-  const DAY_NAMES=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  for(let d=1;d<=daysInMonth;d++){
-    const dt=new Date(plannerViewYear,plannerViewMonth,d);
-    const iso=plannerViewYear+'-'+String(plannerViewMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-    days.push({iso, day:String(d).padStart(2,'0'), dayName:DAY_NAMES[dt.getDay()]});
-  }
-  return days;
-}
-
-function shiftPillCls(s){
-  if(!s||!s.trim())return'sp-empty';
-  return SHIFT_CLS_MAP[s.trim().toUpperCase()]||'sp-D1';
-}
-
-function getTodayISO(){
-  const d=new Date();
-  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-}
-
-async function loadPlanner(){
-  document.getElementById('planner-table-container').innerHTML='<div class="loading">⏳ LOADING PLANNER...</div>';
-  buildYearSelect();
-
-  try{
-    const res=await fetch(API_URL+'?action=getPlanner&t='+Date.now());
-    const data=await res.json();
-    if(data.success&&data.planner&&Array.isArray(data.planner)&&data.planner.length){
-      // New format: [{id,name,primary,shifts:{dateKey:shift}}]
-      const raw=data.planner;
-      if(raw[0]&&raw[0].shifts&&typeof raw[0].shifts==='object'&&!Array.isArray(raw[0].shifts)){
-        // New date-keyed format
-        plannerMembers=raw.map(m=>({id:m.id,name:m.name,primary:m.primary}));
-        plannerData={};
-        raw.forEach(m=>{ plannerData[m.id]=Object.assign({},m.shifts||{}); });
-      } else {
-        // Legacy array format — migrate
-        plannerMembers=raw.map(m=>({id:m.id||m.sl,name:m.name,primary:m.primary||''}));
-        plannerData={};
-        plannerMembers.forEach(m=>{ plannerData[m.id]={}; });
-      }
-      if(data.updatedAt){
-        const d=new Date(data.updatedAt);
-        document.getElementById('planner-saved-label').textContent=
-          '✅ Last published: '+d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+
-          ' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-      }
-    } else {
-      // Use defaults, empty shifts
-      plannerMembers=DEFAULT_MEMBERS.map(m=>({...m}));
-      plannerData={};
-      plannerMembers.forEach(m=>{ plannerData[m.id]={}; });
-    }
-  } catch{
-    plannerMembers=DEFAULT_MEMBERS.map(m=>({...m}));
-    plannerData={};
-    plannerMembers.forEach(m=>{ plannerData[m.id]={}; });
-  }
-  plannerDirty=false;
-  updatePlannerDirtyBadge();
-  renderPlanner();
-}
-
-function renderPlanner(){
-  const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  document.getElementById('planner-month-label').textContent=MONTH_NAMES[plannerViewMonth]+' '+plannerViewYear;
-
-  // Legend
-  document.getElementById('planner-legend').innerHTML=SHIFT_LEGEND.map(l=>
-    `<span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#2a6090;font-weight:600;">
-      <span class="shift-pill ${l.cls}">${l.key}</span>${l.label}
-    </span>`).join('');
-
-  // Today
-  const todayISO=getTodayISO();
-  const todayMonth=todayISO.slice(0,7); // yyyy-mm
-  const viewMonth=plannerViewYear+'-'+String(plannerViewMonth+1).padStart(2,'0');
-  document.getElementById('planner-today-label').textContent=
-    todayMonth===viewMonth?'Today: '+todayISO.slice(8)+' '+new Date().toLocaleDateString('en-GB',{weekday:'short'}):'';
-
-  const days=getDaysInViewMonth();
-  const sq=(document.getElementById('planner-search').value||'').toLowerCase();
-
-  let members=plannerMembers;
-  if(sq) members=members.filter(m=>(m.name||'').toLowerCase().includes(sq)||(m.id||'').toLowerCase().includes(sq));
-  if(plannerShiftFilter!=='ALL'){
-    members=members.filter(m=>{
-      const shifts=plannerData[m.id]||{};
-      return days.some(d=>(shifts[d.iso]||'').trim().toUpperCase()===plannerShiftFilter.toUpperCase());
-    });
-  }
-
-  if(!members.length){
-    document.getElementById('planner-table-container').innerHTML='<div style="padding:40px;text-align:center;color:#3a7aaa;font-size:14px;">No team members match your search.</div>';
-    return;
-  }
-
-  // Build header
-  let hdr='<tr><th class="col-name" rowspan="2">Name</th>';
-  days.forEach(d=>{
-    const isT=d.iso===todayISO, isW=d.dayName==='Sat'||d.dayName==='Sun';
-    hdr+=`<th style="padding:7px 6px;text-align:center;font-size:10px;font-weight:700;white-space:nowrap;border:1px solid #c8dff0;background:${isT?'#d8eeff':'#eef5fc'};color:${isT?'#1a7db5':isW?'#888':'#1a7db5'};">${d.day}</th>`;
-  });
-  hdr+='</tr><tr>';
-  days.forEach(d=>{
-    const isT=d.iso===todayISO, isW=d.dayName==='Sat'||d.dayName==='Sun';
-    hdr+=`<th style="font-size:9px;padding:6px;text-align:center;font-weight:700;white-space:nowrap;border:1px solid #c8dff0;background:${isT?'#d8eeff':'#eef5fc'};color:${isT?'#1a7db5':isW?'#888':'#1a7db5'};">${d.dayName}</th>`;
-  });
-  hdr+='</tr>';
-
-  const bodyRows=members.map(m=>{
-    const shifts=plannerData[m.id]||{};
-    let cells='';
-    days.forEach(d=>{
-      const s=shifts[d.iso]||'';
-      const isT=d.iso===todayISO;
-      const cls=shiftPillCls(s);
-      const hl=plannerShiftFilter!=='ALL'&&s.trim().toUpperCase()===plannerShiftFilter.toUpperCase();
-      const pillContent=s||'<span style="font-size:9px;color:#c0c0c0;">—</span>';
-      cells+=`<td class="${isT?'col-today':''}" style="cursor:pointer;" title="Click to assign" onclick="openPlannerEditor('${m.id}','${d.iso}',this)">
-        <span class="shift-pill ${cls}${s?'':' sp-empty'}${isT?' sp-TODAY':''}"${hl?' style="box-shadow:0 0 6px rgba(26,125,181,.3);"':''}>
-          ${s||'—'}
-        </span>
-      </td>`;
-    });
-    return`<tr>
-      <td class="col-name">
-        <div style="font-weight:700;color:#0a3d78;">${m.name}</div>
-        <div style="font-size:10px;color:#3a7aaa;margin-top:1px;font-weight:600;">${m.id} &nbsp;·&nbsp; ${m.primary}</div>
-      </td>${cells}
-    </tr>`;
-  }).join('');
-
-  document.getElementById('planner-table-container').innerHTML=
-    `<table class="planner-tbl"><thead>${hdr}</thead><tbody>${bodyRows}</tbody></table>`;
-}
-
-function openPlannerEditor(memberId, dateKey, cellEl){
-  pceTarget={memberId, dateKey};
-  const shifts=plannerData[memberId]||{};
-  const current=shifts[dateKey]||'';
-  const m=plannerMembers.find(x=>x.id===memberId);
-  const [y,mo,d]=dateKey.split('-');
-  document.getElementById('pce-label').textContent=(m?m.name:memberId)+' — '+d+'/'+mo+'/'+y;
-
-  // Build chip grid
-  const grid=document.getElementById('pce-grid');
-  grid.innerHTML='';
-  // Clear option
-  const clearChip=document.createElement('div');
-  clearChip.className='pce-chip-empty'+(current===''?' selected':'');
-  clearChip.textContent='Clear';
-  clearChip.onclick=()=>applyPlannerCellEdit('');
-  grid.appendChild(clearChip);
-
-  SHIFT_OPTIONS.forEach(s=>{
-    const chip=document.createElement('div');
-    const cls=SHIFT_CLS_MAP[s.toUpperCase()]||'sp-D1';
-    chip.className='pce-chip'+(current===s?' selected':'');
-    chip.textContent=s;
-    chip.style.color=current===s?'#fff':'';
-    chip.onclick=()=>applyPlannerCellEdit(s);
-    grid.appendChild(chip);
-  });
-
-  // Position popup
-  const editor=document.getElementById('planner-cell-editor');
-  editor.style.display='block';
-  const rect=cellEl.getBoundingClientRect();
-  let top=rect.bottom+window.scrollY+4;
-  let left=rect.left+window.scrollX;
-  if(left+220>window.innerWidth)left=window.innerWidth-230;
-  editor.style.top=top+'px';
-  editor.style.left=left+'px';
-}
-function applyPlannerCellEdit(shift){
-  if(!pceTarget)return;
-  if(!plannerData[pceTarget.memberId])plannerData[pceTarget.memberId]={};
-  if(shift===''){
-    delete plannerData[pceTarget.memberId][pceTarget.dateKey];
-  } else {
-    plannerData[pceTarget.memberId][pceTarget.dateKey]=shift;
-  }
-  plannerDirty=true;
-  updatePlannerDirtyBadge();
-  closePlannerEditor();
-  renderPlanner();
-}
-function closePlannerEditor(){
-  document.getElementById('planner-cell-editor').style.display='none';
-  pceTarget=null;
-}
-function updatePlannerDirtyBadge(){
-  document.getElementById('planner-unsaved-badge').classList.toggle('visible',plannerDirty);
-  const btn=document.getElementById('planner-publish-btn');
-  if(plannerDirty){
-    btn.style.background='linear-gradient(135deg,#c07010,#a05008)';
-    btn.textContent='📤 Submit to Agents *';
-  } else {
-    btn.style.background='linear-gradient(135deg,#1a8c5c,#138048)';
-    btn.textContent='📤 Submit to Agents';
-  }
-}
-document.addEventListener('click',e=>{
-  const ed=document.getElementById('planner-cell-editor');
-  if(ed&&ed.style.display!=='none'&&!ed.contains(e.target)&&!e.target.closest('td'))closePlannerEditor();
-});
-
-async function publishPlanner(){
-  const btn=document.getElementById('planner-publish-btn');
-  btn.disabled=true;btn.textContent='⏳ Submitting...';
-  const payload=plannerMembers.map(m=>({
-    id:m.id, name:m.name, primary:m.primary,
-    shifts:Object.assign({},plannerData[m.id]||{})
-  }));
-  try{
-    // Use POST to avoid URL length limits with large payloads
-    const formData=new FormData();
-    formData.append('action','savePlanner');
-    formData.append('payload',JSON.stringify(payload));
-    const res=await fetch(API_URL, {method:'POST', body:formData});
-    const text=await res.text();
-    let data;
-    try{ data=JSON.parse(text); }
-    catch{ throw new Error('Invalid response: '+text.slice(0,100)); }
-    if(data.success){
-      plannerDirty=false;
-      updatePlannerDirtyBadge();
-      const now=new Date();
-      document.getElementById('planner-saved-label').textContent=
-        '✅ Published: '+now.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+
-        ' '+now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-      showToast('📤 Shift planner submitted to agents!');
-    } else {
-      showToast('⚠ Submit failed: '+(data.error||'Unknown error'),false);
-    }
-  } catch(err){
-    console.error('publishPlanner error:',err);
-    // Fallback: try GET with chunked approach
-    try{
-      const res2=await fetch(API_URL+'?'+new URLSearchParams({action:'savePlanner',payload:JSON.stringify(payload)}));
-      const data2=await res2.json();
-      if(data2.success){
-        plannerDirty=false;
-        updatePlannerDirtyBadge();
-        const now=new Date();
-        document.getElementById('planner-saved-label').textContent=
-          '✅ Published: '+now.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+
-          ' '+now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-        showToast('📤 Shift planner submitted to agents!');
-      } else {
-        showToast('⚠ Submit failed. Try again.',false);
-      }
-    } catch{
-      showToast('⚠ Connection error. Check network and try again.',false);
-    }
-  }
-  btn.disabled=false;
-  updatePlannerDirtyBadge();
-}
-
-// ── PLANNER EXCEL EXPORT ────────────────────────────────
-function exportPlannerExcel(){
-  if(!plannerMembers.length){showToast('⚠ No planner data to export.',false);return;}
-  const wb=XLSX.utils.book_new();
-  const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  const days=getDaysInViewMonth();
-  const monthLabel=MONTH_NAMES[plannerViewMonth]+' '+plannerViewYear;
-
-  // Header rows
-  const hdr1=['Name','ID','Primary',...days.map(d=>d.day+'/'+String(plannerViewMonth+1).padStart(2,'0'))];
-  const hdr2=['','','',...days.map(d=>d.dayName)];
-  const rows=plannerMembers.map(m=>{
-    const shifts=plannerData[m.id]||{};
-    return[m.name, m.id, m.primary, ...days.map(d=>shifts[d.iso]||'')];
-  });
-
-  const ws=XLSX.utils.aoa_to_sheet([hdr1,hdr2,...rows]);
-  // Column widths
-  ws['!cols']=[{wch:24},{wch:10},{wch:18},...days.map(()=>({wch:8}))];
-  // Style header
-  [0,1].forEach(ri=>{
-    hdr1.forEach((_,ci)=>{
-      const addr=XLSX.utils.encode_cell({r:ri,c:ci});
-      if(ws[addr]) ws[addr].s={font:{bold:true,color:{rgb:'FFFFFF'}},fill:{fgColor:{rgb:'185FA5'}},alignment:{horizontal:'center'}};
-    });
-  });
-  XLSX.utils.book_append_sheet(wb,ws,monthLabel.replace(' ','_'));
-  XLSX.writeFile(wb,'ShiftPlanner_'+monthLabel.replace(' ','_')+'.xlsx');
-  showToast('✅ Planner exported to Excel!');
-}
-
-// ── PLANNER EXCEL TEMPLATE DOWNLOAD ─────────────────────
-function downloadPlannerTemplate(){
-  if(!plannerMembers.length){showToast('⚠ Load planner first.',false);return;}
-  const wb=XLSX.utils.book_new();
-  const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
-
-  // Create sheets for current month + next 2 months
-  for(let offset=0;offset<3;offset++){
-    let m=plannerViewMonth+offset, y=plannerViewYear;
-    if(m>11){m-=12;y++;}
-    const daysInMonth=new Date(y,m+1,0).getDate();
-    const DAY_NAMES=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-    const days=[];
-    for(let d=1;d<=daysInMonth;d++){
-      const dt=new Date(y,m,d);
-      const iso=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-      days.push({iso,day:String(d).padStart(2,'0'),dayName:DAY_NAMES[dt.getDay()]});
-    }
-    const monthLabel=MONTH_NAMES[m]+' '+y;
-    const hdr1=['Name','ID','Primary',...days.map(d=>d.day+'/'+String(m+1).padStart(2,'0'))];
-    const hdr2=['','','',...days.map(d=>d.dayName)];
-    const shiftOpts=['D1','D2','D3','D4','D5','N','W/OFF','Holiday','Compff'];
-    const noteRow=['← Fill shifts using: '+shiftOpts.join(', '),'','',''];
-    const rows=plannerMembers.map(mem=>{
-      const shifts=plannerData[mem.id]||{};
-      return[mem.name,mem.id,mem.primary,...days.map(d=>shifts[d.iso]||'')];
-    });
-    const ws=XLSX.utils.aoa_to_sheet([hdr1,hdr2,noteRow,...rows]);
-    ws['!cols']=[{wch:24},{wch:10},{wch:18},...days.map(()=>({wch:8}))];
-    hdr1.forEach((_,ci)=>{
-      const addr=XLSX.utils.encode_cell({r:0,c:ci});
-      if(ws[addr]) ws[addr].s={font:{bold:true,color:{rgb:'FFFFFF'}},fill:{fgColor:{rgb:'0A3D78'}},alignment:{horizontal:'center'}};
-    });
-    XLSX.utils.book_append_sheet(wb,ws,monthLabel.replace(' ','_'));
-  }
-  XLSX.writeFile(wb,'ShiftPlanner_Template.xlsx');
-  showToast('✅ Template downloaded! Fill shifts and import back.');
-}
-
-// ── PLANNER EXCEL IMPORT ─────────────────────────────────
-function importPlannerExcel(input){
-  const file=input.files[0];
-  if(!file){return;}
-  const reader=new FileReader();
-  reader.onload=function(e){
-    try{
-      const data=new Uint8Array(e.target.result);
-      const wb=XLSX.read(data,{type:'array'});
-      let totalImported=0;
-      const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
-      const SHIFT_VALID=new Set(['D1','D2','D3','D4','D5','N','W/OFF','HOLIDAY','COMPFF']);
-
-      wb.SheetNames.forEach(sheetName=>{
-        const ws=wb.Sheets[sheetName];
-        const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
-        if(rows.length<3)return;
-
-        // Row 0: header with dates like "05/04"
-        const hdr=rows[0];
-        // Row 1: day names (skip)
-        // Row 2: note row (skip)
-        // Row 3+: member data
-
-        // Parse date columns from header (col index 3+)
-        // Try to detect year from sheet name e.g. "April_2026"
-        let sheetYear=plannerViewYear;
-        let sheetMonth=-1;
-        MONTH_NAMES.forEach((mn,mi)=>{
-          if(sheetName.toLowerCase().includes(mn.toLowerCase())){sheetMonth=mi;}
-        });
-        const yearMatch=sheetName.match(/(\d{4})/);
-        if(yearMatch)sheetYear=parseInt(yearMatch[1]);
-
-        // Build date keys from header columns
-        const dateCols=[];
-        for(let ci=3;ci<hdr.length;ci++){
-          const cell=(hdr[ci]||'').toString().trim();
-          if(!cell)continue;
-          // Format: "05/04" => day/month
-          const parts=cell.split('/');
-          if(parts.length===2){
-            const day=parts[0].padStart(2,'0');
-            const mo=sheetMonth>=0?String(sheetMonth+1).padStart(2,'0'):parts[1].padStart(2,'0');
-            const iso=sheetYear+'-'+mo+'-'+day;
-            dateCols.push({ci,iso});
-          }
-        }
-
-        // Process member rows (skip first 3 rows: hdr, daynames, note)
-        for(let ri=3;ri<rows.length;ri++){
-          const row=rows[ri];
-          const memberId=(row[1]||'').toString().trim();
-          if(!memberId)continue;
-          // Find member
-          const member=plannerMembers.find(m=>m.id===memberId);
-          if(!member)continue;
-          if(!plannerData[memberId])plannerData[memberId]={};
-          dateCols.forEach(({ci,iso})=>{
-            const val=(row[ci]||'').toString().trim().toUpperCase();
-            if(!val){
-              // empty = clear
-              delete plannerData[memberId][iso];
-            } else if(SHIFT_VALID.has(val)){
-              // normalize
-              const normalized={'HOLIDAY':'Holiday','COMPFF':'Compff','W/OFF':'W/OFF'}[val]||val;
-              plannerData[memberId][iso]=normalized;
-              totalImported++;
-            }
-          });
-        }
-      });
-
-      plannerDirty=true;
-      updatePlannerDirtyBadge();
-      renderPlanner();
-      showToast('✅ Imported '+totalImported+' shifts! Review then click Submit to Agents.');
-    }catch(err){
-      console.error(err);
-      showToast('⚠ Import failed — check file format.',false);
-    }
-    input.value='';
-  };
-  reader.readAsArrayBuffer(file);
-}
-
-// ═══════════════════════════════════════════════════════
-//  WHY NOT SOLVED
-// ═══════════════════════════════════════════════════════
-async function loadWNSAgentList(){
-  if(!allUsers.length){
-    try{const res=await fetch(API_URL+'?action=getUsers&t='+Date.now());const data=await res.json();if(data.success)allUsers=data.users||[];}catch{}
-  }
-  const sel=document.getElementById('wns-agent');
-  const cur=sel.value;
-  sel.innerHTML='<option value="">— Select Agent —</option>';
-  allUsers.forEach(u=>{const o=document.createElement('option');o.value=u.username;o.textContent=u.username+(u.team?' ('+u.team+')':'');sel.appendChild(o);});
-  if(cur)sel.value=cur;
-}
-async function loadWNSTickets(){
-  document.getElementById('wnsTableContainer').innerHTML='<div class="loading">⏳ LOADING...</div>';
-  try{
-    const res=await fetch(API_URL+'?action=getWNSTickets&t='+Date.now());
-    const data=await res.json();
-    if(data.success){
-      allWNSTickets=data.tickets||[];filteredWNSTickets=[...allWNSTickets];
-      renderWNSStats(allWNSTickets);renderWNSTable(filteredWNSTickets);
-      document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();
-    }else document.getElementById('wnsTableContainer').innerHTML='<div class="error-msg">⚠ Failed.</div>';
-  }catch{document.getElementById('wnsTableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}
-}
-function renderWNSStats(list){
-  const pending=list.filter(t=>t.status==='Pending').length;
-  const completed=list.filter(t=>t.status==='Completed').length;
-  const agents=new Set(list.filter(t=>t.status==='Completed').map(t=>t.agentName)).size;
-  document.getElementById('wns-s-total').textContent=list.length;
-  document.getElementById('wns-s-pending').textContent=pending;
-  document.getElementById('wns-s-completed').textContent=completed;
-  document.getElementById('wns-s-agents').textContent=agents;
-}
-function renderWNSTable(list){
-  document.getElementById('wns-count').textContent=list.length+' records';
-  if(!list.length){document.getElementById('wnsTableContainer').innerHTML='<div class="loading" style="color:#3a7aaa;">No tickets found.</div>';return;}
-  const statusBadge=s=>s==='Completed'
-    ?'<span style="background:#d4f5e4;border:1px solid #6cd4a0;border-radius:12px;padding:2px 9px;font-size:10px;font-weight:700;color:#1a7050;">✅ COMPLETED</span>'
-    :'<span style="background:#fff3d8;border:1px solid #f5c840;border-radius:12px;padding:2px 9px;font-size:10px;font-weight:700;color:#8a6010;">⏳ PENDING</span>';
-  const tbody=document.createElement('tbody');
-  [...list].reverse().forEach((t,i)=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML='<td style="color:#3a7aaa;font-size:11px;font-weight:600;">'+(i+1)+'</td><td style="font-weight:700;color:#0a3d78;">🎫 '+(t.ticketId||'—')+'</td><td style="font-size:12px;color:#2a4a6a;">👤 '+(t.agentName||'—')+'</td><td style="font-size:12px;color:#2a4a6a;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="'+(t.summary||'')+'">'+(t.summary||'—')+'</td><td style="font-size:11px;color:#3a7aaa;">'+(t.assignedAt||'').slice(0,10)+'</td><td>'+statusBadge(t.status)+'</td><td style="font-size:11px;color:#3a7aaa;">'+(t.status==='Completed'?(t.submittedAt||'').slice(0,10)||'—':'—')+'</td><td style="white-space:nowrap;"></td>';
-    const actionTd=tr.querySelector('td:last-child');
-    const viewBtn=document.createElement('button');viewBtn.className='view-btn';viewBtn.textContent='👁 View';viewBtn.onclick=()=>openWNSDetail(t);actionTd.appendChild(viewBtn);
-    if(t.status==='Pending'){
-      const editBtn=document.createElement('button');editBtn.className='edit-btn';editBtn.style.marginLeft='5px';editBtn.textContent='✏ Edit';editBtn.onclick=()=>editWNSTicket(t);actionTd.appendChild(editBtn);
-      const delBtn=document.createElement('button');delBtn.className='delete-btn';delBtn.style.marginLeft='5px';delBtn.textContent='🗑 Delete';delBtn.onclick=()=>deleteWNSTicket(t);actionTd.appendChild(delBtn);
-    }else{
-      const reBtn=document.createElement('button');reBtn.className='reset-btn';reBtn.style.marginLeft='5px';reBtn.textContent='↩ Re-open';reBtn.onclick=()=>reOpenWNSTicket(t);actionTd.appendChild(reBtn);
-      const delBtn2=document.createElement('button');delBtn2.className='delete-btn';delBtn2.style.marginLeft='5px';delBtn2.textContent='🗑 Delete';delBtn2.onclick=()=>deleteWNSTicket(t);actionTd.appendChild(delBtn2);
-    }
-    tbody.appendChild(tr);
-  });
-  const table=document.createElement('table');
-  table.innerHTML='<thead><tr><th>#</th><th>Ticket ID</th><th>Assigned Agent</th><th>Summary</th><th>Assigned Date</th><th>Status</th><th>Submitted</th><th>Actions</th></tr></thead>';
-  table.appendChild(tbody);
-  document.getElementById('wnsTableContainer').innerHTML='';
-  document.getElementById('wnsTableContainer').appendChild(table);
-}
-function filterWNSTable(){
-  const q=document.getElementById('wnsSearchInput').value.toLowerCase();
-  filteredWNSTickets=q?allWNSTickets.filter(t=>(t.ticketId||'').toLowerCase().includes(q)||(t.agentName||'').toLowerCase().includes(q)||(t.summary||'').toLowerCase().includes(q)):[...allWNSTickets];
-  renderWNSTable(filteredWNSTickets);
-}
-async function submitWNSAssign(){
-  const editId=document.getElementById('wns-edit-id').value;
-  const ticketId=document.getElementById('wns-ticketId').value.trim();
-  const agent=document.getElementById('wns-agent').value;
-  const summary=document.getElementById('wns-summary').value.trim();
-  if(!ticketId||!agent||!summary){showFormMsg('wns-msg','⚠ All three fields are required.','error');return;}
-  const btn=document.getElementById('wns-submit-btn');btn.disabled=true;showFormMsg('wns-msg','⏳ Saving...','loading');
-  try{
-    const params=new URLSearchParams({action:editId?'updateWNSTicket':'assignWNSTicket',id:editId,ticketId,agentName:agent,summary,assignedAt:new Date().toISOString()});
-    const res=await fetch(API_URL+'?'+params.toString());
-    const data=await res.json();
-    if(data.success){showFormMsg('wns-msg',editId?'✅ Updated!':'✅ Ticket assigned!','success');clearWNSForm();loadWNSTickets();}
-    else showFormMsg('wns-msg','⚠ '+(data.error||'Failed'),'error');
-  }catch{showFormMsg('wns-msg','⚠ Connection error.','error');}
-  btn.disabled=false;
-}
+// ── WHY NOT SOLVED ────────────────────────────────────────────────────────────
+async function loadWNSAgentList(){if(!allUsers.length){try{const res=await fetch(API_URL+'?action=getUsers&t='+Date.now());const data=await res.json();if(data.success)allUsers=data.users||[];}catch{}}const sel=document.getElementById('wns-agent');const cur=sel.value;sel.innerHTML='<option value="">— Select Agent —</option>';allUsers.forEach(u=>{const o=document.createElement('option');o.value=u.username;o.textContent=u.username+(u.team?' ('+u.team+')':'');sel.appendChild(o);});if(cur)sel.value=cur;}
+async function loadWNSTickets(){document.getElementById('wnsTableContainer').innerHTML='<div class="loading">⏳ LOADING...</div>';try{const res=await fetch(API_URL+'?action=getWNSTickets&t='+Date.now());const data=await res.json();if(data.success){allWNSTickets=data.tickets||[];filteredWNSTickets=[...allWNSTickets];renderWNSStats(allWNSTickets);renderWNSTable(filteredWNSTickets);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}else document.getElementById('wnsTableContainer').innerHTML='<div class="error-msg">⚠ Failed.</div>';}catch{document.getElementById('wnsTableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}}
+function renderWNSStats(list){const pending=list.filter(t=>t.status==='Pending').length;const completed=list.filter(t=>t.status==='Completed').length;const agents=new Set(list.filter(t=>t.status==='Completed').map(t=>t.agentName)).size;document.getElementById('wns-s-total').textContent=list.length;document.getElementById('wns-s-pending').textContent=pending;document.getElementById('wns-s-completed').textContent=completed;document.getElementById('wns-s-agents').textContent=agents;}
+function renderWNSTable(list){document.getElementById('wns-count').textContent=list.length+' records';if(!list.length){document.getElementById('wnsTableContainer').innerHTML='<div class="loading" style="color:#3a7aaa;">No tickets found.</div>';return;}const statusBadge=s=>s==='Completed'?'<span style="background:#d4f5e4;border:1px solid #6cd4a0;border-radius:12px;padding:2px 9px;font-size:10px;font-weight:700;color:#1a7050;">✅ COMPLETED</span>':'<span style="background:#fff3d8;border:1px solid #f5c840;border-radius:12px;padding:2px 9px;font-size:10px;font-weight:700;color:#8a6010;">⏳ PENDING</span>';const tbody=document.createElement('tbody');[...list].reverse().forEach((t,i)=>{const tr=document.createElement('tr');tr.innerHTML='<td style="color:#3a7aaa;font-size:11px;font-weight:600;">'+(i+1)+'</td><td style="font-weight:700;color:#0a3d78;">🎫 '+(t.ticketId||'—')+'</td><td style="font-size:12px;color:#2a4a6a;">👤 '+(t.agentName||'—')+'</td><td style="font-size:12px;color:#2a4a6a;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="'+(t.summary||'')+'">'+(t.summary||'—')+'</td><td style="font-size:11px;color:#3a7aaa;">'+(t.assignedAt||'').slice(0,10)+'</td><td>'+statusBadge(t.status)+'</td><td style="font-size:11px;color:#3a7aaa;">'+(t.status==='Completed'?(t.submittedAt||'').slice(0,10)||'—':'—')+'</td><td style="white-space:nowrap;"></td>';const actionTd=tr.querySelector('td:last-child');const viewBtn=document.createElement('button');viewBtn.className='view-btn';viewBtn.textContent='👁 View';viewBtn.onclick=()=>openWNSDetail(t);actionTd.appendChild(viewBtn);if(t.status==='Pending'){const editBtn=document.createElement('button');editBtn.className='edit-btn';editBtn.style.marginLeft='5px';editBtn.textContent='✏ Edit';editBtn.onclick=()=>editWNSTicket(t);actionTd.appendChild(editBtn);const delBtn=document.createElement('button');delBtn.className='delete-btn';delBtn.style.marginLeft='5px';delBtn.textContent='🗑 Delete';delBtn.onclick=()=>deleteWNSTicket(t);actionTd.appendChild(delBtn);}else{const reBtn=document.createElement('button');reBtn.className='reset-btn';reBtn.style.marginLeft='5px';reBtn.textContent='↩ Re-open';reBtn.onclick=()=>reOpenWNSTicket(t);actionTd.appendChild(reBtn);const delBtn2=document.createElement('button');delBtn2.className='delete-btn';delBtn2.style.marginLeft='5px';delBtn2.textContent='🗑 Delete';delBtn2.onclick=()=>deleteWNSTicket(t);actionTd.appendChild(delBtn2);}tbody.appendChild(tr);});const table=document.createElement('table');table.innerHTML='<thead><tr><th>#</th><th>Ticket ID</th><th>Assigned Agent</th><th>Summary</th><th>Assigned Date</th><th>Status</th><th>Submitted</th><th>Actions</th></tr></thead>';table.appendChild(tbody);document.getElementById('wnsTableContainer').innerHTML='';document.getElementById('wnsTableContainer').appendChild(table);}
+function filterWNSTable(){const q=document.getElementById('wnsSearchInput').value.toLowerCase();filteredWNSTickets=q?allWNSTickets.filter(t=>(t.ticketId||'').toLowerCase().includes(q)||(t.agentName||'').toLowerCase().includes(q)||(t.summary||'').toLowerCase().includes(q)):[...allWNSTickets];renderWNSTable(filteredWNSTickets);}
+async function submitWNSAssign(){const editId=document.getElementById('wns-edit-id').value;const ticketId=document.getElementById('wns-ticketId').value.trim();const agent=document.getElementById('wns-agent').value;const summary=document.getElementById('wns-summary').value.trim();if(!ticketId||!agent||!summary){showFormMsg('wns-msg','⚠ All three fields are required.','error');return;}const btn=document.getElementById('wns-submit-btn');btn.disabled=true;showFormMsg('wns-msg','⏳ Saving...','loading');try{const params=new URLSearchParams({action:editId?'updateWNSTicket':'assignWNSTicket',id:editId,ticketId,agentName:agent,summary,assignedAt:new Date().toISOString()});const res=await fetch(API_URL+'?'+params.toString());const data=await res.json();if(data.success){showFormMsg('wns-msg',editId?'✅ Updated!':'✅ Ticket assigned!','success');clearWNSForm();loadWNSTickets();}else showFormMsg('wns-msg','⚠ '+(data.error||'Failed'),'error');}catch{showFormMsg('wns-msg','⚠ Connection error.','error');}btn.disabled=false;}
 function editWNSTicket(t){document.getElementById('wns-edit-id').value=t.id||'';document.getElementById('wns-ticketId').value=t.ticketId||'';document.getElementById('wns-agent').value=t.agentName||'';document.getElementById('wns-summary').value=t.summary||'';document.getElementById('wnsFormTitle').textContent='✏ Edit: '+t.ticketId;document.getElementById('wns-submit-btn').textContent='💾 Update';document.getElementById('wns-cancel-btn').style.display='inline-block';document.getElementById('wnsFormTitle').scrollIntoView({behavior:'smooth'});}
 function cancelWNSEdit(){clearWNSForm();}
 function clearWNSForm(){['wns-edit-id','wns-ticketId','wns-summary'].forEach(id=>document.getElementById(id).value='');document.getElementById('wns-agent').value='';document.getElementById('wnsFormTitle').textContent='➕ Assign Ticket for Review';document.getElementById('wns-submit-btn').textContent='💾 Assign Ticket';document.getElementById('wns-cancel-btn').style.display='none';document.getElementById('wns-msg').style.display='none';}
@@ -1218,104 +621,35 @@ function openWNSDetail(t){
   document.getElementById('wnsDetailOverlay').classList.add('open');
 }
 function closeWNSDetail(){document.getElementById('wnsDetailOverlay').classList.remove('open');}
-
-// ── WNS EXCEL EXPORT ──────────────────────────────────────────
 function exportWNSExcel(){
   if(!allWNSTickets.length){showToast('⚠ No WNS data to export.',false);return;}
   const wb=XLSX.utils.book_new();
-
-  // ── Sheet 1: Summary ──
   const now=new Date();
-  const sumData=[
-    ['LRP Support — Why Not Solved by HD'],
-    ['Exported: '+now.toLocaleString()],
-    [],
-    ['Metric','Value'],
-    ['Total Assigned',allWNSTickets.length],
-    ['Pending Review',allWNSTickets.filter(t=>t.status==='Pending').length],
-    ['Completed',allWNSTickets.filter(t=>t.status==='Completed').length],
-    ['Agents Reviewed',new Set(allWNSTickets.filter(t=>t.status==='Completed').map(t=>t.agentName)).size]
-  ];
-  const ws1=XLSX.utils.aoa_to_sheet(sumData);
-  ws1['!cols']=[{wch:28},{wch:20}];
-  // Style title
-  if(ws1['A1']) ws1['A1'].s={font:{bold:true,sz:16,color:{rgb:'0A3D78'}},fill:{fgColor:{rgb:'C8DFF0'}}};
+  const sumData=[['LRP Support — Why Not Solved by HD'],['Exported: '+now.toLocaleString()],[],['Metric','Value'],['Total Assigned',allWNSTickets.length],['Pending Review',allWNSTickets.filter(t=>t.status==='Pending').length],['Completed',allWNSTickets.filter(t=>t.status==='Completed').length],['Agents Reviewed',new Set(allWNSTickets.filter(t=>t.status==='Completed').map(t=>t.agentName)).size]];
+  const ws1=XLSX.utils.aoa_to_sheet(sumData);ws1['!cols']=[{wch:28},{wch:20}];
+  if(ws1['A1'])ws1['A1'].s={font:{bold:true,sz:16,color:{rgb:'0A3D78'}},fill:{fgColor:{rgb:'C8DFF0'}}};
   XLSX.utils.book_append_sheet(wb,ws1,'Summary');
-
-  // ── Sheet 2: All Tickets ──
-  const headers=['#','Ticket ID','Assigned Agent','Status','Summary','Assigned Date','Submitted Date',
-    'Client','Component','Priority','Root Cause','Ticket Date',
-    'Primary Reason','Why Not Solved','What Was Learned','How to Solve Next Time',
-    'Engg Resolution Time','Sandbox Tried','Sandbox Result','Reference / Notes'];
-
-  const rows=allWNSTickets.map((t,i)=>[
-    i+1,
-    t.ticketId||'',
-    t.agentName||'',
-    t.status||'',
-    t.summary||'',
-    (t.assignedAt||'').slice(0,10),
-    t.status==='Completed'?(t.submittedAt||'').slice(0,10):'',
-    t.client||'',
-    t.component||'',
-    t.priority||'',
-    t.rootCause||'',
-    t.ticketDate||'',
-    t.primaryReason||'',
-    t.whyNotSolved||'',
-    t.whatLearned||'',
-    t.howSolveNext||'',
-    t.engResolutionTime||'',
-    t.sandboxTried||'',
-    t.sandboxResult||'',
-    t.reference||''
-  ]);
-
+  const headers=['#','Ticket ID','Assigned Agent','Status','Summary','Assigned Date','Submitted Date','Client','Component','Priority','Root Cause','Ticket Date','Primary Reason','Why Not Solved','What Was Learned','How to Solve Next Time','Engg Resolution Time','Sandbox Tried','Sandbox Result','Reference / Notes'];
+  const rows=allWNSTickets.map((t,i)=>[i+1,t.ticketId||'',t.agentName||'',t.status||'',t.summary||'',(t.assignedAt||'').slice(0,10),t.status==='Completed'?(t.submittedAt||'').slice(0,10):'',t.client||'',t.component||'',t.priority||'',t.rootCause||'',t.ticketDate||'',t.primaryReason||'',t.whyNotSolved||'',t.whatLearned||'',t.howSolveNext||'',t.engResolutionTime||'',t.sandboxTried||'',t.sandboxResult||'',t.reference||'']);
   const ws2=XLSX.utils.aoa_to_sheet([headers,...rows]);
-  ws2['!cols']=[
-    {wch:4},{wch:16},{wch:22},{wch:12},{wch:40},{wch:14},{wch:14},
-    {wch:14},{wch:14},{wch:12},{wch:16},{wch:14},
-    {wch:28},{wch:50},{wch:50},{wch:50},
-    {wch:20},{wch:14},{wch:30},{wch:30}
-  ];
-  // Header style
-  headers.forEach((_,ci)=>{
-    const addr=XLSX.utils.encode_cell({r:0,c:ci});
-    if(ws2[addr]) ws2[addr].s={font:{bold:true,color:{rgb:'FFFFFF'}},fill:{fgColor:{rgb:'0A3D78'}},alignment:{horizontal:'center'}};
-  });
+  ws2['!cols']=[{wch:4},{wch:16},{wch:22},{wch:12},{wch:40},{wch:14},{wch:14},{wch:14},{wch:14},{wch:12},{wch:16},{wch:14},{wch:28},{wch:50},{wch:50},{wch:50},{wch:20},{wch:14},{wch:30},{wch:30}];
+  headers.forEach((_,ci)=>{const addr=XLSX.utils.encode_cell({r:0,c:ci});if(ws2[addr])ws2[addr].s={font:{bold:true,color:{rgb:'FFFFFF'}},fill:{fgColor:{rgb:'0A3D78'}},alignment:{horizontal:'center'}};});
   XLSX.utils.book_append_sheet(wb,ws2,'All Tickets');
-
-  // ── Sheet 3: Completed Only ──
   const completed=allWNSTickets.filter(t=>t.status==='Completed');
   if(completed.length){
-    const cRows=completed.map((t,i)=>[
-      i+1, t.ticketId||'', t.agentName||'', t.summary||'',
-      (t.assignedAt||'').slice(0,10), (t.submittedAt||'').slice(0,10),
-      t.client||'', t.component||'', t.priority||'', t.rootCause||'',
-      t.primaryReason||'', t.whyNotSolved||'', t.whatLearned||'',
-      t.howSolveNext||'', t.engResolutionTime||'', t.sandboxTried||''
-    ]);
-    const cHdr=['#','Ticket ID','Agent','Summary','Assigned','Submitted',
-      'Client','Component','Priority','Root Cause',
-      'Primary Reason','Why Not Solved','Learned','How Next Time','Engg Time','Sandbox'];
+    const cRows=completed.map((t,i)=>[i+1,t.ticketId||'',t.agentName||'',t.summary||'',(t.assignedAt||'').slice(0,10),(t.submittedAt||'').slice(0,10),t.client||'',t.component||'',t.priority||'',t.rootCause||'',t.primaryReason||'',t.whyNotSolved||'',t.whatLearned||'',t.howSolveNext||'',t.engResolutionTime||'',t.sandboxTried||'']);
+    const cHdr=['#','Ticket ID','Agent','Summary','Assigned','Submitted','Client','Component','Priority','Root Cause','Primary Reason','Why Not Solved','Learned','How Next Time','Engg Time','Sandbox'];
     const ws3=XLSX.utils.aoa_to_sheet([cHdr,...cRows]);
-    ws3['!cols']=[{wch:4},{wch:16},{wch:20},{wch:38},{wch:13},{wch:13},
-      {wch:14},{wch:14},{wch:12},{wch:16},{wch:28},{wch:48},{wch:48},{wch:48},{wch:18},{wch:12}];
-    cHdr.forEach((_,ci)=>{
-      const addr=XLSX.utils.encode_cell({r:0,c:ci});
-      if(ws3[addr]) ws3[addr].s={font:{bold:true,color:{rgb:'FFFFFF'}},fill:{fgColor:{rgb:'6030A0'}},alignment:{horizontal:'center'}};
-    });
+    ws3['!cols']=[{wch:4},{wch:16},{wch:20},{wch:38},{wch:13},{wch:13},{wch:14},{wch:14},{wch:12},{wch:16},{wch:28},{wch:48},{wch:48},{wch:48},{wch:18},{wch:12}];
+    cHdr.forEach((_,ci)=>{const addr=XLSX.utils.encode_cell({r:0,c:ci});if(ws3[addr])ws3[addr].s={font:{bold:true,color:{rgb:'FFFFFF'}},fill:{fgColor:{rgb:'6030A0'}},alignment:{horizontal:'center'}};});
     XLSX.utils.book_append_sheet(wb,ws3,'Completed Reviews');
   }
-
   const fname='WNS_Export_'+now.getFullYear()+String(now.getMonth()+1).padStart(2,'0')+String(now.getDate()).padStart(2,'0')+'.xlsx';
   XLSX.writeFile(wb,fname);
   showToast('✅ WNS data exported to Excel!');
 }
 
-// ═══════════════════════════════════════════════════════
-//  DARK MODE
-// ═══════════════════════════════════════════════════════
+// ── DARK MODE ─────────────────────────────────────────────────────────────────
 let darkMode=false;
 (function createStars(){const container=document.getElementById('stars');if(!container)return;for(let i=0;i<120;i++){const s=document.createElement('div');s.className='star';const size=Math.random()*2.5+0.8;s.style.cssText=`width:${size}px;height:${size}px;top:${Math.random()*65}%;left:${Math.random()*100}%;animation-duration:${2+Math.random()*3}s;animation-delay:${Math.random()*4}s;`;container.appendChild(s);}})();
 function toggleDarkMode(){darkMode=!darkMode;const sun=document.getElementById('skySun'),bg=document.getElementById('oceanBg'),box=document.querySelector('.login-box');if(darkMode){sun.classList.remove('sun-mode');sun.classList.add('moon-mode');bg.classList.add('dark');box.classList.add('dark');}else{sun.classList.remove('moon-mode');sun.classList.add('sun-mode');bg.classList.remove('dark');box.classList.remove('dark');}}
