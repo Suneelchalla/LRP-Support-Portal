@@ -126,19 +126,17 @@
   .field-tooltip .tt-label { font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
   .f-tooltip-wrap:hover .field-tooltip, .f-tooltip-wrap input:focus + .field-tooltip { display: block; }
   .f-tooltip-wrap.empty .field-tooltip { display: none !important; }
-  .btn-submit-admin { width: 100%; background: linear-gradient(135deg,#0f766e,#0d9488); color: #fff; border: none; border-radius: 8px; padding: 11px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 10px; transition: opacity .2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-  .btn-submit-admin:hover { opacity: .88; }
-  .btn-submit-admin:disabled { opacity: .5; cursor: not-allowed; }
-  .admin-submit-status { margin-top: 8px; font-size: 12px; font-weight: 600; text-align: center; padding: 7px 12px; border-radius: 7px; display: none; }
-  .admin-submit-status.loading { background: #dbeafe; color: #185FA5; display: block; }
-  .admin-submit-status.success { background: #d1fae5; color: #065f46; display: block; }
-  .admin-submit-status.error { background: #fee2e2; color: #991b1b; display: block; }
+  /* ── Single submit button styles ── */
+  .btn-submit { width: 100%; background: linear-gradient(135deg,#0f766e,#0d9488); color: #fff; border: none; border-radius: 8px; padding: 12px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 14px; transition: opacity .2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn-submit:hover { opacity: .88; }
+  .btn-submit:disabled { opacity: .5; cursor: not-allowed; }
+  .submit-status { margin-top: 8px; padding: 8px 12px; border-radius: 7px; font-size: 12px; font-weight: 600; display: none; }
+  .submit-status.loading { background: #dbeafe; color: #185FA5; display: block; }
+  .submit-status.success { background: #d1fae5; color: #065f46; display: block; }
+  .submit-status.error   { background: #fee2e2; color: #991b1b; display: block; }
+  .submit-status.warn    { background: #fef3c7; color: #92400e; display: block; }
   .server-loaded-banner { display: none; background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; font-size: 12px; font-weight: 600; color: #065f46; text-align: center; }
   .server-loaded-banner.visible { display: block; }
-  .btn-submit { width: 100%; background: #185FA5; color: #fff; border: none; border-radius: 8px; padding: 11px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 4px; transition: background .15s; }
-  .btn-submit:hover { background: #0c447c; }
-  .btn-import { font-size: 12px; padding: 5px 12px; border-radius: 7px; border: 1.5px solid #185FA5; color: #185FA5; background: transparent; cursor: pointer; font-weight: 500; }
-  .btn-import:hover { background: #dbeafe; }
   .log-empty { text-align: center; padding: 2.5rem 1rem; color: #9ca3af; }
   .log-empty-icon { font-size: 36px; margin-bottom: 8px; }
   .summary-card { background: #185FA5; border-radius: 10px; padding: 12px 14px; color: #fff; margin-bottom: 10px; }
@@ -191,9 +189,11 @@
 
 <div class="layout">
   <div class="left-panel">
+
     <div class="server-loaded-banner" id="serverLoadedBanner">
-      ✅ This shift handover was already submitted. Showing saved data from server.
+      ✅ This shift handover is live on the server — all agents can see it.
     </div>
+
     <div class="section-card">
       <div class="section-label">Shift Details</div>
       <div class="grid-2">
@@ -248,7 +248,10 @@
 
     <div class="tickets-top">
       <div class="tickets-heading">Tickets</div>
-      <button class="btn-import" id="importBtn" onclick="importPending()">Import Pending from D3</button>
+      <button id="importBtn" onclick="importPending()"
+        style="background:#e0f0ff;color:#185FA5;border:1.5px solid #185FA5;border-radius:7px;padding:5px 14px;font-size:12px;cursor:pointer;font-weight:600;">
+        ⬇ Import Pending from D3
+      </button>
     </div>
 
     <div class="grid-3" style="margin-bottom:12px;">
@@ -261,25 +264,25 @@
       <div><span class="cat-dot" style="background:#E24B4A;"></span><span class="cat-title" style="color:#a32d2d;">Showstopper</span><span class="cat-count" id="count-showstopper" style="background:#E24B4A;">0</span></div>
       <button class="cat-add" style="border-color:#E24B4A;color:#E24B4A;" onclick="addTicket('showstopper')">+ Add</button>
     </div>
-    <div class="cat-body" style="border-color:#F09595;" id="body-showstopper"><div class="empty-row" style="font-size:12px;color:#9ca3af;padding:4px 2px;">No tickets. Click "+ Add" to add one.</div></div>
+    <div class="cat-body" style="border-color:#F09595;" id="body-showstopper"><div style="font-size:12px;color:#9ca3af;padding:4px 2px;">No tickets. Click "+ Add" to add one.</div></div>
 
     <div class="cat-header" style="background:#FAEEDA;">
       <div><span class="cat-dot" style="background:#BA7517;"></span><span class="cat-title" style="color:#854F0B;">High Priority</span><span class="cat-count" id="count-high" style="background:#BA7517;">0</span></div>
       <button class="cat-add" style="border-color:#BA7517;color:#854F0B;" onclick="addTicket('high')">+ Add</button>
     </div>
-    <div class="cat-body" style="border-color:#EF9F27;" id="body-high"><div class="empty-row" style="font-size:12px;color:#9ca3af;padding:4px 2px;">No tickets. Click "+ Add" to add one.</div></div>
+    <div class="cat-body" style="border-color:#EF9F27;" id="body-high"><div style="font-size:12px;color:#9ca3af;padding:4px 2px;">No tickets. Click "+ Add" to add one.</div></div>
 
     <div class="cat-header" style="background:#F3E8FF;">
       <div><span class="cat-dot" style="background:#7C3AED;"></span><span class="cat-title" style="color:#5B21B6;">Customer Escalated</span><span class="cat-count" id="count-escalated" style="background:#7C3AED;">0</span></div>
       <button class="cat-add" style="border-color:#7C3AED;color:#7C3AED;" onclick="addTicket('escalated')">+ Add</button>
     </div>
-    <div class="cat-body" style="border-color:#C4B5FD;" id="body-escalated"><div class="empty-row" style="font-size:12px;color:#9ca3af;padding:4px 2px;">No tickets. Click "+ Add" to add one.</div></div>
+    <div class="cat-body" style="border-color:#C4B5FD;" id="body-escalated"><div style="font-size:12px;color:#9ca3af;padding:4px 2px;">No tickets. Click "+ Add" to add one.</div></div>
 
     <div class="cat-header" style="background:#F1EFE8;">
       <div><span class="cat-dot" style="background:#888780;"></span><span class="cat-title" style="color:#5F5E5A;">Long Pending</span><span class="cat-count" id="count-longpending" style="background:#888780;">0</span></div>
       <button class="cat-add" style="border-color:#888780;color:#5F5E5A;" onclick="addTicket('longpending')">+ Add</button>
     </div>
-    <div class="cat-body" style="border-color:#B4B2A9;" id="body-longpending"><div class="empty-row" style="font-size:12px;color:#9ca3af;padding:4px 2px;">No tickets. Click "+ Add" to add one.</div></div>
+    <div class="cat-body" style="border-color:#B4B2A9;" id="body-longpending"><div style="font-size:12px;color:#9ca3af;padding:4px 2px;">No tickets. Click "+ Add" to add one.</div></div>
 
     <div class="info-boxes-section" style="margin-top:14px;">
       <div class="section-label" style="margin-bottom:8px;">Important Information</div>
@@ -291,14 +294,20 @@
       </div>
     </div>
 
-    <button class="btn-submit" id="btnSubmitHandover" onclick="submitHandover()" style="margin-top:14px;">✔ Submit Handover</button>
-    <button class="btn-submit-admin" id="btnSubmitAdmin" onclick="submitToAdmin()" style="display:none;">📤 Submit to Admin</button>
-    <div class="admin-submit-status" id="adminSubmitStatus"></div>
-  </div>
+    <!-- SINGLE SUBMIT BUTTON — no more two-step flow -->
+    <button class="btn-submit" id="btnSubmitHandover" onclick="submitHandover()">
+      ✔ Submit Handover
+    </button>
+    <div class="submit-status" id="submitStatus"></div>
+
+  </div><!-- /left-panel -->
 
   <div class="right-panel">
     <div class="section-label" style="margin-bottom:10px;">Handover Summary</div>
-    <div id="logEmpty" class="log-empty"><div class="log-empty-icon">📋</div><div style="font-size:13px;">Submit a shift to see the summary here.</div></div>
+    <div id="logEmpty" class="log-empty">
+      <div class="log-empty-icon">📋</div>
+      <div style="font-size:13px;">Submit a shift to see the summary here.</div>
+    </div>
     <div id="logContent" style="display:none;">
       <div class="summary-card">
         <div class="summary-shift" id="sumShiftTitle"></div>
@@ -315,12 +324,13 @@
       <div id="miniCats"></div>
     </div>
     <div class="saved-shifts">
-      <div class="saved-label">Saved Shifts</div>
+      <div class="saved-label">Saved Shifts (local)</div>
       <div class="saved-list" id="savedList"></div>
     </div>
   </div>
 </div>
 
+<!-- FULL LOG OVERLAY -->
 <div class="fulllog-overlay" id="fulllogOverlay">
   <div class="fulllog-header">
     <div>
@@ -342,165 +352,317 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const API_URL='https://script.google.com/macros/s/AKfycbyenGVPixxjpCX06QeS8po56fr0XG7co2wVwRvzhaLOGaKSdh4NWAZzG7q9c1aB6v1eSw/exec';
+// ── CONFIG ──────────────────────────────────────────────────────────────────
+const API_URL = 'https://script.google.com/macros/s/AKfycbxDf5IEEgL5eYY_-vYGAfZgPvAVfjgbGYceUu_lP3lnwrZpb2fO9xYxvgSvzM0D3oP2ZA/exec';
 
-const CLIENT_MAP={"SWIPHX":"SWIRE","SWI":"SWIRE","HSL":"HSL","MILAHA":"MILAHA","MIL":"MILAHA","TASLI":"TASLI","TAS":"TASLI","ESLGEN":"ESL","ESL":"ESL","LSCSAIL":"LSCSAIL","LSC":"LSCSAIL","VCL":"VCL","NFR":"NFR","VSS":"VSS","LRP":"LRP"};
-function resolveClient(id){if(!id)return"";const p=id.split("-");if(p.length<2)return"";const pfx=p[0].toUpperCase();const keys=Object.keys(CLIENT_MAP).sort((a,b)=>b.length-a.length);for(const k of keys){if(pfx===k)return CLIENT_MAP[k];}return pfx;}
-
-const TEAM=["Challa Venkat Suneel","Akash Nagarathinam","Vignesh Maharajan","Vinothkumar Boopathy","Vignesh Rajapandian","Vinothraj","Rene Claret","Kulasekar B","Seenivasan"];
-const SHIFTS=["D1","D2","D3"];
-const CATS=[
-  {key:"showstopper",label:"Showstopper",color:"#E24B4A",border:"#F09595",bg:"#FCEBEB"},
-  {key:"high",label:"High Priority",color:"#BA7517",border:"#EF9F27",bg:"#FAEEDA"},
-  {key:"escalated",label:"Customer Escalated",color:"#7C3AED",border:"#C4B5FD",bg:"#F3E8FF"},
-  {key:"longpending",label:"Long Pending",color:"#888780",border:"#B4B2A9",bg:"#F1EFE8"}
-];
-
-let tickets={showstopper:[],high:[],escalated:[],longpending:[]};
-let currentLog=null;
-let selected={"ms-current":[],"ms-next":[]};
-let ssSelected={"ss-mails":"","ss-jira":""};
-let ticketCounter=0;
-
-document.addEventListener("DOMContentLoaded",()=>{
-  document.getElementById("shiftDate").value=todayStr();
-  buildDropdowns();updateImportBtn();renderSaved();loadShift();
-});
-document.addEventListener("click",e=>{
-  if(!e.target.closest(".ms-wrap")&&!e.target.closest(".ss-wrap"))
-    document.querySelectorAll(".ms-dropdown,.ss-dropdown").forEach(d=>d.classList.remove("open"));
-});
-
-function todayStr(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;}
-function shiftKey(d,s){return"shift:"+d+":"+s;}
-function getDate(){return document.getElementById("shiftDate").value;}
-function getShift(){return document.getElementById("shiftSelect").value;}
-function prevShift(s){return SHIFTS[(SHIFTS.indexOf(s)+SHIFTS.length-1)%SHIFTS.length];}
-function uid(){return"t"+(++ticketCounter)+(Math.random()*1000|0);}
-function esc(s){return(s||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");}
-function calcAge(dateStr){if(!dateStr)return"";const days=Math.floor((new Date()-new Date(dateStr))/86400000);if(days<0)return"0d";if(days===0)return"Today";return days+"d";}
-function showToast(msg,type="success"){const t=document.getElementById("toast");t.style.background=({success:"#3B6D11",error:"#a32d2d",warn:"#854F0B",info:"#185FA5"})[type]||"#3B6D11";t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2800);}
-function getInfoBoxes(){return[1,2,3,4].map(i=>document.getElementById("infoBox"+i).value);}
-function setInfoBoxes(arr){[1,2,3,4].forEach((i,idx)=>{document.getElementById("infoBox"+i).value=(arr&&arr[idx])?arr[idx]:"";});}
-
-// ── Helpers for server data ──
-function parseMembers(str){if(!str||!str.trim())return[];return str.split(',').map(s=>s.trim()).filter(Boolean);}
-function normDate(str){if(!str)return'';const p=str.split('-');if(p.length===3&&p[0].length===2)return`${p[2]}-${p[1]}-${p[0]}`;return str;}
-function buildTicketStubs(idsStr,count,pendingCount){
-  if(!idsStr||!idsStr.trim())return[];
-  const ids=idsStr.split(',').map(s=>s.trim()).filter(Boolean);
-  const pending=Number(pendingCount)||0;
-  return ids.map((id,i)=>({_id:uid(),ticketId:id==='(no id)'?'':id,client:resolveClient(id),desc:'',status:i<pending?'Pending':'Completed',assignedTo:'',nextAction:'',createdDate:''}));
+const CLIENT_MAP = {
+  "SWIPHX":"SWIRE","SWI":"SWIRE","HSL":"HSL","MILAHA":"MILAHA","MIL":"MILAHA",
+  "TASLI":"TASLI","TAS":"TASLI","ESLGEN":"ESL","ESL":"ESL","LSCSAIL":"LSCSAIL",
+  "LSC":"LSCSAIL","VCL":"VCL","NFR":"NFR","VSS":"VSS","LRP":"LRP"
+};
+function resolveClient(id) {
+  if (!id) return "";
+  const p = id.split("-");
+  if (p.length < 2) return "";
+  const pfx = p[0].toUpperCase();
+  const keys = Object.keys(CLIENT_MAP).sort((a,b) => b.length-a.length);
+  for (const k of keys) { if (pfx === k) return CLIENT_MAP[k]; }
+  return pfx;
 }
 
-// ── Dropdowns ──
-function buildDropdowns(){
-  ["ms-current","ms-next"].forEach(id=>{
-    const dd=document.getElementById(id+"-dd");
-    TEAM.forEach(name=>{
-      const div=document.createElement("div");div.className="ms-opt";div.dataset.name=name;
-      div.innerHTML=`<span class="ms-check"></span><span>${name}</span>`;
-      div.onclick=(e)=>{e.stopPropagation();toggleOption(id,name);};
+const TEAM = [
+  "Challa Venkat Suneel","Akash Nagarathinam","Vignesh Maharajan",
+  "Vinothkumar Boopathy","Vignesh Rajapandian","Vinothraj",
+  "Rene Claret","Kulasekar B","Seenivasan"
+];
+const SHIFTS = ["D1","D2","D3"];
+const CATS = [
+  {key:"showstopper", label:"Showstopper",       color:"#E24B4A", border:"#F09595", bg:"#FCEBEB"},
+  {key:"high",        label:"High Priority",      color:"#BA7517", border:"#EF9F27", bg:"#FAEEDA"},
+  {key:"escalated",   label:"Customer Escalated", color:"#7C3AED", border:"#C4B5FD", bg:"#F3E8FF"},
+  {key:"longpending", label:"Long Pending",       color:"#888780", border:"#B4B2A9", bg:"#F1EFE8"}
+];
+
+let tickets       = {showstopper:[],high:[],escalated:[],longpending:[]};
+let currentLog    = null;
+let selected      = {"ms-current":[],"ms-next":[]};
+let ssSelected    = {"ss-mails":"","ss-jira":""};
+let ticketCounter = 0;
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("shiftDate").value = todayStr();
+  buildDropdowns();
+  updateImportBtn();
+  renderSaved();
+  loadShift();
+});
+document.addEventListener("click", e => {
+  if (!e.target.closest(".ms-wrap") && !e.target.closest(".ss-wrap"))
+    document.querySelectorAll(".ms-dropdown,.ss-dropdown").forEach(d => d.classList.remove("open"));
+});
+
+// ── UTILS ─────────────────────────────────────────────────────────────────────
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
+function shiftKey(d,s) { return "shift:"+d+":"+s; }
+function getDate()  { return document.getElementById("shiftDate").value; }
+function getShift() { return document.getElementById("shiftSelect").value; }
+function prevShift(s) { return SHIFTS[(SHIFTS.indexOf(s)+SHIFTS.length-1)%SHIFTS.length]; }
+function uid()  { return "t"+(++ticketCounter)+(Math.random()*1000|0); }
+function esc(s) { return (s||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;"); }
+function calcAge(dateStr) {
+  if (!dateStr) return "";
+  const days = Math.floor((new Date()-new Date(dateStr))/86400000);
+  if (days<0) return "0d";
+  if (days===0) return "Today";
+  return days+"d";
+}
+function showToast(msg, type="success") {
+  const t = document.getElementById("toast");
+  t.style.background = ({success:"#3B6D11",error:"#a32d2d",warn:"#854F0B",info:"#185FA5"})[type]||"#3B6D11";
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2800);
+}
+function showSubmitStatus(msg, type) {
+  const el = document.getElementById("submitStatus");
+  el.textContent = msg;
+  el.className = "submit-status "+type;
+}
+function getInfoBoxes() { return [1,2,3,4].map(i => document.getElementById("infoBox"+i).value); }
+function setInfoBoxes(arr) {
+  [1,2,3,4].forEach((i,idx) => { document.getElementById("infoBox"+i).value = (arr&&arr[idx])?arr[idx]:""; });
+}
+function parseMembers(str) {
+  if (!str||!str.trim()) return [];
+  return str.split(',').map(s=>s.trim()).filter(Boolean);
+}
+function normDate(str) {
+  if (!str) return '';
+  const p = str.split('-');
+  if (p.length===3 && p[0].length===2) return `${p[2]}-${p[1]}-${p[0]}`;
+  return str;
+}
+function buildTicketStubs(idsStr, count, pendingCount) {
+  if (!idsStr||!idsStr.trim()) return [];
+  const ids = idsStr.split(',').map(s=>s.trim()).filter(Boolean);
+  const pending = Number(pendingCount)||0;
+  return ids.map((id,i) => ({
+    _id:uid(), ticketId:id==='(no id)'?'':id,
+    client:resolveClient(id), desc:'',
+    status: i < pending ? 'Pending' : 'Completed',
+    assignedTo:'', nextAction:'', createdDate:''
+  }));
+}
+
+// ── DROPDOWNS ─────────────────────────────────────────────────────────────────
+function buildDropdowns() {
+  ["ms-current","ms-next"].forEach(id => {
+    const dd = document.getElementById(id+"-dd");
+    TEAM.forEach(name => {
+      const div = document.createElement("div");
+      div.className = "ms-opt"; div.dataset.name = name;
+      div.innerHTML = `<span class="ms-check"></span><span>${name}</span>`;
+      div.onclick = e => { e.stopPropagation(); toggleOption(id,name); };
       dd.appendChild(div);
     });
   });
 }
-function toggleDropdown(id){
-  const dd=document.getElementById(id+"-dd");const wasOpen=dd.classList.contains("open");
+function toggleDropdown(id) {
+  const dd = document.getElementById(id+"-dd");
+  const wasOpen = dd.classList.contains("open");
   document.querySelectorAll(".ms-dropdown,.ss-dropdown").forEach(d=>d.classList.remove("open"));
-  if(!wasOpen){if(id==="ms-current")syncCrossDropdown("ms-current","ms-next");if(id==="ms-next")syncCrossDropdown("ms-next","ms-current");dd.classList.add("open");}
+  if (!wasOpen) {
+    if (id==="ms-current") syncCrossDropdown("ms-current","ms-next");
+    if (id==="ms-next")    syncCrossDropdown("ms-next","ms-current");
+    dd.classList.add("open");
+  }
 }
-function toggleOption(msId,name){
-  const arr=selected[msId];selected[msId]=arr.includes(name)?arr.filter(x=>x!==name):[...arr,name];renderDisplay(msId);
-  if(msId==="ms-current"){selected["ms-next"]=selected["ms-next"].filter(n=>!selected["ms-current"].includes(n));renderDisplay("ms-next");syncCrossDropdown("ms-next","ms-current");onCurrentMembersChanged(false);}
-  else if(msId==="ms-next"){syncCrossDropdown("ms-current","ms-next");}
+function toggleOption(msId, name) {
+  const arr = selected[msId];
+  selected[msId] = arr.includes(name) ? arr.filter(x=>x!==name) : [...arr,name];
+  renderDisplay(msId);
+  if (msId==="ms-current") {
+    selected["ms-next"] = selected["ms-next"].filter(n=>!selected["ms-current"].includes(n));
+    renderDisplay("ms-next");
+    syncCrossDropdown("ms-next","ms-current");
+    onCurrentMembersChanged(false);
+  } else if (msId==="ms-next") {
+    syncCrossDropdown("ms-current","ms-next");
+  }
 }
-function syncCrossDropdown(msId,otherMsId){const taken=selected[otherMsId];document.querySelectorAll(`#${msId}-dd .ms-opt`).forEach(o=>o.classList.toggle("dimmed",taken.includes(o.dataset.name)));}
-function renderDisplay(msId){
-  const vals=selected[msId];const display=document.querySelector(`#${msId} .ms-display`);display.innerHTML="";
-  if(!vals.length){display.innerHTML=`<span class="ms-placeholder">Select members...</span><span class="ms-arrow">▾</span>`;}
-  else{vals.forEach(s=>{const sp=document.createElement("span");sp.className="ms-tag";sp.textContent=s;display.appendChild(sp);});const arr=document.createElement("span");arr.className="ms-arrow";arr.textContent="▾";display.appendChild(arr);}
-  document.querySelectorAll(`#${msId}-dd .ms-opt`).forEach(o=>{const n=o.dataset.name,isSel=vals.includes(n);o.classList.toggle("selected",isSel);o.querySelector(".ms-check").textContent=isSel?"✓":"";});
+function syncCrossDropdown(msId, otherMsId) {
+  const taken = selected[otherMsId];
+  document.querySelectorAll(`#${msId}-dd .ms-opt`).forEach(o =>
+    o.classList.toggle("dimmed", taken.includes(o.dataset.name)));
 }
-function setDropdown(msId,values){selected[msId]=[...(values||[])];renderDisplay(msId);}
+function renderDisplay(msId) {
+  const vals = selected[msId];
+  const display = document.querySelector(`#${msId} .ms-display`);
+  display.innerHTML = "";
+  if (!vals.length) {
+    display.innerHTML = `<span class="ms-placeholder">Select members...</span><span class="ms-arrow">▾</span>`;
+  } else {
+    vals.forEach(s => {
+      const sp = document.createElement("span"); sp.className="ms-tag"; sp.textContent=s;
+      display.appendChild(sp);
+    });
+    const arr = document.createElement("span"); arr.className="ms-arrow"; arr.textContent="▾";
+    display.appendChild(arr);
+  }
+  document.querySelectorAll(`#${msId}-dd .ms-opt`).forEach(o => {
+    const isSel = vals.includes(o.dataset.name);
+    o.classList.toggle("selected",isSel);
+    o.querySelector(".ms-check").textContent = isSel?"✓":"";
+  });
+}
+function setDropdown(msId, values) { selected[msId]=[...(values||[])]; renderDisplay(msId); }
 
-function onCurrentMembersChanged(){
-  const members=selected["ms-current"];
-  if(!members.length){ssSelected["ss-mails"]="";ssSelected["ss-jira"]="";renderSSDisplay("ss-mails",true);renderSSDisplay("ss-jira",true);return;}
-  if(members.length===1){ssSelected["ss-mails"]=members[0];ssSelected["ss-jira"]=members[0];renderSSDisplay("ss-mails",false,true);renderSSDisplay("ss-jira",false,true);return;}
-  if(ssSelected["ss-mails"]&&!members.includes(ssSelected["ss-mails"]))ssSelected["ss-mails"]="";
-  if(ssSelected["ss-jira"]&&!members.includes(ssSelected["ss-jira"]))ssSelected["ss-jira"]="";
-  if(ssSelected["ss-mails"]&&!ssSelected["ss-jira"]){const o=members.filter(m=>m!==ssSelected["ss-mails"]);if(o.length)ssSelected["ss-jira"]=o[0];}
-  if(!ssSelected["ss-mails"]&&!ssSelected["ss-jira"]){ssSelected["ss-mails"]=members[0];ssSelected["ss-jira"]=members[1]||members[0];}
-  renderSSDisplay("ss-mails",false);renderSSDisplay("ss-jira",false);buildSSDropdown("ss-mails");buildSSDropdown("ss-jira");
+function onCurrentMembersChanged() {
+  const members = selected["ms-current"];
+  if (!members.length) {
+    ssSelected["ss-mails"]=""; ssSelected["ss-jira"]="";
+    renderSSDisplay("ss-mails",true); renderSSDisplay("ss-jira",true); return;
+  }
+  if (members.length===1) {
+    ssSelected["ss-mails"]=members[0]; ssSelected["ss-jira"]=members[0];
+    renderSSDisplay("ss-mails",false,true); renderSSDisplay("ss-jira",false,true); return;
+  }
+  if (ssSelected["ss-mails"]&&!members.includes(ssSelected["ss-mails"])) ssSelected["ss-mails"]="";
+  if (ssSelected["ss-jira"] &&!members.includes(ssSelected["ss-jira"]))  ssSelected["ss-jira"]="";
+  if (ssSelected["ss-mails"]&&!ssSelected["ss-jira"]) {
+    const o=members.filter(m=>m!==ssSelected["ss-mails"]);
+    if(o.length) ssSelected["ss-jira"]=o[0];
+  }
+  if (!ssSelected["ss-mails"]&&!ssSelected["ss-jira"]) {
+    ssSelected["ss-mails"]=members[0]; ssSelected["ss-jira"]=members[1]||members[0];
+  }
+  renderSSDisplay("ss-mails",false); renderSSDisplay("ss-jira",false);
+  buildSSDropdown("ss-mails"); buildSSDropdown("ss-jira");
 }
-function renderSSDisplay(ssId,disabled=false,solo=false){
-  const display=document.getElementById(ssId+"-display");const valEl=document.getElementById(ssId+"-val");const val=ssSelected[ssId];
-  if(disabled){display.classList.add("disabled");valEl.className="ss-val placeholder";valEl.textContent="Select current members first";return;}
+function renderSSDisplay(ssId, disabled=false, solo=false) {
+  const display = document.getElementById(ssId+"-display");
+  const valEl   = document.getElementById(ssId+"-val");
+  const val     = ssSelected[ssId];
+  if (disabled) {
+    display.classList.add("disabled");
+    valEl.className="ss-val placeholder"; valEl.textContent="Select current members first"; return;
+  }
   display.classList.remove("disabled");
-  if(solo){valEl.className="ss-val";valEl.textContent=val;display.onclick=null;display.style.cursor="default";display.title="Only one current member — auto-assigned";}
-  else{display.onclick=()=>toggleSSDropdown(ssId);display.style.cursor="pointer";display.title="";valEl.className=val?"ss-val":"ss-val placeholder";valEl.textContent=val||"Select...";}
+  if (solo) {
+    valEl.className="ss-val"; valEl.textContent=val;
+    display.onclick=null; display.style.cursor="default";
+    display.title="Only one current member — auto-assigned";
+  } else {
+    display.onclick=()=>toggleSSDropdown(ssId); display.style.cursor="pointer"; display.title="";
+    valEl.className=val?"ss-val":"ss-val placeholder"; valEl.textContent=val||"Select...";
+  }
 }
-function buildSSDropdown(ssId){
-  const dd=document.getElementById(ssId+"-dd");const otherId=ssId==="ss-mails"?"ss-jira":"ss-mails";const otherVal=ssSelected[otherId];const members=selected["ms-current"];
+function buildSSDropdown(ssId) {
+  const dd=document.getElementById(ssId+"-dd");
+  const otherId=ssId==="ss-mails"?"ss-jira":"ss-mails";
+  const otherVal=ssSelected[otherId];
+  const members=selected["ms-current"];
   dd.innerHTML="";
-  if(!members.length){const h=document.createElement("div");h.className="ss-hint";h.textContent="No current members selected.";dd.appendChild(h);return;}
-  members.forEach(name=>{
-    const div=document.createElement("div");div.className="ss-opt";
-    const isDimmed=(name===otherVal&&members.length>1);const isSelected=ssSelected[ssId]===name;
-    if(isDimmed)div.classList.add("dimmed");if(isSelected)div.classList.add("selected");
+  if (!members.length) {
+    const h=document.createElement("div"); h.className="ss-hint";
+    h.textContent="No current members selected."; dd.appendChild(h); return;
+  }
+  members.forEach(name => {
+    const div=document.createElement("div"); div.className="ss-opt";
+    const isDimmed=(name===otherVal&&members.length>1);
+    const isSelected=ssSelected[ssId]===name;
+    if(isDimmed) div.classList.add("dimmed");
+    if(isSelected) div.classList.add("selected");
     div.innerHTML=`<span style="width:14px;height:14px;border-radius:50%;background:${isSelected?'#185FA5':'#d0d7df'};display:inline-flex;align-items:center;justify-content:center;font-size:9px;color:#fff;flex-shrink:0;">${isSelected?'✓':''}</span><span>${name}</span>`;
-    if(!isDimmed)div.onclick=(e)=>{e.stopPropagation();selectSSOption(ssId,name);};
+    if(!isDimmed) div.onclick=e=>{e.stopPropagation();selectSSOption(ssId,name);};
     dd.appendChild(div);
   });
-  if(members.length>1){const h=document.createElement("div");h.className="ss-hint";h.textContent="Dimmed name is assigned to the other field.";dd.appendChild(h);}
+  if(members.length>1){
+    const h=document.createElement("div"); h.className="ss-hint";
+    h.textContent="Dimmed name is assigned to the other field."; dd.appendChild(h);
+  }
 }
-function toggleSSDropdown(ssId){
-  const members=selected["ms-current"];if(!members.length||members.length===1)return;
-  buildSSDropdown(ssId);const dd=document.getElementById(ssId+"-dd");const wasOpen=dd.classList.contains("open");
-  document.querySelectorAll(".ms-dropdown,.ss-dropdown").forEach(d=>d.classList.remove("open"));if(!wasOpen)dd.classList.add("open");
+function toggleSSDropdown(ssId) {
+  const members=selected["ms-current"];
+  if(!members.length||members.length===1) return;
+  buildSSDropdown(ssId);
+  const dd=document.getElementById(ssId+"-dd");
+  const wasOpen=dd.classList.contains("open");
+  document.querySelectorAll(".ms-dropdown,.ss-dropdown").forEach(d=>d.classList.remove("open"));
+  if(!wasOpen) dd.classList.add("open");
 }
-function selectSSOption(ssId,name){
-  ssSelected[ssId]=name;document.querySelectorAll(".ss-dropdown").forEach(d=>d.classList.remove("open"));
-  renderSSDisplay("ss-mails",false);renderSSDisplay("ss-jira",false);buildSSDropdown("ss-mails");buildSSDropdown("ss-jira");
+function selectSSOption(ssId, name) {
+  ssSelected[ssId]=name;
+  document.querySelectorAll(".ss-dropdown").forEach(d=>d.classList.remove("open"));
+  renderSSDisplay("ss-mails",false); renderSSDisplay("ss-jira",false);
+  buildSSDropdown("ss-mails"); buildSSDropdown("ss-jira");
 }
-function setSSValues(mailsVal,jiraVal){
-  ssSelected["ss-mails"]=mailsVal||"";ssSelected["ss-jira"]=jiraVal||"";
-  const members=selected["ms-current"];const disabled=!members.length,solo=members.length===1;
-  renderSSDisplay("ss-mails",disabled,solo);renderSSDisplay("ss-jira",disabled,solo);
+function setSSValues(mailsVal, jiraVal) {
+  ssSelected["ss-mails"]=mailsVal||""; ssSelected["ss-jira"]=jiraVal||"";
+  const members=selected["ms-current"];
+  const disabled=!members.length, solo=members.length===1;
+  renderSSDisplay("ss-mails",disabled,solo); renderSSDisplay("ss-jira",disabled,solo);
   if(!disabled&&!solo){buildSSDropdown("ss-mails");buildSSDropdown("ss-jira");}
 }
 
-const catColorMap={showstopper:"#E24B4A",high:"#BA7517",escalated:"#7C3AED",longpending:"#888780"};
-function addTicket(cat,data={}){
+// ── TICKET MANAGEMENT ─────────────────────────────────────────────────────────
+const catColorMap = {showstopper:"#E24B4A",high:"#BA7517",escalated:"#7C3AED",longpending:"#888780"};
+
+function addTicket(cat, data={}) {
   const obj={_id:uid(),category:cat,ticketId:"",client:"",desc:"",status:"Pending",assignedTo:"",nextAction:"",createdDate:"",...data};
-  tickets[cat].push(obj);renderCatBody(cat);updateStats();
+  tickets[cat].push(obj); renderCatBody(cat); updateStats();
 }
-function renderCatBody(cat){
-  const body=document.getElementById("body-"+cat);const color=catColorMap[cat];body.innerHTML="";
-  if(!tickets[cat].length){body.innerHTML=`<div style="font-size:12px;color:#9ca3af;padding:4px 2px;">No tickets. Click "+ Add" to add one.</div>`;document.getElementById("count-"+cat).textContent="0";return;}
+function renderCatBody(cat) {
+  const body=document.getElementById("body-"+cat);
+  const color=catColorMap[cat];
+  body.innerHTML="";
+  if(!tickets[cat].length){
+    body.innerHTML=`<div style="font-size:12px;color:#9ca3af;padding:4px 2px;">No tickets. Click "+ Add" to add one.</div>`;
+    document.getElementById("count-"+cat).textContent="0"; return;
+  }
   document.getElementById("count-"+cat).textContent=tickets[cat].length;
-  tickets[cat].forEach(t=>{
-    const age=calcAge(t.createdDate);const hasDesc=!!(t.desc&&t.desc.trim());const hasAction=!!(t.nextAction&&t.nextAction.trim());
-    const row=document.createElement("div");row.className="ticket-row";row.style.borderLeftColor=color;
+  tickets[cat].forEach(t => {
+    const age=calcAge(t.createdDate);
+    const hasDesc=!!(t.desc&&t.desc.trim());
+    const hasAction=!!(t.nextAction&&t.nextAction.trim());
+    const row=document.createElement("div");
+    row.className="ticket-row"; row.style.borderLeftColor=color;
     row.innerHTML=`<div class="ticket-line">
-      <input class="f-id" value="${esc(t.ticketId)}" placeholder="Ticket ID" data-cat="${cat}" data-tid="${t._id}" oninput="handleTicketIdInput(this)" onchange="updateTicket(this.dataset.cat,this.dataset.tid,'ticketId',this.value)"/>
-      <input class="f-client" value="${esc(t.client)}" placeholder="Client" data-id="${t._id}" data-cat="${cat}" data-auto-filled="${resolveClient(t.ticketId)===t.client&&t.client?'true':'false'}" style="${resolveClient(t.ticketId)&&resolveClient(t.ticketId)===t.client?'background:#f0fdf4;color:#065f46;font-weight:600;':''}" onchange="updateTicket('${cat}','${t._id}','client',this.value)"/>
-      <div class="f-tooltip-wrap f-desc${hasDesc?'':' empty'}" data-cat="${cat}" data-tid="${t._id}">
-        <input value="${esc(t.desc)}" placeholder="Description" oninput="syncTooltip(this,'Description')" onchange="updateTicket('${cat}','${t._id}','desc',this.value)"/>
+      <input class="f-id" value="${esc(t.ticketId)}" placeholder="Ticket ID"
+        data-cat="${cat}" data-tid="${t._id}"
+        oninput="handleTicketIdInput(this)"
+        onchange="updateTicket(this.dataset.cat,this.dataset.tid,'ticketId',this.value)"/>
+      <input class="f-client" value="${esc(t.client)}" placeholder="Client"
+        data-id="${t._id}" data-cat="${cat}"
+        data-auto-filled="${resolveClient(t.ticketId)===t.client&&t.client?'true':'false'}"
+        style="${resolveClient(t.ticketId)&&resolveClient(t.ticketId)===t.client?'background:#f0fdf4;color:#065f46;font-weight:600;':''}"
+        onchange="updateTicket('${cat}','${t._id}','client',this.value)"/>
+      <div class="f-tooltip-wrap f-desc${hasDesc?'':' empty'}">
+        <input value="${esc(t.desc)}" placeholder="Description"
+          oninput="syncTooltip(this,'Description')"
+          onchange="updateTicket('${cat}','${t._id}','desc',this.value)"/>
         <div class="field-tooltip"><div class="tt-label">Description</div>${esc(t.desc)||''}</div>
       </div>
       <select class="f-assign" onchange="updateTicket('${cat}','${t._id}','assignedTo',this.value)">
         <option value="">Assigned To</option>
-        ${["Exports","Operations","Cost","Imports","PNC","EMS","VSS","NFR","E com","CMR","EDI","Finance","MIS","Feeder Ops","HelpDesk"].map(tm=>`<option${t.assignedTo===tm?" selected":""}>${tm}</option>`).join("")}
+        ${["Exports","Operations","Cost","Imports","PNC","EMS","VSS","NFR","E com","CMR","EDI","Finance","MIS","Feeder Ops","HelpDesk"]
+          .map(tm=>`<option${t.assignedTo===tm?" selected":""}>${tm}</option>`).join("")}
       </select>
-      <div class="f-tooltip-wrap f-action${hasAction?'':' empty'}" data-cat="${cat}" data-tid="${t._id}">
-        <input value="${esc(t.nextAction)}" placeholder="Next Action" oninput="syncTooltip(this,'Next Action')" onchange="updateTicket('${cat}','${t._id}','nextAction',this.value)"/>
+      <div class="f-tooltip-wrap f-action${hasAction?'':' empty'}">
+        <input value="${esc(t.nextAction)}" placeholder="Next Action"
+          oninput="syncTooltip(this,'Next Action')"
+          onchange="updateTicket('${cat}','${t._id}','nextAction',this.value)"/>
         <div class="field-tooltip"><div class="tt-label">Next Action</div>${esc(t.nextAction)||''}</div>
       </div>
-      <input class="f-date" type="date" value="${esc(t.createdDate)}" title="Created Date" onchange="updateTicket('${cat}','${t._id}','createdDate',this.value)"/>
+      <input class="f-date" type="date" value="${esc(t.createdDate)}" title="Created Date"
+        onchange="updateTicket('${cat}','${t._id}','createdDate',this.value)"/>
       <div class="f-age" title="Ticket Age">${age||"—"}</div>
-      <select class="f-status" onchange="updateTicket('${cat}','${t._id}','status',this.value)" style="color:${t.status==='Completed'?'#065f46':'#a32d2d'}">
+      <select class="f-status" onchange="updateTicket('${cat}','${t._id}','status',this.value)"
+        style="color:${t.status==='Completed'?'#065f46':'#a32d2d'}">
         <option${t.status==="Pending"?" selected":""}>Pending</option>
         <option${t.status==="Completed"?" selected":""}>Completed</option>
       </select>
@@ -509,312 +671,713 @@ function renderCatBody(cat){
     body.appendChild(row);
   });
 }
-function syncTooltip(inputEl,label){const wrap=inputEl.closest(".f-tooltip-wrap");const tt=wrap.querySelector(".field-tooltip");const val=inputEl.value.trim();if(val){wrap.classList.remove("empty");tt.innerHTML=`<div class="tt-label">${label}</div>${esc(val)}`;}else{wrap.classList.add("empty");}}
-function handleTicketIdInput(inputEl){
-  const pos=inputEl.selectionStart;inputEl.value=inputEl.value.toUpperCase();inputEl.setSelectionRange(pos,pos);
+function syncTooltip(inputEl, label) {
+  const wrap=inputEl.closest(".f-tooltip-wrap");
+  const tt=wrap.querySelector(".field-tooltip");
+  const val=inputEl.value.trim();
+  if(val){wrap.classList.remove("empty");tt.innerHTML=`<div class="tt-label">${label}</div>${esc(val)}`;}
+  else{wrap.classList.add("empty");}
+}
+function handleTicketIdInput(inputEl) {
+  const pos=inputEl.selectionStart;
+  inputEl.value=inputEl.value.toUpperCase();
+  inputEl.setSelectionRange(pos,pos);
   const cat=inputEl.dataset.cat,id=inputEl.dataset.tid,val=inputEl.value;
-  const t=tickets[cat]&&tickets[cat].find(x=>x._id===id);if(!t)return;
-  t.ticketId=val;const resolved=resolveClient(val);
-  const clientInput=inputEl.closest(".ticket-line").querySelector(".f-client");if(!clientInput)return;
-  if(resolved){t.client=resolved;clientInput.value=resolved;clientInput.style.background="#f0fdf4";clientInput.style.color="#065f46";clientInput.style.fontWeight="600";clientInput.dataset.autoFilled="true";}
-  else{if(clientInput.dataset.autoFilled==="true"){t.client="";clientInput.value="";clientInput.style.background="";clientInput.style.color="";clientInput.style.fontWeight="";clientInput.dataset.autoFilled="false";}}
+  const t=tickets[cat]&&tickets[cat].find(x=>x._id===id);
+  if(!t) return;
+  t.ticketId=val;
+  const resolved=resolveClient(val);
+  const clientInput=inputEl.closest(".ticket-line").querySelector(".f-client");
+  if(!clientInput) return;
+  if(resolved){
+    t.client=resolved; clientInput.value=resolved;
+    clientInput.style.background="#f0fdf4"; clientInput.style.color="#065f46";
+    clientInput.style.fontWeight="600"; clientInput.dataset.autoFilled="true";
+  } else {
+    if(clientInput.dataset.autoFilled==="true"){
+      t.client=""; clientInput.value="";
+      clientInput.style.background=""; clientInput.style.color="";
+      clientInput.style.fontWeight=""; clientInput.dataset.autoFilled="false";
+    }
+  }
   updateStats();
 }
-function updateTicket(cat,id,field,val){
-  const t=tickets[cat].find(x=>x._id===id);if(!t)return;t[field]=val;
-  if(field==="ticketId"){const r=resolveClient(val);if(r)t.client=r;}updateStats();
-  if(field==="status"){document.querySelectorAll(`#body-${cat} select`).forEach(s=>{s.style.color=s.value==="Completed"?"#065f46":"#a32d2d";});}
-  if(field==="createdDate")renderCatBody(cat);
+function updateTicket(cat, id, field, val) {
+  const t=tickets[cat].find(x=>x._id===id);
+  if(!t) return;
+  t[field]=val;
+  if(field==="ticketId"){const r=resolveClient(val);if(r)t.client=r;}
+  updateStats();
+  if(field==="status"){
+    document.querySelectorAll(`#body-${cat} select`).forEach(s=>{
+      s.style.color=s.value==="Completed"?"#065f46":"#a32d2d";
+    });
+  }
+  if(field==="createdDate") renderCatBody(cat);
 }
-function removeTicket(cat,id){tickets[cat]=tickets[cat].filter(x=>x._id!==id);renderCatBody(cat);updateStats();}
-function updateStats(){
-  const all=Object.values(tickets).flat();const pend=all.filter(t=>t.status==="Pending").length;
+function removeTicket(cat, id) {
+  tickets[cat]=tickets[cat].filter(x=>x._id!==id); renderCatBody(cat); updateStats();
+}
+function updateStats() {
+  const all=Object.values(tickets).flat();
+  const pend=all.filter(t=>t.status==="Pending").length;
   document.getElementById("statTotal").textContent=all.length;
   document.getElementById("statPending").textContent=pend;
   document.getElementById("statCompleted").textContent=all.length-pend;
 }
-function onShiftChange(){updateImportBtn();loadShift();}
 
-// ── LOAD SHIFT: server first, then localStorage ──
-async function loadShift(){
+// ── SHIFT CHANGE ──────────────────────────────────────────────────────────────
+function onShiftChange() { updateImportBtn(); loadShift(); }
+
+// ── LOAD SHIFT: server first → localStorage fallback ─────────────────────────
+async function loadShift() {
   tickets={showstopper:[],high:[],escalated:[],longpending:[]};
-  setDropdown("ms-current",[]);setDropdown("ms-next",[]);
+  setDropdown("ms-current",[]); setDropdown("ms-next",[]);
   ssSelected={"ss-mails":"","ss-jira":""};
-  renderSSDisplay("ss-mails",true);renderSSDisplay("ss-jira",true);
-  setInfoBoxes([]);CATS.forEach(c=>renderCatBody(c.key));updateStats();
+  renderSSDisplay("ss-mails",true); renderSSDisplay("ss-jira",true);
+  setInfoBoxes([]);
+  CATS.forEach(c=>renderCatBody(c.key));
+  updateStats();
   currentLog=null;
+
   document.getElementById("logEmpty").style.display="";
   document.getElementById("logContent").style.display="none";
   document.getElementById("btnFullLog").style.display="none";
-  document.getElementById("btnSubmitAdmin").style.display="none";
-  document.getElementById("adminSubmitStatus").style.display="none";
+  document.getElementById("submitStatus").className="submit-status";
   document.getElementById("serverLoadedBanner").classList.remove("visible");
-  document.getElementById("btnSubmitHandover").style.display="";
 
-  // STEP 1 — try server first
-  try{
-    const res=await fetch(API_URL+'?action=getHandovers&t='+Date.now());
+  const btn=document.getElementById("btnSubmitHandover");
+  btn.disabled=false;
+  btn.textContent="✔ Submit Handover";
+
+  // ── STEP 1: Try server (shared across all agents) ──
+  try {
+    const res=await fetch(API_URL+"?action=getHandovers&t="+Date.now());
     const data=await res.json();
     if(data.success&&data.handovers&&data.handovers.length){
-      const cd=getDate(),cs=getShift();
+      const cd=getDate(), cs=getShift();
       const rec=data.handovers.find(h=>{
-        const hd=h.date||'';
-        return(hd===cd||normDate(hd)===cd)&&h.shift===cs;
+        const hd=h.date||"";
+        return (hd===cd||normDate(hd)===cd)&&h.shift===cs;
       });
       if(rec){
         setDropdown("ms-current",parseMembers(rec.currentMembers));
         setDropdown("ms-next",parseMembers(rec.nextMembers));
-        setInfoBoxes([rec.infoBox1||'',rec.infoBox2||'',rec.infoBox3||'',rec.infoBox4||'']);
+        setInfoBoxes([rec.infoBox1||"",rec.infoBox2||"",rec.infoBox3||"",rec.infoBox4||""]);
         onCurrentMembersChanged();
         const members=selected["ms-current"];
         if(members.length>1){
-          if(rec.mailsHandledBy&&members.includes(rec.mailsHandledBy))ssSelected["ss-mails"]=rec.mailsHandledBy;
-          if(rec.jiraHandledBy&&members.includes(rec.jiraHandledBy))ssSelected["ss-jira"]=rec.jiraHandledBy;
-          renderSSDisplay("ss-mails",false);renderSSDisplay("ss-jira",false);
-        }else{setSSValues(rec.mailsHandledBy||'',rec.jiraHandledBy||'');}
+          if(rec.mailsHandledBy&&members.includes(rec.mailsHandledBy)) ssSelected["ss-mails"]=rec.mailsHandledBy;
+          if(rec.jiraHandledBy &&members.includes(rec.jiraHandledBy))  ssSelected["ss-jira"]=rec.jiraHandledBy;
+          renderSSDisplay("ss-mails",false); renderSSDisplay("ss-jira",false);
+        } else {
+          setSSValues(rec.mailsHandledBy||"",rec.jiraHandledBy||"");
+        }
         tickets.showstopper=buildTicketStubs(rec.showstopperIds,rec.showstopperCount,rec.showstopperPending);
-        tickets.high=buildTicketStubs(rec.highIds,rec.highCount,rec.highPending);
-        tickets.escalated=buildTicketStubs(rec.escalatedIds,rec.escalatedCount,rec.escalatedPending);
+        tickets.high       =buildTicketStubs(rec.highIds,rec.highCount,rec.highPending);
+        tickets.escalated  =buildTicketStubs(rec.escalatedIds,rec.escalatedCount,rec.escalatedPending);
         tickets.longpending=buildTicketStubs(rec.longpendingIds,rec.longpendingCount,rec.longpendingPending);
-        CATS.forEach(c=>renderCatBody(c.key));updateStats();
+        CATS.forEach(c=>renderCatBody(c.key));
+        updateStats();
         currentLog={
-          date:rec.date,shift:rec.shift,
-          currentMembers:parseMembers(rec.currentMembers),nextMembers:parseMembers(rec.nextMembers),
-          mailsHandledBy:rec.mailsHandledBy||'',jiraHandledBy:rec.jiraHandledBy||'',
-          infoBoxes:[rec.infoBox1||'',rec.infoBox2||'',rec.infoBox3||'',rec.infoBox4||''],
+          date:rec.date, shift:rec.shift,
+          currentMembers:parseMembers(rec.currentMembers),
+          nextMembers:parseMembers(rec.nextMembers),
+          mailsHandledBy:rec.mailsHandledBy||"",
+          jiraHandledBy:rec.jiraHandledBy||"",
+          infoBoxes:[rec.infoBox1||"",rec.infoBox2||"",rec.infoBox3||"",rec.infoBox4||""],
           tickets:{showstopper:tickets.showstopper,high:tickets.high,escalated:tickets.escalated,longpending:tickets.longpending},
           submittedAt:rec.submittedAt||rec.receivedAt||new Date().toISOString()
         };
         showSummary(currentLog);
         document.getElementById("serverLoadedBanner").classList.add("visible");
-        document.getElementById("btnSubmitAdmin").style.display="none";
-        const st=document.getElementById("adminSubmitStatus");
-        st.className="admin-submit-status success";st.textContent="✅ This shift was already submitted to admin.";st.style.display="block";
+        btn.textContent="↺ Update & Re-submit Handover";
+        showSubmitStatus("✅ Loaded from server — visible to all agents.","success");
         showToast("Loaded submitted handover from server","info");
         return;
       }
     }
-  }catch(err){showToast("Could not reach server — using local data.","warn");}
+  } catch(err) {
+    showToast("Could not reach server — checking local data.","warn");
+  }
 
-  // STEP 2 — localStorage fallback
+  // ── STEP 2: localStorage fallback ──
   const raw=localStorage.getItem(shiftKey(getDate(),getShift()));
   if(!raw){
+    // Pre-fill current members from previous shift's nextMembers
     const prev=prevShift(getShift());
     const prevRaw=localStorage.getItem(shiftKey(getDate(),prev));
     if(prevRaw){
-      try{const pd=JSON.parse(prevRaw);if(pd.nextMembers&&pd.nextMembers.length){setDropdown("ms-current",pd.nextMembers);onCurrentMembersChanged(false);showToast("Current members pre-filled from "+prev+" handover","info");}}catch(e){}
+      try{
+        const pd=JSON.parse(prevRaw);
+        if(pd.nextMembers&&pd.nextMembers.length){
+          setDropdown("ms-current",pd.nextMembers);
+          onCurrentMembersChanged(false);
+          showToast("Current members pre-filled from "+prev+" handover","info");
+        }
+      }catch(e){}
     }
     return;
   }
   try{
-    const data=JSON.parse(raw);
-    setDropdown("ms-current",data.currentMembers||[]);setDropdown("ms-next",data.nextMembers||[]);
-    setInfoBoxes(data.infoBoxes||[]);
-    CATS.forEach(c=>{(data.tickets[c.key]||[]).forEach(t=>tickets[c.key].push(t));});
-    CATS.forEach(c=>renderCatBody(c.key));updateStats();
-    setSSValues(data.mailsHandledBy||"",data.jiraHandledBy||"");onCurrentMembersChanged();
+    const savedData=JSON.parse(raw);
+    setDropdown("ms-current",savedData.currentMembers||[]);
+    setDropdown("ms-next",savedData.nextMembers||[]);
+    setInfoBoxes(savedData.infoBoxes||[]);
+    CATS.forEach(c=>{(savedData.tickets[c.key]||[]).forEach(t=>tickets[c.key].push(t));});
+    CATS.forEach(c=>renderCatBody(c.key));
+    updateStats();
+    setSSValues(savedData.mailsHandledBy||"",savedData.jiraHandledBy||"");
+    onCurrentMembersChanged();
     const members=selected["ms-current"];
     if(members.length>1){
-      if(data.mailsHandledBy&&members.includes(data.mailsHandledBy))ssSelected["ss-mails"]=data.mailsHandledBy;
-      if(data.jiraHandledBy&&members.includes(data.jiraHandledBy))ssSelected["ss-jira"]=data.jiraHandledBy;
-      renderSSDisplay("ss-mails",false);renderSSDisplay("ss-jira",false);
+      if(savedData.mailsHandledBy&&members.includes(savedData.mailsHandledBy)) ssSelected["ss-mails"]=savedData.mailsHandledBy;
+      if(savedData.jiraHandledBy &&members.includes(savedData.jiraHandledBy))  ssSelected["ss-jira"]=savedData.jiraHandledBy;
+      renderSSDisplay("ss-mails",false); renderSSDisplay("ss-jira",false);
     }
-    if(data.log){currentLog=data.log;showSummary(data.log);}
-    showToast("Shift data loaded","info");
+    if(savedData.log){
+      currentLog=savedData.log; showSummary(savedData.log);
+      btn.textContent="↺ Update & Re-submit Handover";
+      showSubmitStatus("⚠ Saved locally only — click above to sync with all agents.","warn");
+    }
+    showToast("Shift data loaded from local storage","info");
   }catch(e){}
 }
 
-function saveShift(log){
-  localStorage.setItem(shiftKey(getDate(),getShift()),JSON.stringify({
-    currentMembers:selected["ms-current"],nextMembers:selected["ms-next"],
-    mailsHandledBy:ssSelected["ss-mails"],jiraHandledBy:ssSelected["ss-jira"],
-    infoBoxes:getInfoBoxes(),tickets,log
-  }));renderSaved();
+// ── SAVE TO LOCALSTORAGE ──────────────────────────────────────────────────────
+function saveShift(log) {
+  localStorage.setItem(shiftKey(getDate(),getShift()), JSON.stringify({
+    currentMembers:selected["ms-current"],
+    nextMembers:selected["ms-next"],
+    mailsHandledBy:ssSelected["ss-mails"],
+    jiraHandledBy:ssSelected["ss-jira"],
+    infoBoxes:getInfoBoxes(),
+    tickets, log
+  }));
+  renderSaved();
 }
 
-function submitHandover(){
-  const log={
-    date:getDate(),shift:getShift(),
-    currentMembers:[...selected["ms-current"]],nextMembers:[...selected["ms-next"]],
-    mailsHandledBy:ssSelected["ss-mails"],jiraHandledBy:ssSelected["ss-jira"],
-    infoBoxes:getInfoBoxes(),tickets:JSON.parse(JSON.stringify(tickets)),
-    submittedAt:new Date().toISOString()
-  };
-  saveShift(log);currentLog=log;showSummary(log);showToast("Shift submitted successfully!");
-  document.getElementById("btnSubmitAdmin").style.display="flex";
-  document.getElementById("adminSubmitStatus").style.display="none";
-}
+// ── SINGLE SUBMIT HANDOVER ────────────────────────────────────────────────────
+async function submitHandover() {
+  const date=getDate(), shift=getShift();
+  if(!date||!shift){showToast("Please set date and shift.","warn");return;}
 
-async function submitToAdmin(){
-  if(!currentLog){showToast("Please submit the handover first.","warn");return;}
-  const log=currentLog;const all=Object.values(log.tickets).flat();
-  const pending=all.filter(t=>t.status==="Pending").length;const completed=all.length-pending;
+  const all=Object.values(tickets).flat();
+  const pending=all.filter(t=>t.status==="Pending").length;
+  const completed=all.length-pending;
   const cs={};
-  CATS.forEach(cat=>{const tix=log.tickets[cat.key]||[];cs[cat.key+'Count']=tix.length;cs[cat.key+'Ids']=tix.map(t=>t.ticketId||'(no id)').join(', ');cs[cat.key+'Pending']=tix.filter(t=>t.status==='Pending').length;});
-  const btn=document.getElementById("btnSubmitAdmin");const statusEl=document.getElementById("adminSubmitStatus");
-  btn.disabled=true;statusEl.className="admin-submit-status loading";statusEl.textContent="⏳ Submitting to admin...";
+  CATS.forEach(cat=>{
+    const tix=tickets[cat.key]||[];
+    cs[cat.key+"Count"]=tix.length;
+    cs[cat.key+"Ids"]=tix.map(t=>t.ticketId||"(no id)").join(", ");
+    cs[cat.key+"Pending"]=tix.filter(t=>t.status==="Pending").length;
+  });
+  const submittedAt=new Date().toISOString();
+  const log={
+    date, shift,
+    currentMembers:[...selected["ms-current"]],
+    nextMembers:[...selected["ms-next"]],
+    mailsHandledBy:ssSelected["ss-mails"],
+    jiraHandledBy:ssSelected["ss-jira"],
+    infoBoxes:getInfoBoxes(),
+    tickets:JSON.parse(JSON.stringify(tickets)),
+    submittedAt
+  };
+
+  // Save locally first (resilience)
+  saveShift(log);
+  currentLog=log;
+  showSummary(log);
+
+  const btn=document.getElementById("btnSubmitHandover");
+  btn.disabled=true;
+  btn.textContent="⏳ Submitting...";
+  showSubmitStatus("⏳ Submitting to server...","loading");
+
   try{
     const params=new URLSearchParams({
-      action:'saveHandover',date:log.date,shift:log.shift,
-      currentMembers:log.currentMembers.join(', '),nextMembers:log.nextMembers.join(', '),
-      mailsHandledBy:log.mailsHandledBy||'',jiraHandledBy:log.jiraHandledBy||'',
-      totalTickets:all.length,pendingTickets:pending,completedTickets:completed,
-      showstopperCount:cs.showstopperCount,showstopperPending:cs.showstopperPending,showstopperIds:cs.showstopperIds,
-      highCount:cs.highCount,highPending:cs.highPending,highIds:cs.highIds,
-      escalatedCount:cs.escalatedCount,escalatedPending:cs.escalatedPending,escalatedIds:cs.escalatedIds,
-      longpendingCount:cs.longpendingCount,longpendingPending:cs.longpendingPending,longpendingIds:cs.longpendingIds,
-      infoBox1:(log.infoBoxes&&log.infoBoxes[0])||'',infoBox2:(log.infoBoxes&&log.infoBoxes[1])||'',
-      infoBox3:(log.infoBoxes&&log.infoBoxes[2])||'',infoBox4:(log.infoBoxes&&log.infoBoxes[3])||'',
-      submittedAt:log.submittedAt
+      action:"saveHandover",
+      date, shift,
+      currentMembers:log.currentMembers.join(", "),
+      nextMembers:log.nextMembers.join(", "),
+      mailsHandledBy:log.mailsHandledBy||"",
+      jiraHandledBy:log.jiraHandledBy||"",
+      totalTickets:all.length,
+      pendingTickets:pending,
+      completedTickets:completed,
+      showstopperCount:cs.showstopperCount,
+      showstopperPending:cs.showstopperPending,
+      showstopperIds:cs.showstopperIds,
+      highCount:cs.highCount,
+      highPending:cs.highPending,
+      highIds:cs.highIds,
+      escalatedCount:cs.escalatedCount,
+      escalatedPending:cs.escalatedPending,
+      escalatedIds:cs.escalatedIds,
+      longpendingCount:cs.longpendingCount,
+      longpendingPending:cs.longpendingPending,
+      longpendingIds:cs.longpendingIds,
+      infoBox1:(log.infoBoxes&&log.infoBoxes[0])||"",
+      infoBox2:(log.infoBoxes&&log.infoBoxes[1])||"",
+      infoBox3:(log.infoBoxes&&log.infoBoxes[2])||"",
+      infoBox4:(log.infoBoxes&&log.infoBoxes[3])||"",
+      submittedAt
     });
-    const res=await fetch(API_URL+'?'+params.toString());const data=await res.json();
+    const res=await fetch(API_URL+"?"+params.toString());
+    const data=await res.json();
     if(data.success){
-      statusEl.className="admin-submit-status success";statusEl.textContent="✅ Successfully submitted to admin!";
-      btn.textContent="✅ Submitted to Admin";btn.disabled=true;
+      btn.disabled=false;
+      btn.textContent="↺ Update & Re-submit Handover";
       document.getElementById("serverLoadedBanner").classList.add("visible");
-      showToast("Handover submitted to admin!","success");
-    }else{throw new Error(data.error||'Unknown error');}
-  }catch(err){statusEl.className="admin-submit-status error";statusEl.textContent="⚠ Failed to submit. Please try again.";btn.disabled=false;showToast("Failed to submit to admin.","error");}
+      showSubmitStatus("✅ Submitted — all agents can now see this handover!","success");
+      showToast("Handover submitted to server successfully!","success");
+    } else {
+      throw new Error(data.error||"Unknown error");
+    }
+  }catch(err){
+    btn.disabled=false;
+    btn.textContent="↺ Retry Submit";
+    showSubmitStatus("⚠ Saved locally but server sync failed. Click Retry to try again.","error");
+    showToast("Server sync failed — data saved locally.","error");
+  }
 }
 
-function showSummary(log){
-  document.getElementById("logEmpty").style.display="none";document.getElementById("logContent").style.display="block";document.getElementById("btnFullLog").style.display="";
+// ── IMPORT PENDING: server first → localStorage fallback ──────────────────────
+async function importPending() {
+  const prev=prevShift(getShift());
+
+  // Try server first
+  try{
+    const res=await fetch(API_URL+"?action=getHandovers&t="+Date.now());
+    const data=await res.json();
+    if(data.success&&data.handovers&&data.handovers.length){
+      const cd=getDate();
+      const rec=data.handovers.find(h=>{
+        const hd=h.date||"";
+        return (hd===cd||normDate(hd)===cd)&&h.shift===prev;
+      });
+      if(rec){
+        const prevTickets={
+          showstopper:buildTicketStubs(rec.showstopperIds,rec.showstopperCount,rec.showstopperPending),
+          high:       buildTicketStubs(rec.highIds,rec.highCount,rec.highPending),
+          escalated:  buildTicketStubs(rec.escalatedIds,rec.escalatedCount,rec.escalatedPending),
+          longpending:buildTicketStubs(rec.longpendingIds,rec.longpendingCount,rec.longpendingPending)
+        };
+        let total=0;
+        CATS.forEach(c=>{
+          (prevTickets[c.key]||[]).filter(t=>t.status==="Pending").forEach(t=>{
+            tickets[c.key].push({...t,_id:uid()}); total++;
+          });
+        });
+        const infoBoxVals=[rec.infoBox1||"",rec.infoBox2||"",rec.infoBox3||"",rec.infoBox4||""];
+        if(infoBoxVals.some(b=>b&&b.trim())) setInfoBoxes(infoBoxVals);
+        if(!total){showToast("No pending tickets in "+prev+" shift (server)","warn");return;}
+        CATS.forEach(c=>renderCatBody(c.key));
+        updateStats();
+        showToast(`Imported ${total} pending ticket(s) from ${prev} (server)`,"success");
+        return;
+      }
+    }
+  }catch(err){/* fall through to localStorage */}
+
+  // localStorage fallback
+  const raw=localStorage.getItem(shiftKey(getDate(),prev));
+  if(!raw){showToast("No saved data for "+prev,"warn");return;}
+  try{
+    const savedData=JSON.parse(raw);
+    let total=0;
+    CATS.forEach(c=>{
+      (savedData.tickets[c.key]||[]).filter(t=>t.status==="Pending").forEach(t=>{
+        tickets[c.key].push({...t,_id:uid()}); total++;
+      });
+    });
+    if(savedData.infoBoxes&&savedData.infoBoxes.some(b=>b&&b.trim())){
+      setInfoBoxes(savedData.infoBoxes);
+      showToast(`Imported ${total} pending ticket(s) + info notes from ${prev} (local)`);
+    } else {
+      if(!total){showToast("No pending tickets in "+prev,"warn");return;}
+      showToast(`Imported ${total} pending ticket(s) from ${prev} (local)`);
+    }
+    CATS.forEach(c=>renderCatBody(c.key));
+    updateStats();
+  }catch(e){showToast("Failed to import","error");}
+}
+
+// ── SHOW SUMMARY ──────────────────────────────────────────────────────────────
+function showSummary(log) {
+  document.getElementById("logEmpty").style.display="none";
+  document.getElementById("logContent").style.display="block";
+  document.getElementById("btnFullLog").style.display="";
   document.getElementById("sumShiftTitle").textContent=log.date+" — "+log.shift;
   document.getElementById("sumSubmitTime").textContent="Submitted "+new Date(log.submittedAt).toLocaleTimeString();
-  const all=Object.values(log.tickets).flat();const pend=all.filter(t=>t.status==="Pending").length;
-  document.getElementById("sumTotal").textContent=all.length;document.getElementById("sumPend").textContent=pend;document.getElementById("sumComp").textContent=all.length-pend;
+  const all=Object.values(log.tickets).flat();
+  const pend=all.filter(t=>t.status==="Pending").length;
+  document.getElementById("sumTotal").textContent=all.length;
+  document.getElementById("sumPend").textContent=pend;
+  document.getElementById("sumComp").textContent=all.length-pend;
   document.getElementById("sumMembers").textContent=(log.currentMembers.join(", ")||"—")+" → "+(log.nextMembers.join(", ")||"—");
-  document.getElementById("sumMails").textContent=log.mailsHandledBy||"—";document.getElementById("sumJira").textContent=log.jiraHandledBy||"—";
-  const miniCats=document.getElementById("miniCats");miniCats.innerHTML="";
+  document.getElementById("sumMails").textContent=log.mailsHandledBy||"—";
+  document.getElementById("sumJira").textContent=log.jiraHandledBy||"—";
+  const miniCats=document.getElementById("miniCats");
+  miniCats.innerHTML="";
   CATS.forEach(cat=>{
-    const tix=log.tickets[cat.key]||[];if(!tix.length)return;
-    const wrap=document.createElement("div");wrap.className="mini-cat";
-    const head=document.createElement("div");head.className="mini-cat-head";
-    head.innerHTML=`<span style="width:8px;height:8px;border-radius:50%;background:${cat.color};display:inline-block;"></span><span style="color:${cat.color}">${cat.label}</span><span style="font-size:10px;background:${cat.color};color:#fff;border-radius:8px;padding:1px 6px;">${tix.length}</span>`;
+    const tix=log.tickets[cat.key]||[];
+    if(!tix.length) return;
+    const wrap=document.createElement("div"); wrap.className="mini-cat";
+    const head=document.createElement("div"); head.className="mini-cat-head";
+    head.innerHTML=`<span style="width:8px;height:8px;border-radius:50%;background:${cat.color};display:inline-block;"></span>
+      <span style="color:${cat.color}">${cat.label}</span>
+      <span style="font-size:10px;background:${cat.color};color:#fff;border-radius:8px;padding:1px 6px;">${tix.length}</span>`;
     wrap.appendChild(head);
     tix.forEach(t=>{
-      const ageDays=t.createdDate?Math.floor((new Date()-new Date(t.createdDate))/86400000):0;const isOld=t.status==="Pending"&&ageDays>10;
-      const row=document.createElement("div");row.className="mini-ticket";row.style.borderLeftColor=cat.color;
+      const ageDays=t.createdDate?Math.floor((new Date()-new Date(t.createdDate))/86400000):0;
+      const isOld=t.status==="Pending"&&ageDays>10;
+      const row=document.createElement("div"); row.className="mini-ticket"; row.style.borderLeftColor=cat.color;
       if(isOld){row.style.background="#FEE2E2";row.style.borderLeft="3px solid #E24B4A";}
-      row.innerHTML=`<span style="font-weight:600;${isOld?'color:#991b1b;':''}">${esc(t.ticketId)||"—"}</span><span style="color:#5f6b7a;font-size:10px;margin-left:4px;flex:1;padding:0 4px;">${esc(t.client)}</span>${isOld?`<span style="font-size:10px;font-weight:700;color:#991b1b;background:#FECACA;border-radius:5px;padding:1px 6px;margin-right:4px;">${ageDays}d overdue</span>`:""}<span class="status-pill ${t.status==='Completed'?'status-completed':'status-pending'}">${t.status}</span>`;
+      row.innerHTML=`<span style="font-weight:600;${isOld?'color:#991b1b;':''}">${esc(t.ticketId)||"—"}</span>
+        <span style="color:#5f6b7a;font-size:10px;margin-left:4px;flex:1;padding:0 4px;">${esc(t.client)}</span>
+        ${isOld?`<span style="font-size:10px;font-weight:700;color:#991b1b;background:#FECACA;border-radius:5px;padding:1px 6px;margin-right:4px;">${ageDays}d overdue</span>`:""}
+        <span class="status-pill ${t.status==='Completed'?'status-completed':'status-pending'}">${t.status}</span>`;
       wrap.appendChild(row);
     });
     miniCats.appendChild(wrap);
   });
 }
 
-function mailHandover(){
-  const log=currentLog;if(!log)return;
-  const all=Object.values(log.tickets).flat();const pend=all.filter(t=>t.status==="Pending").length,comp=all.length-pend;
-  const catLabels={showstopper:"Showstopper",high:"High Priority",escalated:"Customer Escalated",longpending:"Long Pending"};
-  const statusIcon=s=>s==="Completed"?"✅":"🔴";
-  let body=`LRP SUPPORT – SHIFT HANDOVER\n${"=".repeat(40)}\nDate  : ${log.date}    Shift : ${log.shift}\nSubmitted : ${new Date(log.submittedAt).toLocaleString()}\n\n`;
-  body+=`TEAM\n${"-".repeat(30)}\nCurrent Shift : ${log.currentMembers.join(", ")||"—"}\nNext Shift    : ${log.nextMembers.join(", ")||"—"}\nMails By      : ${log.mailsHandledBy||"—"}\nJira By       : ${log.jiraHandledBy||"—"}\n\n`;
-  body+=`TICKET SUMMARY\n${"-".repeat(30)}\nTotal: ${all.length}   Pending: ${pend}   Completed: ${comp}\n\n`;
-  CATS.forEach(cat=>{
-    const tix=log.tickets[cat.key]||[];body+=`${catLabels[cat.key].toUpperCase()} (${tix.length})\n${"-".repeat(30)}\n`;
-    if(!tix.length){body+=`  No tickets.\n`;}
-    else{tix.forEach((t,i)=>{const age=calcAge(t.createdDate);const ageDays=t.createdDate?Math.floor((new Date()-new Date(t.createdDate))/86400000):0;const overdue=t.status==="Pending"&&ageDays>10?` ⚠ ${ageDays}d OVERDUE`:"";body+=`  ${i+1}. ${t.ticketId||"—"} [${t.client||"—"}]${overdue}\n`;if(t.desc)body+=`     Description : ${t.desc}\n`;if(t.assignedTo)body+=`     Assigned To : ${t.assignedTo}\n`;if(t.nextAction)body+=`     Next Action : ${t.nextAction}\n`;body+=`     Age: ${age||"—"}   Status: ${statusIcon(t.status)} ${t.status}\n\n`;});}
-    body+="\n";
+// ── MISC ──────────────────────────────────────────────────────────────────────
+function updateImportBtn() {
+  document.getElementById("importBtn").textContent="⬇ Import Pending from "+prevShift(getShift());
+}
+function renderSaved() {
+  const list=document.getElementById("savedList");
+  list.innerHTML="";
+  const keys=Object.keys(localStorage).filter(k=>k.startsWith("shift:")).sort().slice(-15);
+  if(!keys.length){list.innerHTML=`<span style="font-size:12px;color:#c0c4cc;">No shifts saved yet.</span>`;return;}
+  keys.forEach(k=>{
+    const parts=k.split(":"),d=parts[1],s=parts[2];
+    const btn=document.createElement("button");
+    btn.className="saved-btn"+(getDate()===d&&getShift()===s?" active":"");
+    btn.textContent=`${d} ${s}`;
+    btn.onclick=()=>{document.getElementById("shiftDate").value=d;document.getElementById("shiftSelect").value=s;onShiftChange();};
+    list.appendChild(btn);
   });
-  const boxes=(log.infoBoxes||[]).filter(b=>b&&b.trim());if(boxes.length){body+=`IMPORTANT INFORMATION\n${"-".repeat(30)}\n`;boxes.forEach((txt,i)=>{body+=`[${i+1}] ${txt}\n\n`;});}
-  body+=`${"=".repeat(40)}\nThis is an auto-generated handover mail from LRP Support Shift Handover Tool.`;
-  const nextNames=log.nextMembers.join(", ")||"Next Shift Team";
-  const subject=`[LRP Support] Shift Handover – ${log.shift} | ${log.date}`;
-  const greeting=`Hi ${nextNames},\n\nPlease find below the shift handover summary for ${log.shift} on ${log.date}.\n\n`;
-  const sign=`\n\nRegards,\n${log.currentMembers.join(" & ")||"Current Shift Team"}\nLRP Support`;
-  const fullBody=greeting+body+sign;
-  const mailWin=window.open("","_blank");if(!mailWin){showToast("Pop-up blocked. Allow pop-ups and try again.","error");return;}
-  mailWin.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Send Handover Mail</title><style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f6f9;color:#1a1a1a;padding:28px 32px;}h2{color:#185FA5;margin-bottom:6px;font-size:18px;}.sub{font-size:13px;color:#5f6b7a;margin-bottom:20px;}.field{margin-bottom:14px;}label{font-size:12px;font-weight:600;color:#5f6b7a;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px;}input{width:100%;padding:8px 12px;border:1px solid #d0d7df;border-radius:7px;font-size:13px;outline:none;}input:focus{border-color:#185FA5;}textarea{width:100%;padding:10px 12px;border:1px solid #d0d7df;border-radius:7px;font-size:12px;font-family:monospace;line-height:1.6;resize:vertical;outline:none;min-height:420px;}textarea:focus{border-color:#185FA5;}.actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}.btn{padding:10px 22px;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer;}.btn-primary{background:#185FA5;color:#fff;}.btn-copy{background:#f0f4f8;color:#374151;border:1px solid #d0d7df;}.btn-close{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;}.note{font-size:12px;color:#9ca3af;margin-top:10px;background:#fff;border:1px solid #e0e4ea;border-radius:7px;padding:10px 14px;line-height:1.7;}.copied{color:#065f46;font-size:12px;font-weight:600;display:none;margin-top:6px;}</style></head><body><h2>✉ Send Shift Handover Mail</h2><div class="sub">Fill in the To address, copy the body, then click Open in Mail.</div><div class="field"><label>Subject</label><input id="subj" value="${subject.replace(/"/g,'&quot;')}"/></div><div class="field"><label>Mail Body (copy this)</label><textarea id="mailBody">${fullBody.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</textarea></div><div class="actions"><button class="btn btn-copy" onclick="copyBody()">📋 Copy Body</button><button class="btn btn-primary" onclick="openMail()">📨 Open in Mail App</button><button class="btn btn-close" onclick="window.close()">✕ Close</button></div><div class="copied" id="copiedMsg">✅ Copied to clipboard!</div><div class="note"><strong>How to send:</strong><br>1. Click <strong>Copy Body</strong>.<br>2. Click <strong>Open in Mail App</strong>.<br>3. Paste body and add recipients.<br>4. Hit Send!</div><script>function copyBody(){const ta=document.getElementById('mailBody');ta.select();try{document.execCommand('copy');}catch(e){navigator.clipboard.writeText(ta.value).catch(()=>{});}const msg=document.getElementById('copiedMsg');msg.style.display='block';setTimeout(()=>msg.style.display='none',2500);}function openMail(){const subj=encodeURIComponent(document.getElementById('subj').value);const hint=encodeURIComponent('(Please paste the copied mail body here)');window.location.href='mailto:?subject='+subj+'&body='+hint;}<\/script></body></html>`);
-  mailWin.document.close();showToast("Mail composer opened in new tab!","info");
 }
 
-function openFullLog(){
-  if(!currentLog)return;const log=currentLog;
-  document.getElementById("flHeaderMeta").textContent=log.date+" | Shift "+log.shift+" | Submitted "+new Date(log.submittedAt).toLocaleTimeString();
-  document.getElementById("flTop").innerHTML=`<div class="fl-info-box"><div class="fl-info-label">Date</div><div class="fl-info-val">${log.date}</div></div><div class="fl-info-box"><div class="fl-info-label">Shift</div><div class="fl-info-val">${log.shift}</div></div><div class="fl-info-box" style="flex:2"><div class="fl-info-label">Current Shift Members</div><div class="fl-members">${log.currentMembers.join(" &nbsp;·&nbsp; ")||"—"}</div></div><div class="fl-info-box" style="flex:2"><div class="fl-info-label">Next Shift Members</div><div class="fl-members">${log.nextMembers.join(" &nbsp;·&nbsp; ")||"—"}</div></div><div class="fl-info-box" style="flex:1.5"><div class="fl-info-label">Mails Handled By</div><div class="fl-members">${log.mailsHandledBy||"—"}</div></div><div class="fl-info-box" style="flex:1.5"><div class="fl-info-label">Jira Handled By</div><div class="fl-members">${log.jiraHandledBy||"—"}</div></div>`;
-  const all=Object.values(log.tickets).flat();const pend=all.filter(t=>t.status==="Pending").length;
-  document.getElementById("flStats").innerHTML=`<div class="fl-stat" style="background:#dbeafe;"><div class="fl-stat-num" style="color:#185FA5;">${all.length}</div><div class="fl-stat-lbl" style="color:#185FA5;">Total Tickets</div></div><div class="fl-stat" style="background:#fee2e2;"><div class="fl-stat-num" style="color:#a32d2d;">${pend}</div><div class="fl-stat-lbl" style="color:#a32d2d;">Pending</div></div><div class="fl-stat" style="background:#d1fae5;"><div class="fl-stat-num" style="color:#065f46;">${all.length-pend}</div><div class="fl-stat-lbl" style="color:#065f46;">Completed</div></div>`;
-  const flInfoBoxes=document.getElementById("flInfoBoxes");flInfoBoxes.innerHTML="";
-  (log.infoBoxes||[]).forEach(txt=>{if(!txt||!txt.trim())return;const box=document.createElement("div");box.className="fl-info-note-box";box.innerHTML=`<div class="fl-info-note-label"><span>📢</span> Important Information</div><div class="fl-info-note-text">${esc(txt).replace(/\n/g,'<br>')}</div>`;flInfoBoxes.appendChild(box);});
-  const flCats=document.getElementById("flCats");flCats.innerHTML="";
+// ── FULL LOG OVERLAY ──────────────────────────────────────────────────────────
+function openFullLog() {
+  if(!currentLog) return;
+  const log=currentLog;
+  document.getElementById("flHeaderMeta").textContent=
+    log.date+" | Shift "+log.shift+" | Submitted "+new Date(log.submittedAt).toLocaleTimeString();
+  document.getElementById("flTop").innerHTML=
+    `<div class="fl-info-box"><div class="fl-info-label">Date</div><div class="fl-info-val">${log.date}</div></div>
+     <div class="fl-info-box"><div class="fl-info-label">Shift</div><div class="fl-info-val">${log.shift}</div></div>
+     <div class="fl-info-box" style="flex:2"><div class="fl-info-label">Current Shift Members</div><div class="fl-members">${log.currentMembers.join(" &nbsp;·&nbsp; ")||"—"}</div></div>
+     <div class="fl-info-box" style="flex:2"><div class="fl-info-label">Next Shift Members</div><div class="fl-members">${log.nextMembers.join(" &nbsp;·&nbsp; ")||"—"}</div></div>
+     <div class="fl-info-box" style="flex:1.5"><div class="fl-info-label">Mails Handled By</div><div class="fl-members">${log.mailsHandledBy||"—"}</div></div>
+     <div class="fl-info-box" style="flex:1.5"><div class="fl-info-label">Jira Handled By</div><div class="fl-members">${log.jiraHandledBy||"—"}</div></div>`;
+  const all=Object.values(log.tickets).flat();
+  const pend=all.filter(t=>t.status==="Pending").length;
+  document.getElementById("flStats").innerHTML=
+    `<div class="fl-stat" style="background:#dbeafe;"><div class="fl-stat-num" style="color:#185FA5;">${all.length}</div><div class="fl-stat-lbl" style="color:#185FA5;">Total Tickets</div></div>
+     <div class="fl-stat" style="background:#fee2e2;"><div class="fl-stat-num" style="color:#a32d2d;">${pend}</div><div class="fl-stat-lbl" style="color:#a32d2d;">Pending</div></div>
+     <div class="fl-stat" style="background:#d1fae5;"><div class="fl-stat-num" style="color:#065f46;">${all.length-pend}</div><div class="fl-stat-lbl" style="color:#065f46;">Completed</div></div>`;
+  const flInfoBoxes=document.getElementById("flInfoBoxes");
+  flInfoBoxes.innerHTML="";
+  (log.infoBoxes||[]).forEach(txt=>{
+    if(!txt||!txt.trim()) return;
+    const box=document.createElement("div"); box.className="fl-info-note-box";
+    box.innerHTML=`<div class="fl-info-note-label"><span>📢</span> Important Information</div>
+      <div class="fl-info-note-text">${esc(txt).replace(/\n/g,'<br>')}</div>`;
+    flInfoBoxes.appendChild(box);
+  });
+  const flCats=document.getElementById("flCats");
+  flCats.innerHTML="";
   CATS.forEach(cat=>{
-    const tix=log.tickets[cat.key]||[];const card=document.createElement("div");card.className="fl-cat-card";
-    const head=document.createElement("div");head.className="fl-cat-head";head.style.background=cat.bg;
-    head.innerHTML=`<span class="fl-cat-dot" style="background:${cat.color};"></span><span class="fl-cat-title" style="color:${cat.color};">${cat.label}</span><span class="fl-cat-count" style="background:${cat.color};">${tix.length}</span>`;
+    const tix=log.tickets[cat.key]||[];
+    const card=document.createElement("div"); card.className="fl-cat-card";
+    const head=document.createElement("div"); head.className="fl-cat-head"; head.style.background=cat.bg;
+    head.innerHTML=`<span class="fl-cat-dot" style="background:${cat.color};"></span>
+      <span class="fl-cat-title" style="color:${cat.color};">${cat.label}</span>
+      <span class="fl-cat-count" style="background:${cat.color};">${tix.length}</span>`;
     card.appendChild(head);
-    if(!tix.length){const em=document.createElement("div");em.className="fl-empty";em.textContent="No tickets.";card.appendChild(em);}
-    else{tix.forEach(t=>{const age=calcAge(t.createdDate);const ageDays=t.createdDate?Math.floor((new Date()-new Date(t.createdDate))/86400000):0;const isOld=t.status==="Pending"&&ageDays>10,isComp=t.status==="Completed";const row=document.createElement("div");row.className="fl-ticket";if(isOld){row.style.background="#FFF0F0";row.style.borderLeft="3px solid #E24B4A";}row.innerHTML=`<div class="fl-t-row"><span class="fl-t-id" ${isOld?'style="color:#991b1b;"':''}>${esc(t.ticketId)||"—"}</span><div style="display:flex;align-items:center;gap:6px;">${isOld?`<span style="font-size:11px;font-weight:700;color:#991b1b;background:#FECACA;border-radius:5px;padding:1px 7px;">${ageDays}d overdue</span>`:age?`<span class="fl-t-age">${age}</span>`:""}<span class="status-pill ${isComp?'status-completed':'status-pending'}">${t.status}</span></div></div><div class="fl-t-client">${esc(t.client)}</div><div class="fl-t-desc">${esc(t.desc)}</div>${t.assignedTo?`<div class="fl-t-meta">Assigned: ${esc(t.assignedTo)}</div>`:""}${t.nextAction?`<div class="fl-t-next">&#8594; ${esc(t.nextAction)}</div>`:""}`;card.appendChild(row);});}
+    if(!tix.length){
+      const em=document.createElement("div"); em.className="fl-empty"; em.textContent="No tickets.";
+      card.appendChild(em);
+    } else {
+      tix.forEach(t=>{
+        const age=calcAge(t.createdDate);
+        const ageDays=t.createdDate?Math.floor((new Date()-new Date(t.createdDate))/86400000):0;
+        const isOld=t.status==="Pending"&&ageDays>10,isComp=t.status==="Completed";
+        const row=document.createElement("div"); row.className="fl-ticket";
+        if(isOld){row.style.background="#FFF0F0";row.style.borderLeft="3px solid #E24B4A";}
+        row.innerHTML=`<div class="fl-t-row">
+          <span class="fl-t-id" ${isOld?'style="color:#991b1b;"':''}>${esc(t.ticketId)||"—"}</span>
+          <div style="display:flex;align-items:center;gap:6px;">
+            ${isOld?`<span style="font-size:11px;font-weight:700;color:#991b1b;background:#FECACA;border-radius:5px;padding:1px 7px;">${ageDays}d overdue</span>`:age?`<span class="fl-t-age">${age}</span>`:""}
+            <span class="status-pill ${isComp?'status-completed':'status-pending'}">${t.status}</span>
+          </div></div>
+          <div class="fl-t-client">${esc(t.client)}</div>
+          <div class="fl-t-desc">${esc(t.desc)}</div>
+          ${t.assignedTo?`<div class="fl-t-meta">Assigned: ${esc(t.assignedTo)}</div>`:""}
+          ${t.nextAction?`<div class="fl-t-next">→ ${esc(t.nextAction)}</div>`:""}`;
+        card.appendChild(row);
+      });
+    }
     flCats.appendChild(card);
   });
   document.getElementById("fulllogOverlay").classList.add("open");
 }
-function closeFullLog(){document.getElementById("fulllogOverlay").classList.remove("open");}
+function closeFullLog() { document.getElementById("fulllogOverlay").classList.remove("open"); }
 
-function printHandover(){
-  const log=currentLog;if(!log)return;
-  const all=Object.values(log.tickets).flat();const pend=all.filter(t=>t.status==="Pending").length,comp=all.length-pend;
-  const catStyles={showstopper:{color:"#E24B4A",bg:"#FCEBEB",label:"Showstopper"},high:{color:"#BA7517",bg:"#FAEEDA",label:"High Priority"},escalated:{color:"#7C3AED",bg:"#F3E8FF",label:"Customer Escalated"},longpending:{color:"#888780",bg:"#F1EFE8",label:"Long Pending"}};
+// ── MAIL HANDOVER ─────────────────────────────────────────────────────────────
+function mailHandover() {
+  const log=currentLog; if(!log) return;
+  const all=Object.values(log.tickets).flat();
+  const pend=all.filter(t=>t.status==="Pending").length,comp=all.length-pend;
+  const catLabels={showstopper:"Showstopper",high:"High Priority",escalated:"Customer Escalated",longpending:"Long Pending"};
+  const statusIcon=s=>s==="Completed"?"✅":"🔴";
+  let body=`LRP SUPPORT – SHIFT HANDOVER\n${"=".repeat(40)}\nDate  : ${log.date}    Shift : ${log.shift}\nSubmitted : ${new Date(log.submittedAt).toLocaleString()}\n\n`+
+    `TEAM\n${"-".repeat(30)}\nCurrent Shift : ${log.currentMembers.join(", ")||"—"}\nNext Shift    : ${log.nextMembers.join(", ")||"—"}\nMails By      : ${log.mailsHandledBy||"—"}\nJira By       : ${log.jiraHandledBy||"—"}\n\n`+
+    `TICKET SUMMARY\n${"-".repeat(30)}\nTotal: ${all.length}   Pending: ${pend}   Completed: ${comp}\n\n`;
+  CATS.forEach(cat=>{
+    const tix=log.tickets[cat.key]||[];
+    body+=`${catLabels[cat.key].toUpperCase()} (${tix.length})\n${"-".repeat(30)}\n`;
+    if(!tix.length){body+="  No tickets.\n";}
+    else{tix.forEach((t,i)=>{
+      const age=calcAge(t.createdDate);
+      const ageDays=t.createdDate?Math.floor((new Date()-new Date(t.createdDate))/86400000):0;
+      const overdue=t.status==="Pending"&&ageDays>10?` ⚠ ${ageDays}d OVERDUE`:"";
+      body+=`  ${i+1}. ${t.ticketId||"—"} [${t.client||"—"}]${overdue}\n`;
+      if(t.desc)       body+=`     Description : ${t.desc}\n`;
+      if(t.assignedTo) body+=`     Assigned To : ${t.assignedTo}\n`;
+      if(t.nextAction) body+=`     Next Action : ${t.nextAction}\n`;
+      body+=`     Age: ${age||"—"}   Status: ${statusIcon(t.status)} ${t.status}\n\n`;
+    });}
+    body+="\n";
+  });
+  const boxes=(log.infoBoxes||[]).filter(b=>b&&b.trim());
+  if(boxes.length){body+=`IMPORTANT INFORMATION\n${"-".repeat(30)}\n`;boxes.forEach((txt,i)=>{body+=`[${i+1}] ${txt}\n\n`;});}
+  body+=`${"=".repeat(40)}\nAuto-generated by LRP Support Shift Handover Tool.`;
+  const nextNames=log.nextMembers.join(", ")||"Next Shift Team";
+  const subject=`[LRP Support] Shift Handover – ${log.shift} | ${log.date}`;
+  const fullBody=`Hi ${nextNames},\n\nPlease find below the shift handover summary for ${log.shift} on ${log.date}.\n\n`+
+    body+`\n\nRegards,\n${log.currentMembers.join(" & ")||"Current Shift Team"}\nLRP Support`;
+  const mailWin=window.open("","_blank");
+  if(!mailWin){showToast("Pop-up blocked. Allow pop-ups and try again.","error");return;}
+  mailWin.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Send Handover Mail</title>
+  <style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f6f9;color:#1a1a1a;padding:28px 32px;}
+  h2{color:#185FA5;margin-bottom:6px;font-size:18px;}.sub{font-size:13px;color:#5f6b7a;margin-bottom:20px;}
+  .field{margin-bottom:14px;}label{font-size:12px;font-weight:600;color:#5f6b7a;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px;}
+  input{width:100%;padding:8px 12px;border:1px solid #d0d7df;border-radius:7px;font-size:13px;outline:none;}
+  input:focus{border-color:#185FA5;}
+  textarea{width:100%;padding:10px 12px;border:1px solid #d0d7df;border-radius:7px;font-size:12px;font-family:monospace;line-height:1.6;resize:vertical;outline:none;min-height:420px;}
+  textarea:focus{border-color:#185FA5;}
+  .actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
+  .btn{padding:10px 22px;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer;}
+  .btn-primary{background:#185FA5;color:#fff;}.btn-copy{background:#f0f4f8;color:#374151;border:1px solid #d0d7df;}
+  .btn-close{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;}
+  .copied{color:#065f46;font-size:12px;font-weight:600;display:none;margin-top:6px;}</style></head>
+  <body><h2>✉ Send Shift Handover Mail</h2>
+  <div class="sub">Fill in the To address, copy the body, then click Open in Mail.</div>
+  <div class="field"><label>Subject</label><input id="subj" value="${subject.replace(/"/g,'&quot;')}"/></div>
+  <div class="field"><label>Mail Body (copy this)</label><textarea id="mailBody">${fullBody.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</textarea></div>
+  <div class="actions">
+    <button class="btn btn-copy" onclick="copyBody()">📋 Copy Body</button>
+    <button class="btn btn-primary" onclick="openMail()">📨 Open in Mail App</button>
+    <button class="btn btn-close" onclick="window.close()">✕ Close</button>
+  </div>
+  <div class="copied" id="copiedMsg">✅ Copied to clipboard!</div>
+  <script>
+    function copyBody(){const ta=document.getElementById('mailBody');ta.select();try{document.execCommand('copy');}catch(e){navigator.clipboard.writeText(ta.value).catch(()=>{});}const msg=document.getElementById('copiedMsg');msg.style.display='block';setTimeout(()=>msg.style.display='none',2500);}
+    function openMail(){const subj=encodeURIComponent(document.getElementById('subj').value);window.location.href='mailto:?subject='+subj+'&body='+encodeURIComponent('(Please paste the copied mail body here)');}
+  <\/script></body></html>`);
+  mailWin.document.close();
+  showToast("Mail composer opened in new tab!","info");
+}
+
+// ── PRINT / PDF ───────────────────────────────────────────────────────────────
+function printHandover() {
+  const log=currentLog; if(!log) return;
+  const all=Object.values(log.tickets).flat();
+  const pend=all.filter(t=>t.status==="Pending").length,comp=all.length-pend;
   function escH(s){return(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  const catStyles={
+    showstopper:{color:"#E24B4A",bg:"#FCEBEB",label:"Showstopper"},
+    high:{color:"#BA7517",bg:"#FAEEDA",label:"High Priority"},
+    escalated:{color:"#7C3AED",bg:"#F3E8FF",label:"Customer Escalated"},
+    longpending:{color:"#888780",bg:"#F1EFE8",label:"Long Pending"}
+  };
   let catHTML="";
   CATS.forEach(cat=>{
-    const tix=log.tickets[cat.key]||[],cs=catStyles[cat.key];let rows="";
+    const tix=log.tickets[cat.key]||[],cs=catStyles[cat.key];
+    let rows="";
     if(!tix.length){rows=`<tr><td colspan="7" style="text-align:center;color:#9ca3af;padding:10px;font-size:12px;">No tickets in this category.</td></tr>`;}
-    else{tix.forEach((t,i)=>{const age=calcAge(t.createdDate),ageDays=t.createdDate?Math.floor((new Date()-new Date(t.createdDate))/86400000):0;const isOld=t.status==="Pending"&&ageDays>10,isComp=t.status==="Completed";const rowBg=isOld?"#FFF0F0":i%2===0?"#fafafa":"#fff";const statusBg=isComp?"#d1fae5":"#fee2e2",statusColor=isComp?"#065f46":"#991b1b";rows+=`<tr style="background:${rowBg};"><td style="padding:7px 10px;font-weight:700;color:${isOld?'#991b1b':'#1a1a1a'};border-bottom:1px solid #f0f0f0;">${escH(t.ticketId)||"—"}</td><td style="padding:7px 10px;color:#5f6b7a;border-bottom:1px solid #f0f0f0;">${escH(t.client)}</td><td style="padding:7px 10px;color:#374151;border-bottom:1px solid #f0f0f0;">${escH(t.desc)}</td><td style="padding:7px 10px;color:#374151;border-bottom:1px solid #f0f0f0;">${escH(t.assignedTo)}</td><td style="padding:7px 10px;color:#374151;border-bottom:1px solid #f0f0f0;">${escH(t.nextAction)}</td><td style="padding:7px 10px;text-align:center;border-bottom:1px solid #f0f0f0;">${isOld?`<span style="font-size:11px;font-weight:700;color:#991b1b;background:#FECACA;border-radius:4px;padding:2px 6px;">${ageDays}d overdue</span>`:`<span style="font-size:11px;color:#854F0B;background:#FAEEDA;border-radius:4px;padding:2px 6px;">${age||"—"}</span>`}</td><td style="padding:7px 10px;text-align:center;border-bottom:1px solid #f0f0f0;"><span style="font-size:11px;font-weight:600;color:${statusColor};background:${statusBg};border-radius:5px;padding:2px 8px;">${t.status}</span></td></tr>`;});}
-    catHTML+=`<div style="margin-bottom:20px;border-radius:8px;overflow:hidden;border:1px solid #e0e4ea;"><div style="background:${cs.bg};padding:10px 14px;display:flex;align-items:center;gap:8px;"><span style="width:11px;height:11px;border-radius:50%;background:${cs.color};display:inline-block;"></span><span style="font-size:13px;font-weight:700;color:${cs.color};">${cs.label}</span><span style="font-size:11px;color:#fff;background:${cs.color};border-radius:9px;padding:1px 8px;margin-left:4px;">${tix.length}</span></div><table style="width:100%;border-collapse:collapse;font-size:12px;"><thead><tr style="background:#374151;"><th style="padding:7px 10px;color:#fff;text-align:left;font-weight:600;">Ticket ID</th><th style="padding:7px 10px;color:#fff;text-align:left;font-weight:600;">Client</th><th style="padding:7px 10px;color:#fff;text-align:left;font-weight:600;">Description</th><th style="padding:7px 10px;color:#fff;text-align:left;font-weight:600;">Assigned To</th><th style="padding:7px 10px;color:#fff;text-align:left;font-weight:600;">Next Action</th><th style="padding:7px 10px;color:#fff;text-align:center;font-weight:600;">Age</th><th style="padding:7px 10px;color:#fff;text-align:center;font-weight:600;">Status</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+    else{tix.forEach((t,i)=>{
+      const age=calcAge(t.createdDate),ageDays=t.createdDate?Math.floor((new Date()-new Date(t.createdDate))/86400000):0;
+      const isOld=t.status==="Pending"&&ageDays>10,isComp=t.status==="Completed";
+      const rowBg=isOld?"#FFF0F0":i%2===0?"#fafafa":"#fff";
+      const statusBg=isComp?"#d1fae5":"#fee2e2",statusColor=isComp?"#065f46":"#991b1b";
+      rows+=`<tr style="background:${rowBg};">
+        <td style="padding:7px 10px;font-weight:700;color:${isOld?'#991b1b':'#1a1a1a'};border-bottom:1px solid #f0f0f0;">${escH(t.ticketId)||"—"}</td>
+        <td style="padding:7px 10px;color:#5f6b7a;border-bottom:1px solid #f0f0f0;">${escH(t.client)}</td>
+        <td style="padding:7px 10px;color:#374151;border-bottom:1px solid #f0f0f0;">${escH(t.desc)}</td>
+        <td style="padding:7px 10px;color:#374151;border-bottom:1px solid #f0f0f0;">${escH(t.assignedTo)}</td>
+        <td style="padding:7px 10px;color:#374151;border-bottom:1px solid #f0f0f0;">${escH(t.nextAction)}</td>
+        <td style="padding:7px 10px;text-align:center;border-bottom:1px solid #f0f0f0;">
+          ${isOld?`<span style="font-size:11px;font-weight:700;color:#991b1b;background:#FECACA;border-radius:4px;padding:2px 6px;">${ageDays}d overdue</span>`:`<span style="font-size:11px;color:#854F0B;background:#FAEEDA;border-radius:4px;padding:2px 6px;">${age||"—"}</span>`}
+        </td>
+        <td style="padding:7px 10px;text-align:center;border-bottom:1px solid #f0f0f0;">
+          <span style="font-size:11px;font-weight:600;color:${statusColor};background:${statusBg};border-radius:5px;padding:2px 8px;">${t.status}</span>
+        </td>
+      </tr>`;
+    });}
+    catHTML+=`<div style="margin-bottom:20px;border-radius:8px;overflow:hidden;border:1px solid #e0e4ea;">
+      <div style="background:${cs.bg};padding:10px 14px;display:flex;align-items:center;gap:8px;">
+        <span style="width:11px;height:11px;border-radius:50%;background:${cs.color};display:inline-block;"></span>
+        <span style="font-size:13px;font-weight:700;color:${cs.color};">${cs.label}</span>
+        <span style="font-size:11px;color:#fff;background:${cs.color};border-radius:9px;padding:1px 8px;margin-left:4px;">${tix.length}</span>
+      </div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px;">
+        <thead><tr style="background:#374151;">
+          <th style="padding:7px 10px;color:#fff;text-align:left;font-weight:600;">Ticket ID</th>
+          <th style="padding:7px 10px;color:#fff;text-align:left;font-weight:600;">Client</th>
+          <th style="padding:7px 10px;color:#fff;text-align:left;font-weight:600;">Description</th>
+          <th style="padding:7px 10px;color:#fff;text-align:left;font-weight:600;">Assigned To</th>
+          <th style="padding:7px 10px;color:#fff;text-align:left;font-weight:600;">Next Action</th>
+          <th style="padding:7px 10px;color:#fff;text-align:center;font-weight:600;">Age</th>
+          <th style="padding:7px 10px;color:#fff;text-align:center;font-weight:600;">Status</th>
+        </tr></thead><tbody>${rows}</tbody>
+      </table></div>`;
   });
-  const boxes2=(log.infoBoxes||[]).filter(b=>b&&b.trim());let infoHTML="";
-  if(boxes2.length){infoHTML=`<div style="margin-top:24px;"><div style="font-size:13px;font-weight:700;color:#92400e;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;">📢 Important Information</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">${boxes2.map(txt=>`<div style="background:#fffbeb;border:1.5px solid #f59e0b;border-radius:8px;padding:12px 14px;"><div style="font-size:11px;font-weight:700;color:#92400e;margin-bottom:6px;">📢 Important Information</div><div style="font-size:12px;color:#374151;white-space:pre-wrap;line-height:1.6;">${escH(txt)}</div></div>`).join("")}</div></div>`;}
-  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Shift Handover - ${log.date} ${log.shift}</title><style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#1a1a1a;font-size:13px;background:#fff;}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}.no-print{display:none!important;}@page{margin:15mm 12mm;size:A4 landscape;}}</style></head><body style="padding:28px 32px;max-width:1100px;margin:0 auto;"><div class="no-print" style="text-align:right;margin-bottom:16px;"><button onclick="window.print()" style="background:#185FA5;color:#fff;border:none;border-radius:7px;padding:9px 22px;font-size:13px;font-weight:600;cursor:pointer;">🖨 Print / Save as PDF</button><button onclick="window.close()" style="margin-left:8px;background:#e5e7eb;color:#374151;border:none;border-radius:7px;padding:9px 18px;font-size:13px;cursor:pointer;">✕ Close</button></div><div style="background:#185FA5;border-radius:10px;padding:16px 22px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;"><div><div style="color:#fff;font-size:20px;font-weight:700;">LRP Support Shift Handover</div><div style="color:rgba(255,255,255,.75);font-size:12px;margin-top:3px;">IT Support Team  |  Generated: ${new Date().toLocaleString()}</div></div><div style="text-align:right;"><div style="color:#fff;font-size:22px;font-weight:700;">${log.shift}</div><div style="color:rgba(255,255,255,.75);font-size:12px;">${log.date}</div></div></div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;"><div style="background:#f0f4f8;border-radius:8px;padding:10px 14px;"><div style="font-size:10px;color:#5f6b7a;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">Current Shift</div><div style="font-size:12px;font-weight:600;color:#1a1a1a;line-height:1.6;">${log.currentMembers.join("<br>")||"—"}</div></div><div style="background:#f0f4f8;border-radius:8px;padding:10px 14px;"><div style="font-size:10px;color:#5f6b7a;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">Next Shift</div><div style="font-size:12px;font-weight:600;color:#1a1a1a;line-height:1.6;">${log.nextMembers.join("<br>")||"—"}</div></div><div style="background:#f0f4f8;border-radius:8px;padding:10px 14px;"><div style="font-size:10px;color:#5f6b7a;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">Mails Handled By</div><div style="font-size:13px;font-weight:600;color:#1a1a1a;">${escH(log.mailsHandledBy)||"—"}</div></div><div style="background:#f0f4f8;border-radius:8px;padding:10px 14px;"><div style="font-size:10px;color:#5f6b7a;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">Jira Handled By</div><div style="font-size:13px;font-weight:600;color:#1a1a1a;">${escH(log.jiraHandledBy)||"—"}</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;"><div style="background:#dbeafe;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:26px;font-weight:700;color:#185FA5;">${all.length}</div><div style="font-size:11px;color:#185FA5;">Total Tickets</div></div><div style="background:#fee2e2;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:26px;font-weight:700;color:#991b1b;">${pend}</div><div style="font-size:11px;color:#991b1b;">Pending</div></div><div style="background:#d1fae5;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:26px;font-weight:700;color:#065f46;">${comp}</div><div style="font-size:11px;color:#065f46;">Completed</div></div></div>${catHTML}${infoHTML}<div style="margin-top:28px;border-top:1px solid #e0e4ea;padding-top:10px;text-align:center;font-size:11px;color:#9ca3af;">LRP Support · Shift Handover · ${log.date} ${log.shift} · Submitted ${new Date(log.submittedAt).toLocaleTimeString()}</div><script>window.onload=function(){window.print();}<\/script></body></html>`;
-  const win=window.open("","_blank");win.document.write(html);win.document.close();
+  const boxes2=(log.infoBoxes||[]).filter(b=>b&&b.trim());
+  let infoHTML="";
+  if(boxes2.length){
+    infoHTML=`<div style="margin-top:24px;">
+      <div style="font-size:13px;font-weight:700;color:#92400e;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;">📢 Important Information</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        ${boxes2.map(txt=>`<div style="background:#fffbeb;border:1.5px solid #f59e0b;border-radius:8px;padding:12px 14px;">
+          <div style="font-size:11px;font-weight:700;color:#92400e;margin-bottom:6px;">📢 Important Information</div>
+          <div style="font-size:12px;color:#374151;white-space:pre-wrap;line-height:1.6;">${escH(txt)}</div>
+        </div>`).join("")}
+      </div></div>`;
+  }
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"/>
+  <title>Shift Handover - ${log.date} ${log.shift}</title>
+  <style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#1a1a1a;font-size:13px;background:#fff;}
+  @media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}.no-print{display:none!important;}@page{margin:15mm 12mm;size:A4 landscape;}}</style>
+  </head><body style="padding:28px 32px;max-width:1100px;margin:0 auto;">
+  <div class="no-print" style="text-align:right;margin-bottom:16px;">
+    <button onclick="window.print()" style="background:#185FA5;color:#fff;border:none;border-radius:7px;padding:9px 22px;font-size:13px;font-weight:600;cursor:pointer;">🖨 Print / Save as PDF</button>
+    <button onclick="window.close()" style="margin-left:8px;background:#e5e7eb;color:#374151;border:none;border-radius:7px;padding:9px 18px;font-size:13px;cursor:pointer;">✕ Close</button>
+  </div>
+  <div style="background:#185FA5;border-radius:10px;padding:16px 22px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;">
+    <div>
+      <div style="color:#fff;font-size:20px;font-weight:700;">LRP Support Shift Handover</div>
+      <div style="color:rgba(255,255,255,.75);font-size:12px;margin-top:3px;">IT Support Team | Generated: ${new Date().toLocaleString()}</div>
+    </div>
+    <div style="text-align:right;">
+      <div style="color:#fff;font-size:22px;font-weight:700;">${log.shift}</div>
+      <div style="color:rgba(255,255,255,.75);font-size:12px;">${log.date}</div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;">
+    <div style="background:#f0f4f8;border-radius:8px;padding:10px 14px;"><div style="font-size:10px;color:#5f6b7a;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">Current Shift</div><div style="font-size:12px;font-weight:600;color:#1a1a1a;line-height:1.6;">${log.currentMembers.join("<br>")||"—"}</div></div>
+    <div style="background:#f0f4f8;border-radius:8px;padding:10px 14px;"><div style="font-size:10px;color:#5f6b7a;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">Next Shift</div><div style="font-size:12px;font-weight:600;color:#1a1a1a;line-height:1.6;">${log.nextMembers.join("<br>")||"—"}</div></div>
+    <div style="background:#f0f4f8;border-radius:8px;padding:10px 14px;"><div style="font-size:10px;color:#5f6b7a;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">Mails Handled By</div><div style="font-size:13px;font-weight:600;color:#1a1a1a;">${escH(log.mailsHandledBy)||"—"}</div></div>
+    <div style="background:#f0f4f8;border-radius:8px;padding:10px 14px;"><div style="font-size:10px;color:#5f6b7a;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">Jira Handled By</div><div style="font-size:13px;font-weight:600;color:#1a1a1a;">${escH(log.jiraHandledBy)||"—"}</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;">
+    <div style="background:#dbeafe;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:26px;font-weight:700;color:#185FA5;">${all.length}</div><div style="font-size:11px;color:#185FA5;">Total Tickets</div></div>
+    <div style="background:#fee2e2;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:26px;font-weight:700;color:#991b1b;">${pend}</div><div style="font-size:11px;color:#991b1b;">Pending</div></div>
+    <div style="background:#d1fae5;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:26px;font-weight:700;color:#065f46;">${comp}</div><div style="font-size:11px;color:#065f46;">Completed</div></div>
+  </div>
+  ${catHTML}${infoHTML}
+  <div style="margin-top:28px;border-top:1px solid #e0e4ea;padding-top:10px;text-align:center;font-size:11px;color:#9ca3af;">
+    LRP Support · Shift Handover · ${log.date} ${log.shift} · Submitted ${new Date(log.submittedAt).toLocaleTimeString()}
+  </div>
+  <script>window.onload=function(){window.print();}<\/script>
+  </body></html>`;
+  const win=window.open("","_blank"); win.document.write(html); win.document.close();
 }
 
-function updateImportBtn(){document.getElementById("importBtn").textContent="Import Pending from "+prevShift(getShift());}
-function importPending(){
-  const prev=prevShift(getShift());const raw=localStorage.getItem(shiftKey(getDate(),prev));
-  if(!raw){showToast("No saved data for "+prev,"warn");return;}
-  try{const data=JSON.parse(raw);let total=0;CATS.forEach(c=>{(data.tickets[c.key]||[]).filter(t=>t.status==="Pending").forEach(t=>{tickets[c.key].push({...t,_id:uid()});total++;});});if(data.infoBoxes&&data.infoBoxes.some(b=>b&&b.trim())){setInfoBoxes(data.infoBoxes);showToast(`Imported ${total} pending ticket(s) + info notes from ${prev}`);}else{if(!total){showToast("No pending tickets in "+prev,"warn");return;}showToast(`Imported ${total} pending ticket(s) from ${prev}`);}CATS.forEach(c=>renderCatBody(c.key));updateStats();}catch(e){showToast("Failed to import","error");}
-}
-
-function renderSaved(){
-  const list=document.getElementById("savedList");list.innerHTML="";
-  const keys=Object.keys(localStorage).filter(k=>k.startsWith("shift:")).sort().slice(-15);
-  if(!keys.length){list.innerHTML=`<span style="font-size:12px;color:#c0c4cc;">No shifts saved yet.</span>`;return;}
-  keys.forEach(k=>{const parts=k.split(":"),d=parts[1],s=parts[2];const btn=document.createElement("button");btn.className="saved-btn"+(getDate()===d&&getShift()===s?" active":"");btn.textContent=`${d} ${s}`;btn.onclick=()=>{document.getElementById("shiftDate").value=d;document.getElementById("shiftSelect").value=s;onShiftChange();};list.appendChild(btn);});
-}
-
-function exportCSV(){
+// ── EXPORT EXCEL ──────────────────────────────────────────────────────────────
+function exportCSV() {
   const wb=XLSX.utils.book_new();const ws={};let r=0;
   function setCell(row,col,value,style){const addr=XLSX.utils.encode_cell({r:row,c:col});ws[addr]={v:value,t:typeof value==='number'?'n':'s',s:style||{}};}
-  const sTitle={font:{bold:true,sz:16,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:"185FA5"}},alignment:{horizontal:"center",vertical:"center"}};
-  const sSubtitle={font:{bold:false,sz:11,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:"185FA5"}},alignment:{horizontal:"center"}};
-  const sSectionHead={font:{bold:true,sz:11,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:"2D6FA8"}},alignment:{horizontal:"left",vertical:"center"}};
+  const sTitle    ={font:{bold:true,sz:16,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:"185FA5"}},alignment:{horizontal:"center",vertical:"center"}};
+  const sSubtitle ={font:{bold:false,sz:11,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:"185FA5"}},alignment:{horizontal:"center"}};
+  const sSectionH ={font:{bold:true,sz:11,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:"2D6FA8"}},alignment:{horizontal:"left",vertical:"center"}};
   const sInfoLabel={font:{bold:true,sz:10,color:{rgb:"5F6B7A"}},fill:{fgColor:{rgb:"F0F4F8"}},alignment:{horizontal:"left"}};
-  const sInfoVal={font:{sz:10,color:{rgb:"1A1A1A"}},fill:{fgColor:{rgb:"FFFFFF"}},alignment:{horizontal:"left"}};
-  const sNoteHead={font:{bold:true,sz:10,color:{rgb:"92400e"}},fill:{fgColor:{rgb:"FFFBEB"}},alignment:{horizontal:"left"}};
-  const sNoteVal={font:{sz:10,color:{rgb:"374151"}},fill:{fgColor:{rgb:"FFFBEB"}},alignment:{horizontal:"left",wrapText:true}};
+  const sInfoVal  ={font:{sz:10,color:{rgb:"1A1A1A"}},fill:{fgColor:{rgb:"FFFFFF"}},alignment:{horizontal:"left"}};
   const sTblHeader={font:{bold:true,sz:10,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:"374151"}},alignment:{horizontal:"center",vertical:"center"}};
-  const sTblEven={font:{sz:10},fill:{fgColor:{rgb:"F8F9FA"}},alignment:{horizontal:"left",vertical:"center"}};
-  const sTblOdd={font:{sz:10},fill:{fgColor:{rgb:"FFFFFF"}},alignment:{horizontal:"left",vertical:"center"}};
+  const sTblEven  ={font:{sz:10},fill:{fgColor:{rgb:"F8F9FA"}},alignment:{horizontal:"left",vertical:"center"}};
+  const sTblOdd   ={font:{sz:10},fill:{fgColor:{rgb:"FFFFFF"}},alignment:{horizontal:"left",vertical:"center"}};
   const sCompleted={font:{bold:true,sz:10,color:{rgb:"065f46"}},fill:{fgColor:{rgb:"D1FAE5"}},alignment:{horizontal:"center"}};
-  const sPending={font:{bold:true,sz:10,color:{rgb:"991b1b"}},fill:{fgColor:{rgb:"FEE2E2"}},alignment:{horizontal:"center"}};
-  const sAge={font:{bold:true,sz:10,color:{rgb:"854F0B"}},fill:{fgColor:{rgb:"FAEEDA"}},alignment:{horizontal:"center"}};
-  const sCatColors={showstopper:{head:{font:{bold:true,sz:11,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:"E24B4A"}},alignment:{horizontal:"left"}}},high:{head:{font:{bold:true,sz:11,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:"BA7517"}},alignment:{horizontal:"left"}}},escalated:{head:{font:{bold:true,sz:11,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:"7C3AED"}},alignment:{horizontal:"left"}}},longpending:{head:{font:{bold:true,sz:11,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:"888780"}},alignment:{horizontal:"left"}}}};
+  const sPending  ={font:{bold:true,sz:10,color:{rgb:"991b1b"}},fill:{fgColor:{rgb:"FEE2E2"}},alignment:{horizontal:"center"}};
+  const sAge      ={font:{bold:true,sz:10,color:{rgb:"854F0B"}},fill:{fgColor:{rgb:"FAEEDA"}},alignment:{horizontal:"center"}};
+  const sCatColors={
+    showstopper:{head:{font:{bold:true,sz:11,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:"E24B4A"}},alignment:{horizontal:"left"}}},
+    high:       {head:{font:{bold:true,sz:11,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:"BA7517"}},alignment:{horizontal:"left"}}},
+    escalated:  {head:{font:{bold:true,sz:11,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:"7C3AED"}},alignment:{horizontal:"left"}}},
+    longpending:{head:{font:{bold:true,sz:11,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:"888780"}},alignment:{horizontal:"left"}}}
+  };
   const TOTAL_COLS=9;
-  function mergeRow(row,style,value,fromCol=0,toCol=TOTAL_COLS-1){setCell(row,fromCol,value,style);for(let c=fromCol+1;c<=toCol;c++)setCell(row,c,"",style);if(!ws['!merges'])ws['!merges']=[];ws['!merges'].push({s:{r:row,c:fromCol},e:{r:row,c:toCol}});}
-  mergeRow(r,sTitle,"LRP Support Shift Handover");r++;mergeRow(r,sSubtitle,"IT Support Team  |  Generated: "+new Date().toLocaleString());r++;r++;
-  mergeRow(r,sSectionHead,"  SHIFT DETAILS");r++;
-  [["Date",getDate()],["Shift",getShift()],["Current Shift Members",selected["ms-current"].join(", ")||"—"],["Next Shift Members",selected["ms-next"].join(", ")||"—"],["Mails Handled By",ssSelected["ss-mails"]||"—"],["Jira Handled By",ssSelected["ss-jira"]||"—"]].forEach(([label,val])=>{setCell(r,0,label,sInfoLabel);setCell(r,1,"",sInfoLabel);ws['!merges']=ws['!merges']||[];ws['!merges'].push({s:{r,c:0},e:{r,c:1}});setCell(r,2,val,sInfoVal);for(let c=3;c<TOTAL_COLS;c++)setCell(r,c,"",sInfoVal);ws['!merges'].push({s:{r,c:2},e:{r,c:TOTAL_COLS-1}});r++;});r++;
+  function mergeRow(row,style,value,fromCol=0,toCol=TOTAL_COLS-1){
+    setCell(row,fromCol,value,style);
+    for(let c=fromCol+1;c<=toCol;c++)setCell(row,c,"",style);
+    if(!ws['!merges'])ws['!merges']=[];
+    ws['!merges'].push({s:{r:row,c:fromCol},e:{r:row,c:toCol}});
+  }
+  mergeRow(r,sTitle,"LRP Support Shift Handover");r++;
+  mergeRow(r,sSubtitle,"IT Support Team  |  Generated: "+new Date().toLocaleString());r++;r++;
+  mergeRow(r,sSectionH,"  SHIFT DETAILS");r++;
+  [["Date",getDate()],["Shift",getShift()],
+   ["Current Shift Members",selected["ms-current"].join(", ")||"—"],
+   ["Next Shift Members",selected["ms-next"].join(", ")||"—"],
+   ["Mails Handled By",ssSelected["ss-mails"]||"—"],
+   ["Jira Handled By",ssSelected["ss-jira"]||"—"]
+  ].forEach(([label,val])=>{
+    setCell(r,0,label,sInfoLabel);setCell(r,1,"",sInfoLabel);
+    ws['!merges']=ws['!merges']||[];ws['!merges'].push({s:{r,c:0},e:{r,c:1}});
+    setCell(r,2,val,sInfoVal);for(let c=3;c<TOTAL_COLS;c++)setCell(r,c,"",sInfoVal);
+    ws['!merges'].push({s:{r,c:2},e:{r,c:TOTAL_COLS-1}});r++;
+  });r++;
   const infoBoxes=getInfoBoxes();
-  if(infoBoxes.some(b=>b&&b.trim())){mergeRow(r,sSectionHead,"  IMPORTANT INFORMATION");r++;infoBoxes.forEach((txt,idx)=>{if(!txt||!txt.trim())return;setCell(r,0,"📢 Box "+(idx+1),sNoteHead);setCell(r,1,"",sNoteHead);ws['!merges']=ws['!merges']||[];ws['!merges'].push({s:{r,c:0},e:{r,c:1}});setCell(r,2,txt,sNoteVal);for(let c=3;c<TOTAL_COLS;c++)setCell(r,c,"",sNoteVal);ws['!merges'].push({s:{r,c:2},e:{r,c:TOTAL_COLS-1}});r++;});r++;}
-  const allTix=Object.values(tickets).flat();const pendCount=allTix.filter(t=>t.status==="Pending").length;
-  mergeRow(r,sSectionHead,"  TICKET SUMMARY");r++;
-  [["Total Tickets",allTix.length],["Pending",pendCount],["Completed",allTix.length-pendCount]].forEach(([label,val])=>{setCell(r,0,label,sInfoLabel);setCell(r,1,"",sInfoLabel);ws['!merges']=ws['!merges']||[];ws['!merges'].push({s:{r,c:0},e:{r,c:1}});setCell(r,2,val,sInfoVal);for(let c=3;c<TOTAL_COLS;c++)setCell(r,c,"",sInfoVal);ws['!merges'].push({s:{r,c:2},e:{r,c:TOTAL_COLS-1}});r++;});r++;
+  if(infoBoxes.some(b=>b&&b.trim())){
+    mergeRow(r,sSectionH,"  IMPORTANT INFORMATION");r++;
+    infoBoxes.forEach((txt,idx)=>{
+      if(!txt||!txt.trim())return;
+      setCell(r,0,"📢 Box "+(idx+1),sInfoLabel);setCell(r,1,"",sInfoLabel);
+      ws['!merges']=ws['!merges']||[];ws['!merges'].push({s:{r,c:0},e:{r,c:1}});
+      setCell(r,2,txt,sInfoVal);for(let c=3;c<TOTAL_COLS;c++)setCell(r,c,"",sInfoVal);
+      ws['!merges'].push({s:{r,c:2},e:{r,c:TOTAL_COLS-1}});r++;
+    });r++;
+  }
+  const allTix=Object.values(tickets).flat();
+  const pendCount=allTix.filter(t=>t.status==="Pending").length;
+  mergeRow(r,sSectionH,"  TICKET SUMMARY");r++;
+  [["Total Tickets",allTix.length],["Pending",pendCount],["Completed",allTix.length-pendCount]].forEach(([label,val])=>{
+    setCell(r,0,label,sInfoLabel);setCell(r,1,"",sInfoLabel);
+    ws['!merges']=ws['!merges']||[];ws['!merges'].push({s:{r,c:0},e:{r,c:1}});
+    setCell(r,2,val,sInfoVal);for(let c=3;c<TOTAL_COLS;c++)setCell(r,c,"",sInfoVal);
+    ws['!merges'].push({s:{r,c:2},e:{r,c:TOTAL_COLS-1}});r++;
+  });r++;
   const tblHeaders=["#","Ticket ID","Client","Description","Status","Assigned To","Next Action","Created Date","Age"];
   CATS.forEach(cat=>{
-    const tix=tickets[cat.key]||[];mergeRow(r,sCatColors[cat.key].head,"  "+cat.label.toUpperCase()+" ("+tix.length+" tickets)");r++;
+    const tix=tickets[cat.key]||[];
+    mergeRow(r,sCatColors[cat.key].head,"  "+cat.label.toUpperCase()+" ("+tix.length+" tickets)");r++;
     if(!tix.length){mergeRow(r,sTblOdd,"  No tickets in this category.");r++;}
-    else{tblHeaders.forEach((h,c)=>setCell(r,c,h,sTblHeader));r++;tix.forEach((t,idx)=>{const base=idx%2===0?sTblEven:sTblOdd;setCell(r,0,idx+1,base);setCell(r,1,t.ticketId||"",base);setCell(r,2,t.client||"",base);setCell(r,3,t.desc||"",base);setCell(r,4,t.status,t.status==="Completed"?sCompleted:sPending);setCell(r,5,t.assignedTo||"",base);setCell(r,6,t.nextAction||"",base);setCell(r,7,t.createdDate||"",base);setCell(r,8,calcAge(t.createdDate)||"—",sAge);r++;});}
+    else{
+      tblHeaders.forEach((h,c)=>setCell(r,c,h,sTblHeader));r++;
+      tix.forEach((t,idx)=>{
+        const base=idx%2===0?sTblEven:sTblOdd;
+        setCell(r,0,idx+1,base);setCell(r,1,t.ticketId||"",base);setCell(r,2,t.client||"",base);
+        setCell(r,3,t.desc||"",base);setCell(r,4,t.status,t.status==="Completed"?sCompleted:sPending);
+        setCell(r,5,t.assignedTo||"",base);setCell(r,6,t.nextAction||"",base);
+        setCell(r,7,t.createdDate||"",base);setCell(r,8,calcAge(t.createdDate)||"—",sAge);r++;
+      });
+    }
     r++;
   });
   ws['!cols']=[{wch:4},{wch:14},{wch:14},{wch:30},{wch:12},{wch:20},{wch:28},{wch:14},{wch:8}];
