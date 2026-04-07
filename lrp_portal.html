@@ -7,7 +7,6 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚢</text></svg>">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  :root { --rust:#c0441a;--signal-orange:#e8610a; }
   body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#eef5fc;min-height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center; }
   .scene{position:fixed;inset:0;overflow:hidden;}
   .ocean-bg{position:absolute;inset:0;background:linear-gradient(180deg,#b8e0f7 0%,#7ec8e3 35%,#1a7db5 60%,#1056a0 80%,#0a3d78 100%);}
@@ -112,6 +111,43 @@
 <script>
 const API_URL='https://script.google.com/macros/s/AKfycbxhyO1pVbA_TeGsoD7kKAwHHxhMyitT7XN41y0f_1m28LWMaJ-7Rlo3fDPx9j10dnA2Tw/exec';
 
+// ── Global sign-out defined at top level so onclick="signOut()" always finds it ──
+window.signOut = async function(){
+  const u = _CURRENT_USER;
+  if(u){
+    try{ await fetch(API_URL+'?'+new URLSearchParams({action:'agentLogout',username:u})); }catch{}
+  }
+  // Clear all intervals
+  _INTERVALS.forEach(id=>clearInterval(id));
+  _INTERVALS.length=0;
+  localStorage.removeItem('lrp_session');
+  localStorage.removeItem('lrp_quote');
+  location.reload();
+};
+
+// ── Global chat toggle defined at top level ──
+window._toggleChat = function(){
+  const panel=document.getElementById('chatPanel');
+  if(!panel)return;
+  _CHAT_OPEN=!_CHAT_OPEN;
+  if(_CHAT_OPEN){ panel.classList.add('open'); document.title='LRP Support Portal'; _loadPresence(); }
+  else panel.classList.remove('open');
+};
+window._renderAgents = function(){ _doRenderAgents(); };
+window._openConv    = function(p){ _doOpenConv(p); };
+window._sendMsg     = async function(){ await _doSendMsg(); };
+
+// ── Global state ──
+let _CURRENT_USER = '';
+let _INTERVALS    = [];
+let _CHAT_OPEN    = false;
+let _CHAT_PEER    = '';
+let _CHAT_AGENTS  = [];
+let _CHAT_UNREAD  = {};
+let _CHAT_MSGS    = [];
+let _CHAT_LASTTS  = '';
+let _CHAT_POLL    = null;
+
 const AGENT_QUOTES=[
   {text:"Every customer interaction is a chance to turn a problem into loyalty.",author:"LRP Wisdom"},
   {text:"Patience is not the ability to wait, but how you act while you're waiting.",author:"Joyce Meyer"},
@@ -136,15 +172,15 @@ const AGENT_QUOTES=[
 ];
 
 function getSessionQuote(){
-  const saved=localStorage.getItem('lrp_quote');
-  if(saved)return JSON.parse(saved);
+  const s=localStorage.getItem('lrp_quote');
+  if(s)return JSON.parse(s);
   const q=AGENT_QUOTES[Math.floor(Math.random()*AGENT_QUOTES.length)];
   localStorage.setItem('lrp_quote',JSON.stringify(q));
   return q;
 }
 function showMsg(id,text,type){
   const el=document.getElementById(id);
-  el.textContent=text;el.className='msg '+type;el.style.display='block';
+  el.textContent=text; el.className='msg '+type; el.style.display='block';
 }
 
 window.addEventListener('load',function(){
@@ -153,7 +189,7 @@ window.addEventListener('load',function(){
     try{
       const s=JSON.parse(saved);
       if(s&&s.username&&s.team) showDashboard(s.username,s.team);
-    }catch{localStorage.removeItem('lrp_session');}
+    }catch{ localStorage.removeItem('lrp_session'); }
   }
 });
 
@@ -178,7 +214,7 @@ async function handleLogin(){
       sessionStorage.setItem('admin_token',ad.token);
       sessionStorage.setItem('admin_token_time',Date.now().toString());
       showMsg('login-msg','✅ Admin access granted','success');
-      setTimeout(()=>{window.location.href='admin.html';},1000);
+      setTimeout(()=>{ window.location.href='admin.html'; },1000);
       return;
     }
   }catch{}
@@ -230,19 +266,198 @@ async function submitNewPassword(username,team){
   if(np.length<6){showMsg('cpw-msg','⚠ Password must be ≥ 6 characters.','error');return;}
   if(np!==nc){showMsg('cpw-msg','⚠ Passwords do not match.','error');return;}
   const btn=document.getElementById('cpw-btn');
-  btn.disabled=true;showMsg('cpw-msg','⏳ Updating password...','loading');
+  btn.disabled=true; showMsg('cpw-msg','⏳ Updating password...','loading');
   try{
     const res=await fetch(API_URL+'?'+new URLSearchParams({action:'changePassword',username,newPassword:np}));
     const data=await res.json();
-    if(data.success){showMsg('cpw-msg','✅ Password set! Entering portal...','success');setTimeout(()=>showDashboard(username,team),1200);}
-    else{showMsg('cpw-msg','⚠ Failed to update. Try again.','error');btn.disabled=false;}
-  }catch{showMsg('cpw-msg','⚠ Connection error.','error');btn.disabled=false;}
+    if(data.success){ showMsg('cpw-msg','✅ Password set! Entering portal...','success'); setTimeout(()=>showDashboard(username,team),1200); }
+    else{ showMsg('cpw-msg','⚠ Failed to update. Try again.','error'); btn.disabled=false; }
+  }catch{ showMsg('cpw-msg','⚠ Connection error.','error'); btn.disabled=false; }
 }
 
 // ══════════════════════════════════════════════════════════════
-//  DASHBOARD + CHAT ENGINE
+//  CHAT HELPERS (defined globally so they survive innerHTML swap)
+// ══════════════════════════════════════════════════════════════
+const AV_COLS=['av-blue','av-teal','av-purple','av-amber','av-coral','av-pink','av-green'];
+function _avCol(n){let h=0;for(let i=0;i<n.length;i++)h=(h*31+n.charCodeAt(i))&0xffff;return AV_COLS[h%AV_COLS.length];}
+function _ini(n){return n.trim().split(/\s+/).map(w=>w[0]).join('').toUpperCase().slice(0,2);}
+function _fmtT(iso){try{return new Date(iso).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}catch{return '';}}
+function _esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function _isAdmin(u){return u.isAdmin===true||u.team==='Admin';}
+
+// ── SINGLE combined poll (presence + unread in one call every 45s) ──
+// Heartbeat piggybacks on the same cadence — only ONE fetch at a time.
+let _pollBusy=false;
+async function _combinedPoll(){
+  if(_pollBusy)return;
+  _pollBusy=true;
+  try{
+    // 1. Heartbeat (fire-and-forget, no await needed)
+    fetch(API_URL+'?'+new URLSearchParams({action:'heartbeat',username:_CURRENT_USER})).catch(()=>{});
+
+    // 2. Presence
+    const pr=await fetch(API_URL+'?action=getPresence&t='+Date.now());
+    const pd=await pr.json();
+    if(pd.success){
+      const me=_CURRENT_USER.toLowerCase();
+      const onlineOthers=pd.presence.filter(p=>p.online&&p.username.toLowerCase()!==me).length;
+      const sub=document.getElementById('chatOnlineCount');
+      if(sub)sub.textContent=onlineOthers+' other'+(onlineOthers!==1?'s':'')+' online';
+      const cnt=document.getElementById('db-online-count');
+      if(cnt)cnt.textContent=onlineOthers+1;
+      _CHAT_AGENTS=pd.presence
+        .filter(p=>p.username.toLowerCase()!==me)
+        .sort((a,b)=>{
+          if(a.online&&!b.online)return -1;
+          if(!a.online&&b.online)return 1;
+          if(_isAdmin(a)&&!_isAdmin(b))return -1;
+          if(!_isAdmin(a)&&_isAdmin(b))return 1;
+          return a.username.localeCompare(b.username);
+        });
+      _doRenderAgents();
+    }
+
+    // 3. Unread counts
+    const ur=await fetch(API_URL+'?'+new URLSearchParams({action:'getUnreadCounts',username:_CURRENT_USER})+'&t='+Date.now());
+    const ud=await ur.json();
+    if(ud.success){
+      _CHAT_UNREAD=ud.counts||{};
+      const total=ud.total||0;
+      const badge=document.getElementById('chatFabBadge');
+      if(badge){ badge.textContent=total>9?'9+':total; badge.style.display=total>0?'flex':'none'; }
+      _doRenderAgents();
+      document.title=total>0&&!_CHAT_OPEN?'('+total+') LRP Support Portal':'LRP Support Portal';
+    }
+  }catch{}
+  _pollBusy=false;
+}
+
+// Separate fast poll only for active conversation messages (every 6s)
+async function _msgPoll(){
+  if(!_CHAT_PEER||!_CURRENT_USER)return;
+  try{
+    const params={action:'getMessages',user1:_CURRENT_USER,user2:_CHAT_PEER};
+    if(_CHAT_LASTTS)params.since=_CHAT_LASTTS;
+    const r=await fetch(API_URL+'?'+new URLSearchParams(params)+'&t='+Date.now());
+    const d=await r.json();
+    if(d.success&&d.messages&&d.messages.length){
+      _CHAT_MSGS=[..._CHAT_MSGS,...d.messages];
+      _CHAT_LASTTS=_CHAT_MSGS[_CHAT_MSGS.length-1].sentAt;
+      _doRenderMsgs();
+    }
+  }catch{}
+}
+
+function _loadPresence(){ _combinedPoll(); }
+
+function _doRenderAgents(){
+  const list=document.getElementById('chatAgentList');
+  if(!list)return;
+  const q=(document.getElementById('chatSearch')?.value||'').toLowerCase();
+  let agents=_CHAT_AGENTS;
+  if(q)agents=agents.filter(a=>a.username.toLowerCase().includes(q));
+  const admins=agents.filter(a=>_isAdmin(a));
+  const regular=agents.filter(a=>!_isAdmin(a));
+  const online=regular.filter(a=>a.online);
+  const offline=regular.filter(a=>!a.online);
+  let html='';
+  if(admins.length){ html+=`<div class="chat-section-lbl">Admin</div>`; admins.forEach(a=>html+=_agentHTML(a)); }
+  if(online.length){ html+=`<div class="chat-section-lbl" style="margin-top:4px;">Online (${online.length})</div>`; online.forEach(a=>html+=_agentHTML(a)); }
+  if(offline.length){ html+=`<div class="chat-section-lbl" style="margin-top:4px;">Offline (${offline.length})</div>`; offline.forEach(a=>html+=_agentHTML(a)); }
+  if(!agents.length)html='<div style="font-size:11px;color:#3a7aaa;padding:12px 8px;text-align:center;">No results</div>';
+  list.innerHTML=html;
+}
+
+function _agentHTML(a){
+  const unread=_CHAT_UNREAD[a.username]||0;
+  const isActive=a.username.toLowerCase()===_CHAT_PEER.toLowerCase();
+  const isAdm=_isAdmin(a);
+  const cls=isAdm?'av-admin':_avCol(a.username);
+  const initials=isAdm?'AD':_ini(a.username);
+  const displayName=isAdm?'⚓ '+a.username:a.username;
+  const badge=unread>0&&!isActive?`<span class="chat-unread">${unread>9?'9+':unread}</span>`:'';
+  return`<div class="chat-agent-item${isActive?' active':''}" onclick="_openConv('${a.username.replace(/'/g,"\\'")}')">
+    <div class="chat-av ${cls}">${initials}<span class="chat-presence ${a.online?'presence-online':'presence-offline'}"></span></div>
+    <span class="chat-agent-name">${_esc(displayName)}</span>
+    ${badge}
+  </div>`;
+}
+
+function _doOpenConv(peer){
+  _CHAT_PEER=peer; _CHAT_MSGS=[]; _CHAT_LASTTS='';
+  _doRenderAgents();
+  const pData=_CHAT_AGENTS.find(a=>a.username.toLowerCase()===peer.toLowerCase());
+  const isOn=pData?pData.online:false;
+  const isAdm=pData?_isAdmin(pData):false;
+  const cls=isAdm?'av-admin':_avCol(peer);
+  const initials=isAdm?'AD':_ini(peer);
+  const displayName=isAdm?'⚓ '+peer:peer;
+  const conv=document.getElementById('chatConvArea');
+  if(!conv)return;
+  conv.innerHTML=`
+    <div class="chat-conv-header">
+      <div class="chat-av ${cls}" style="width:28px;height:28px;font-size:10px;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${initials}</div>
+      <div style="flex:1;min-width:0;">
+        <div class="chat-conv-name">${_esc(displayName)}</div>
+        <div class="chat-conv-status ${isOn?'conv-online':'conv-offline'}">${isOn?'● Online':'● Offline'}</div>
+      </div>
+    </div>
+    <div class="chat-messages" id="chatMsgs"><div class="chat-empty"><div class="chat-empty-icon">💬</div>Start the conversation</div></div>
+    <div class="chat-input-row">
+      <input type="text" id="chatMsgInput" placeholder="Message ${_esc(displayName)}..." onkeydown="if(event.key==='Enter')_sendMsg()"/>
+      <button class="chat-send-btn" onclick="_sendMsg()">Send</button>
+    </div>`;
+  fetch(API_URL+'?'+new URLSearchParams({action:'markRead',username:_CURRENT_USER,sender:peer})).catch(()=>{});
+  delete _CHAT_UNREAD[peer];
+  // Load full history once
+  (async()=>{
+    try{
+      const r=await fetch(API_URL+'?'+new URLSearchParams({action:'getMessages',user1:_CURRENT_USER,user2:peer})+'&t='+Date.now());
+      const d=await r.json();
+      if(d.success){ _CHAT_MSGS=d.messages||[]; if(_CHAT_MSGS.length)_CHAT_LASTTS=_CHAT_MSGS[_CHAT_MSGS.length-1].sentAt; _doRenderMsgs(); }
+    }catch{}
+  })();
+  document.getElementById('chatMsgInput')?.focus();
+}
+
+function _doRenderMsgs(){
+  const box=document.getElementById('chatMsgs');
+  if(!box)return;
+  if(!_CHAT_MSGS.length){ box.innerHTML='<div class="chat-empty"><div class="chat-empty-icon">💬</div>Start the conversation</div>'; return; }
+  const atBottom=box.scrollHeight-box.scrollTop-box.clientHeight<80;
+  box.innerHTML=_CHAT_MSGS.map(m=>{
+    const mine=m.from.toLowerCase()===_CURRENT_USER.toLowerCase();
+    return`<div class="chat-msg ${mine?'mine':'theirs'}">
+      <div class="chat-bubble">${_esc(m.message)}</div>
+      <div class="chat-msg-time">${_fmtT(m.sentAt)}</div>
+    </div>`;
+  }).join('');
+  if(atBottom||_CHAT_MSGS.length<=5)box.scrollTop=box.scrollHeight;
+}
+
+async function _doSendMsg(){
+  const input=document.getElementById('chatMsgInput');
+  if(!input)return;
+  const msg=input.value.trim();
+  if(!msg||!_CHAT_PEER)return;
+  input.value='';
+  // Optimistic render
+  const opt={id:'opt-'+Date.now(),from:_CURRENT_USER,to:_CHAT_PEER,message:msg,sentAt:new Date().toISOString(),isRead:false};
+  _CHAT_MSGS.push(opt); _CHAT_LASTTS=opt.sentAt; _doRenderMsgs();
+  try{ await fetch(API_URL+'?'+new URLSearchParams({action:'sendMessage',fromUser:_CURRENT_USER,toUser:_CHAT_PEER,message:msg})); }catch{}
+}
+
+// ══════════════════════════════════════════════════════════════
+//  DASHBOARD
 // ══════════════════════════════════════════════════════════════
 function showDashboard(username,team){
+  // Store globally BEFORE innerHTML swap so signOut() can always find it
+  _CURRENT_USER=username;
+  // Clear any old intervals from a previous session
+  _INTERVALS.forEach(id=>clearInterval(id));
+  _INTERVALS.length=0;
+  _CHAT_PEER=''; _CHAT_MSGS=[]; _CHAT_AGENTS=[]; _CHAT_UNREAD={}; _CHAT_LASTTS=''; _CHAT_OPEN=false;
+
   const q=getSessionQuote();
   document.body.innerHTML=`
 <style>
@@ -287,12 +502,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .quote-mark{font-size:22px;color:#1a5a90;opacity:.6;line-height:1;font-family:Georgia,serif;flex-shrink:0;}
 .quote-text{font-size:13px;color:#0a3d78;font-style:italic;font-family:Georgia,serif;flex:1;font-weight:500;}
 .quote-author{font-size:11px;color:#1a5a90;white-space:nowrap;flex-shrink:0;font-weight:800;}
-/* presence pill */
 .presence-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.8);border-radius:10px;padding:4px 10px;font-size:11px;font-weight:700;color:#1a5a90;}
 .presence-dot{width:8px;height:8px;border-radius:50%;background:#1a8c5c;animation:presencePulse 2s ease-in-out infinite;}
 @keyframes presencePulse{0%,100%{opacity:1;}50%{opacity:.5;}}
-/* chat widget */
-#chatWidget{position:fixed;bottom:24px;right:24px;z-index:9000;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}
+#chatWidget{position:fixed;bottom:24px;right:24px;z-index:9000;}
 #chatFab{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#1a7db5,#0a3d78);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 16px rgba(10,60,120,.35);transition:transform .2s;position:relative;}
 #chatFab:hover{transform:scale(1.08);}
 #chatFabBadge{position:absolute;top:-4px;right:-4px;background:#e53935;color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:700;display:none;align-items:center;justify-content:center;border:2px solid #fff;}
@@ -340,7 +553,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .chat-send-btn{padding:6px 12px;background:linear-gradient(135deg,#1a7db5,#0a3d78);border:none;border-radius:8px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;}
 .chat-no-sel{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#3a7aaa;font-size:12px;text-align:center;padding:20px;}
 .chat-no-sel-icon{font-size:32px;margin-bottom:10px;}
-/* avatar colours */
 .av-blue{background:#ddeeff;color:#0a4070;}
 .av-teal{background:#d4f0e8;color:#0a5040;}
 .av-purple{background:#e8deff;color:#400880;}
@@ -415,8 +627,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <span class="quote-text" id="db-quote-text"></span>
   <span class="quote-author" id="db-quote-author"></span>
 </div>
-
-<!-- CHAT WIDGET -->
 <div id="chatWidget">
   <div id="chatPanel">
     <div class="chat-header">
@@ -434,16 +644,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <div class="chat-agents-list" id="chatAgentList"></div>
       </div>
       <div class="chat-conv" id="chatConvArea">
-        <div class="chat-no-sel">
-          <div class="chat-no-sel-icon">👈</div>
-          <div>Select a person<br>to start chatting</div>
-        </div>
+        <div class="chat-no-sel"><div class="chat-no-sel-icon">👈</div><div>Select a person<br>to start chatting</div></div>
       </div>
     </div>
   </div>
   <button id="chatFab" onclick="_toggleChat()" title="Team Chat">
-    💬
-    <span id="chatFabBadge"></span>
+    💬<span id="chatFabBadge"></span>
   </button>
 </div>`;
 
@@ -452,210 +658,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   document.getElementById('db-quote-text').textContent=q.text;
   document.getElementById('db-quote-author').textContent='— '+q.author;
 
-  // ── CHAT ENGINE ──
-  const AV_COLS=['av-blue','av-teal','av-purple','av-amber','av-coral','av-pink','av-green'];
-  function avCol(n){let h=0;for(let i=0;i<n.length;i++)h=(h*31+n.charCodeAt(i))&0xffff;return AV_COLS[h%AV_COLS.length];}
-  function ini(n){return n.trim().split(/\s+/).map(w=>w[0]).join('').toUpperCase().slice(0,2);}
-  function fmtT(iso){try{return new Date(iso).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}catch{return '';}}
-  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-  function isAdminUser(u){return u.isAdmin===true||(u.team==='Admin');}
+  // ── Start combined poll: 45s for presence+unread, 6s for messages ──
+  _combinedPoll(); // immediate first call
+  _INTERVALS.push(setInterval(_combinedPoll, 45000)); // presence+unread+heartbeat every 45s
+  _INTERVALS.push(setInterval(_msgPoll, 6000));        // message poll only when chat open
 
-  let _open=false,_peer='',_agents=[],_unread={},_msgs=[],_pollT=null,_lastTs='';
-
-  // heartbeat
-  async function _hb(){try{await fetch(API_URL+'?'+new URLSearchParams({action:'heartbeat',username}));}catch{}}
-  _hb();setInterval(_hb,60000);
-
-  // presence
-  async function _loadPresence(){
-    try{
-      const r=await fetch(API_URL+'?action=getPresence&t='+Date.now());
-      const d=await r.json();
-      if(d.success){
-        const me=username.toLowerCase();
-        const online=d.presence.filter(p=>p.online&&p.username.toLowerCase()!==me).length;
-        const sub=document.getElementById('chatOnlineCount');
-        if(sub)sub.textContent=online+' other'+(online!==1?'s':'')+' online';
-        const cnt=document.getElementById('db-online-count');
-        if(cnt)cnt.textContent=online+1; // include self
-        _agents=d.presence
-          .filter(p=>p.username.toLowerCase()!==me)
-          .sort((a,b)=>{
-            // Admin always first among online
-            if(a.online&&!b.online)return -1;
-            if(!a.online&&b.online)return 1;
-            if(isAdminUser(a)&&!isAdminUser(b))return -1;
-            if(!isAdminUser(a)&&isAdminUser(b))return 1;
-            return a.username.localeCompare(b.username);
-          });
-        _renderAgents();
-      }
-    }catch{}
-  }
-  _loadPresence();setInterval(_loadPresence,30000);
-
-  // unread counts
-  async function _loadUnread(){
-    try{
-      const r=await fetch(API_URL+'?'+new URLSearchParams({action:'getUnreadCounts',username})+'&t='+Date.now());
-      const d=await r.json();
-      if(d.success){
-        _unread=d.counts||{};
-        const total=d.total||0;
-        const badge=document.getElementById('chatFabBadge');
-        if(badge){badge.textContent=total>9?'9+':total;badge.style.display=total>0?'flex':'none';}
-        _renderAgents();
-        document.title=total>0&&!_open?'('+total+') LRP Support Portal':'LRP Support Portal';
-      }
-    }catch{}
-  }
-  _loadUnread();setInterval(_loadUnread,12000);
-
-  window._renderAgents=function(){
-    const list=document.getElementById('chatAgentList');
-    if(!list)return;
-    const q=(document.getElementById('chatSearch')?.value||'').toLowerCase();
-    let agents=_agents;
-    if(q)agents=agents.filter(a=>a.username.toLowerCase().includes(q));
-
-    // Separate admin entries from regular agents
-    const admins=agents.filter(a=>isAdminUser(a));
-    const regular=agents.filter(a=>!isAdminUser(a));
-    const online=regular.filter(a=>a.online);
-    const offline=regular.filter(a=>!a.online);
-
-    let html='';
-    if(admins.length){
-      html+=`<div class="chat-section-lbl">Admin</div>`;
-      admins.forEach(a=>html+=_agentHTML(a));
-    }
-    if(online.length){
-      html+=`<div class="chat-section-lbl" style="margin-top:4px;">Online (${online.length})</div>`;
-      online.forEach(a=>html+=_agentHTML(a));
-    }
-    if(offline.length){
-      html+=`<div class="chat-section-lbl" style="margin-top:4px;">Offline (${offline.length})</div>`;
-      offline.forEach(a=>html+=_agentHTML(a));
-    }
-    if(!agents.length)html='<div style="font-size:11px;color:#3a7aaa;padding:12px 8px;text-align:center;">No results</div>';
-    list.innerHTML=html;
-  };
-
-  function _agentHTML(a){
-    const unread=_unread[a.username]||0;
-    const isActive=a.username.toLowerCase()===_peer.toLowerCase();
-    const isAdmin=isAdminUser(a);
-    const cls=isAdmin?'av-admin':avCol(a.username);
-    const initials=isAdmin?'AD':ini(a.username);
-    const displayName=isAdmin?'⚓ '+a.username:a.username;
-    const unreadBadge=unread>0&&!isActive?`<span class="chat-unread">${unread>9?'9+':unread}</span>`:'';
-    return`<div class="chat-agent-item${isActive?' active':''}" onclick="_openConv('${a.username.replace(/'/g,"\\'")}')">
-      <div class="chat-av ${cls}">${initials}<span class="chat-presence ${a.online?'presence-online':'presence-offline'}"></span></div>
-      <span class="chat-agent-name">${esc(displayName)}</span>
-      ${unreadBadge}
-    </div>`;
-  }
-
-  window._toggleChat=function(){
-    _open=!_open;
-    const panel=document.getElementById('chatPanel');
-    if(_open){panel.classList.add('open');document.title='LRP Support Portal';_loadPresence();}
-    else panel.classList.remove('open');
-  };
-
-  window._openConv=function(peer){
-    _peer=peer;_msgs=[];_lastTs='';
-    _renderAgents();
-    if(_pollT)clearInterval(_pollT);
-    _pollT=setInterval(()=>{if(_peer)_loadMsgs(false);},5000);
-    const pData=_agents.find(a=>a.username.toLowerCase()===peer.toLowerCase());
-    const isOn=pData?pData.online:false;
-    const isAdmin=pData?isAdminUser(pData):false;
-    const cls=isAdmin?'av-admin':avCol(peer);
-    const initials=isAdmin?'AD':ini(peer);
-    const displayName=isAdmin?'⚓ '+peer:peer;
-    const conv=document.getElementById('chatConvArea');
-    conv.innerHTML=`
-      <div class="chat-conv-header">
-        <div class="chat-av ${cls}" style="width:28px;height:28px;font-size:10px;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${initials}</div>
-        <div style="flex:1;min-width:0;">
-          <div class="chat-conv-name">${esc(displayName)}</div>
-          <div class="chat-conv-status ${isOn?'conv-online':'conv-offline'}">${isOn?'● Online':'● Offline'}</div>
-        </div>
-      </div>
-      <div class="chat-messages" id="chatMsgs"><div class="chat-empty"><div class="chat-empty-icon">💬</div>Start the conversation</div></div>
-      <div class="chat-input-row">
-        <input type="text" id="chatMsgInput" placeholder="Message ${esc(displayName)}..." onkeydown="if(event.key==='Enter')_sendMsg()"/>
-        <button class="chat-send-btn" onclick="_sendMsg()">Send</button>
-      </div>`;
-    fetch(API_URL+'?'+new URLSearchParams({action:'markRead',username,sender:peer})).catch(()=>{});
-    delete _unread[peer];
-    _loadMsgs(true);
-    document.getElementById('chatMsgInput')?.focus();
-  };
-
-  async function _loadMsgs(reset){
-    if(!_peer)return;
-    try{
-      const params={action:'getMessages',user1:username,user2:_peer};
-      if(!reset&&_lastTs)params.since=_lastTs;
-      const r=await fetch(API_URL+'?'+new URLSearchParams(params)+'&t='+Date.now());
-      const d=await r.json();
-      if(d.success){
-        if(reset)_msgs=d.messages||[];
-        else if(d.messages?.length)_msgs=[..._msgs,...d.messages];
-        if(_msgs.length)_lastTs=_msgs[_msgs.length-1].sentAt;
-        _renderMsgs();
-      }
-    }catch{}
-  }
-
-  function _renderMsgs(){
-    const box=document.getElementById('chatMsgs');
-    if(!box)return;
-    if(!_msgs.length){box.innerHTML='<div class="chat-empty"><div class="chat-empty-icon">💬</div>Start the conversation</div>';return;}
-    const atBottom=box.scrollHeight-box.scrollTop-box.clientHeight<80;
-    box.innerHTML=_msgs.map(m=>{
-      const mine=m.from.toLowerCase()===username.toLowerCase();
-      return`<div class="chat-msg ${mine?'mine':'theirs'}">
-        <div class="chat-bubble">${esc(m.message)}</div>
-        <div class="chat-msg-time">${fmtT(m.sentAt)}</div>
-      </div>`;
-    }).join('');
-    if(atBottom||_msgs.length<=5)box.scrollTop=box.scrollHeight;
-  }
-
-  window._sendMsg=async function(){
-    const input=document.getElementById('chatMsgInput');
-    if(!input)return;
-    const msg=input.value.trim();
-    if(!msg||!_peer)return;
-    input.value='';
-    const opt={id:'opt-'+Date.now(),from:username,to:_peer,message:msg,sentAt:new Date().toISOString(),isRead:false};
-    _msgs.push(opt);_lastTs=opt.sentAt;_renderMsgs();
-    try{await fetch(API_URL+'?'+new URLSearchParams({action:'sendMessage',fromUser:username,toUser:_peer,message:msg}));}catch{}
-  };
-
-  // sign out
-  window.signOut=async function(){
-    try{await fetch(API_URL+'?'+new URLSearchParams({action:'agentLogout',username}));}catch{}
-    localStorage.removeItem('lrp_session');
-    localStorage.removeItem('lrp_quote');
-    location.reload();
-  };
-
+  // Mark offline on tab close
   window.addEventListener('beforeunload',function(){
-    navigator.sendBeacon(API_URL+'?'+new URLSearchParams({action:'agentLogout',username}));
+    navigator.sendBeacon(API_URL+'?'+new URLSearchParams({action:'agentLogout',username:_CURRENT_USER}));
   });
 }
 
-// ── LOGIN PAGE ──
+// ── LOGIN PAGE STARS ──
 let loginDark=false;
-(function createLoginStars(){
+(function(){
   const c=document.getElementById('loginStars');
   if(!c)return;
   for(let i=0;i<120;i++){
-    const s=document.createElement('div');s.className='star';
+    const s=document.createElement('div'); s.className='star';
     const sz=Math.random()*2.5+0.8;
     s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*70}%;left:${Math.random()*100}%;animation-duration:${2+Math.random()*3}s;animation-delay:${Math.random()*4}s;`;
     c.appendChild(s);
