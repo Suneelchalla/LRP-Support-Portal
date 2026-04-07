@@ -401,8 +401,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   _presencePoll();
   _INTERVALS.push(setInterval(_presencePoll,45000));
 
-  window.addEventListener('beforeunload',function(){
-    navigator.sendBeacon(API_URL+'?'+new URLSearchParams({action:'agentLogout',username:_CURRENT_USER}));
+  // Only logout on true tab/browser close, NOT on navigation to other pages
+  window.addEventListener('pagehide',function(e){
+    if(!e.persisted){
+      navigator.sendBeacon(API_URL+'?'+new URLSearchParams({action:'agentLogout',username:_CURRENT_USER}));
+    }
   });
 }
 
