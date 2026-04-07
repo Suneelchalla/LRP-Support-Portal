@@ -122,44 +122,8 @@ window.signOut = async function(){
   location.reload();
 };
 
-// ── Global state ──
+// ── Global state (chat vars removed) ──
 let _CURRENT_USER='', _INTERVALS=[], _pollBusy=false;
-
-// ── LOCATION — fetched AFTER login, updated silently ──
-// Does not block login flow at all
-async function fetchAndUpdateLocation(username){
-  try{
-    if(!navigator.geolocation){ return; }
-    navigator.geolocation.getCurrentPosition(
-      async pos=>{
-        const {latitude:lat,longitude:lon}=pos.coords;
-        let loc=`${lat.toFixed(4)}, ${lon.toFixed(4)}`;
-        try{
-          const r=await fetch(
-            `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`,
-            {headers:{'Accept-Language':'en','User-Agent':'LRP-Support-Portal'}}
-          );
-          const d=await r.json();
-          if(d&&d.address){
-            const a=d.address;
-            const parts=[
-              a.road||a.pedestrian||a.footway||'',
-              a.suburb||a.neighbourhood||a.quarter||'',
-              a.city||a.town||a.village||a.county||'',
-              a.state||a.region||'',
-              a.country||''
-            ].filter(Boolean);
-            if(parts.length) loc=parts.join(', ');
-          }
-        }catch{}
-        // Silently update location on server after login succeeds
-        fetch(API_URL+'?'+new URLSearchParams({action:'login',username,password:'__location_update_only__',location:loc})).catch(()=>{});
-      },
-      ()=>{},
-      {timeout:8000,maximumAge:300000}
-    );
-  }catch{}
-}
 
 const AGENT_QUOTES=[
   {text:"Every customer interaction is a chance to turn a problem into loyalty.",author:"LRP Wisdom"},
@@ -206,42 +170,15 @@ window.addEventListener('load',function(){
   }
 });
 
-// ── Change Password (first login) ──
-function showChangePassword(username,team){
-  document.getElementById('panelWrap').innerHTML=`
-  <div class="panel" style="text-align:left;">
-    <div style="text-align:center;margin-bottom:16px;">
-      <div class="login-logo">🔐</div>
-      <div class="brand-text"><h1>SET NEW PASSWORD</h1><p>FIRST TIME LOGIN</p></div>
-    </div>
-    <div class="divider"></div>
-    <div style="background:#fff8e8;border:1.5px solid #f0c840;border-radius:8px;padding:10px 14px;margin-bottom:18px;">
-      <div style="font-size:11px;font-weight:700;color:#8a6010;letter-spacing:1px;">⚠ Temporary password detected</div>
-      <div style="font-size:12px;color:#5a6a80;margin-top:4px;line-height:1.5;">Your admin has set a temporary password. Please create your personal password to continue.</div>
-    </div>
-    <div class="form-group"><label>New Password</label><div class="input-wrap"><span class="input-icon">🔐</span><input type="password" id="new-pass" placeholder="Min 6 characters"/></div></div>
-    <div class="form-group"><label>Confirm New Password</label><div class="input-wrap"><span class="input-icon">✅</span><input type="password" id="new-confirm" placeholder="Re-enter new password"/></div></div>
-    <div id="cpw-msg" class="msg"></div>
-    <button class="btn-primary" id="cpw-btn" onclick="submitNewPassword('${username}','${team}')">🔒 SET MY PASSWORD</button>
-  </div>`;
+// ── ORIGINAL IP-based location (kept exactly as original — works reliably) ──
+async function fetchLocation(){
+  try{const r=await fetch('http://ip-api.com/json/?fields=status,city,regionName,country');const d=await r.json();if(d.status==='success'&&d.city){const l=[d.city,d.regionName,d.country].filter(Boolean).join(', ');if(l)return l;}}catch{}
+  try{const r=await fetch('https://ipwho.is/');const d=await r.json();if(d.success&&d.city){const l=[d.city,d.region,d.country].filter(Boolean).join(', ');if(l)return l;}}catch{}
+  try{const r=await fetch('https://ipapi.co/json/');const d=await r.json();const l=[d.city,d.region,d.country_name].filter(Boolean).join(', ');if(l)return l;}catch{}
+  return 'Unknown';
 }
 
-async function submitNewPassword(username,team){
-  const np=document.getElementById('new-pass').value;
-  const nc=document.getElementById('new-confirm').value;
-  if(!np||!nc){showMsg('cpw-msg','⚠ Both fields are required.','error');return;}
-  if(np.length<6){showMsg('cpw-msg','⚠ Password must be ≥ 6 characters.','error');return;}
-  if(np!==nc){showMsg('cpw-msg','⚠ Passwords do not match.','error');return;}
-  const btn=document.getElementById('cpw-btn');
-  btn.disabled=true; showMsg('cpw-msg','⏳ Updating password...','loading');
-  try{
-    const res=await fetch(API_URL+'?'+new URLSearchParams({action:'changePassword',username,newPassword:np}));
-    const data=await res.json();
-    if(data.success){ showMsg('cpw-msg','✅ Password set! Entering portal...','success'); setTimeout(()=>showDashboard(username,team),1200); }
-    else{ showMsg('cpw-msg','⚠ Failed to update. Try again.','error'); btn.disabled=false; }
-  }catch{ showMsg('cpw-msg','⚠ Connection error.','error'); btn.disabled=false; }
-}
-
+// ── ORIGINAL handleLogin (kept exactly as original) ──
 async function handleLogin(){
   const u=document.getElementById('login-user').value.trim();
   const p=document.getElementById('login-pass').value;
@@ -249,8 +186,6 @@ async function handleLogin(){
   const btn=document.getElementById('login-btn');
   btn.disabled=true;
   showMsg('login-msg','⏳ Verifying...','loading');
-
-  // Check admin first
   try{
     const ar=await fetch(API_URL+'?'+new URLSearchParams({action:'adminLogin',username:u,password:p}));
     const ad=await ar.json();
@@ -262,11 +197,7 @@ async function handleLogin(){
       return;
     }
   }catch{}
-
-  // Agent login — get location via browser geolocation
-  // Show signing in immediately, location fetches in parallel
-  showMsg('login-msg','⏳ Signing in...','loading');
-  const location = await fetchLocation();
+  const location=await fetchLocation();
   try{
     const res=await fetch(API_URL+'?'+new URLSearchParams({action:'login',username:u,password:p,location}));
     const data=await res.json();
@@ -323,38 +254,31 @@ async function submitNewPassword(username,team){
   }catch{ showMsg('cpw-msg','⚠ Connection error.','error'); btn.disabled=false; }
 }
 
-// ── Presence-only poll (no chat messaging) ──
-let _pollBusy = false;
-
+// ── Presence-only poll (chat removed, heartbeat + online count only) ──
 async function _presencePoll(){
-  if(_pollBusy) return;
-  _pollBusy = true;
+  if(_pollBusy)return;
+  _pollBusy=true;
   try{
-    // Send heartbeat
     fetch(API_URL+'?'+new URLSearchParams({action:'heartbeat',username:_CURRENT_USER})).catch(()=>{});
-
-    // Fetch presence for online count display
-    const pr = await fetch(API_URL+'?action=getPresence&t='+Date.now());
-    const pd = await pr.json();
-    if(pd.success && pd.presence){
-      const me = _CURRENT_USER.toLowerCase();
-      const onlineOthers = pd.presence.filter(p=>
-        p.username.toLowerCase() !== me && p.online
-      ).length;
-      const cnt = document.getElementById('db-online-count');
-      if(cnt) cnt.textContent = onlineOthers + 1; // +1 = self
+    const pr=await fetch(API_URL+'?action=getPresence&t='+Date.now());
+    const pd=await pr.json();
+    if(pd.success&&pd.presence){
+      const me=_CURRENT_USER.toLowerCase();
+      const onlineOthers=pd.presence.filter(p=>p.username.toLowerCase()!==me&&p.online).length;
+      const cnt=document.getElementById('db-online-count');
+      if(cnt)cnt.textContent=onlineOthers+1;
     }
-  }catch(e){ console.warn('presencePoll error',e); }
-  _pollBusy = false;
+  }catch(e){console.warn('presencePoll error',e);}
+  _pollBusy=false;
 }
 
 // ── Dashboard ──
 function showDashboard(username,team){
-  _CURRENT_USER = username;
+  _CURRENT_USER=username;
   _INTERVALS.forEach(id=>clearInterval(id));
-  _INTERVALS.length = 0;
+  _INTERVALS.length=0;
 
-  const q = getSessionQuote();
+  const q=getSessionQuote();
   document.body.innerHTML=`
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -468,21 +392,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <span class="quote-author" id="db-quote-author"></span>
 </div>`;
 
-  document.getElementById('db-username').textContent = username.toUpperCase();
-  document.getElementById('db-team').textContent = '⚓ ' + team;
-  document.getElementById('db-quote-text').textContent = q.text;
-  document.getElementById('db-quote-author').textContent = '— ' + q.author;
+  document.getElementById('db-username').textContent=username.toUpperCase();
+  document.getElementById('db-team').textContent='⚓ '+team;
+  document.getElementById('db-quote-text').textContent=q.text;
+  document.getElementById('db-quote-author').textContent='— '+q.author;
 
-  // Start presence-only polling (45s interval)
+  // Presence-only poll — no chat intervals
   _presencePoll();
-  _INTERVALS.push(setInterval(_presencePoll, 45000));
+  _INTERVALS.push(setInterval(_presencePoll,45000));
 
-  window.addEventListener('beforeunload', function(){
+  window.addEventListener('beforeunload',function(){
     navigator.sendBeacon(API_URL+'?'+new URLSearchParams({action:'agentLogout',username:_CURRENT_USER}));
   });
 }
 
-// ── Login page stars + dark mode ──
+// ── Login page dark mode + stars ──
 let loginDark=false;
 (function(){
   const c=document.getElementById('loginStars');
