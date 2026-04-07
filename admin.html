@@ -594,56 +594,75 @@ async function _sendAdminHB(logout){
   try{await fetch(API_URL+'?'+new URLSearchParams({action:logout?'agentLogout':'heartbeat',username:getAdminId()}));}catch{}
 }
 
+// ── REPLACE the existing _adminCombinedPoll function in admin.html with this ──
+
 async function _adminCombinedPoll(){
   if(_adminPollBusy)return;
   _adminPollBusy=true;
   try{
     fetch(API_URL+'?'+new URLSearchParams({action:'heartbeat',username:getAdminId()})).catch(()=>{});
 
-    const pr=await fetch(API_URL+'?action=getPresence&t='+Date.now());
-    const pd=await pr.json();
-    if(pd.success){
+    // always fetch ALL users so list is never empty
+    const ur2=await fetch(API_URL+'?action=getUsers&t='+Date.now());
+    const ud2=await ur2.json();
+    let baseList=[];
+    if(ud2.success&&ud2.users){
       const me=getAdminId().toLowerCase();
-      let list=pd.presence||[];
-      const others=list.filter(p=>p.username.toLowerCase()!==me);
-      if(others.length===0){
-        try{
-          const ur2=await fetch(API_URL+'?action=getUsers&t='+Date.now());
-          const ud2=await ur2.json();
-          if(ud2.success&&ud2.users){
-            const existing=new Set(list.map(p=>p.username.toLowerCase()));
-            ud2.users.forEach(u=>{
-              if(u.username.toLowerCase()===me)return;
-              if(!existing.has(u.username.toLowerCase()))
-                list.push({username:u.username,online:false,lastSeen:u.lastSeen||'',team:u.team||'',isAdmin:false});
-            });
-          }
-        }catch{}
-      }
-      const onlineCount=list.filter(p=>p.online&&p.username.toLowerCase()!==me).length;
-      const sub=document.getElementById('chatOnlineCount');
-      if(sub)sub.textContent=onlineCount+' agent'+(onlineCount!==1?'s':'')+' online';
-      _chatAgents=list.filter(p=>p.username.toLowerCase()!==me)
-        .sort((a,b)=>{if(a.online&&!b.online)return -1;if(!a.online&&b.online)return 1;return a.username.localeCompare(b.username);});
-      renderAdminAgentList();
-      _updateAgentTablePresence(list);
+      baseList=ud2.users
+        .filter(u=>u.username.toLowerCase()!==me)
+        .map(u=>({
+          username:u.username,
+          online:false,
+          lastSeen:u.lastSeen||'',
+          team:u.team||'',
+          isAdmin:u.team==='Admin'
+        }));
     }
 
-    const ur=await fetch(API_URL+'?'+new URLSearchParams({action:'getUnreadCounts',username:getAdminId()})+'&t='+Date.now());
-    const ud=await ur.json();
-    if(ud.success){
-      _chatUnread=ud.counts||{};
-      const total=ud.total||0;
+    // overlay presence on top
+    try{
+      const pr=await fetch(API_URL+'?action=getPresence&t='+Date.now());
+      const pd=await pr.json();
+      if(pd.success&&pd.presence){
+        const me=getAdminId().toLowerCase();
+        const presenceMap={};
+        pd.presence.forEach(p=>{
+          if(p.username.toLowerCase()!==me)
+            presenceMap[p.username.toLowerCase()]=p;
+        });
+        baseList=baseList.map(u=>{
+          const pEntry=presenceMap[u.username.toLowerCase()];
+          return pEntry?{...u,online:pEntry.online,lastSeen:pEntry.lastSeen,team:pEntry.team||u.team}:u;
+        });
+      }
+    }catch{}
+
+    const me2=getAdminId().toLowerCase();
+    const onlineCount=baseList.filter(p=>p.online&&p.username.toLowerCase()!==me2).length;
+    const sub=document.getElementById('chatOnlineCount');
+    if(sub)sub.textContent=onlineCount+' agent'+(onlineCount!==1?'s':'')+' online';
+
+    _chatAgents=baseList.sort((a,b)=>{
+      if(a.online&&!b.online)return -1;if(!a.online&&b.online)return 1;
+      return a.username.localeCompare(b.username);
+    });
+    renderAdminAgentList();
+    _updateAgentTablePresence(baseList);
+
+    // unread counts
+    const ucr=await fetch(API_URL+'?'+new URLSearchParams({action:'getUnreadCounts',username:getAdminId()})+'&t='+Date.now());
+    const ucd=await ucr.json();
+    if(ucd.success){
+      _chatUnread=ucd.counts||{};
+      const total=ucd.total||0;
       const badge=document.getElementById('chatFabBadge');
       if(badge){badge.textContent=total>9?'9+':total;badge.style.display=total>0?'flex':'none';}
       renderAdminAgentList();
       document.title=total>0&&!_chatOpen?'('+total+') LRP Admin':'LRP Admin Dashboard';
     }
-  }catch{}
+  }catch(e){console.warn('adminCombinedPoll error',e);}
   _adminPollBusy=false;
 }
-
-async function _adminMsgPoll(){
   if(!_chatPeer)return;
   try{
     const params={action:'getMessages',user1:getAdminId(),user2:_chatPeer};
