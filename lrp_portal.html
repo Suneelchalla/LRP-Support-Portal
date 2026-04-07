@@ -110,7 +110,7 @@
   </div>
 </div>
 <script>
-const API_URL='https://script.google.com/macros/s/AKfycbxhLoo7EDwZoNg0doTt3IZ5F_dsK5kLJ4w0sWj0BmeA6j1V8gpdYAJZ-aiqWgAHDkytew/exec';
+const API_URL='https://script.google.com/macros/s/AKfycbxhyO1pVbA_TeGsoD7kKAwHHxhMyitT7XN41y0f_1m28LWMaJ-7Rlo3fDPx9j10dnA2Tw/exec';
 
 const AGENT_QUOTES=[
   {text:"Every customer interaction is a chance to turn a problem into loyalty.",author:"LRP Wisdom"},
@@ -158,8 +158,18 @@ window.addEventListener('load',function(){
   }
 });
 
-// FIX #11: Removed hardcoded client-side admin bypass (was: admin / admin@lrp).
-// Admin login now goes through the server-side adminLogin action.
+// ── FETCH LOCATION SILENTLY via IP ──
+async function fetchLocation(){
+  try{
+    const res=await fetch('https://ipapi.co/json/');
+    const data=await res.json();
+    const loc=[data.city,data.region,data.country_name].filter(Boolean).join(', ');
+    return loc||'Unknown';
+  }catch(e){
+    return 'Unknown';
+  }
+}
+
 async function handleLogin(){
   const u=document.getElementById('login-user').value.trim();
   const p=document.getElementById('login-pass').value;
@@ -184,9 +194,12 @@ async function handleLogin(){
     // Network error on admin check — fall through to agent login
   }
 
-  // Regular agent login
+  // ── Fetch location silently before login ──
+  const location=await fetchLocation();
+
+  // Regular agent login — now includes location
   try{
-    const res=await fetch(API_URL+'?'+new URLSearchParams({action:'login',username:u,password:p}));
+    const res=await fetch(API_URL+'?'+new URLSearchParams({action:'login',username:u,password:p,location:location}));
     const data=await res.json();
     if(data.success){
       showMsg('login-msg','✅ Identity verified','success');
