@@ -125,46 +125,40 @@ window.signOut = async function(){
 // ── Global state ──
 let _CURRENT_USER='', _INTERVALS=[], _pollBusy=false;
 
-// ── LOCATION via Browser Geolocation API ──
-// Hard timeout wrapper so login never hangs
-function fetchLocation(){
-  return new Promise(resolve=>{
-    // Overall hard cap of 10s — login must not hang
-    const hardTimeout = setTimeout(()=>resolve('Unknown'), 10000);
-    const done = val=>{ clearTimeout(hardTimeout); resolve(val); };
-
-    if(!navigator.geolocation){ done('Unknown'); return; }
-
+// ── LOCATION — fetched AFTER login, updated silently ──
+// Does not block login flow at all
+async function fetchAndUpdateLocation(username){
+  try{
+    if(!navigator.geolocation){ return; }
     navigator.geolocation.getCurrentPosition(
       async pos=>{
-        const {latitude:lat, longitude:lon} = pos.coords;
+        const {latitude:lat,longitude:lon}=pos.coords;
+        let loc=`${lat.toFixed(4)}, ${lon.toFixed(4)}`;
         try{
-          const res = await fetch(
+          const r=await fetch(
             `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`,
-            { headers:{ 'Accept-Language':'en', 'User-Agent':'LRP-Support-Portal' } }
+            {headers:{'Accept-Language':'en','User-Agent':'LRP-Support-Portal'}}
           );
-          const d = await res.json();
-          if(d && d.address){
-            const a = d.address;
-            const parts = [
-              a.road || a.pedestrian || a.footway || '',
-              a.suburb || a.neighbourhood || a.quarter || '',
-              a.city || a.town || a.village || a.county || '',
-              a.state || a.region || '',
-              a.country || ''
+          const d=await r.json();
+          if(d&&d.address){
+            const a=d.address;
+            const parts=[
+              a.road||a.pedestrian||a.footway||'',
+              a.suburb||a.neighbourhood||a.quarter||'',
+              a.city||a.town||a.village||a.county||'',
+              a.state||a.region||'',
+              a.country||''
             ].filter(Boolean);
-            done(parts.join(', ') || `${lat.toFixed(4)}, ${lon.toFixed(4)}`);
-          } else {
-            done(`${lat.toFixed(4)}, ${lon.toFixed(4)}`);
+            if(parts.length) loc=parts.join(', ');
           }
-        }catch{
-          done(`${lat.toFixed(4)}, ${lon.toFixed(4)}`);
-        }
+        }catch{}
+        // Silently update location on server after login succeeds
+        fetch(API_URL+'?'+new URLSearchParams({action:'login',username,password:'__location_update_only__',location:loc})).catch(()=>{});
       },
-      _err=>{ done('Unknown'); },
-      { timeout:6000, maximumAge:300000 }
+      ()=>{},
+      {timeout:8000,maximumAge:300000}
     );
-  });
+  }catch{}
 }
 
 const AGENT_QUOTES=[
