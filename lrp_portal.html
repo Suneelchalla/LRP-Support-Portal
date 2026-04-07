@@ -126,13 +126,18 @@ window.signOut = async function(){
 let _CURRENT_USER='', _INTERVALS=[], _pollBusy=false;
 
 // ── LOCATION via Browser Geolocation API ──
-async function fetchLocation(){
+// Hard timeout wrapper so login never hangs
+function fetchLocation(){
   return new Promise(resolve=>{
-    if(!navigator.geolocation){ resolve('Unknown'); return; }
+    // Overall hard cap of 10s — login must not hang
+    const hardTimeout = setTimeout(()=>resolve('Unknown'), 10000);
+    const done = val=>{ clearTimeout(hardTimeout); resolve(val); };
+
+    if(!navigator.geolocation){ done('Unknown'); return; }
+
     navigator.geolocation.getCurrentPosition(
       async pos=>{
         const {latitude:lat, longitude:lon} = pos.coords;
-        // Reverse geocode using nominatim (free, no API key needed)
         try{
           const res = await fetch(
             `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`,
@@ -141,7 +146,6 @@ async function fetchLocation(){
           const d = await res.json();
           if(d && d.address){
             const a = d.address;
-            // Build full address from available parts
             const parts = [
               a.road || a.pedestrian || a.footway || '',
               a.suburb || a.neighbourhood || a.quarter || '',
@@ -149,17 +153,16 @@ async function fetchLocation(){
               a.state || a.region || '',
               a.country || ''
             ].filter(Boolean);
-            resolve(parts.join(', ') || `${lat.toFixed(4)}, ${lon.toFixed(4)}`);
+            done(parts.join(', ') || `${lat.toFixed(4)}, ${lon.toFixed(4)}`);
           } else {
-            resolve(`${lat.toFixed(4)}, ${lon.toFixed(4)}`);
+            done(`${lat.toFixed(4)}, ${lon.toFixed(4)}`);
           }
         }catch{
-          // If reverse geocode fails, fallback to coords
-          resolve(`${lat.toFixed(4)}, ${lon.toFixed(4)}`);
+          done(`${lat.toFixed(4)}, ${lon.toFixed(4)}`);
         }
       },
-      _err=>{ resolve('Unknown'); },  // User denied or error → Unknown
-      { timeout:8000, maximumAge:300000 }
+      _err=>{ done('Unknown'); },
+      { timeout:6000, maximumAge:300000 }
     );
   });
 }
@@ -267,10 +270,9 @@ async function handleLogin(){
   }catch{}
 
   // Agent login — get location via browser geolocation
-  showMsg('login-msg','⏳ Getting location...','loading');
-  const location = await fetchLocation();
-
+  // Show signing in immediately, location fetches in parallel
   showMsg('login-msg','⏳ Signing in...','loading');
+  const location = await fetchLocation();
   try{
     const res=await fetch(API_URL+'?'+new URLSearchParams({action:'login',username:u,password:p,location}));
     const data=await res.json();
