@@ -158,16 +158,37 @@ window.addEventListener('load',function(){
   }
 });
 
-// ── FETCH LOCATION SILENTLY via IP ──
+/ ── FETCH LOCATION SILENTLY via IP (tries multiple APIs for accuracy) ──
 async function fetchLocation(){
+  // Try ip-api.com first — more accurate for Indian ISPs
+  try{
+    const res=await fetch('http://ip-api.com/json/?fields=status,city,regionName,country');
+    const data=await res.json();
+    if(data.status==='success'&&data.city){
+      const loc=[data.city,data.regionName,data.country].filter(Boolean).join(', ');
+      if(loc) return loc;
+    }
+  }catch(e){}
+
+  // Fallback 1: ipwho.is
+  try{
+    const res=await fetch('https://ipwho.is/');
+    const data=await res.json();
+    if(data.success&&data.city){
+      const loc=[data.city,data.region,data.country].filter(Boolean).join(', ');
+      if(loc) return loc;
+    }
+  }catch(e){}
+
+  // Fallback 2: ipapi.co (original)
   try{
     const res=await fetch('https://ipapi.co/json/');
     const data=await res.json();
     const loc=[data.city,data.region,data.country_name].filter(Boolean).join(', ');
-    return loc||'Unknown';
-  }catch(e){
-    return 'Unknown';
-  }
+    if(loc) return loc;
+  }catch(e){}
+
+  return 'Unknown';
 }
 
 async function handleLogin(){
