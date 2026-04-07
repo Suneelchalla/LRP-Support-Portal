@@ -535,7 +535,6 @@ function showDashboard(){
 }
 
 function adminLogout(){
-  if(!confirm('Sign out?'))return;
   _sendAdminHB(true);
   if(_adminPollTimer)clearInterval(_adminPollTimer);
   adminToken=null;
