@@ -140,7 +140,7 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
 .ho-overlay{display:none;position:fixed;inset:0;background:rgba(10,50,100,.5);z-index:9999;align-items:center;justify-content:center;padding:20px;}
 .ho-overlay.open{display:flex;}
 .ho-box{background:#fff;border:1.5px solid #c8dff0;border-radius:12px;width:100%;max-width:720px;max-height:88vh;overflow-y:auto;padding:28px 32px;position:relative;box-shadow:0 12px 40px rgba(10,50,100,.2);}
-/* ── SHIFT PLANNER ── */
+/* SHIFT PLANNER */
 .planner-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
 .planner-month-nav{display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #c8dff0;border-radius:8px;padding:6px 12px;}
 .planner-month-nav button{background:none;border:none;color:#1a7db5;cursor:pointer;font-size:16px;font-weight:700;padding:0 4px;line-height:1;}
@@ -174,8 +174,68 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
 .pce-chip-empty:hover,.pce-chip-empty.selected{border-color:#a0a0a0;background:#e8e8e8;color:#606060;}
 .wns-export-btn{padding:9px 20px;background:linear-gradient(135deg,#1a8c5c,#138048);border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;display:inline-flex;align-items:center;gap:8px;transition:opacity .2s;box-shadow:0 4px 14px rgba(26,140,92,.3);}
 .wns-export-btn:hover{opacity:.88;}
-/* ── LOCATION BADGE ── */
 .loc-badge{display:inline-flex;align-items:center;gap:4px;background:#eef5fc;border:1px solid #b8d4ee;border-radius:12px;padding:3px 9px;font-size:11px;color:#1a5a90;font-weight:600;white-space:nowrap;max-width:200px;overflow:hidden;text-overflow:ellipsis;}
+/* ── PRESENCE DOT in agent table ── */
+.presence-dot-sm{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;flex-shrink:0;}
+.dot-online{background:#1a8c5c;}
+.dot-offline{background:#c0392b;}
+/* ── CHAT WIDGET ── */
+#chatWidget{position:fixed;bottom:24px;right:24px;z-index:10000;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}
+#chatFab{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#1a7db5,#0a3d78);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 16px rgba(10,60,120,.35);transition:transform .2s;position:relative;}
+#chatFab:hover{transform:scale(1.08);}
+#chatFabBadge{position:absolute;top:-4px;right:-4px;background:#e53935;color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:700;display:none;align-items:center;justify-content:center;border:2px solid #fff;}
+#chatPanel{position:absolute;bottom:62px;right:0;width:360px;height:520px;background:#fff;border-radius:14px;box-shadow:0 8px 40px rgba(10,60,120,.22);border:1.5px solid #c8dff0;display:none;flex-direction:column;overflow:hidden;}
+#chatPanel.open{display:flex;}
+.chat-header{background:linear-gradient(135deg,#1a7db5,#0a3d78);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;}
+.chat-header-title{color:#fff;font-size:13px;font-weight:700;letter-spacing:1px;}
+.chat-header-sub{color:rgba(255,255,255,.75);font-size:10px;margin-top:1px;}
+.chat-close-btn{background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:6px;width:26px;height:26px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+.chat-close-btn:hover{background:rgba(255,255,255,.35);}
+.chat-body{display:flex;flex:1;overflow:hidden;}
+.chat-agents{width:130px;min-width:130px;border-right:1px solid #ddeeff;display:flex;flex-direction:column;background:#f4f9ff;}
+.chat-agents-search{padding:6px 8px;border-bottom:1px solid #ddeeff;}
+.chat-agents-search input{width:100%;padding:5px 8px;border:1px solid #c8dff0;border-radius:6px;font-size:11px;outline:none;background:#fff;color:#1a3a5c;}
+.chat-agents-list{flex:1;overflow-y:auto;}
+.chat-section-lbl{font-size:9px;font-weight:700;color:#3a7aaa;letter-spacing:1px;padding:6px 8px 2px;text-transform:uppercase;}
+.chat-agent-item{display:flex;align-items:center;gap:6px;padding:7px 8px;cursor:pointer;transition:background .12s;}
+.chat-agent-item:hover{background:#e8f2fb;}
+.chat-agent-item.active{background:#ddeeff;}
+.chat-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;position:relative;}
+.chat-presence{position:absolute;bottom:-1px;right:-1px;width:8px;height:8px;border-radius:50%;border:1.5px solid #f4f9ff;}
+.presence-online{background:#1a8c5c;}
+.presence-offline{background:#c0392b;}
+.chat-agent-name{font-size:11px;color:#1a3a5c;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;}
+.chat-unread{background:#1a7db5;color:#fff;border-radius:50%;width:14px;height:14px;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.chat-conv{flex:1;display:flex;flex-direction:column;min-width:0;}
+.chat-conv-header{padding:8px 12px;border-bottom:1px solid #ddeeff;background:#fff;display:flex;align-items:center;gap:8px;}
+.chat-conv-name{font-size:12px;font-weight:700;color:#0a3d78;flex:1;}
+.chat-conv-status{font-size:10px;font-weight:600;}
+.conv-online{color:#1a8c5c;}
+.conv-offline{color:#c0392b;}
+.chat-messages{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:7px;background:#f8fbff;}
+.chat-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#3a7aaa;font-size:12px;opacity:.7;}
+.chat-empty-icon{font-size:28px;margin-bottom:8px;}
+.chat-msg{display:flex;flex-direction:column;max-width:80%;}
+.chat-msg.mine{align-self:flex-end;align-items:flex-end;}
+.chat-msg.theirs{align-self:flex-start;align-items:flex-start;}
+.chat-bubble{padding:6px 10px;border-radius:10px;font-size:12px;line-height:1.5;word-break:break-word;}
+.chat-msg.mine .chat-bubble{background:#ddeeff;color:#0a3d78;border-bottom-right-radius:3px;}
+.chat-msg.theirs .chat-bubble{background:#fff;border:1px solid #ddeeff;color:#1a3a5c;border-bottom-left-radius:3px;}
+.chat-msg-time{font-size:9px;color:#3a7aaa;margin-top:2px;padding:0 2px;}
+.chat-input-row{padding:8px 10px;border-top:1px solid #ddeeff;display:flex;gap:6px;background:#fff;}
+.chat-input-row input{flex:1;padding:6px 10px;border:1.5px solid #c8dff0;border-radius:8px;font-size:12px;outline:none;color:#1a3a5c;background:#f4f9ff;}
+.chat-input-row input:focus{border-color:#1a7db5;background:#fff;}
+.chat-send-btn{padding:6px 12px;background:linear-gradient(135deg,#1a7db5,#0a3d78);border:none;border-radius:8px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;}
+.chat-no-sel{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#3a7aaa;font-size:12px;text-align:center;padding:20px;}
+.chat-no-sel-icon{font-size:32px;margin-bottom:10px;}
+.av-blue{background:#ddeeff;color:#0a4070;}
+.av-teal{background:#d4f0e8;color:#0a5040;}
+.av-purple{background:#e8deff;color:#400880;}
+.av-amber{background:#fff3d8;color:#8a6010;}
+.av-coral{background:#ffe8d8;color:#703010;}
+.av-pink{background:#fde8f4;color:#700030;}
+.av-green{background:#d8f5e0;color:#0a5020;}
+.av-admin{background:#0a3d78;color:#fff;}
 </style>
 </head>
 <body>
@@ -371,8 +431,6 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
         <div id="planner-table-container" style="min-width:900px;"><div class="loading">⏳ LOADING...</div></div>
       </div>
     </div>
-
-    <!-- Cell editor popup -->
     <div id="planner-cell-editor">
       <div style="font-size:10px;color:#1a7db5;letter-spacing:1px;margin-bottom:8px;font-weight:700;" id="pce-label">ASSIGN SHIFT</div>
       <div class="pce-shift-grid" id="pce-grid"></div>
@@ -394,7 +452,7 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
         </div>
         <div class="form-field" style="margin-bottom:14px;">
           <label style="display:block;font-size:10px;font-weight:700;letter-spacing:1.5px;color:#1a7db5;text-transform:uppercase;margin-bottom:4px;">Issue Summary / Description *</label>
-          <textarea id="wns-summary" placeholder="Paste the Jira ticket summary here so the agent understands what this ticket is about…" style="width:100%;background:#f4f9ff;border:1.5px solid #b8d4ee;border-radius:6px;padding:9px 12px;font-size:13px;color:#1a3a5c;outline:none;resize:vertical;min-height:80px;font-family:inherit;transition:border-color .2s;"></textarea>
+          <textarea id="wns-summary" placeholder="Paste the Jira ticket summary here…" style="width:100%;background:#f4f9ff;border:1.5px solid #b8d4ee;border-radius:6px;padding:9px 12px;font-size:13px;color:#1a3a5c;outline:none;resize:vertical;min-height:80px;font-family:inherit;transition:border-color .2s;"></textarea>
         </div>
         <div class="form-actions">
           <button class="btn-purple" id="wns-submit-btn" onclick="submitWNSAssign()">💾 Assign Ticket</button>
@@ -421,8 +479,8 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
       </div>
     </div>
 
-  </div><!-- /main -->
-</div><!-- /dashboard -->
+  </div>
+</div>
 
 <!-- HANDOVER DETAIL OVERLAY -->
 <div class="ho-overlay" id="hoDetailOverlay">
@@ -440,12 +498,48 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
+<!-- CHAT WIDGET -->
+<div id="chatWidget" style="display:none;">
+  <div id="chatPanel">
+    <div class="chat-header">
+      <div>
+        <div class="chat-header-title">💬 Agent Chat</div>
+        <div class="chat-header-sub" id="chatOnlineCount">Loading...</div>
+      </div>
+      <button class="chat-close-btn" onclick="toggleAdminChat()">✕</button>
+    </div>
+    <div class="chat-body">
+      <div class="chat-agents">
+        <div class="chat-agents-search">
+          <input type="text" id="chatSearch" placeholder="Search..." oninput="renderAdminAgentList()"/>
+        </div>
+        <div class="chat-agents-list" id="chatAgentList"></div>
+      </div>
+      <div class="chat-conv" id="chatConvArea">
+        <div class="chat-no-sel">
+          <div class="chat-no-sel-icon">👈</div>
+          <div>Select an agent<br>to start chatting</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button id="chatFab" onclick="toggleAdminChat()" title="Agent Chat">
+    💬
+    <span id="chatFabBadge"></span>
+  </button>
+</div>
+
 <script>
 const API_URL='https://script.google.com/macros/s/AKfycbxhyO1pVbA_TeGsoD7kKAwHHxhMyitT7XN41y0f_1m28LWMaJ-7Rlo3fDPx9j10dnA2Tw/exec';
 let adminToken=null;
+// Admin's chat identity — stored in sessionStorage so it survives tab refresh
+const ADMIN_CHAT_ID='Admin';
 let allUsers=[],allCreds=[],allLogs=[],filteredLogs=[],allHandovers=[],filteredHandovers=[];
 let allWNSTickets=[],filteredWNSTickets=[];
 let selectedAgent=null,currentTab='agents';
+
+// ── CHAT STATE ──
+let _chatOpen=false,_chatPeer='',_chatAgents=[],_chatUnread={},_chatMsgs=[],_chatPollTimer=null,_lastMsgTs='';
 
 // ── AUTH ──
 window.addEventListener('load',()=>{
@@ -457,6 +551,7 @@ window.addEventListener('load',()=>{
     verifyToken(savedToken);
   }
 });
+
 async function verifyToken(token){
   try{
     const res=await fetch(API_URL+'?action=verifyAdminToken&token='+encodeURIComponent(token));
@@ -465,6 +560,7 @@ async function verifyToken(token){
     else{sessionStorage.removeItem('admin_token');sessionStorage.removeItem('admin_token_time');}
   }catch{adminToken=token;showDashboard();}
 }
+
 async function adminLogin(){
   const u=document.getElementById('adm-user').value.trim(),p=document.getElementById('adm-pass').value;
   const err=document.getElementById('adm-err'),btn=document.getElementById('adm-btn');
@@ -478,23 +574,229 @@ async function adminLogin(){
       adminToken=data.token;
       sessionStorage.setItem('admin_token',adminToken);
       sessionStorage.setItem('admin_token_time',Date.now().toString());
+      // Store admin username for chat
+      sessionStorage.setItem('admin_chat_username', u);
       showDashboard();
     }else if(data.error==='ADMIN_NOT_CONFIGURED'){err.textContent='⚠ Admin not configured in Script Properties.';err.style.display='block';}
     else{err.textContent='⚠ Invalid admin credentials.';err.style.display='block';}
   }catch{err.textContent='⚠ Connection error.';err.style.display='block';}
   btn.disabled=false;btn.textContent='⚓ Sign In';
 }
-function showDashboard(){document.getElementById('loginScreen').style.display='none';document.getElementById('dashboard').style.display='block';document.getElementById('adm-pass').value='';loadUsers();}
+
+function showDashboard(){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('dashboard').style.display='block';
+  document.getElementById('adm-pass').value='';
+  loadUsers();
+  initAdminChat();
+}
+
 function adminLogout(){
   if(!confirm('Sign out?'))return;
+  // Mark admin offline in chat
+  _sendAdminHeartbeat(true);
   adminToken=null;
-  sessionStorage.removeItem('admin_token');sessionStorage.removeItem('admin_token_time');
-  document.getElementById('loginScreen').style.display='flex';document.getElementById('dashboard').style.display='none';
-  document.getElementById('adm-user').value='';document.getElementById('adm-pass').value='';document.getElementById('adm-err').style.display='none';
+  sessionStorage.removeItem('admin_token');
+  sessionStorage.removeItem('admin_token_time');
+  sessionStorage.removeItem('admin_chat_username');
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('dashboard').style.display='none';
+  document.getElementById('adm-user').value='';
+  document.getElementById('adm-pass').value='';
+  document.getElementById('adm-err').style.display='none';
+  document.getElementById('chatWidget').style.display='none';
 }
+
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('loginScreen').style.display!=='none')adminLogin();});
 
-// ── UTILS ──
+// ══════════════════════════════════════════════════════
+//  ADMIN CHAT ENGINE
+// ══════════════════════════════════════════════════════
+const AV_COLORS=['av-blue','av-teal','av-purple','av-amber','av-coral','av-pink','av-green'];
+function _avColor(name){let h=0;for(let i=0;i<name.length;i++)h=(h*31+name.charCodeAt(i))&0xffff;return AV_COLORS[h%AV_COLORS.length];}
+function _initials(name){return name.trim().split(/\s+/).map(w=>w[0]).join('').toUpperCase().slice(0,2);}
+function _fmtTime(iso){try{const d=new Date(iso);return d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}catch{return '';}}
+function _escHTML(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// Admin's identity in chat: use the stored admin username or fallback to 'Admin'
+function getAdminChatId(){
+  return sessionStorage.getItem('admin_chat_username')||ADMIN_CHAT_ID;
+}
+
+async function _sendAdminHeartbeat(logout){
+  const id=getAdminChatId();
+  const action=logout?'agentLogout':'heartbeat';
+  try{await fetch(API_URL+'?'+new URLSearchParams({action,username:id}));}catch{}
+}
+
+async function _loadAdminPresence(){
+  try{
+    const res=await fetch(API_URL+'?action=getPresence&t='+Date.now());
+    const data=await res.json();
+    if(data.success){
+      const me=getAdminChatId().toLowerCase();
+      const online=data.presence.filter(p=>p.online&&p.username.toLowerCase()!==me).length;
+      const sub=document.getElementById('chatOnlineCount');
+      if(sub) sub.textContent=online+' agent'+(online!==1?'s':'')+' online';
+      _chatAgents=data.presence
+        .filter(p=>p.username.toLowerCase()!==me)
+        .sort((a,b)=>{if(a.online&&!b.online)return -1;if(!a.online&&b.online)return 1;return a.username.localeCompare(b.username);});
+      renderAdminAgentList();
+      // Also update the presence dots in the agents table
+      _updateAgentTablePresence(data.presence);
+    }
+  }catch{}
+}
+
+function _updateAgentTablePresence(presence){
+  presence.forEach(p=>{
+    const dots=document.querySelectorAll(`[data-presence="${p.username}"]`);
+    dots.forEach(dot=>{
+      dot.className='presence-dot-sm '+(p.online?'dot-online':'dot-offline');
+      dot.title=p.online?'Online':'Offline';
+    });
+  });
+}
+
+async function _loadAdminUnread(){
+  const me=getAdminChatId();
+  try{
+    const res=await fetch(API_URL+'?'+new URLSearchParams({action:'getUnreadCounts',username:me})+'&t='+Date.now());
+    const data=await res.json();
+    if(data.success){
+      _chatUnread=data.counts||{};
+      const total=data.total||0;
+      const badge=document.getElementById('chatFabBadge');
+      if(badge){badge.textContent=total>9?'9+':total;badge.style.display=total>0?'flex':'none';}
+      renderAdminAgentList();
+      document.title=total>0&&!_chatOpen?'('+total+') LRP Admin':'LRP Admin Dashboard';
+    }
+  }catch{}
+}
+
+window.renderAdminAgentList=function(){
+  const list=document.getElementById('chatAgentList');
+  if(!list)return;
+  const q=(document.getElementById('chatSearch')?.value||'').toLowerCase();
+  let agents=_chatAgents;
+  if(q)agents=agents.filter(a=>a.username.toLowerCase().includes(q));
+  const online=agents.filter(a=>a.online),offline=agents.filter(a=>!a.online);
+  let html='';
+  if(online.length){html+=`<div class="chat-section-lbl">Online (${online.length})</div>`;online.forEach(a=>html+=_adminAgentHTML(a));}
+  if(offline.length){html+=`<div class="chat-section-lbl" style="margin-top:4px;">Offline (${offline.length})</div>`;offline.forEach(a=>html+=_adminAgentHTML(a));}
+  if(!agents.length)html='<div style="font-size:11px;color:#3a7aaa;padding:12px 8px;text-align:center;">No agents found</div>';
+  list.innerHTML=html;
+};
+
+function _adminAgentHTML(a){
+  const unread=_chatUnread[a.username]||0;
+  const isActive=a.username.toLowerCase()===_chatPeer.toLowerCase();
+  const cls=_avColor(a.username);
+  const ini=_initials(a.username);
+  const unreadBadge=unread>0&&!isActive?`<span class="chat-unread">${unread>9?'9+':unread}</span>`:'';
+  return`<div class="chat-agent-item${isActive?' active':''}" onclick="adminOpenConv('${a.username.replace(/'/g,"\\'")}')">
+    <div class="chat-av ${cls}">${ini}<span class="chat-presence ${a.online?'presence-online':'presence-offline'}"></span></div>
+    <span class="chat-agent-name">${a.username}</span>
+    ${unreadBadge}
+  </div>`;
+}
+
+window.toggleAdminChat=function(){
+  _chatOpen=!_chatOpen;
+  const panel=document.getElementById('chatPanel');
+  if(_chatOpen){panel.classList.add('open');document.title='LRP Admin Dashboard';_loadAdminPresence();}
+  else panel.classList.remove('open');
+};
+
+window.adminOpenConv=function(peer){
+  _chatPeer=peer;_chatMsgs=[];_lastMsgTs='';
+  renderAdminAgentList();
+  if(_chatPollTimer)clearInterval(_chatPollTimer);
+  _chatPollTimer=setInterval(()=>{if(_chatPeer)_adminLoadMsgs(false);},5000);
+  const pData=_chatAgents.find(a=>a.username.toLowerCase()===peer.toLowerCase());
+  const isOn=pData?pData.online:false;
+  const cls=_avColor(peer);const ini=_initials(peer);
+  const conv=document.getElementById('chatConvArea');
+  conv.innerHTML=`
+    <div class="chat-conv-header">
+      <div class="chat-av ${cls}" style="width:28px;height:28px;font-size:10px;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${ini}</div>
+      <div style="flex:1;min-width:0;"><div class="chat-conv-name">${peer}</div><div class="chat-conv-status ${isOn?'conv-online':'conv-offline'}">${isOn?'● Online':'● Offline'}</div></div>
+    </div>
+    <div class="chat-messages" id="chatMsgs"><div class="chat-empty"><div class="chat-empty-icon">💬</div>Start the conversation</div></div>
+    <div class="chat-input-row">
+      <input type="text" id="chatMsgInput" placeholder="Message ${peer}..." onkeydown="if(event.key==='Enter')adminSendMsg()"/>
+      <button class="chat-send-btn" onclick="adminSendMsg()">Send</button>
+    </div>`;
+  const me=getAdminChatId();
+  fetch(API_URL+'?'+new URLSearchParams({action:'markRead',username:me,sender:peer})).catch(()=>{});
+  delete _chatUnread[peer];
+  _adminLoadMsgs(true);
+  document.getElementById('chatMsgInput')?.focus();
+};
+
+async function _adminLoadMsgs(reset){
+  if(!_chatPeer)return;
+  const me=getAdminChatId();
+  try{
+    const params={action:'getMessages',user1:me,user2:_chatPeer};
+    if(!reset&&_lastMsgTs)params.since=_lastMsgTs;
+    const res=await fetch(API_URL+'?'+new URLSearchParams(params)+'&t='+Date.now());
+    const data=await res.json();
+    if(data.success){
+      if(reset)_chatMsgs=data.messages||[];
+      else if(data.messages?.length)_chatMsgs=[..._chatMsgs,...data.messages];
+      if(_chatMsgs.length)_lastMsgTs=_chatMsgs[_chatMsgs.length-1].sentAt;
+      _adminRenderMsgs();
+    }
+  }catch{}
+}
+
+function _adminRenderMsgs(){
+  const box=document.getElementById('chatMsgs');
+  if(!box)return;
+  const me=getAdminChatId().toLowerCase();
+  if(!_chatMsgs.length){box.innerHTML='<div class="chat-empty"><div class="chat-empty-icon">💬</div>Start the conversation</div>';return;}
+  const atBottom=box.scrollHeight-box.scrollTop-box.clientHeight<80;
+  box.innerHTML=_chatMsgs.map(m=>{
+    const mine=m.from.toLowerCase()===me;
+    return`<div class="chat-msg ${mine?'mine':'theirs'}">
+      <div class="chat-bubble">${_escHTML(m.message)}</div>
+      <div class="chat-msg-time">${_fmtTime(m.sentAt)}</div>
+    </div>`;
+  }).join('');
+  if(atBottom||_chatMsgs.length<=5)box.scrollTop=box.scrollHeight;
+}
+
+window.adminSendMsg=async function(){
+  const input=document.getElementById('chatMsgInput');
+  if(!input)return;
+  const msg=input.value.trim();
+  if(!msg||!_chatPeer)return;
+  input.value='';
+  const me=getAdminChatId();
+  const opt={id:'opt-'+Date.now(),from:me,to:_chatPeer,message:msg,sentAt:new Date().toISOString(),isRead:false};
+  _chatMsgs.push(opt);_lastMsgTs=opt.sentAt;_adminRenderMsgs();
+  try{await fetch(API_URL+'?'+new URLSearchParams({action:'sendMessage',fromUser:me,toUser:_chatPeer,message:msg}));}catch{}
+};
+
+function initAdminChat(){
+  document.getElementById('chatWidget').style.display='block';
+  // Register admin presence with a heartbeat
+  _sendAdminHeartbeat(false);
+  setInterval(()=>_sendAdminHeartbeat(false),60000);
+  _loadAdminPresence();
+  setInterval(_loadAdminPresence,30000);
+  _loadAdminUnread();
+  setInterval(_loadAdminUnread,12000);
+}
+
+window.addEventListener('beforeunload',function(){
+  navigator.sendBeacon(API_URL+'?'+new URLSearchParams({action:'agentLogout',username:getAdminChatId()}));
+});
+
+// ══════════════════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════════════════
 function switchTab(tab){
   currentTab=tab;
   ['agents','creds','tracker','handover','planner','wns'].forEach(t=>{
@@ -559,13 +861,15 @@ function renderTable(users){
   const rows=users.map((u,i)=>{
     const st=getStatus(u.lastLogin);
     const defBadge=u.isDefault?'<span style="background:#fff8d8;border:1px solid #e8d040;border-radius:3px;padding:2px 7px;font-size:10px;font-weight:700;color:#705010;margin-left:6px;">TEMP PW</span>':'';
-    // ── Location cell ──
     const locCell=u.lastLocation&&u.lastLocation!=='Unknown'&&u.lastLocation!==''
       ?`<span class="loc-badge">📍 ${u.lastLocation}</span>`
       :'<span style="font-size:11px;color:#aaa;">—</span>';
+    // Presence dot + chat button
+    const presenceDot=`<span class="presence-dot-sm ${u.online?'dot-online':'dot-offline'}" data-presence="${u.username}" title="${u.online?'Online':'Offline'}"></span>`;
+    const chatBtn=`<button onclick="adminChatWith('${u.username}')" style="background:#ddeeff;border:1px solid #80bce8;border-radius:5px;color:#1a5a90;cursor:pointer;font-size:11px;font-weight:700;padding:4px 9px;white-space:nowrap;margin-left:5px;" title="Chat with ${u.username}">💬 Chat</button>`;
     return`<tr>
       <td style="color:#3a7aaa;font-size:12px;font-weight:600;">${i+1}</td>
-      <td style="font-weight:700;color:#0a3d78;">👤 ${u.username}${defBadge}</td>
+      <td style="font-weight:700;color:#0a3d78;">${presenceDot}👤 ${u.username}${defBadge}</td>
       <td>${u.email||'—'}</td>
       <td><span style="background:#eef5fc;border:1px solid #a8cce8;border-radius:4px;padding:2px 8px;font-size:11px;color:#1a5a90;">⚓ ${u.team||'—'}</span></td>
       <td><span class="badge ${st.cls}">${st.label}</span></td>
@@ -576,6 +880,7 @@ function renderTable(users){
         <button class="edit-btn" onclick="editAgent(${i})">✏ Edit</button>
         <button class="reset-btn" id="rbtn_${i}" onclick="resetPassword('${u.username}',${i})">🔑 Reset PW</button>
         <button class="delete-btn" id="dbtn_${i}" onclick="deleteUser('${u.username}',${i})">🗑 Delete</button>
+        ${chatBtn}
       </td>
     </tr>`;
   }).join('');
@@ -585,6 +890,12 @@ function renderTable(users){
       <th>Status</th><th>Last Login Location</th><th>Last Login</th><th>Created</th><th>Actions</th>
     </tr></thead><tbody>${rows}</tbody></table>`;
 }
+
+// Quick-chat from agent table row
+window.adminChatWith=function(username){
+  if(!document.getElementById('chatPanel').classList.contains('open')) toggleAdminChat();
+  setTimeout(()=>adminOpenConv(username),150);
+};
 
 function filterTable(){
   const q=document.getElementById('searchInput').value.toLowerCase();
@@ -703,8 +1014,8 @@ function closePlannerEditor(){document.getElementById('planner-cell-editor').sty
 function updatePlannerDirtyBadge(){document.getElementById('planner-unsaved-badge').classList.toggle('visible',plannerDirty);const btn=document.getElementById('planner-publish-btn');if(plannerDirty){btn.style.background='linear-gradient(135deg,#c07010,#a05008)';btn.textContent='📤 Submit to Agents *';}else{btn.style.background='linear-gradient(135deg,#1a8c5c,#138048)';btn.textContent='📤 Submit to Agents';}}
 document.addEventListener('click',e=>{const ed=document.getElementById('planner-cell-editor');if(ed&&ed.style.display!=='none'&&!ed.contains(e.target)&&!e.target.closest('td'))closePlannerEditor();});
 async function publishPlanner(){const btn=document.getElementById('planner-publish-btn');btn.disabled=true;btn.textContent='⏳ Submitting...';const payload=plannerMembers.map(m=>({id:m.id,name:m.name,primary:m.primary,shifts:Object.assign({},plannerData[m.id]||{})}));try{const formData=new FormData();formData.append('action','savePlanner');formData.append('payload',JSON.stringify(payload));const res=await fetch(API_URL,{method:'POST',body:formData});const text=await res.text();let data;try{data=JSON.parse(text);}catch{throw new Error('Invalid response: '+text.slice(0,100));}if(data.success){plannerDirty=false;updatePlannerDirtyBadge();const now=new Date();document.getElementById('planner-saved-label').textContent='✅ Published: '+now.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+' '+now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});showToast('📤 Shift planner submitted to agents!');}else{showToast('⚠ Submit failed: '+(data.error||'Unknown error'),false);}}catch(err){try{const res2=await fetch(API_URL+'?'+new URLSearchParams({action:'savePlanner',payload:JSON.stringify(payload)}));const data2=await res2.json();if(data2.success){plannerDirty=false;updatePlannerDirtyBadge();const now=new Date();document.getElementById('planner-saved-label').textContent='✅ Published: '+now.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+' '+now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});showToast('📤 Shift planner submitted to agents!');}else{showToast('⚠ Submit failed. Try again.',false);}}catch{showToast('⚠ Connection error. Check network and try again.',false);}}btn.disabled=false;updatePlannerDirtyBadge();}
-function exportPlannerExcel(){if(!plannerMembers.length){showToast('⚠ No planner data to export.',false);return;}const wb=XLSX.utils.book_new();const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];const days=getDaysInViewMonth();const monthLabel=MONTH_NAMES[plannerViewMonth]+' '+plannerViewYear;const hdr1=['Name','ID','Primary',...days.map(d=>d.day+'/'+String(plannerViewMonth+1).padStart(2,'0'))];const hdr2=['','','',...days.map(d=>d.dayName)];const rows=plannerMembers.map(m=>{const shifts=plannerData[m.id]||{};return[m.name,m.id,m.primary,...days.map(d=>shifts[d.iso]||'')];});const ws=XLSX.utils.aoa_to_sheet([hdr1,hdr2,...rows]);ws['!cols']=[{wch:24},{wch:10},{wch:18},...days.map(()=>({wch:8}))];[0,1].forEach(ri=>{hdr1.forEach((_,ci)=>{const addr=XLSX.utils.encode_cell({r:ri,c:ci});if(ws[addr])ws[addr].s={font:{bold:true,color:{rgb:'FFFFFF'}},fill:{fgColor:{rgb:'185FA5'}},alignment:{horizontal:'center'}};});});XLSX.utils.book_append_sheet(wb,ws,monthLabel.replace(' ','_'));XLSX.writeFile(wb,'ShiftPlanner_'+monthLabel.replace(' ','_')+'.xlsx');showToast('✅ Planner exported to Excel!');}
-function downloadPlannerTemplate(){if(!plannerMembers.length){showToast('⚠ Load planner first.',false);return;}const wb=XLSX.utils.book_new();const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];for(let offset=0;offset<3;offset++){let m=plannerViewMonth+offset,y=plannerViewYear;if(m>11){m-=12;y++;}const daysInMonth=new Date(y,m+1,0).getDate();const DAY_NAMES=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];const days=[];for(let d=1;d<=daysInMonth;d++){const dt=new Date(y,m,d);const iso=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');days.push({iso,day:String(d).padStart(2,'0'),dayName:DAY_NAMES[dt.getDay()]});}const monthLabel=MONTH_NAMES[m]+' '+y;const hdr1=['Name','ID','Primary',...days.map(d=>d.day+'/'+String(m+1).padStart(2,'0'))];const hdr2=['','','',...days.map(d=>d.dayName)];const shiftOpts=['D1','D2','D3','D4','D5','N','W/OFF','Holiday','Compff'];const noteRow=['← Fill shifts using: '+shiftOpts.join(', '),'','',''];const rows=plannerMembers.map(mem=>{const shifts=plannerData[mem.id]||{};return[mem.name,mem.id,mem.primary,...days.map(d=>shifts[d.iso]||'')];});const ws=XLSX.utils.aoa_to_sheet([hdr1,hdr2,noteRow,...rows]);ws['!cols']=[{wch:24},{wch:10},{wch:18},...days.map(()=>({wch:8}))];hdr1.forEach((_,ci)=>{const addr=XLSX.utils.encode_cell({r:0,c:ci});if(ws[addr])ws[addr].s={font:{bold:true,color:{rgb:'FFFFFF'}},fill:{fgColor:{rgb:'0A3D78'}},alignment:{horizontal:'center'}};});XLSX.utils.book_append_sheet(wb,ws,monthLabel.replace(' ','_'));}XLSX.writeFile(wb,'ShiftPlanner_Template.xlsx');showToast('✅ Template downloaded! Fill shifts and import back.');}
+function exportPlannerExcel(){if(!plannerMembers.length){showToast('⚠ No planner data to export.',false);return;}const wb=XLSX.utils.book_new();const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];const days=getDaysInViewMonth();const monthLabel=MONTH_NAMES[plannerViewMonth]+' '+plannerViewYear;const hdr1=['Name','ID','Primary',...days.map(d=>d.day+'/'+String(plannerViewMonth+1).padStart(2,'0'))];const hdr2=['','','',...days.map(d=>d.dayName)];const rows=plannerMembers.map(m=>{const shifts=plannerData[m.id]||{};return[m.name,m.id,m.primary,...days.map(d=>shifts[d.iso]||'')];});const ws=XLSX.utils.aoa_to_sheet([hdr1,hdr2,...rows]);ws['!cols']=[{wch:24},{wch:10},{wch:18},...days.map(()=>({wch:8}))];XLSX.utils.book_append_sheet(wb,ws,monthLabel.replace(' ','_'));XLSX.writeFile(wb,'ShiftPlanner_'+monthLabel.replace(' ','_')+'.xlsx');showToast('✅ Planner exported to Excel!');}
+function downloadPlannerTemplate(){if(!plannerMembers.length){showToast('⚠ Load planner first.',false);return;}const wb=XLSX.utils.book_new();const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];for(let offset=0;offset<3;offset++){let m=plannerViewMonth+offset,y=plannerViewYear;if(m>11){m-=12;y++;}const daysInMonth=new Date(y,m+1,0).getDate();const DAY_NAMES=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];const days=[];for(let d=1;d<=daysInMonth;d++){const dt=new Date(y,m,d);const iso=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');days.push({iso,day:String(d).padStart(2,'0'),dayName:DAY_NAMES[dt.getDay()]});}const monthLabel=MONTH_NAMES[m]+' '+y;const hdr1=['Name','ID','Primary',...days.map(d=>d.day+'/'+String(m+1).padStart(2,'0'))];const hdr2=['','','',...days.map(d=>d.dayName)];const shiftOpts=['D1','D2','D3','D4','D5','N','W/OFF','Holiday','Compff'];const noteRow=['← Fill shifts using: '+shiftOpts.join(', '),'','',''];const rows=plannerMembers.map(mem=>{const shifts=plannerData[mem.id]||{};return[mem.name,mem.id,mem.primary,...days.map(d=>shifts[d.iso]||'')];});const ws=XLSX.utils.aoa_to_sheet([hdr1,hdr2,noteRow,...rows]);ws['!cols']=[{wch:24},{wch:10},{wch:18},...days.map(()=>({wch:8}))];XLSX.utils.book_append_sheet(wb,ws,monthLabel.replace(' ','_'));}XLSX.writeFile(wb,'ShiftPlanner_Template.xlsx');showToast('✅ Template downloaded! Fill shifts and import back.');}
 function importPlannerExcel(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=function(e){try{const data=new Uint8Array(e.target.result);const wb=XLSX.read(data,{type:'array'});let totalImported=0;const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];const SHIFT_VALID=new Set(['D1','D2','D3','D4','D5','N','W/OFF','HOLIDAY','COMPFF']);wb.SheetNames.forEach(sheetName=>{const ws=wb.Sheets[sheetName];const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});if(rows.length<3)return;const hdr=rows[0];let sheetYear=plannerViewYear,sheetMonth=-1;MONTH_NAMES.forEach((mn,mi)=>{if(sheetName.toLowerCase().includes(mn.toLowerCase()))sheetMonth=mi;});const yearMatch=sheetName.match(/(\d{4})/);if(yearMatch)sheetYear=parseInt(yearMatch[1]);const dateCols=[];for(let ci=3;ci<hdr.length;ci++){const cell=(hdr[ci]||'').toString().trim();if(!cell)continue;const parts=cell.split('/');if(parts.length===2){const day=parts[0].padStart(2,'0');const mo=sheetMonth>=0?String(sheetMonth+1).padStart(2,'0'):parts[1].padStart(2,'0');const iso=sheetYear+'-'+mo+'-'+day;dateCols.push({ci,iso});}}for(let ri=3;ri<rows.length;ri++){const row=rows[ri];const memberId=(row[1]||'').toString().trim();if(!memberId)continue;const member=plannerMembers.find(m=>m.id===memberId);if(!member)continue;if(!plannerData[memberId])plannerData[memberId]={};dateCols.forEach(({ci,iso})=>{const val=(row[ci]||'').toString().trim().toUpperCase();if(!val){delete plannerData[memberId][iso];}else if(SHIFT_VALID.has(val)){const normalized={'HOLIDAY':'Holiday','COMPFF':'Compff','W/OFF':'W/OFF'}[val]||val;plannerData[memberId][iso]=normalized;totalImported++;}});}});plannerDirty=true;updatePlannerDirtyBadge();renderPlanner();showToast('✅ Imported '+totalImported+' shifts! Review then click Submit to Agents.');}catch(err){showToast('⚠ Import failed — check file format.',false);}input.value='';};reader.readAsArrayBuffer(file);}
 
 // ── WHY NOT SOLVED ──
@@ -727,13 +1038,11 @@ function exportWNSExcel(){
   const now=new Date();
   const sumData=[['LRP Support — Why Not Solved by HD'],['Exported: '+now.toLocaleString()],[],['Metric','Value'],['Total Assigned',allWNSTickets.length],['Pending Review',allWNSTickets.filter(t=>t.status==='Pending').length],['Completed',allWNSTickets.filter(t=>t.status==='Completed').length],['Agents Reviewed',new Set(allWNSTickets.filter(t=>t.status==='Completed').map(t=>t.agentName)).size]];
   const ws1=XLSX.utils.aoa_to_sheet(sumData);ws1['!cols']=[{wch:28},{wch:20}];
-  if(ws1['A1'])ws1['A1'].s={font:{bold:true,sz:16,color:{rgb:'0A3D78'}},fill:{fgColor:{rgb:'C8DFF0'}}};
   XLSX.utils.book_append_sheet(wb,ws1,'Summary');
   const headers=['#','Ticket ID','Assigned Agent','Status','Summary','Assigned Date','Submitted Date','Client','Component','Priority','Root Cause','Ticket Date','Primary Reason','Why Not Solved','What Was Learned','How to Solve Next Time','Engg Resolution Time','Sandbox Tried','Sandbox Result','Reference / Notes'];
   const rows=allWNSTickets.map((t,i)=>[i+1,t.ticketId||'',t.agentName||'',t.status||'',t.summary||'',(t.assignedAt||'').slice(0,10),t.status==='Completed'?(t.submittedAt||'').slice(0,10):'',t.client||'',t.component||'',t.priority||'',t.rootCause||'',t.ticketDate||'',t.primaryReason||'',t.whyNotSolved||'',t.whatLearned||'',t.howSolveNext||'',t.engResolutionTime||'',t.sandboxTried||'',t.sandboxResult||'',t.reference||'']);
   const ws2=XLSX.utils.aoa_to_sheet([headers,...rows]);
   ws2['!cols']=[{wch:4},{wch:16},{wch:22},{wch:12},{wch:40},{wch:14},{wch:14},{wch:14},{wch:14},{wch:12},{wch:16},{wch:14},{wch:28},{wch:50},{wch:50},{wch:50},{wch:20},{wch:14},{wch:30},{wch:30}];
-  headers.forEach((_,ci)=>{const addr=XLSX.utils.encode_cell({r:0,c:ci});if(ws2[addr])ws2[addr].s={font:{bold:true,color:{rgb:'FFFFFF'}},fill:{fgColor:{rgb:'0A3D78'}},alignment:{horizontal:'center'}};});
   XLSX.utils.book_append_sheet(wb,ws2,'All Tickets');
   const completed=allWNSTickets.filter(t=>t.status==='Completed');
   if(completed.length){
@@ -741,7 +1050,6 @@ function exportWNSExcel(){
     const cHdr=['#','Ticket ID','Agent','Summary','Assigned','Submitted','Client','Component','Priority','Root Cause','Primary Reason','Why Not Solved','Learned','How Next Time','Engg Time','Sandbox'];
     const ws3=XLSX.utils.aoa_to_sheet([cHdr,...cRows]);
     ws3['!cols']=[{wch:4},{wch:16},{wch:20},{wch:38},{wch:13},{wch:13},{wch:14},{wch:14},{wch:12},{wch:16},{wch:28},{wch:48},{wch:48},{wch:48},{wch:18},{wch:12}];
-    cHdr.forEach((_,ci)=>{const addr=XLSX.utils.encode_cell({r:0,c:ci});if(ws3[addr])ws3[addr].s={font:{bold:true,color:{rgb:'FFFFFF'}},fill:{fgColor:{rgb:'6030A0'}},alignment:{horizontal:'center'}};});
     XLSX.utils.book_append_sheet(wb,ws3,'Completed Reviews');
   }
   const fname='WNS_Export_'+now.getFullYear()+String(now.getMonth()+1).padStart(2,'0')+String(now.getDate()).padStart(2,'0')+'.xlsx';
