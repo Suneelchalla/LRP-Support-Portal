@@ -111,7 +111,7 @@
 <script>
 const API_URL='https://script.google.com/macros/s/AKfycbxhyO1pVbA_TeGsoD7kKAwHHxhMyitT7XN41y0f_1m28LWMaJ-7Rlo3fDPx9j10dnA2Tw/exec';
 
-// ── Global sign-out (defined at top level so onclick="signOut()" always works) ──
+// ── Global sign-out ──
 window.signOut = async function(){
   const u=_CURRENT_USER;
   if(u){ try{ await fetch(API_URL+'?'+new URLSearchParams({action:'agentLogout',username:u})); }catch{} }
@@ -121,15 +121,48 @@ window.signOut = async function(){
   localStorage.removeItem('lrp_quote');
   location.reload();
 };
-window._toggleChat  = function(){ _doToggleChat(); };
-window._renderAgents= function(){ _doRenderAgents(); };
-window._openConv    = function(p){ _doOpenConv(p); };
-window._sendMsg     = async function(){ await _doSendMsg(); };
 
 // ── Global state ──
-let _CURRENT_USER='', _INTERVALS=[], _CHAT_OPEN=false, _CHAT_PEER='';
-let _CHAT_AGENTS=[], _CHAT_UNREAD={}, _CHAT_MSGS=[], _CHAT_LASTTS='';
-let _pollBusy=false;
+let _CURRENT_USER='', _INTERVALS=[], _pollBusy=false;
+
+// ── LOCATION via Browser Geolocation API ──
+async function fetchLocation(){
+  return new Promise(resolve=>{
+    if(!navigator.geolocation){ resolve('Unknown'); return; }
+    navigator.geolocation.getCurrentPosition(
+      async pos=>{
+        const {latitude:lat, longitude:lon} = pos.coords;
+        // Reverse geocode using nominatim (free, no API key needed)
+        try{
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`,
+            { headers:{ 'Accept-Language':'en', 'User-Agent':'LRP-Support-Portal' } }
+          );
+          const d = await res.json();
+          if(d && d.address){
+            const a = d.address;
+            // Build full address from available parts
+            const parts = [
+              a.road || a.pedestrian || a.footway || '',
+              a.suburb || a.neighbourhood || a.quarter || '',
+              a.city || a.town || a.village || a.county || '',
+              a.state || a.region || '',
+              a.country || ''
+            ].filter(Boolean);
+            resolve(parts.join(', ') || `${lat.toFixed(4)}, ${lon.toFixed(4)}`);
+          } else {
+            resolve(`${lat.toFixed(4)}, ${lon.toFixed(4)}`);
+          }
+        }catch{
+          // If reverse geocode fails, fallback to coords
+          resolve(`${lat.toFixed(4)}, ${lon.toFixed(4)}`);
+        }
+      },
+      _err=>{ resolve('Unknown'); },  // User denied or error → Unknown
+      { timeout:8000, maximumAge:300000 }
+    );
+  });
+}
 
 const AGENT_QUOTES=[
   {text:"Every customer interaction is a chance to turn a problem into loyalty.",author:"LRP Wisdom"},
@@ -176,11 +209,40 @@ window.addEventListener('load',function(){
   }
 });
 
-async function fetchLocation(){
-  try{const r=await fetch('http://ip-api.com/json/?fields=status,city,regionName,country');const d=await r.json();if(d.status==='success'&&d.city){const l=[d.city,d.regionName,d.country].filter(Boolean).join(', ');if(l)return l;}}catch{}
-  try{const r=await fetch('https://ipwho.is/');const d=await r.json();if(d.success&&d.city){const l=[d.city,d.region,d.country].filter(Boolean).join(', ');if(l)return l;}}catch{}
-  try{const r=await fetch('https://ipapi.co/json/');const d=await r.json();const l=[d.city,d.region,d.country_name].filter(Boolean).join(', ');if(l)return l;}catch{}
-  return 'Unknown';
+// ── Change Password (first login) ──
+function showChangePassword(username,team){
+  document.getElementById('panelWrap').innerHTML=`
+  <div class="panel" style="text-align:left;">
+    <div style="text-align:center;margin-bottom:16px;">
+      <div class="login-logo">🔐</div>
+      <div class="brand-text"><h1>SET NEW PASSWORD</h1><p>FIRST TIME LOGIN</p></div>
+    </div>
+    <div class="divider"></div>
+    <div style="background:#fff8e8;border:1.5px solid #f0c840;border-radius:8px;padding:10px 14px;margin-bottom:18px;">
+      <div style="font-size:11px;font-weight:700;color:#8a6010;letter-spacing:1px;">⚠ Temporary password detected</div>
+      <div style="font-size:12px;color:#5a6a80;margin-top:4px;line-height:1.5;">Your admin has set a temporary password. Please create your personal password to continue.</div>
+    </div>
+    <div class="form-group"><label>New Password</label><div class="input-wrap"><span class="input-icon">🔐</span><input type="password" id="new-pass" placeholder="Min 6 characters"/></div></div>
+    <div class="form-group"><label>Confirm New Password</label><div class="input-wrap"><span class="input-icon">✅</span><input type="password" id="new-confirm" placeholder="Re-enter new password"/></div></div>
+    <div id="cpw-msg" class="msg"></div>
+    <button class="btn-primary" id="cpw-btn" onclick="submitNewPassword('${username}','${team}')">🔒 SET MY PASSWORD</button>
+  </div>`;
+}
+
+async function submitNewPassword(username,team){
+  const np=document.getElementById('new-pass').value;
+  const nc=document.getElementById('new-confirm').value;
+  if(!np||!nc){showMsg('cpw-msg','⚠ Both fields are required.','error');return;}
+  if(np.length<6){showMsg('cpw-msg','⚠ Password must be ≥ 6 characters.','error');return;}
+  if(np!==nc){showMsg('cpw-msg','⚠ Passwords do not match.','error');return;}
+  const btn=document.getElementById('cpw-btn');
+  btn.disabled=true; showMsg('cpw-msg','⏳ Updating password...','loading');
+  try{
+    const res=await fetch(API_URL+'?'+new URLSearchParams({action:'changePassword',username,newPassword:np}));
+    const data=await res.json();
+    if(data.success){ showMsg('cpw-msg','✅ Password set! Entering portal...','success'); setTimeout(()=>showDashboard(username,team),1200); }
+    else{ showMsg('cpw-msg','⚠ Failed to update. Try again.','error'); btn.disabled=false; }
+  }catch{ showMsg('cpw-msg','⚠ Connection error.','error'); btn.disabled=false; }
 }
 
 async function handleLogin(){
@@ -190,6 +252,8 @@ async function handleLogin(){
   const btn=document.getElementById('login-btn');
   btn.disabled=true;
   showMsg('login-msg','⏳ Verifying...','loading');
+
+  // Check admin first
   try{
     const ar=await fetch(API_URL+'?'+new URLSearchParams({action:'adminLogin',username:u,password:p}));
     const ad=await ar.json();
@@ -201,7 +265,12 @@ async function handleLogin(){
       return;
     }
   }catch{}
-  const location=await fetchLocation();
+
+  // Agent login — get location via browser geolocation
+  showMsg('login-msg','⏳ Getting location...','loading');
+  const location = await fetchLocation();
+
+  showMsg('login-msg','⏳ Signing in...','loading');
   try{
     const res=await fetch(API_URL+'?'+new URLSearchParams({action:'login',username:u,password:p,location}));
     const data=await res.json();
@@ -258,215 +327,38 @@ async function submitNewPassword(username,team){
   }catch{ showMsg('cpw-msg','⚠ Connection error.','error'); btn.disabled=false; }
 }
 
-// ── Chat helpers (global so they survive innerHTML swap) ──
-const AV_COLS=['av-blue','av-teal','av-purple','av-amber','av-coral','av-pink','av-green'];
-function _avCol(n){let h=0;for(let i=0;i<n.length;i++)h=(h*31+n.charCodeAt(i))&0xffff;return AV_COLS[h%AV_COLS.length];}
-function _ini(n){return n.trim().split(/\s+/).map(w=>w[0]).join('').toUpperCase().slice(0,2);}
-function _fmtT(iso){try{return new Date(iso).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}catch{return '';}}
-function _esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function _isAdmin(u){return u.isAdmin===true||u.team==='Admin';}
+// ── Presence-only poll (no chat messaging) ──
+let _pollBusy = false;
 
-// Combined poll: heartbeat + presence + unread in one cycle (45s)
-// ── REPLACE the existing _combinedPoll function in index.html with this ──
-
-async function _combinedPoll(){
-  if(_pollBusy)return;
-  _pollBusy=true;
+async function _presencePoll(){
+  if(_pollBusy) return;
+  _pollBusy = true;
   try{
-    // heartbeat
+    // Send heartbeat
     fetch(API_URL+'?'+new URLSearchParams({action:'heartbeat',username:_CURRENT_USER})).catch(()=>{});
 
-    // always fetch ALL users first so the list is never empty
-    const ur2=await fetch(API_URL+'?action=getUsers&t='+Date.now());
-    const ud2=await ur2.json();
-    let baseList=[];
-    if(ud2.success&&ud2.users){
-      const me=_CURRENT_USER.toLowerCase();
-      baseList=ud2.users
-        .filter(u=>u.username.toLowerCase()!==me)
-        .map(u=>({
-          username:u.username,
-          online:false,
-          lastSeen:u.lastSeen||'',
-          team:u.team||'',
-          isAdmin:u.team==='Admin'
-        }));
+    // Fetch presence for online count display
+    const pr = await fetch(API_URL+'?action=getPresence&t='+Date.now());
+    const pd = await pr.json();
+    if(pd.success && pd.presence){
+      const me = _CURRENT_USER.toLowerCase();
+      const onlineOthers = pd.presence.filter(p=>
+        p.username.toLowerCase() !== me && p.online
+      ).length;
+      const cnt = document.getElementById('db-online-count');
+      if(cnt) cnt.textContent = onlineOthers + 1; // +1 = self
     }
-
-    // overlay presence data on top
-    try{
-      const pr=await fetch(API_URL+'?action=getPresence&t='+Date.now());
-      const pd=await pr.json();
-      if(pd.success&&pd.presence){
-        const me=_CURRENT_USER.toLowerCase();
-        const presenceMap={};
-        pd.presence.forEach(p=>{
-          if(p.username.toLowerCase()!==me)
-            presenceMap[p.username.toLowerCase()]=p;
-        });
-        baseList=baseList.map(u=>{
-          const pEntry=presenceMap[u.username.toLowerCase()];
-          return pEntry?{...u,online:pEntry.online,lastSeen:pEntry.lastSeen,team:pEntry.team||u.team,isAdmin:pEntry.isAdmin||u.isAdmin}:u;
-        });
-      }
-    }catch{}
-
-    const me2=_CURRENT_USER.toLowerCase();
-    const onlineOthers=baseList.filter(p=>p.online&&p.username.toLowerCase()!==me2).length;
-    const sub=document.getElementById('chatOnlineCount');
-    if(sub)sub.textContent=onlineOthers+' other'+(onlineOthers!==1?'s':'')+' online';
-    const cnt=document.getElementById('db-online-count');
-    if(cnt)cnt.textContent=onlineOthers+1;
-
-    _CHAT_AGENTS=baseList.sort((a,b)=>{
-      if(a.online&&!b.online)return -1; if(!a.online&&b.online)return 1;
-      if(_isAdmin(a)&&!_isAdmin(b))return -1; if(!_isAdmin(a)&&_isAdmin(b))return 1;
-      return a.username.localeCompare(b.username);
-    });
-    _doRenderAgents();
-
-    // unread counts
-    const ucr=await fetch(API_URL+'?'+new URLSearchParams({action:'getUnreadCounts',username:_CURRENT_USER})+'&t='+Date.now());
-    const ucd=await ucr.json();
-    if(ucd.success){
-      _CHAT_UNREAD=ucd.counts||{};
-      const total=ucd.total||0;
-      const badge=document.getElementById('chatFabBadge');
-      if(badge){badge.textContent=total>9?'9+':total;badge.style.display=total>0?'flex':'none';}
-      _doRenderAgents();
-      document.title=total>0&&!_CHAT_OPEN?'('+total+') LRP Support Portal':'LRP Support Portal';
-    }
-  }catch(e){console.warn('combinedPoll error',e);}
-  _pollBusy=false;
-}
-
-// Message poll (6s — only fetches new messages since last timestamp)
-async function _msgPoll(){
-  if(!_CHAT_PEER||!_CURRENT_USER)return;
-  try{
-    const params={action:'getMessages',user1:_CURRENT_USER,user2:_CHAT_PEER};
-    if(_CHAT_LASTTS)params.since=_CHAT_LASTTS;
-    const r=await fetch(API_URL+'?'+new URLSearchParams(params)+'&t='+Date.now());
-    const d=await r.json();
-    if(d.success&&d.messages&&d.messages.length){
-      _CHAT_MSGS=[..._CHAT_MSGS,...d.messages];
-      _CHAT_LASTTS=_CHAT_MSGS[_CHAT_MSGS.length-1].sentAt;
-      _doRenderMsgs();
-    }
-  }catch{}
-}
-
-function _doRenderAgents(){
-  const list=document.getElementById('chatAgentList');
-  if(!list)return;
-  const q=(document.getElementById('chatSearch')?.value||'').toLowerCase();
-  let agents=_CHAT_AGENTS;
-  if(q)agents=agents.filter(a=>a.username.toLowerCase().includes(q));
-  const admins=agents.filter(a=>_isAdmin(a));
-  const regular=agents.filter(a=>!_isAdmin(a));
-  const online=regular.filter(a=>a.online);
-  const offline=regular.filter(a=>!a.online);
-  let html='';
-  if(admins.length){ html+=`<div class="chat-section-lbl">Admin</div>`; admins.forEach(a=>html+=_agentHTML(a)); }
-  if(online.length){ html+=`<div class="chat-section-lbl" style="margin-top:4px;">Online (${online.length})</div>`; online.forEach(a=>html+=_agentHTML(a)); }
-  if(offline.length){ html+=`<div class="chat-section-lbl" style="margin-top:4px;">Offline (${offline.length})</div>`; offline.forEach(a=>html+=_agentHTML(a)); }
-  if(!agents.length)html='<div style="font-size:11px;color:#3a7aaa;padding:12px 8px;text-align:center;">No results</div>';
-  list.innerHTML=html;
-}
-
-function _agentHTML(a){
-  const unread=_CHAT_UNREAD[a.username]||0;
-  const isActive=a.username.toLowerCase()===_CHAT_PEER.toLowerCase();
-  const isAdm=_isAdmin(a);
-  const cls=isAdm?'av-admin':_avCol(a.username);
-  const initials=isAdm?'AD':_ini(a.username);
-  const displayName=isAdm?'⚓ '+a.username:a.username;
-  const badge=unread>0&&!isActive?`<span class="chat-unread">${unread>9?'9+':unread}</span>`:'';
-  return`<div class="chat-agent-item${isActive?' active':''}" onclick="_openConv('${a.username.replace(/'/g,"\\'")}')">
-    <div class="chat-av ${cls}">${initials}<span class="chat-presence ${a.online?'presence-online':'presence-offline'}"></span></div>
-    <span class="chat-agent-name">${_esc(displayName)}</span>
-    ${badge}
-  </div>`;
-}
-
-function _doToggleChat(){
-  _CHAT_OPEN=!_CHAT_OPEN;
-  const panel=document.getElementById('chatPanel');
-  if(!panel)return;
-  if(_CHAT_OPEN){ panel.classList.add('open'); document.title='LRP Support Portal'; _combinedPoll(); }
-  else panel.classList.remove('open');
-}
-
-function _doOpenConv(peer){
-  _CHAT_PEER=peer; _CHAT_MSGS=[]; _CHAT_LASTTS='';
-  _doRenderAgents();
-  const pData=_CHAT_AGENTS.find(a=>a.username.toLowerCase()===peer.toLowerCase());
-  const isOn=pData?pData.online:false;
-  const isAdm=pData?_isAdmin(pData):false;
-  const cls=isAdm?'av-admin':_avCol(peer);
-  const initials=isAdm?'AD':_ini(peer);
-  const displayName=isAdm?'⚓ '+peer:peer;
-  const conv=document.getElementById('chatConvArea');
-  if(!conv)return;
-  conv.innerHTML=`
-    <div class="chat-conv-header">
-      <div class="chat-av ${cls}" style="width:28px;height:28px;font-size:10px;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${initials}</div>
-      <div style="flex:1;min-width:0;">
-        <div class="chat-conv-name">${_esc(displayName)}</div>
-        <div class="chat-conv-status ${isOn?'conv-online':'conv-offline'}">${isOn?'● Online':'● Offline'}</div>
-      </div>
-    </div>
-    <div class="chat-messages" id="chatMsgs"><div class="chat-empty"><div class="chat-empty-icon">💬</div>Start the conversation</div></div>
-    <div class="chat-input-row">
-      <input type="text" id="chatMsgInput" placeholder="Message ${_esc(displayName)}..." onkeydown="if(event.key==='Enter')_sendMsg()"/>
-      <button class="chat-send-btn" onclick="_sendMsg()">Send</button>
-    </div>`;
-  fetch(API_URL+'?'+new URLSearchParams({action:'markRead',username:_CURRENT_USER,sender:peer})).catch(()=>{});
-  delete _CHAT_UNREAD[peer];
-  (async()=>{
-    try{
-      const r=await fetch(API_URL+'?'+new URLSearchParams({action:'getMessages',user1:_CURRENT_USER,user2:peer})+'&t='+Date.now());
-      const d=await r.json();
-      if(d.success){ _CHAT_MSGS=d.messages||[]; if(_CHAT_MSGS.length)_CHAT_LASTTS=_CHAT_MSGS[_CHAT_MSGS.length-1].sentAt; _doRenderMsgs(); }
-    }catch{}
-  })();
-  document.getElementById('chatMsgInput')?.focus();
-}
-
-function _doRenderMsgs(){
-  const box=document.getElementById('chatMsgs');
-  if(!box)return;
-  if(!_CHAT_MSGS.length){ box.innerHTML='<div class="chat-empty"><div class="chat-empty-icon">💬</div>Start the conversation</div>'; return; }
-  const atBottom=box.scrollHeight-box.scrollTop-box.clientHeight<80;
-  box.innerHTML=_CHAT_MSGS.map(m=>{
-    const mine=m.from.toLowerCase()===_CURRENT_USER.toLowerCase();
-    return`<div class="chat-msg ${mine?'mine':'theirs'}">
-      <div class="chat-bubble">${_esc(m.message)}</div>
-      <div class="chat-msg-time">${_fmtT(m.sentAt)}</div>
-    </div>`;
-  }).join('');
-  if(atBottom||_CHAT_MSGS.length<=5)box.scrollTop=box.scrollHeight;
-}
-
-async function _doSendMsg(){
-  const input=document.getElementById('chatMsgInput');
-  if(!input)return;
-  const msg=input.value.trim();
-  if(!msg||!_CHAT_PEER)return;
-  input.value='';
-  const opt={id:'opt-'+Date.now(),from:_CURRENT_USER,to:_CHAT_PEER,message:msg,sentAt:new Date().toISOString(),isRead:false};
-  _CHAT_MSGS.push(opt); _CHAT_LASTTS=opt.sentAt; _doRenderMsgs();
-  try{ await fetch(API_URL+'?'+new URLSearchParams({action:'sendMessage',fromUser:_CURRENT_USER,toUser:_CHAT_PEER,message:msg})); }catch{}
+  }catch(e){ console.warn('presencePoll error',e); }
+  _pollBusy = false;
 }
 
 // ── Dashboard ──
 function showDashboard(username,team){
-  _CURRENT_USER=username;
+  _CURRENT_USER = username;
   _INTERVALS.forEach(id=>clearInterval(id));
-  _INTERVALS.length=0;
-  _CHAT_PEER=''; _CHAT_MSGS=[]; _CHAT_AGENTS=[]; _CHAT_UNREAD={}; _CHAT_LASTTS=''; _CHAT_OPEN=false;
+  _INTERVALS.length = 0;
 
-  const q=getSessionQuote();
+  const q = getSessionQuote();
   document.body.innerHTML=`
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -513,58 +405,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .presence-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.8);border-radius:10px;padding:4px 10px;font-size:11px;font-weight:700;color:#1a5a90;}
 .presence-dot{width:8px;height:8px;border-radius:50%;background:#1a8c5c;animation:presencePulse 2s ease-in-out infinite;}
 @keyframes presencePulse{0%,100%{opacity:1;}50%{opacity:.5;}}
-#chatWidget{position:fixed;bottom:24px;right:24px;z-index:9000;}
-#chatFab{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#1a7db5,#0a3d78);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 16px rgba(10,60,120,.35);transition:transform .2s;position:relative;}
-#chatFab:hover{transform:scale(1.08);}
-#chatFabBadge{position:absolute;top:-4px;right:-4px;background:#e53935;color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:700;display:none;align-items:center;justify-content:center;border:2px solid #fff;}
-#chatPanel{position:absolute;bottom:62px;right:0;width:360px;height:520px;background:#fff;border-radius:14px;box-shadow:0 8px 40px rgba(10,60,120,.22);border:1.5px solid #c8dff0;display:none;flex-direction:column;overflow:hidden;}
-#chatPanel.open{display:flex;}
-.chat-header{background:linear-gradient(135deg,#1a7db5,#0a3d78);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;}
-.chat-header-title{color:#fff;font-size:13px;font-weight:700;letter-spacing:1px;}
-.chat-header-sub{color:rgba(255,255,255,.75);font-size:10px;margin-top:1px;}
-.chat-close-btn{background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:6px;width:26px;height:26px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
-.chat-close-btn:hover{background:rgba(255,255,255,.35);}
-.chat-body{display:flex;flex:1;overflow:hidden;}
-.chat-agents{width:130px;min-width:130px;border-right:1px solid #ddeeff;display:flex;flex-direction:column;background:#f4f9ff;}
-.chat-agents-search{padding:6px 8px;border-bottom:1px solid #ddeeff;}
-.chat-agents-search input{width:100%;padding:5px 8px;border:1px solid #c8dff0;border-radius:6px;font-size:11px;outline:none;background:#fff;color:#1a3a5c;}
-.chat-agents-list{flex:1;overflow-y:auto;}
-.chat-section-lbl{font-size:9px;font-weight:700;color:#3a7aaa;letter-spacing:1px;padding:6px 8px 2px;text-transform:uppercase;}
-.chat-agent-item{display:flex;align-items:center;gap:6px;padding:7px 8px;cursor:pointer;transition:background .12s;}
-.chat-agent-item:hover{background:#e8f2fb;}
-.chat-agent-item.active{background:#ddeeff;}
-.chat-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;position:relative;}
-.chat-presence{position:absolute;bottom:-1px;right:-1px;width:8px;height:8px;border-radius:50%;border:1.5px solid #f4f9ff;}
-.presence-online{background:#1a8c5c;}
-.presence-offline{background:#c0392b;}
-.chat-agent-name{font-size:11px;color:#1a3a5c;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;}
-.chat-unread{background:#1a7db5;color:#fff;border-radius:50%;width:14px;height:14px;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.chat-conv{flex:1;display:flex;flex-direction:column;min-width:0;}
-.chat-conv-header{padding:8px 12px;border-bottom:1px solid #ddeeff;background:#fff;display:flex;align-items:center;gap:8px;}
-.chat-conv-name{font-size:12px;font-weight:700;color:#0a3d78;flex:1;}
-.chat-conv-status{font-size:10px;font-weight:600;}
-.conv-online{color:#1a8c5c;}
-.conv-offline{color:#c0392b;}
-.chat-messages{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:7px;background:#f8fbff;}
-.chat-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#3a7aaa;font-size:12px;opacity:.7;}
-.chat-empty-icon{font-size:28px;margin-bottom:8px;}
-.chat-msg{display:flex;flex-direction:column;max-width:80%;}
-.chat-msg.mine{align-self:flex-end;align-items:flex-end;}
-.chat-msg.theirs{align-self:flex-start;align-items:flex-start;}
-.chat-bubble{padding:6px 10px;border-radius:10px;font-size:12px;line-height:1.5;word-break:break-word;}
-.chat-msg.mine .chat-bubble{background:#ddeeff;color:#0a3d78;border-bottom-right-radius:3px;}
-.chat-msg.theirs .chat-bubble{background:#fff;border:1px solid #ddeeff;color:#1a3a5c;border-bottom-left-radius:3px;}
-.chat-msg-time{font-size:9px;color:#3a7aaa;margin-top:2px;padding:0 2px;}
-.chat-input-row{padding:8px 10px;border-top:1px solid #ddeeff;display:flex;gap:6px;background:#fff;}
-.chat-input-row input{flex:1;padding:6px 10px;border:1.5px solid #c8dff0;border-radius:8px;font-size:12px;outline:none;color:#1a3a5c;background:#f4f9ff;}
-.chat-input-row input:focus{border-color:#1a7db5;background:#fff;}
-.chat-send-btn{padding:6px 12px;background:linear-gradient(135deg,#1a7db5,#0a3d78);border:none;border-radius:8px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;}
-.chat-no-sel{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#3a7aaa;font-size:12px;text-align:center;padding:20px;}
-.chat-no-sel-icon{font-size:32px;margin-bottom:10px;}
-.av-blue{background:#ddeeff;color:#0a4070;} .av-teal{background:#d4f0e8;color:#0a5040;}
-.av-purple{background:#e8deff;color:#400880;} .av-amber{background:#fff3d8;color:#8a6010;}
-.av-coral{background:#ffe8d8;color:#703010;} .av-pink{background:#fde8f4;color:#700030;}
-.av-green{background:#d8f5e0;color:#0a5020;} .av-admin{background:#0a3d78;color:#fff;}
 </style>
 <div class="db-bg"></div>
 <div class="db-ocean">
@@ -630,46 +470,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <span class="quote-mark">❝</span>
   <span class="quote-text" id="db-quote-text"></span>
   <span class="quote-author" id="db-quote-author"></span>
-</div>
-<div id="chatWidget">
-  <div id="chatPanel">
-    <div class="chat-header">
-      <div>
-        <div class="chat-header-title">💬 Team Chat</div>
-        <div class="chat-header-sub" id="chatOnlineCount">Loading...</div>
-      </div>
-      <button class="chat-close-btn" onclick="_toggleChat()">✕</button>
-    </div>
-    <div class="chat-body">
-      <div class="chat-agents">
-        <div class="chat-agents-search">
-          <input type="text" id="chatSearch" placeholder="Search..." oninput="_renderAgents()"/>
-        </div>
-        <div class="chat-agents-list" id="chatAgentList"></div>
-      </div>
-      <div class="chat-conv" id="chatConvArea">
-        <div class="chat-no-sel"><div class="chat-no-sel-icon">👈</div><div>Select a person<br>to start chatting</div></div>
-      </div>
-    </div>
-  </div>
-  <button id="chatFab" onclick="_toggleChat()" title="Team Chat">💬<span id="chatFabBadge"></span></button>
 </div>`;
 
-  document.getElementById('db-username').textContent=username.toUpperCase();
-  document.getElementById('db-team').textContent='⚓ '+team;
-  document.getElementById('db-quote-text').textContent=q.text;
-  document.getElementById('db-quote-author').textContent='— '+q.author;
+  document.getElementById('db-username').textContent = username.toUpperCase();
+  document.getElementById('db-team').textContent = '⚓ ' + team;
+  document.getElementById('db-quote-text').textContent = q.text;
+  document.getElementById('db-quote-author').textContent = '— ' + q.author;
 
-  _combinedPoll();
-  _INTERVALS.push(setInterval(_combinedPoll,45000));
-  _INTERVALS.push(setInterval(_msgPoll,6000));
+  // Start presence-only polling (45s interval)
+  _presencePoll();
+  _INTERVALS.push(setInterval(_presencePoll, 45000));
 
-  window.addEventListener('beforeunload',function(){
+  window.addEventListener('beforeunload', function(){
     navigator.sendBeacon(API_URL+'?'+new URLSearchParams({action:'agentLogout',username:_CURRENT_USER}));
   });
 }
 
-// ── Login page ──
+// ── Login page stars + dark mode ──
 let loginDark=false;
 (function(){
   const c=document.getElementById('loginStars');
