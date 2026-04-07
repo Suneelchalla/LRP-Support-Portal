@@ -176,7 +176,6 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
 .loc-badge{display:inline-flex;align-items:center;gap:4px;background:#eef5fc;border:1px solid #b8d4ee;border-radius:12px;padding:3px 9px;font-size:11px;color:#1a5a90;font-weight:600;white-space:nowrap;max-width:200px;overflow:hidden;text-overflow:ellipsis;}
 .presence-dot-sm{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;flex-shrink:0;}
 .dot-online{background:#1a8c5c;}.dot-offline{background:#c0392b;}
-/* chat widget */
 #chatWidget{position:fixed;bottom:24px;right:24px;z-index:10000;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}
 #chatFab{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#1a7db5,#0a3d78);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 16px rgba(10,60,120,.35);transition:transform .2s;position:relative;}
 #chatFab:hover{transform:scale(1.08);}
@@ -521,7 +520,7 @@ let adminToken=null;
 let allUsers=[],allCreds=[],allLogs=[],filteredLogs=[],allHandovers=[],filteredHandovers=[];
 let allWNSTickets=[],filteredWNSTickets=[];
 let selectedAgent=null,currentTab='agents';
-let _chatOpen=false,_chatPeer='',_chatAgents=[],_chatUnread={},_chatMsgs=[],_chatPollTimer=null,_lastMsgTs='';
+let _chatOpen=false,_chatPeer='',_chatAgents=[],_chatUnread={},_chatMsgs=[],_lastMsgTs='';
 let _adminPollBusy=false,_adminPollTimer=null;
 
 // ── AUTH ──
@@ -533,6 +532,7 @@ window.addEventListener('load',()=>{
     verifyToken(t);
   }
 });
+
 async function verifyToken(token){
   try{
     const r=await fetch(API_URL+'?action=verifyAdminToken&token='+encodeURIComponent(token));
@@ -541,6 +541,7 @@ async function verifyToken(token){
     else{sessionStorage.removeItem('admin_token');sessionStorage.removeItem('admin_token_time');}
   }catch{adminToken=token;showDashboard();}
 }
+
 async function adminLogin(){
   const u=document.getElementById('adm-user').value.trim(),p=document.getElementById('adm-pass').value;
   const err=document.getElementById('adm-err'),btn=document.getElementById('adm-btn');
@@ -561,6 +562,7 @@ async function adminLogin(){
   }catch{err.textContent='⚠ Connection error.';err.style.display='block';}
   btn.disabled=false;btn.textContent='⚓ Sign In';
 }
+
 function showDashboard(){
   document.getElementById('loginScreen').style.display='none';
   document.getElementById('dashboard').style.display='block';
@@ -568,6 +570,7 @@ function showDashboard(){
   loadUsers();
   initAdminChat();
 }
+
 function adminLogout(){
   if(!confirm('Sign out?'))return;
   _sendAdminHB(true);
@@ -580,6 +583,7 @@ function adminLogout(){
   document.getElementById('adm-err').style.display='none';
   document.getElementById('chatWidget').style.display='none';
 }
+
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('loginScreen').style.display!=='none')adminLogin();});
 
 // ── CHAT HELPERS ──
@@ -594,15 +598,13 @@ async function _sendAdminHB(logout){
   try{await fetch(API_URL+'?'+new URLSearchParams({action:logout?'agentLogout':'heartbeat',username:getAdminId()}));}catch{}
 }
 
-// ── REPLACE the existing _adminCombinedPoll function in admin.html with this ──
-
+// ── COMBINED POLL ──
 async function _adminCombinedPoll(){
   if(_adminPollBusy)return;
   _adminPollBusy=true;
   try{
     fetch(API_URL+'?'+new URLSearchParams({action:'heartbeat',username:getAdminId()})).catch(()=>{});
 
-    // always fetch ALL users so list is never empty
     const ur2=await fetch(API_URL+'?action=getUsers&t='+Date.now());
     const ud2=await ur2.json();
     let baseList=[];
@@ -619,7 +621,6 @@ async function _adminCombinedPoll(){
         }));
     }
 
-    // overlay presence on top
     try{
       const pr=await fetch(API_URL+'?action=getPresence&t='+Date.now());
       const pd=await pr.json();
@@ -649,7 +650,6 @@ async function _adminCombinedPoll(){
     renderAdminAgentList();
     _updateAgentTablePresence(baseList);
 
-    // unread counts
     const ucr=await fetch(API_URL+'?'+new URLSearchParams({action:'getUnreadCounts',username:getAdminId()})+'&t='+Date.now());
     const ucd=await ucr.json();
     if(ucd.success){
@@ -663,6 +663,9 @@ async function _adminCombinedPoll(){
   }catch(e){console.warn('adminCombinedPoll error',e);}
   _adminPollBusy=false;
 }
+
+// ── MESSAGE POLL (was missing its function declaration) ──
+async function _adminMsgPoll(){
   if(!_chatPeer)return;
   try{
     const params={action:'getMessages',user1:getAdminId(),user2:_chatPeer};
