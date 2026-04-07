@@ -3,511 +3,273 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LRP Support Portal</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚢</text></svg>">
+<title>Shift Planner — LRP Support Portal</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#eef5fc;min-height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center; }
-  .scene{position:fixed;inset:0;overflow:hidden;}
-  .ocean-bg{position:absolute;inset:0;background:linear-gradient(180deg,#b8e0f7 0%,#7ec8e3 35%,#1a7db5 60%,#1056a0 80%,#0a3d78 100%);}
-  .sky-sun{position:absolute;top:40px;right:120px;width:72px;height:72px;border-radius:50%;cursor:pointer;z-index:10;transition:all .8s cubic-bezier(.4,0,.2,1);}
-  .sky-sun.sun-mode{background:radial-gradient(circle,#fff9c4 30%,#ffe57f 60%,rgba(255,220,80,0) 100%);box-shadow:0 0 40px 10px rgba(255,220,80,.3);animation:sunPulse 4s ease-in-out infinite;}
-  .sky-sun.moon-mode{background:radial-gradient(circle at 35% 35%,#e8e8ff 30%,#b0b8d8 70%,rgba(150,160,200,0) 100%);box-shadow:0 0 30px 8px rgba(150,160,255,.25);animation:moonPulse 4s ease-in-out infinite;}
-  @keyframes sunPulse{0%,100%{opacity:.9;transform:scale(1);}50%{opacity:1;transform:scale(1.06);}}
-  @keyframes moonPulse{0%,100%{opacity:.85;transform:scale(1);}50%{opacity:1;transform:scale(1.04);}}
-  .scene .ocean-bg{transition:background 1s ease;}
-  .scene .ocean-bg.dark{background:linear-gradient(180deg,#080c1a 0%,#0d1530 25%,#0a1a3d 55%,#060e24 80%,#020810 100%);}
-  .stars{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 1.2s ease;}
-  .ocean-bg.dark .stars{opacity:1;}
-  .star{position:absolute;background:#fff;border-radius:50%;animation:twinkle linear infinite;}
-  @keyframes twinkle{0%,100%{opacity:.2;}50%{opacity:1;}}
-  .wave1,.wave2,.wave3{transition:background .8s;}
-  .ocean-bg.dark .wave1{background:rgba(100,140,255,.18);}
-  .ocean-bg.dark .wave2{background:rgba(80,120,220,.12);}
-  .ocean-bg.dark .wave3{background:rgba(60,100,200,.07);}
-  .panel{transition:background .8s,border-color .8s,box-shadow .8s;}
-  .panel.dark{background:rgba(10,18,40,.92);border:1px solid rgba(80,120,255,.3);box-shadow:0 12px 40px rgba(0,0,80,.6);}
-  .panel.dark .brand-text h1{color:#a0c4ff;}
-  .panel.dark .brand-text p{color:#5070a0;}
-  .panel.dark .form-group label{color:#6090d0;}
-  .panel.dark .form-group input{background:#0d1a35;border-color:#2a3d6a;color:#c0d8ff;}
-  .panel.dark .form-group input::placeholder{color:#3a5080;}
-  .panel.dark .form-group input:focus{border-color:#4a80e8;background:#101e3a;}
-  .panel.dark .btn-primary{background:linear-gradient(135deg,#2a5aaa,#1a3a7a);}
-  .panel.dark .access-note{color:#4a7ab0;}
-  .panel.dark .divider{background:linear-gradient(90deg,transparent,#2a4a80,transparent);}
-  .ocean-surface{position:absolute;bottom:0;left:0;right:0;height:55%;}
-  .wave{position:absolute;width:200%;height:80px;left:-50%;}
-  .wave1{bottom:46%;background:rgba(255,255,255,.22);border-radius:50% 50% 0 0/40px 40px 0 0;animation:waveDrift 7s ease-in-out infinite;}
-  .wave2{bottom:44%;background:rgba(255,255,255,.14);border-radius:50% 50% 0 0/30px 30px 0 0;animation:waveDrift 9s ease-in-out infinite reverse;}
-  .wave3{bottom:40%;background:rgba(255,255,255,.08);border-radius:50% 50% 0 0/20px 20px 0 0;animation:waveDrift 11s ease-in-out infinite;}
-  @keyframes waveDrift{0%,100%{transform:translateX(0);}50%{transform:translateX(5%);}}
-  .boat{position:absolute;bottom:46.5%;left:50%;transform:translateX(-50%);animation:boatBob 3.5s ease-in-out infinite;}
-  @keyframes boatBob{0%,100%{transform:translateX(-50%) translateY(0) rotate(-1deg);}50%{transform:translateX(-50%) translateY(-6px) rotate(1.5deg);}}
-  .boat-hull{width:160px;height:30px;background:linear-gradient(180deg,#e8a020,#c07010);border-radius:0 0 50% 50%/0 0 20px 20px;position:relative;box-shadow:0 4px 12px rgba(0,0,0,.25);}
-  .boat-deck{width:160px;height:10px;background:#f5c040;border-radius:4px 4px 0 0;}
-  .boat-cabin{width:48px;height:24px;background:#fff;border:2px solid #d0d0d0;border-radius:4px 4px 0 0;position:absolute;top:-34px;left:56px;}
-  .boat-cabin-window{width:12px;height:10px;background:#7ec8e3;border-radius:2px;position:absolute;top:6px;left:8px;}
-  .boat-cabin-window2{width:12px;height:10px;background:#7ec8e3;border-radius:2px;position:absolute;top:6px;right:8px;}
-  .boat-mast{width:3px;height:60px;background:#8b5e3c;position:absolute;top:-94px;left:78px;}
-  .boat-flag{width:20px;height:12px;background:#e03030;clip-path:polygon(0 0,100% 20%,0 100%);position:absolute;top:-94px;left:81px;}
-  .containers{position:absolute;top:-52px;left:8px;display:flex;gap:2px;}
-  .cbox{width:22px;height:18px;border-radius:2px;border:1.5px solid rgba(0,0,0,.15);}
-  .cb1{background:#e53935;}.cb2{background:#1e88e5;}.cb3{background:#43a047;}.cb4{background:#fb8c00;}.cb5{background:#8e24aa;}
-  .panel-wrap{position:relative;z-index:100;width:100%;max-width:400px;padding:16px;}
-  .panel{background:rgba(255,255,255,.93);border:1px solid rgba(255,255,255,.7);border-radius:16px;padding:32px;backdrop-filter:blur(14px);box-shadow:0 12px 40px rgba(10,60,120,.2);text-align:center;}
-  .login-logo{width:52px;height:52px;background:linear-gradient(135deg,#1a7db5,#0a3d78);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 12px;}
-  .brand-text h1{font-size:17px;font-weight:800;color:#0a3d78;letter-spacing:2px;margin-bottom:3px;}
-  .brand-text p{font-size:11px;color:#2a6090;letter-spacing:1px;margin-bottom:22px;font-weight:600;}
-  .divider{height:1px;background:linear-gradient(90deg,transparent,#c8dff0,transparent);margin:0 0 20px;}
-  .form-group{margin-bottom:13px;text-align:left;}
-  .form-group label{display:block;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#1a7db5;margin-bottom:5px;}
-  .input-wrap{position:relative;display:flex;align-items:center;}
-  .input-icon{position:absolute;left:11px;font-size:14px;opacity:.6;z-index:1;}
-  .form-group input{width:100%;background:#f0f7ff;border:1.5px solid #b8d4ee;border-radius:8px;padding:10px 12px 10px 36px;font-size:13px;color:#1a3a5c;outline:none;transition:border-color .3s;}
-  .form-group input::placeholder{color:#4a8ab5;}
-  .form-group input:focus{border-color:#1a7db5;background:#fff;}
-  .btn-primary{width:100%;margin-top:6px;padding:12px;background:linear-gradient(135deg,#1a7db5,#0a3d78);border:none;border-radius:8px;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fff;cursor:pointer;transition:opacity .2s;}
-  .btn-primary:hover{opacity:.88;}
-  .btn-primary:disabled{opacity:.5;cursor:not-allowed;}
-  .msg{margin-top:8px;padding:8px 12px;border-radius:6px;font-size:12px;font-weight:600;letter-spacing:1px;display:none;text-align:left;}
-  .msg.error{background:#fde8e8;border-left:3px solid #e04040;color:#a02020;}
-  .msg.success{background:#d4f5e4;border-left:3px solid #30b870;color:#1a7050;}
-  .msg.loading{background:#e4f0ff;border-left:3px solid #1a7db5;color:#1a5a90;}
-  .access-note{text-align:center;margin-top:16px;font-size:11px;color:#3a7aaa;letter-spacing:1px;line-height:1.6;font-weight:600;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#eef5fc;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{display:grid;grid-template-columns:auto 1fr auto;align-items:center;padding:10px 24px;background:#fff;border-bottom:1.5px solid #c8dff0;box-shadow:0 2px 8px rgba(26,90,160,.07);flex-shrink:0;gap:16px;}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-icon{width:34px;height:34px;background:linear-gradient(135deg,#1a7db5,#0a3d78);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.brand-title{font-size:13px;font-weight:800;color:#0a3d78;letter-spacing:2px;}
+.brand-sub{font-size:10px;color:#2a6090;letter-spacing:1px;font-weight:600;}
+.btn-back{font-size:12px;font-weight:700;letter-spacing:1.5px;padding:7px 16px;background:#eef5fc;border:1.5px solid #b8d4ee;border-radius:6px;color:#1a5a90;cursor:pointer;text-transform:uppercase;text-decoration:none;display:inline-block;}
+.btn-back:hover{background:#d0e8f8;}
+.body{flex:1;overflow:auto;padding:14px 22px;}
+.month-nav{display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #c8dff0;border-radius:8px;padding:6px 12px;margin-right:4px;}
+.month-nav button{background:none;border:none;color:#1a7db5;cursor:pointer;font-size:18px;font-weight:700;line-height:1;padding:0 2px;transition:color .15s;}
+.month-nav button:hover{color:#0a3d78;}
+.month-label{font-size:14px;font-weight:800;color:#0a3d78;min-width:130px;text-align:center;}
+.sp-pill{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.5px;min-width:44px;text-align:center;}
+.sp-D1{background:#ddeeff;border:1px solid #7ab8e8;color:#0a4070;}
+.sp-D2{background:#d8eeff;border:1px solid #60a0d8;color:#083860;}
+.sp-D3{background:#e8deff;border:1px solid #a878d8;color:#400880;}
+.sp-D4{background:#d4f0e8;border:1px solid #50c0a0;color:#0a5040;}
+.sp-D5{background:#d8f5e0;border:1px solid #60d088;color:#0a5020;}
+.sp-N{background:#dde0f8;border:1px solid #8090d8;color:#202870;}
+.sp-WOFF{background:#f0f0f0;border:1px solid #c0c0c0;color:#606060;}
+.sp-HOL{background:#fff8d8;border:1px solid #e8d040;color:#705010;}
+.sp-COMP{background:#ffe8d8;border:1px solid #e09050;color:#703010;}
+.sp-empty{background:#f4f4f4;border:1px dashed #d0d0d0;color:#c0c0c0;}
+.sp-today-col{background:#eef8ff!important;}
+.sp-today-pill{outline:2.5px solid #1a7db5!important;outline-offset:-2px;}
+.ap-tbl{width:100%;border-collapse:collapse;font-size:12px;}
+.ap-tbl th{padding:7px 9px;text-align:center;font-size:10px;font-weight:700;color:#1a7db5;text-transform:uppercase;letter-spacing:1px;background:#eef5fc;border:1px solid #c8dff0;white-space:nowrap;position:sticky;top:0;z-index:2;}
+.ap-tbl th.ap-col-name{text-align:left;min-width:160px;position:sticky;left:0;z-index:3;background:#ddeeff;}
+.ap-tbl td{padding:6px 8px;text-align:center;border:1px solid #ddeeff;color:#2a4a6a;vertical-align:middle;}
+.ap-tbl td.ap-col-name{text-align:left;font-size:13px;font-weight:700;color:#0a3d78;position:sticky;left:0;background:#f4f9ff;border-right:1.5px solid #b8d4ee;white-space:nowrap;}
+.ap-tbl tr:hover td{background:#eef5fc;}
+.ap-tbl tr:hover td.ap-col-name{background:#d0e8f8;}
 </style>
 </head>
 <body>
-<div class="scene">
-  <div class="ocean-bg" id="loginOceanBg">
-    <div class="stars" id="loginStars"></div>
-    <div class="sky-sun sun-mode" id="loginSun" onclick="toggleLoginDark()" title="Toggle dark mode"></div>
-    <div class="ocean-surface">
-      <div class="wave wave1"></div><div class="wave wave2"></div><div class="wave wave3"></div>
-    </div>
-    <div class="boat">
-      <div style="position:relative;">
-        <div class="boat-mast"></div><div class="boat-flag"></div>
-        <div class="boat-cabin"><div class="boat-cabin-window"></div><div class="boat-cabin-window2"></div></div>
-        <div class="containers"><div class="cbox cb1"></div><div class="cbox cb2"></div><div class="cbox cb3"></div><div class="cbox cb4"></div><div class="cbox cb5"></div></div>
-        <div class="boat-deck"></div><div class="boat-hull"></div>
-      </div>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-icon">🚢</div>
+    <div>
+      <div class="brand-title">LRP SUPPORT PORTAL</div>
+      <div class="brand-sub">📅 Shift Planner</div>
     </div>
   </div>
+  <div></div>
+  <a class="btn-back" href="lrp_portal.html">← Back to Dashboard</a>
 </div>
-<div class="panel-wrap" id="panelWrap">
-  <div class="panel">
-    <div class="login-logo">🚢</div>
-    <div class="brand-text"><h1>LRP SUPPORT PORTAL</h1><p>AGENT ACCESS</p></div>
-    <div class="divider"></div>
-    <div class="form-group"><label>Username</label><div class="input-wrap"><span class="input-icon">👤</span><input type="text" id="login-user" placeholder="Enter your username" autocomplete="off"/></div></div>
-    <div class="form-group"><label>Password</label><div class="input-wrap"><span class="input-icon">🔒</span><input type="password" id="login-pass" placeholder="••••••••••"/></div></div>
-    <div id="login-msg" class="msg"></div>
-    <button class="btn-primary" id="login-btn" onclick="handleLogin()">⚓ SIGN IN</button>
-    <div class="access-note">🛡️ Access is provided by your administrator.<br>Contact admin if you need an account.</div>
+
+<div class="body">
+  <!-- Toolbar -->
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+    <div class="month-nav">
+      <button onclick="prevMonth()" title="Previous month">&#8249;</button>
+      <span class="month-label" id="ap-month-label">Loading...</span>
+      <button onclick="nextMonth()" title="Next month">&#8250;</button>
+    </div>
+    <div style="position:relative;">
+      <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:14px;">🔍</span>
+      <input id="ap-search" type="text" placeholder="Search name or ID..."
+        style="background:#fff;border:1.5px solid #b8d4ee;border-radius:6px;padding:8px 12px 8px 34px;font-size:13px;color:#1a3a5c;outline:none;width:200px;"
+        oninput="buildTable()"/>
+    </div>
+    <span id="ap-today-lbl" style="font-size:12px;color:#1a7db5;font-weight:700;white-space:nowrap;"></span>
+    <span id="ap-updated-lbl" style="font-size:11px;color:#1a8c5c;font-weight:600;white-space:nowrap;"></span>
+  </div>
+
+  <!-- Legend -->
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;" id="ap-legend"></div>
+
+  <div style="overflow-x:auto;border:1.5px solid #c8dff0;border-radius:10px;background:#fff;box-shadow:0 2px 8px rgba(26,90,160,.05);">
+    <div id="ap-table" style="min-width:900px;">
+      <div style="padding:40px;text-align:center;color:#3a7aaa;font-size:14px;font-weight:600;">⏳ Loading shift planner...</div>
+    </div>
   </div>
 </div>
 
 <script>
 const API_URL='https://script.google.com/macros/s/AKfycbxhyO1pVbA_TeGsoD7kKAwHHxhMyitT7XN41y0f_1m28LWMaJ-7Rlo3fDPx9j10dnA2Tw/exec';
 
-// ── Global sign-out ──
-window.signOut = async function(){
-  const u=_CURRENT_USER;
-  if(u){ try{ await fetch(API_URL+'?'+new URLSearchParams({action:'agentLogout',username:u})); }catch{} }
-  _INTERVALS.forEach(id=>clearInterval(id));
-  _INTERVALS.length=0;
-  localStorage.removeItem('lrp_session');
-  localStorage.removeItem('lrp_quote');
-  location.reload();
-};
-
-// ── Global state ──
-let _CURRENT_USER='', _INTERVALS=[], _pollBusy=false;
-
-// ── LOCATION via Browser Geolocation API ──
-// Hard timeout wrapper so login never hangs
-function fetchLocation(){
-  return new Promise(resolve=>{
-    // Overall hard cap of 10s — login must not hang
-    const hardTimeout = setTimeout(()=>resolve('Unknown'), 10000);
-    const done = val=>{ clearTimeout(hardTimeout); resolve(val); };
-
-    if(!navigator.geolocation){ done('Unknown'); return; }
-
-    navigator.geolocation.getCurrentPosition(
-      async pos=>{
-        const {latitude:lat, longitude:lon} = pos.coords;
-        try{
-          const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`,
-            { headers:{ 'Accept-Language':'en', 'User-Agent':'LRP-Support-Portal' } }
-          );
-          const d = await res.json();
-          if(d && d.address){
-            const a = d.address;
-            const parts = [
-              a.road || a.pedestrian || a.footway || '',
-              a.suburb || a.neighbourhood || a.quarter || '',
-              a.city || a.town || a.village || a.county || '',
-              a.state || a.region || '',
-              a.country || ''
-            ].filter(Boolean);
-            done(parts.join(', ') || `${lat.toFixed(4)}, ${lon.toFixed(4)}`);
-          } else {
-            done(`${lat.toFixed(4)}, ${lon.toFixed(4)}`);
-          }
-        }catch{
-          done(`${lat.toFixed(4)}, ${lon.toFixed(4)}`);
-        }
-      },
-      _err=>{ done('Unknown'); },
-      { timeout:6000, maximumAge:300000 }
-    );
-  });
-}
-
-const AGENT_QUOTES=[
-  {text:"Every customer interaction is a chance to turn a problem into loyalty.",author:"LRP Wisdom"},
-  {text:"Patience is not the ability to wait, but how you act while you're waiting.",author:"Joyce Meyer"},
-  {text:"Your attitude, not your aptitude, will determine your altitude.",author:"Zig Ziglar"},
-  {text:"The customer's perception is your reality.",author:"Kate Zabriskie"},
-  {text:"Go the extra mile. It's never crowded.",author:"Wayne Dyer"},
-  {text:"Small acts of kindness in support create lifelong customers.",author:"LRP Wisdom"},
-  {text:"Excellence is not a skill, it's an attitude.",author:"Ralph Marston"},
-  {text:"The best time to solve a problem is before the customer notices it.",author:"LRP Wisdom"},
-  {text:"Your work is going to fill a large part of your life. Do it with pride.",author:"Steve Jobs"},
-  {text:"Don't watch the clock; do what it does. Keep going.",author:"Sam Levenson"},
-  {text:"Customers don't expect you to be perfect. They expect you to fix things when they go wrong.",author:"Donald Porter"},
-  {text:"A good customer service agent turns a complaint into a compliment.",author:"LRP Wisdom"},
-  {text:"The secret of getting ahead is getting started.",author:"Mark Twain"},
-  {text:"Success is the sum of small efforts repeated day in and day out.",author:"Robert Collier"},
-  {text:"Make each interaction count — someone's day depends on it.",author:"LRP Wisdom"},
-  {text:"Treat every customer as if they sign your paycheck — because they do.",author:"LRP Wisdom"},
-  {text:"You don't build a business. You build people, and people build the business.",author:"Zig Ziglar"},
-  {text:"Believe you can and you're halfway there.",author:"Theodore Roosevelt"},
-  {text:"It always seems impossible until it's done.",author:"Nelson Mandela"},
-  {text:"Quality is remembered long after the price is forgotten.",author:"Gucci"}
+const LGND=[
+  {key:'D1',label:'Morning',cls:'sp-D1'},
+  {key:'D2',label:'Afternoon',cls:'sp-D2'},
+  {key:'D4',label:'Day',cls:'sp-D4'},
+  {key:'D5',label:'Evening',cls:'sp-D5'},
+  {key:'N',label:'Night',cls:'sp-N'},
+  {key:'W/OFF',label:'Week Off',cls:'sp-WOFF'},
+  {key:'Holiday',label:'Holiday',cls:'sp-HOL'},
+  {key:'Compff',label:'Comp Off',cls:'sp-COMP'}
 ];
 
-function getSessionQuote(){
-  const s=localStorage.getItem('lrp_quote');
-  if(s)return JSON.parse(s);
-  const q=AGENT_QUOTES[Math.floor(Math.random()*AGENT_QUOTES.length)];
-  localStorage.setItem('lrp_quote',JSON.stringify(q));
-  return q;
-}
-function showMsg(id,text,type){
-  const el=document.getElementById(id);
-  el.textContent=text; el.className='msg '+type; el.style.display='block';
+document.getElementById('ap-legend').innerHTML=LGND.map(l=>
+  `<span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#2a6090;font-weight:600;">
+    <span class="sp-pill ${l.cls}">${l.key}</span>${l.label}
+  </span>`).join('');
+
+const SHIFT_CLS={
+  D1:'sp-D1',D2:'sp-D2',D3:'sp-D3',D4:'sp-D4',D5:'sp-D5',
+  N:'sp-N','W/OFF':'sp-WOFF',HOLIDAY:'sp-HOL',COMPFF:'sp-COMP'
+};
+
+const MONTH_NAMES=['January','February','March','April','May','June',
+                   'July','August','September','October','November','December'];
+const DAY_NAMES=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+let plannerTeam=[];
+let viewYear=new Date().getFullYear();
+let viewMonth=new Date().getMonth();
+
+function getTodayISO(){
+  const d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
 
-window.addEventListener('load',function(){
-  const saved=localStorage.getItem('lrp_session');
-  if(saved){
-    try{
-      const s=JSON.parse(saved);
-      if(s&&s.username&&s.team) showDashboard(s.username,s.team);
-    }catch{ localStorage.removeItem('lrp_session'); }
+function getDaysInMonth(y,m){
+  const count=new Date(y,m+1,0).getDate();
+  const days=[];
+  for(let d=1;d<=count;d++){
+    const dt=new Date(y,m,d);
+    const iso=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    days.push({iso,day:String(d).padStart(2,'0'),dayName:DAY_NAMES[dt.getDay()]});
   }
-});
-
-// ── Change Password (first login) ──
-function showChangePassword(username,team){
-  document.getElementById('panelWrap').innerHTML=`
-  <div class="panel" style="text-align:left;">
-    <div style="text-align:center;margin-bottom:16px;">
-      <div class="login-logo">🔐</div>
-      <div class="brand-text"><h1>SET NEW PASSWORD</h1><p>FIRST TIME LOGIN</p></div>
-    </div>
-    <div class="divider"></div>
-    <div style="background:#fff8e8;border:1.5px solid #f0c840;border-radius:8px;padding:10px 14px;margin-bottom:18px;">
-      <div style="font-size:11px;font-weight:700;color:#8a6010;letter-spacing:1px;">⚠ Temporary password detected</div>
-      <div style="font-size:12px;color:#5a6a80;margin-top:4px;line-height:1.5;">Your admin has set a temporary password. Please create your personal password to continue.</div>
-    </div>
-    <div class="form-group"><label>New Password</label><div class="input-wrap"><span class="input-icon">🔐</span><input type="password" id="new-pass" placeholder="Min 6 characters"/></div></div>
-    <div class="form-group"><label>Confirm New Password</label><div class="input-wrap"><span class="input-icon">✅</span><input type="password" id="new-confirm" placeholder="Re-enter new password"/></div></div>
-    <div id="cpw-msg" class="msg"></div>
-    <button class="btn-primary" id="cpw-btn" onclick="submitNewPassword('${username}','${team}')">🔒 SET MY PASSWORD</button>
-  </div>`;
+  return days;
 }
 
-async function submitNewPassword(username,team){
-  const np=document.getElementById('new-pass').value;
-  const nc=document.getElementById('new-confirm').value;
-  if(!np||!nc){showMsg('cpw-msg','⚠ Both fields are required.','error');return;}
-  if(np.length<6){showMsg('cpw-msg','⚠ Password must be ≥ 6 characters.','error');return;}
-  if(np!==nc){showMsg('cpw-msg','⚠ Passwords do not match.','error');return;}
-  const btn=document.getElementById('cpw-btn');
-  btn.disabled=true; showMsg('cpw-msg','⏳ Updating password...','loading');
-  try{
-    const res=await fetch(API_URL+'?'+new URLSearchParams({action:'changePassword',username,newPassword:np}));
-    const data=await res.json();
-    if(data.success){ showMsg('cpw-msg','✅ Password set! Entering portal...','success'); setTimeout(()=>showDashboard(username,team),1200); }
-    else{ showMsg('cpw-msg','⚠ Failed to update. Try again.','error'); btn.disabled=false; }
-  }catch{ showMsg('cpw-msg','⚠ Connection error.','error'); btn.disabled=false; }
+function spCls(s){
+  if(!s||!s.trim())return'sp-empty';
+  return SHIFT_CLS[s.trim().toUpperCase()]||'sp-D1';
 }
 
-async function handleLogin(){
-  const u=document.getElementById('login-user').value.trim();
-  const p=document.getElementById('login-pass').value;
-  if(!u||!p){showMsg('login-msg','⚠ Enter username and password.','error');return;}
-  const btn=document.getElementById('login-btn');
-  btn.disabled=true;
-  showMsg('login-msg','⏳ Verifying...','loading');
+function updateMonthLabel(){
+  document.getElementById('ap-month-label').textContent=MONTH_NAMES[viewMonth]+' '+viewYear;
+}
 
-  // Check admin first
-  try{
-    const ar=await fetch(API_URL+'?'+new URLSearchParams({action:'adminLogin',username:u,password:p}));
-    const ad=await ar.json();
-    if(ad.success&&ad.token){
-      sessionStorage.setItem('admin_token',ad.token);
-      sessionStorage.setItem('admin_token_time',Date.now().toString());
-      showMsg('login-msg','✅ Admin access granted','success');
-      setTimeout(()=>{ window.location.href='admin.html'; },1000);
-      return;
-    }
-  }catch{}
+function prevMonth(){
+  viewMonth--;
+  if(viewMonth<0){viewMonth=11;viewYear--;}
+  updateMonthLabel();
+  buildTable();
+}
 
-  // Agent login — get location via browser geolocation
-  // Show signing in immediately, location fetches in parallel
-  showMsg('login-msg','⏳ Signing in...','loading');
-  const location = await fetchLocation();
-  try{
-    const res=await fetch(API_URL+'?'+new URLSearchParams({action:'login',username:u,password:p,location}));
-    const data=await res.json();
-    if(data.success){
-      showMsg('login-msg','✅ Identity verified','success');
-      localStorage.removeItem('lrp_quote');
-      setTimeout(()=>{
-        localStorage.setItem('lrp_session',JSON.stringify({username:data.user.username,team:data.user.team}));
-        if(data.isDefault) showChangePassword(data.user.username,data.user.team);
-        else showDashboard(data.user.username,data.user.team);
-      },1200);
-    }else{
-      showMsg('login-msg','⚠ Invalid credentials — access denied.','error');
-      btn.disabled=false;
-    }
-  }catch{
-    showMsg('login-msg','⚠ Connection error. Check network.','error');
-    btn.disabled=false;
+function nextMonth(){
+  viewMonth++;
+  if(viewMonth>11){viewMonth=0;viewYear++;}
+  updateMonthLabel();
+  buildTable();
+}
+
+function buildTable(){
+  if(!plannerTeam.length){
+    document.getElementById('ap-table').innerHTML=
+      '<div style="padding:40px;text-align:center;color:#3a7aaa;font-size:14px;">No planner data published yet. Please check back later.</div>';
+    return;
   }
-}
 
-function showChangePassword(username,team){
-  document.getElementById('panelWrap').innerHTML=`
-  <div class="panel" style="text-align:left;">
-    <div style="text-align:center;margin-bottom:16px;">
-      <div class="login-logo">🔐</div>
-      <div class="brand-text"><h1>SET NEW PASSWORD</h1><p>FIRST TIME LOGIN</p></div>
-    </div>
-    <div class="divider"></div>
-    <div style="background:#fff8e8;border:1.5px solid #f0c840;border-radius:8px;padding:10px 14px;margin-bottom:18px;">
-      <div style="font-size:11px;font-weight:700;color:#8a6010;letter-spacing:1px;">⚠ Temporary password detected</div>
-      <div style="font-size:12px;color:#5a6a80;margin-top:4px;line-height:1.5;">Your admin has set a temporary password. Please create your personal password to continue.</div>
-    </div>
-    <div class="form-group"><label>New Password</label><div class="input-wrap"><span class="input-icon">🔐</span><input type="password" id="new-pass" placeholder="Min 6 characters"/></div></div>
-    <div class="form-group"><label>Confirm New Password</label><div class="input-wrap"><span class="input-icon">✅</span><input type="password" id="new-confirm" placeholder="Re-enter new password"/></div></div>
-    <div id="cpw-msg" class="msg"></div>
-    <button class="btn-primary" id="cpw-btn" onclick="submitNewPassword('${username}','${team}')">🔒 SET MY PASSWORD</button>
-  </div>`;
-}
+  const days=getDaysInMonth(viewYear,viewMonth);
+  const todayISO=getTodayISO();
+  const todayMo=todayISO.slice(0,7);
+  const viewMo=viewYear+'-'+String(viewMonth+1).padStart(2,'0');
 
-async function submitNewPassword(username,team){
-  const np=document.getElementById('new-pass').value;
-  const nc=document.getElementById('new-confirm').value;
-  if(!np||!nc){showMsg('cpw-msg','⚠ Both fields are required.','error');return;}
-  if(np.length<6){showMsg('cpw-msg','⚠ Password must be ≥ 6 characters.','error');return;}
-  if(np!==nc){showMsg('cpw-msg','⚠ Passwords do not match.','error');return;}
-  const btn=document.getElementById('cpw-btn');
-  btn.disabled=true; showMsg('cpw-msg','⏳ Updating password...','loading');
-  try{
-    const res=await fetch(API_URL+'?'+new URLSearchParams({action:'changePassword',username,newPassword:np}));
-    const data=await res.json();
-    if(data.success){ showMsg('cpw-msg','✅ Password set! Entering portal...','success'); setTimeout(()=>showDashboard(username,team),1200); }
-    else{ showMsg('cpw-msg','⚠ Failed to update. Try again.','error'); btn.disabled=false; }
-  }catch{ showMsg('cpw-msg','⚠ Connection error.','error'); btn.disabled=false; }
-}
+  document.getElementById('ap-today-lbl').textContent=
+    todayMo===viewMo?'Today: '+todayISO.slice(8)+' ('+DAY_NAMES[new Date().getDay()]+')':'';
 
-// ── Presence-only poll (no chat messaging) ──
-let _pollBusy = false;
+  const sq=(document.getElementById('ap-search').value||'').toLowerCase();
+  const filtered=sq
+    ?plannerTeam.filter(m=>(m.name||'').toLowerCase().includes(sq)||(m.id||'').toLowerCase().includes(sq))
+    :plannerTeam;
 
-async function _presencePoll(){
-  if(_pollBusy) return;
-  _pollBusy = true;
-  try{
-    // Send heartbeat
-    fetch(API_URL+'?'+new URLSearchParams({action:'heartbeat',username:_CURRENT_USER})).catch(()=>{});
+  if(!filtered.length){
+    document.getElementById('ap-table').innerHTML=
+      '<div style="padding:40px;text-align:center;color:#3a7aaa;font-size:14px;">No members match your search.</div>';
+    return;
+  }
 
-    // Fetch presence for online count display
-    const pr = await fetch(API_URL+'?action=getPresence&t='+Date.now());
-    const pd = await pr.json();
-    if(pd.success && pd.presence){
-      const me = _CURRENT_USER.toLowerCase();
-      const onlineOthers = pd.presence.filter(p=>
-        p.username.toLowerCase() !== me && p.online
-      ).length;
-      const cnt = document.getElementById('db-online-count');
-      if(cnt) cnt.textContent = onlineOthers + 1; // +1 = self
-    }
-  }catch(e){ console.warn('presencePoll error',e); }
-  _pollBusy = false;
-}
-
-// ── Dashboard ──
-function showDashboard(username,team){
-  _CURRENT_USER = username;
-  _INTERVALS.forEach(id=>clearInterval(id));
-  _INTERVALS.length = 0;
-
-  const q = getSessionQuote();
-  document.body.innerHTML=`
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-html,body{width:100%;height:100%;overflow:hidden;}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#eef5fc;display:flex;flex-direction:column;}
-.db-bg{position:fixed;inset:0;background:linear-gradient(180deg,#b8e0f7 0%,#7ec8e3 25%,#1a7db5 60%,#0a3d78 100%);z-index:0;}
-.db-ocean{position:fixed;bottom:0;left:0;right:0;height:18%;overflow:hidden;z-index:0;}
-.db-wave{position:absolute;bottom:0;left:-50%;width:200%;height:100%;}
-.db-wave svg{width:100%;height:100%;}
-.wv1{animation:wv 8s linear infinite;opacity:.9;}
-.wv2{animation:wv 12s linear infinite reverse;opacity:.5;bottom:8px;}
-@keyframes wv{0%{transform:translateX(0)}100%{transform:translateX(25%)}}
-.db-topbar{position:relative;z-index:10;display:grid;grid-template-columns:auto 1fr auto;align-items:center;padding:10px 24px;background:rgba(255,255,255,.30);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1.5px solid rgba(255,255,255,.5);box-shadow:0 2px 12px rgba(10,40,100,.15);gap:16px;flex-shrink:0;}
-.db-brand{display:flex;align-items:center;gap:10px;}
-.db-brand-icon{width:36px;height:36px;background:linear-gradient(135deg,#1a7db5,#0a3d78);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
-.db-brand h1{font-size:14px;font-weight:800;color:#0a3d78;letter-spacing:3px;white-space:nowrap;}
-.db-user-info{display:flex;flex-direction:column;align-items:center;}
-.db-user-info .name{font-size:13px;font-weight:800;color:#0a3d78;letter-spacing:2px;}
-.db-user-info .team-lbl{font-size:11px;color:#1a5a90;font-weight:700;}
-.db-topbar-right{display:flex;align-items:center;gap:10px;}
-.db-logout{font-size:12px;font-weight:700;letter-spacing:1.5px;padding:7px 16px;background:#fff0f0;border:1.5px solid #f0b8b8;border-radius:6px;color:#c0392b;cursor:pointer;transition:all .2s;text-transform:uppercase;}
-.db-logout:hover{background:#fad4d4;}
-.db-body{position:relative;z-index:5;flex:1;display:flex;align-items:center;justify-content:center;padding:20px 28px;min-height:0;overflow:hidden;}
-.db-cards-row{display:flex;align-items:stretch;justify-content:center;gap:0;width:100%;max-width:1400px;}
-.db-card{flex:1;max-width:260px;min-width:0;background:#fff;border:1.5px solid #c8dff0;border-radius:14px;padding:24px 18px 18px;cursor:pointer;transition:transform .3s,border-color .3s,box-shadow .3s;box-shadow:0 4px 20px rgba(26,90,160,.10);position:relative;display:flex;flex-direction:column;text-decoration:none;color:inherit;}
-.db-card:hover{transform:translateY(-6px);border-color:#1a7db5;box-shadow:0 14px 36px rgba(26,125,181,.18);}
-.db-card-icon{font-size:38px;margin-bottom:12px;display:block;line-height:1;}
-.db-card-title{font-size:13px;font-weight:800;color:#0a3d78;letter-spacing:1.5px;margin-bottom:10px;line-height:1.5;}
-.db-card-desc{font-size:11px;color:#2a6090;line-height:1.7;margin-bottom:16px;flex:1;font-weight:500;}
-.db-card-btn{display:block;width:100%;padding:10px;text-align:center;background:linear-gradient(135deg,#1a7db5,#0a3d78);border:none;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:2px;color:#fff;transition:opacity .2s;margin-top:auto;}
-.db-card:hover .db-card-btn{opacity:.88;}
-.db-divider{width:1px;align-self:stretch;background:linear-gradient(180deg,transparent,#c8dff0,transparent);flex-shrink:0;margin:12px 8px;}
-.db-card-badge{position:absolute;top:10px;right:10px;font-size:9px;font-weight:700;letter-spacing:1px;padding:3px 9px;border-radius:10px;}
-.badge-ops{background:#d4f5e4;border:1px solid #6cd4a0;color:#1a7050;}
-.badge-log{background:#fff3d8;border:1px solid #f5c840;color:#8a6010;}
-.badge-cred{background:#f0e8ff;border:1px solid #c0a0e0;color:#6030a0;}
-.badge-plan{background:#ddeeff;border:1px solid #80bce8;color:#1a5a90;}
-.badge-wns{background:#f0e8ff;border:1px solid #c0a0e0;color:#6030a0;}
-.quote-bar{position:relative;z-index:10;flex-shrink:0;display:flex;align-items:center;gap:12px;padding:10px 24px;background:rgba(255,255,255,.30);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1.5px solid rgba(255,255,255,.5);box-shadow:0 -2px 12px rgba(10,40,100,.12);}
-.quote-label{font-size:10px;font-weight:800;letter-spacing:2px;color:#0a3d78;white-space:nowrap;flex-shrink:0;text-transform:uppercase;}
-.quote-mark{font-size:22px;color:#1a5a90;opacity:.6;line-height:1;font-family:Georgia,serif;flex-shrink:0;}
-.quote-text{font-size:13px;color:#0a3d78;font-style:italic;font-family:Georgia,serif;flex:1;font-weight:500;}
-.quote-author{font-size:11px;color:#1a5a90;white-space:nowrap;flex-shrink:0;font-weight:800;}
-.presence-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.8);border-radius:10px;padding:4px 10px;font-size:11px;font-weight:700;color:#1a5a90;}
-.presence-dot{width:8px;height:8px;border-radius:50%;background:#1a8c5c;animation:presencePulse 2s ease-in-out infinite;}
-@keyframes presencePulse{0%,100%{opacity:1;}50%{opacity:.5;}}
-</style>
-<div class="db-bg"></div>
-<div class="db-ocean">
-  <div class="db-wave wv1"><svg viewBox="0 0 1200 200" preserveAspectRatio="none"><path d="M0,100 C150,40 300,160 450,100 C600,40 750,160 900,100 C1050,40 1150,120 1200,100 L1200,200 L0,200 Z" fill="rgba(255,255,255,.25)"/></svg></div>
-  <div class="db-wave wv2"><svg viewBox="0 0 1200 200" preserveAspectRatio="none"><path d="M0,130 C200,70 400,170 600,130 C800,90 1000,170 1200,130 L1200,200 L0,200 Z" fill="rgba(255,255,255,.15)"/></svg></div>
-</div>
-<div class="db-topbar">
-  <div class="db-brand"><div class="db-brand-icon">🚢</div><h1>LRP SUPPORT PORTAL</h1></div>
-  <div class="db-user-info">
-    <div class="name" id="db-username"></div>
-    <div class="team-lbl" id="db-team"></div>
-  </div>
-  <div class="db-topbar-right">
-    <span class="presence-pill"><span class="presence-dot"></span><span id="db-online-count">...</span> Online</span>
-    <button class="db-logout" onclick="signOut()">⎋ SIGN OUT</button>
-  </div>
-</div>
-<div class="db-body">
-  <div class="db-cards-row">
-    <a class="db-card" href="Shift_Handover_V6.html">
-      <span class="db-card-badge badge-ops">OPERATIONS</span>
-      <span class="db-card-icon">📋</span>
-      <div class="db-card-title">SHIFT HANDOVER LOGGER</div>
-      <div class="db-card-desc">Manage shift transitions, track ticket statuses, and generate handover reports for your team.</div>
-      <div class="db-card-btn">OPEN MODULE →</div>
-    </a>
-    <div class="db-divider"></div>
-    <a class="db-card" href="Support Ticket Logger_V7.html">
-      <span class="db-card-badge badge-log">TRACKING</span>
-      <span class="db-card-icon">⏱️</span>
-      <div class="db-card-title">SUPPORT TICKET TIME LOGGER</div>
-      <div class="db-card-desc">Track ticket resolution times, follow the checklist, and log your shift summary.</div>
-      <div class="db-card-btn">OPEN MODULE →</div>
-    </a>
-    <div class="db-divider"></div>
-    <a class="db-card" href="credentials.html">
-      <span class="db-card-badge badge-cred">SECURE</span>
-      <span class="db-card-icon">🔐</span>
-      <div class="db-card-title">CLIENT CREDENTIALS</div>
-      <div class="db-card-desc">Access client login credentials — App URLs, User IDs and passwords for all environments.</div>
-      <div class="db-card-btn">OPEN MODULE →</div>
-    </a>
-    <div class="db-divider"></div>
-    <a class="db-card" href="shift_planner.html">
-      <span class="db-card-badge badge-plan">SCHEDULE</span>
-      <span class="db-card-icon">📅</span>
-      <div class="db-card-title">SHIFT PLANNER</div>
-      <div class="db-card-desc">View your team shift schedule. Today's date is highlighted automatically.</div>
-      <div class="db-card-btn">OPEN MODULE →</div>
-    </a>
-    <div class="db-divider"></div>
-    <a class="db-card" href="Why_Not_Solved_HD_V1.html">
-      <span class="db-card-badge badge-wns">LEARNING</span>
-      <span class="db-card-icon">🧠</span>
-      <div class="db-card-title">WHY NOT SOLVED BY HD</div>
-      <div class="db-card-desc">Review escalation tickets assigned by admin. Submit your learning and how you'll solve it next time.</div>
-      <div class="db-card-btn">OPEN MODULE →</div>
-    </a>
-  </div>
-</div>
-<div class="quote-bar">
-  <span class="quote-label">Quote of the Day</span>
-  <span class="quote-mark">❝</span>
-  <span class="quote-text" id="db-quote-text"></span>
-  <span class="quote-author" id="db-quote-author"></span>
-</div>`;
-
-  document.getElementById('db-username').textContent = username.toUpperCase();
-  document.getElementById('db-team').textContent = '⚓ ' + team;
-  document.getElementById('db-quote-text').textContent = q.text;
-  document.getElementById('db-quote-author').textContent = '— ' + q.author;
-
-  // Start presence-only polling (45s interval)
-  _presencePoll();
-  _INTERVALS.push(setInterval(_presencePoll, 45000));
-
-  window.addEventListener('beforeunload', function(){
-    navigator.sendBeacon(API_URL+'?'+new URLSearchParams({action:'agentLogout',username:_CURRENT_USER}));
+  // Header row 1 — dates
+  let hdr='<tr><th class="ap-col-name" rowspan="2">Name</th>';
+  days.forEach(d=>{
+    const isT=d.iso===todayISO,isW=d.dayName==='Sat'||d.dayName==='Sun';
+    hdr+=`<th style="padding:7px 6px;text-align:center;font-size:10px;font-weight:700;
+      white-space:nowrap;border:1px solid #c8dff0;
+      background:${isT?'#d8eeff':'#eef5fc'};
+      color:${isT?'#1a7db5':isW?'#888':'#1a7db5'};">${d.day}</th>`;
   });
+  hdr+='</tr><tr>';
+
+  // Header row 2 — day names
+  days.forEach(d=>{
+    const isT=d.iso===todayISO,isW=d.dayName==='Sat'||d.dayName==='Sun';
+    hdr+=`<th style="font-size:9px;padding:6px;text-align:center;font-weight:700;
+      border:1px solid #c8dff0;
+      background:${isT?'#d8eeff':'#eef5fc'};
+      color:${isT?'#1a7db5':isW?'#888':'#1a7db5'};">${d.dayName}</th>`;
+  });
+  hdr+='</tr>';
+
+  // Body rows
+  const rows=filtered.map(m=>{
+    const shifts=m.shifts||{};
+    let cells='';
+    days.forEach(d=>{
+      const s=shifts[d.iso]||'';
+      const isT=d.iso===todayISO;
+      const cls=spCls(s);
+      cells+=`<td class="${isT?'sp-today-col':''}">
+        <span class="sp-pill ${cls}${isT?' sp-today-pill':''}">${s||'—'}</span>
+      </td>`;
+    });
+    return`<tr>
+      <td class="ap-col-name">
+        <div style="font-weight:700;color:#0a3d78;">${m.name}</div>
+        <div style="font-size:10px;color:#3a7aaa;margin-top:1px;font-weight:600;">${m.id}</div>
+      </td>${cells}
+    </tr>`;
+  }).join('');
+
+  document.getElementById('ap-table').innerHTML=
+    `<table class="ap-tbl"><thead>${hdr}</thead><tbody>${rows}</tbody></table>`;
 }
 
-// ── Login page stars + dark mode ──
-let loginDark=false;
-(function(){
-  const c=document.getElementById('loginStars');
-  if(!c)return;
-  for(let i=0;i<120;i++){
-    const s=document.createElement('div'); s.className='star';
-    const sz=Math.random()*2.5+0.8;
-    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*70}%;left:${Math.random()*100}%;animation-duration:${2+Math.random()*3}s;animation-delay:${Math.random()*4}s;`;
-    c.appendChild(s);
+// Load from server
+(async function(){
+  try{
+    const res=await fetch(API_URL+'?action=getPlanner&t='+Date.now());
+    const data=await res.json();
+    if(data.success&&data.planner&&data.planner.length){
+      const raw=data.planner;
+      // Detect new date-keyed format vs old array format
+      if(raw[0]&&raw[0].shifts&&typeof raw[0].shifts==='object'&&!Array.isArray(raw[0].shifts)){
+        // New format: {id, name, primary, shifts: {'yyyy-mm-dd': 'D1'}}
+        plannerTeam=raw.map(m=>({
+          id:m.id,
+          name:m.name,
+          primary:m.primary||'',
+          shifts:m.shifts||{}
+        }));
+      } else {
+        // Old array format — load members but with empty shifts
+        // Admin needs to re-publish from the new Shift Planner
+        plannerTeam=raw.map(m=>({
+          id:m.id||String(m.sl||''),
+          name:m.name,
+          primary:m.primary||'',
+          shifts:{}
+        }));
+        document.getElementById('ap-updated-lbl').textContent=
+          '⚠ Old format detected — admin please re-publish planner.';
+      }
+      if(data.updatedAt&&plannerTeam[0]&&plannerTeam[0].shifts&&typeof plannerTeam[0].shifts==='object'&&!Array.isArray(plannerTeam[0].shifts)){
+        const d=new Date(data.updatedAt);
+        document.getElementById('ap-updated-lbl').textContent=
+          '✅ Updated: '+d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+
+          ' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      }
+    } else {
+      document.getElementById('ap-updated-lbl').textContent='ℹ No planner data published yet.';
+    }
+  } catch(err){
+    document.getElementById('ap-updated-lbl').textContent='⚠ Could not load — check connection.';
+    console.error(err);
   }
+  updateMonthLabel();
+  buildTable();
 })();
-function toggleLoginDark(){
-  loginDark=!loginDark;
-  const sun=document.getElementById('loginSun'),bg=document.getElementById('loginOceanBg'),panel=document.querySelector('.panel');
-  if(!sun||!bg)return;
-  if(loginDark){sun.classList.replace('sun-mode','moon-mode');bg.classList.add('dark');if(panel)panel.classList.add('dark');}
-  else{sun.classList.replace('moon-mode','sun-mode');bg.classList.remove('dark');if(panel)panel.classList.remove('dark');}
-}
-document.addEventListener('keydown',e=>{if(e.key==='Enter')handleLogin();});
 </script>
 </body>
 </html>
