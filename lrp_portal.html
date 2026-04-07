@@ -267,57 +267,76 @@ function _esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').rep
 function _isAdmin(u){return u.isAdmin===true||u.team==='Admin';}
 
 // Combined poll: heartbeat + presence + unread in one cycle (45s)
+// ── REPLACE the existing _combinedPoll function in index.html with this ──
+
 async function _combinedPoll(){
   if(_pollBusy)return;
   _pollBusy=true;
   try{
+    // heartbeat
     fetch(API_URL+'?'+new URLSearchParams({action:'heartbeat',username:_CURRENT_USER})).catch(()=>{});
 
-    const pr=await fetch(API_URL+'?action=getPresence&t='+Date.now());
-    const pd=await pr.json();
-    if(pd.success){
+    // always fetch ALL users first so the list is never empty
+    const ur2=await fetch(API_URL+'?action=getUsers&t='+Date.now());
+    const ud2=await ur2.json();
+    let baseList=[];
+    if(ud2.success&&ud2.users){
       const me=_CURRENT_USER.toLowerCase();
-      let list=pd.presence||[];
-      const others=list.filter(p=>p.username.toLowerCase()!==me);
-      if(others.length===0){
-        try{
-          const ur2=await fetch(API_URL+'?action=getUsers&t='+Date.now());
-          const ud2=await ur2.json();
-          if(ud2.success&&ud2.users){
-            const existing=new Set(list.map(p=>p.username.toLowerCase()));
-            ud2.users.forEach(u=>{
-              if(u.username.toLowerCase()===me) return;
-              if(!existing.has(u.username.toLowerCase()))
-                list.push({username:u.username,online:false,lastSeen:u.lastSeen||'',team:u.team||'',isAdmin:false});
-            });
-          }
-        }catch{}
-      }
-      const onlineOthers=list.filter(p=>p.online&&p.username.toLowerCase()!==me).length;
-      const sub=document.getElementById('chatOnlineCount');
-      if(sub)sub.textContent=onlineOthers+' other'+(onlineOthers!==1?'s':'')+' online';
-      const cnt=document.getElementById('db-online-count');
-      if(cnt)cnt.textContent=onlineOthers+1;
-      _CHAT_AGENTS=list.filter(p=>p.username.toLowerCase()!==me)
-        .sort((a,b)=>{
-          if(a.online&&!b.online)return -1; if(!a.online&&b.online)return 1;
-          if(_isAdmin(a)&&!_isAdmin(b))return -1; if(!_isAdmin(a)&&_isAdmin(b))return 1;
-          return a.username.localeCompare(b.username);
-        });
-      _doRenderAgents();
+      baseList=ud2.users
+        .filter(u=>u.username.toLowerCase()!==me)
+        .map(u=>({
+          username:u.username,
+          online:false,
+          lastSeen:u.lastSeen||'',
+          team:u.team||'',
+          isAdmin:u.team==='Admin'
+        }));
     }
 
-    const ur=await fetch(API_URL+'?'+new URLSearchParams({action:'getUnreadCounts',username:_CURRENT_USER})+'&t='+Date.now());
-    const ud=await ur.json();
-    if(ud.success){
-      _CHAT_UNREAD=ud.counts||{};
-      const total=ud.total||0;
+    // overlay presence data on top
+    try{
+      const pr=await fetch(API_URL+'?action=getPresence&t='+Date.now());
+      const pd=await pr.json();
+      if(pd.success&&pd.presence){
+        const me=_CURRENT_USER.toLowerCase();
+        const presenceMap={};
+        pd.presence.forEach(p=>{
+          if(p.username.toLowerCase()!==me)
+            presenceMap[p.username.toLowerCase()]=p;
+        });
+        baseList=baseList.map(u=>{
+          const pEntry=presenceMap[u.username.toLowerCase()];
+          return pEntry?{...u,online:pEntry.online,lastSeen:pEntry.lastSeen,team:pEntry.team||u.team,isAdmin:pEntry.isAdmin||u.isAdmin}:u;
+        });
+      }
+    }catch{}
+
+    const me2=_CURRENT_USER.toLowerCase();
+    const onlineOthers=baseList.filter(p=>p.online&&p.username.toLowerCase()!==me2).length;
+    const sub=document.getElementById('chatOnlineCount');
+    if(sub)sub.textContent=onlineOthers+' other'+(onlineOthers!==1?'s':'')+' online';
+    const cnt=document.getElementById('db-online-count');
+    if(cnt)cnt.textContent=onlineOthers+1;
+
+    _CHAT_AGENTS=baseList.sort((a,b)=>{
+      if(a.online&&!b.online)return -1; if(!a.online&&b.online)return 1;
+      if(_isAdmin(a)&&!_isAdmin(b))return -1; if(!_isAdmin(a)&&_isAdmin(b))return 1;
+      return a.username.localeCompare(b.username);
+    });
+    _doRenderAgents();
+
+    // unread counts
+    const ucr=await fetch(API_URL+'?'+new URLSearchParams({action:'getUnreadCounts',username:_CURRENT_USER})+'&t='+Date.now());
+    const ucd=await ucr.json();
+    if(ucd.success){
+      _CHAT_UNREAD=ucd.counts||{};
+      const total=ucd.total||0;
       const badge=document.getElementById('chatFabBadge');
-      if(badge){ badge.textContent=total>9?'9+':total; badge.style.display=total>0?'flex':'none'; }
+      if(badge){badge.textContent=total>9?'9+':total;badge.style.display=total>0?'flex':'none';}
       _doRenderAgents();
       document.title=total>0&&!_CHAT_OPEN?'('+total+') LRP Support Portal':'LRP Support Portal';
     }
-  }catch{}
+  }catch(e){console.warn('combinedPoll error',e);}
   _pollBusy=false;
 }
 
