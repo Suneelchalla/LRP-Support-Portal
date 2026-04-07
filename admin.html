@@ -173,8 +173,7 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
 .pce-chip-empty:hover,.pce-chip-empty.selected{border-color:#a0a0a0;background:#e8e8e8;color:#606060;}
 .wns-export-btn{padding:9px 20px;background:linear-gradient(135deg,#1a8c5c,#138048);border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;display:inline-flex;align-items:center;gap:8px;transition:opacity .2s;box-shadow:0 4px 14px rgba(26,140,92,.3);}
 .wns-export-btn:hover{opacity:.88;}
-/* CHANGE 1: Updated loc-badge to wrap full addresses properly */
-.loc-badge{display:inline-flex;align-items:flex-start;gap:4px;background:#eef5fc;border:1px solid #b8d4ee;border-radius:8px;padding:4px 9px;font-size:11px;color:#1a5a90;font-weight:600;max-width:220px;word-break:break-word;white-space:normal;line-height:1.5;}
+.loc-badge{display:inline-flex;align-items:center;gap:4px;background:#eef5fc;border:1px solid #b8d4ee;border-radius:12px;padding:3px 9px;font-size:11px;color:#1a5a90;font-weight:600;white-space:nowrap;max-width:200px;overflow:hidden;text-overflow:ellipsis;}
 .presence-dot-sm{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;flex-shrink:0;}
 .dot-online{background:#1a8c5c;}.dot-offline{background:#c0392b;}
 #chatWidget{position:fixed;bottom:24px;right:24px;z-index:10000;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}
@@ -488,7 +487,7 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
-<!-- CHAT WIDGET — kept exactly as original -->
+<!-- CHAT WIDGET -->
 <div id="chatWidget" style="display:none;">
   <div id="chatPanel">
     <div class="chat-header">
@@ -572,8 +571,8 @@ function showDashboard(){
   initAdminChat();
 }
 
-// CHANGE 2: Removed confirm() popup from adminLogout
 function adminLogout(){
+  if(!confirm('Sign out?'))return;
   _sendAdminHB(true);
   if(_adminPollTimer)clearInterval(_adminPollTimer);
   adminToken=null;
@@ -587,7 +586,7 @@ function adminLogout(){
 
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('loginScreen').style.display!=='none')adminLogin();});
 
-// ── ALL CHAT + POLL CODE KEPT EXACTLY AS ORIGINAL ──
+// ── CHAT HELPERS ──
 const AV_COLS=['av-blue','av-teal','av-purple','av-amber','av-coral','av-pink','av-green'];
 function _avCol(n){let h=0;for(let i=0;i<n.length;i++)h=(h*31+n.charCodeAt(i))&0xffff;return AV_COLS[h%AV_COLS.length];}
 function _ini(n){return n.trim().split(/\s+/).map(w=>w[0]).join('').toUpperCase().slice(0,2);}
@@ -599,35 +598,58 @@ async function _sendAdminHB(logout){
   try{await fetch(API_URL+'?'+new URLSearchParams({action:logout?'agentLogout':'heartbeat',username:getAdminId()}));}catch{}
 }
 
+// ── COMBINED POLL ──
 async function _adminCombinedPoll(){
   if(_adminPollBusy)return;
   _adminPollBusy=true;
   try{
     fetch(API_URL+'?'+new URLSearchParams({action:'heartbeat',username:getAdminId()})).catch(()=>{});
+
     const ur2=await fetch(API_URL+'?action=getUsers&t='+Date.now());
     const ud2=await ur2.json();
     let baseList=[];
     if(ud2.success&&ud2.users){
       const me=getAdminId().toLowerCase();
-      baseList=ud2.users.filter(u=>u.username.toLowerCase()!==me).map(u=>({username:u.username,online:false,lastSeen:u.lastSeen||'',team:u.team||'',isAdmin:u.team==='Admin'}));
+      baseList=ud2.users
+        .filter(u=>u.username.toLowerCase()!==me)
+        .map(u=>({
+          username:u.username,
+          online:false,
+          lastSeen:u.lastSeen||'',
+          team:u.team||'',
+          isAdmin:u.team==='Admin'
+        }));
     }
+
     try{
       const pr=await fetch(API_URL+'?action=getPresence&t='+Date.now());
       const pd=await pr.json();
       if(pd.success&&pd.presence){
         const me=getAdminId().toLowerCase();
         const presenceMap={};
-        pd.presence.forEach(p=>{if(p.username.toLowerCase()!==me)presenceMap[p.username.toLowerCase()]=p;});
-        baseList=baseList.map(u=>{const pEntry=presenceMap[u.username.toLowerCase()];return pEntry?{...u,online:pEntry.online,lastSeen:pEntry.lastSeen,team:pEntry.team||u.team}:u;});
+        pd.presence.forEach(p=>{
+          if(p.username.toLowerCase()!==me)
+            presenceMap[p.username.toLowerCase()]=p;
+        });
+        baseList=baseList.map(u=>{
+          const pEntry=presenceMap[u.username.toLowerCase()];
+          return pEntry?{...u,online:pEntry.online,lastSeen:pEntry.lastSeen,team:pEntry.team||u.team}:u;
+        });
       }
     }catch{}
+
     const me2=getAdminId().toLowerCase();
     const onlineCount=baseList.filter(p=>p.online&&p.username.toLowerCase()!==me2).length;
     const sub=document.getElementById('chatOnlineCount');
     if(sub)sub.textContent=onlineCount+' agent'+(onlineCount!==1?'s':'')+' online';
-    _chatAgents=baseList.sort((a,b)=>{if(a.online&&!b.online)return -1;if(!a.online&&b.online)return 1;return a.username.localeCompare(b.username);});
+
+    _chatAgents=baseList.sort((a,b)=>{
+      if(a.online&&!b.online)return -1;if(!a.online&&b.online)return 1;
+      return a.username.localeCompare(b.username);
+    });
     renderAdminAgentList();
     _updateAgentTablePresence(baseList);
+
     const ucr=await fetch(API_URL+'?'+new URLSearchParams({action:'getUnreadCounts',username:getAdminId()})+'&t='+Date.now());
     const ucd=await ucr.json();
     if(ucd.success){
@@ -642,6 +664,7 @@ async function _adminCombinedPoll(){
   _adminPollBusy=false;
 }
 
+// ── MESSAGE POLL (was missing its function declaration) ──
 async function _adminMsgPoll(){
   if(!_chatPeer)return;
   try{
@@ -667,9 +690,11 @@ function _updateAgentTablePresence(presence){
 }
 
 window.renderAdminAgentList=function(){
-  const list=document.getElementById('chatAgentList');if(!list)return;
+  const list=document.getElementById('chatAgentList');
+  if(!list)return;
   const q=(document.getElementById('chatSearch')?.value||'').toLowerCase();
-  let agents=_chatAgents;if(q)agents=agents.filter(a=>a.username.toLowerCase().includes(q));
+  let agents=_chatAgents;
+  if(q)agents=agents.filter(a=>a.username.toLowerCase().includes(q));
   const online=agents.filter(a=>a.online),offline=agents.filter(a=>!a.online);
   let html='';
   if(online.length){html+=`<div class="chat-section-lbl">Online (${online.length})</div>`;online.forEach(a=>html+=_adminAgentHTML(a));}
@@ -730,20 +755,26 @@ window.adminOpenConv=function(peer){
 };
 
 function _renderAdminMsgs(){
-  const box=document.getElementById('chatMsgs');if(!box)return;
+  const box=document.getElementById('chatMsgs');
+  if(!box)return;
   const me=getAdminId().toLowerCase();
   if(!_chatMsgs.length){box.innerHTML='<div class="chat-empty"><div class="chat-empty-icon">💬</div>Start the conversation</div>';return;}
   const atBottom=box.scrollHeight-box.scrollTop-box.clientHeight<80;
   box.innerHTML=_chatMsgs.map(m=>{
     const mine=m.from.toLowerCase()===me;
-    return`<div class="chat-msg ${mine?'mine':'theirs'}"><div class="chat-bubble">${_esc(m.message)}</div><div class="chat-msg-time">${_fmtT(m.sentAt)}</div></div>`;
+    return`<div class="chat-msg ${mine?'mine':'theirs'}">
+      <div class="chat-bubble">${_esc(m.message)}</div>
+      <div class="chat-msg-time">${_fmtT(m.sentAt)}</div>
+    </div>`;
   }).join('');
   if(atBottom||_chatMsgs.length<=5)box.scrollTop=box.scrollHeight;
 }
 
 window.adminSendMsg=async function(){
-  const input=document.getElementById('chatMsgInput');if(!input)return;
-  const msg=input.value.trim();if(!msg||!_chatPeer)return;
+  const input=document.getElementById('chatMsgInput');
+  if(!input)return;
+  const msg=input.value.trim();
+  if(!msg||!_chatPeer)return;
   input.value='';
   const me=getAdminId();
   const opt={id:'opt-'+Date.now(),from:me,to:_chatPeer,message:msg,sentAt:new Date().toISOString(),isRead:false};
@@ -769,8 +800,27 @@ window.addEventListener('beforeunload',function(){
 });
 
 // ── UTILS ──
-function switchTab(tab){currentTab=tab;['agents','creds','tracker','handover','planner','wns'].forEach(t=>{document.getElementById('atab-'+t)?.classList.toggle('active',t===tab);document.getElementById('panel-'+t)?.classList.toggle('active',t===tab);});if(tab==='creds')loadCreds();if(tab==='tracker')loadTracker();if(tab==='handover')loadHandovers();if(tab==='planner')loadPlanner();if(tab==='wns'){loadWNSAgentList();loadWNSTickets();}document.getElementById('lastRefreshed').textContent='';}
-function refreshCurrent(){if(currentTab==='agents')loadUsers();else if(currentTab==='creds')loadCreds();else if(currentTab==='tracker')loadTracker();else if(currentTab==='handover')loadHandovers();else if(currentTab==='planner')loadPlanner();else if(currentTab==='wns')loadWNSTickets();}
+function switchTab(tab){
+  currentTab=tab;
+  ['agents','creds','tracker','handover','planner','wns'].forEach(t=>{
+    document.getElementById('atab-'+t)?.classList.toggle('active',t===tab);
+    document.getElementById('panel-'+t)?.classList.toggle('active',t===tab);
+  });
+  if(tab==='creds')loadCreds();
+  if(tab==='tracker')loadTracker();
+  if(tab==='handover')loadHandovers();
+  if(tab==='planner')loadPlanner();
+  if(tab==='wns'){loadWNSAgentList();loadWNSTickets();}
+  document.getElementById('lastRefreshed').textContent='';
+}
+function refreshCurrent(){
+  if(currentTab==='agents')loadUsers();
+  else if(currentTab==='creds')loadCreds();
+  else if(currentTab==='tracker')loadTracker();
+  else if(currentTab==='handover')loadHandovers();
+  else if(currentTab==='planner')loadPlanner();
+  else if(currentTab==='wns')loadWNSTickets();
+}
 function showToast(msg,success=true){const t=document.getElementById('toast');t.textContent=msg;t.style.borderColor=success?'#6cd4a0':'#f0aaaa';t.style.color=success?'#1a7050':'#a02020';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
 function showFormMsg(id,text,type){const el=document.getElementById(id);el.textContent=text;el.className='form-msg '+type;el.style.display='inline-block';if(type!=='loading')setTimeout(()=>{el.style.display='none';},3000);}
 function formatDate(iso){if(!iso)return'—';const d=new Date(iso);return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}
@@ -780,8 +830,24 @@ function envClass(e){const v=(e||'').toLowerCase();if(v==='production')return'en
 function normalizeDateToClient(val){if(!val)return'';var s=val.toString().trim();if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;if(/^\d{2}-\d{2}-\d{4}$/.test(s)){var p=s.split('-');return p[2]+'-'+p[1]+'-'+p[0];}try{var d=new Date(s);if(!isNaN(d.getTime()))return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}catch(e){}return s;}
 
 // ── AGENTS ──
-async function loadUsers(){document.getElementById('tableContainer').innerHTML='<div class="loading">⏳ FETCHING AGENT DATA...</div>';try{const res=await fetch(API_URL+'?action=getUsers&t='+Date.now());const data=await res.json();if(data.success){allUsers=data.users||[];updateStats(allUsers);renderTable(allUsers);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}else document.getElementById('tableContainer').innerHTML='<div class="error-msg">⚠ Failed to load data.</div>';}catch{document.getElementById('tableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}}
-function updateStats(users){const today=users.filter(u=>u.lastLogin&&(new Date()-new Date(u.lastLogin))/3600000<24).length;const week=users.filter(u=>{if(!u.lastLogin)return false;const h=(new Date()-new Date(u.lastLogin))/3600000;return h>=24&&h<168;}).length;const never=users.filter(u=>!u.lastLogin).length;document.getElementById('s-total').textContent=users.length;document.getElementById('s-online').textContent=today;document.getElementById('s-recent').textContent=week;document.getElementById('s-inactive').textContent=never;}
+async function loadUsers(){
+  document.getElementById('tableContainer').innerHTML='<div class="loading">⏳ FETCHING AGENT DATA...</div>';
+  try{
+    const res=await fetch(API_URL+'?action=getUsers&t='+Date.now());
+    const data=await res.json();
+    if(data.success){allUsers=data.users||[];updateStats(allUsers);renderTable(allUsers);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}
+    else document.getElementById('tableContainer').innerHTML='<div class="error-msg">⚠ Failed to load data.</div>';
+  }catch{document.getElementById('tableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}
+}
+function updateStats(users){
+  const today=users.filter(u=>u.lastLogin&&(new Date()-new Date(u.lastLogin))/3600000<24).length;
+  const week=users.filter(u=>{if(!u.lastLogin)return false;const h=(new Date()-new Date(u.lastLogin))/3600000;return h>=24&&h<168;}).length;
+  const never=users.filter(u=>!u.lastLogin).length;
+  document.getElementById('s-total').textContent=users.length;
+  document.getElementById('s-online').textContent=today;
+  document.getElementById('s-recent').textContent=week;
+  document.getElementById('s-inactive').textContent=never;
+}
 function renderTable(users){
   if(!users.length){document.getElementById('tableContainer').innerHTML='<div class="loading" style="color:#3a7aaa;">No agents found.</div>';document.getElementById('filterCount').textContent='';return;}
   document.getElementById('filterCount').textContent=users.length+' agents';
@@ -797,7 +863,7 @@ function renderTable(users){
       <td>${u.email||'—'}</td>
       <td><span style="background:#eef5fc;border:1px solid #a8cce8;border-radius:4px;padding:2px 8px;font-size:11px;color:#1a5a90;">⚓ ${u.team||'—'}</span></td>
       <td><span class="badge ${st.cls}">${st.label}</span></td>
-      <td style="max-width:240px;">${locCell}</td>
+      <td>${locCell}</td>
       <td style="font-size:11px;color:#3a7aaa;font-weight:600;">${formatDate(u.lastLogin)}</td>
       <td style="font-size:11px;color:#3a7aaa;font-weight:600;">${formatDate(u.registeredAt)}</td>
       <td>
