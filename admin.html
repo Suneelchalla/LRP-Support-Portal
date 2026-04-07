@@ -83,7 +83,7 @@ thead tr{background:#eef5fc;}
 th{padding:11px 14px;text-align:left;font-size:11px;font-weight:700;color:#1a7db5;text-transform:uppercase;letter-spacing:1px;border-bottom:1.5px solid #c8dff0;}
 td{padding:11px 14px;font-size:13px;border-bottom:1px solid #e4f0fa;color:#2a4a6a;vertical-align:middle;}
 tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
-.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;}
 .badge-online{background:#d4f5e4;border:1px solid #6cd4a0;color:#1a7050;}
 .badge-recent{background:#fff3d8;border:1px solid #f5c840;color:#8a6010;}
 .badge-offline{background:#f0f0f0;border:1px solid #d0d0d0;color:#888;}
@@ -174,6 +174,8 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
 .pce-chip-empty:hover,.pce-chip-empty.selected{border-color:#a0a0a0;background:#e8e8e8;color:#606060;}
 .wns-export-btn{padding:9px 20px;background:linear-gradient(135deg,#1a8c5c,#138048);border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:1px;display:inline-flex;align-items:center;gap:8px;transition:opacity .2s;box-shadow:0 4px 14px rgba(26,140,92,.3);}
 .wns-export-btn:hover{opacity:.88;}
+/* ── LOCATION BADGE ── */
+.loc-badge{display:inline-flex;align-items:center;gap:4px;background:#eef5fc;border:1px solid #b8d4ee;border-radius:12px;padding:3px 9px;font-size:11px;color:#1a5a90;font-weight:600;white-space:nowrap;max-width:200px;overflow:hidden;text-overflow:ellipsis;}
 </style>
 </head>
 <body>
@@ -439,7 +441,7 @@ tr:hover td{background:#f0f8ff;}tr:last-child td{border-bottom:none;}
 </div>
 
 <script>
-const API_URL='https://script.google.com/macros/s/AKfycbxhLoo7EDwZoNg0doTt3IZ5F_dsK5kLJ4w0sWj0BmeA6j1V8gpdYAJZ-aiqWgAHDkytew/exec';
+const API_URL='https://script.google.com/macros/s/AKfycbxhyO1pVbA_TeGsoD7kKAwHHxhMyitT7XN41y0f_1m28LWMaJ-7Rlo3fDPx9j10dnA2Tw/exec';
 let adminToken=null;
 let allUsers=[],allCreds=[],allLogs=[],filteredLogs=[],allHandovers=[],filteredHandovers=[];
 let allWNSTickets=[],filteredWNSTickets=[];
@@ -523,16 +525,132 @@ function envClass(e){const v=(e||'').toLowerCase();if(v==='production')return'en
 function normalizeDateToClient(val){if(!val)return'';var s=val.toString().trim();if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;if(/^\d{2}-\d{2}-\d{4}$/.test(s)){var p=s.split('-');return p[2]+'-'+p[1]+'-'+p[0];}try{var d=new Date(s);if(!isNaN(d.getTime()))return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}catch(e){}return s;}
 
 // ── AGENTS ──
-async function loadUsers(){document.getElementById('tableContainer').innerHTML='<div class="loading">⏳ FETCHING AGENT DATA...</div>';try{const res=await fetch(API_URL+'?action=getUsers&t='+Date.now());const data=await res.json();if(data.success){allUsers=data.users||[];updateStats(allUsers);renderTable(allUsers);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}else document.getElementById('tableContainer').innerHTML='<div class="error-msg">⚠ Failed to load data.</div>';}catch{document.getElementById('tableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}}
-function updateStats(users){const today=users.filter(u=>u.lastLogin&&(new Date()-new Date(u.lastLogin))/3600000<24).length;const week=users.filter(u=>{if(!u.lastLogin)return false;const h=(new Date()-new Date(u.lastLogin))/3600000;return h>=24&&h<168;}).length;const never=users.filter(u=>!u.lastLogin).length;document.getElementById('s-total').textContent=users.length;document.getElementById('s-online').textContent=today;document.getElementById('s-recent').textContent=week;document.getElementById('s-inactive').textContent=never;}
-function renderTable(users){if(!users.length){document.getElementById('tableContainer').innerHTML='<div class="loading" style="color:#3a7aaa;">No agents found.</div>';document.getElementById('filterCount').textContent='';return;}document.getElementById('filterCount').textContent=users.length+' agents';const rows=users.map((u,i)=>{const st=getStatus(u.lastLogin);const defBadge=u.isDefault?'<span style="background:#fff8d8;border:1px solid #e8d040;border-radius:3px;padding:2px 7px;font-size:10px;font-weight:700;color:#705010;margin-left:6px;">TEMP PW</span>':'';return'<tr><td style="color:#3a7aaa;font-size:12px;font-weight:600;">'+(i+1)+'</td><td style="font-weight:700;color:#0a3d78;">👤 '+u.username+defBadge+'</td><td>'+(u.email||'—')+'</td><td><span style="background:#eef5fc;border:1px solid #a8cce8;border-radius:4px;padding:2px 8px;font-size:11px;color:#1a5a90;">⚓ '+(u.team||'—')+'</span></td><td><span class="badge '+st.cls+'">'+st.label+'</span></td><td style="font-size:11px;color:#3a7aaa;font-weight:600;">'+formatDate(u.lastLogin)+'</td><td style="font-size:11px;color:#3a7aaa;font-weight:600;">'+formatDate(u.registeredAt)+'</td><td><button class="edit-btn" onclick="editAgent('+i+')">✏ Edit</button><button class="reset-btn" id="rbtn_'+i+'" onclick="resetPassword(\''+u.username+'\','+i+')">🔑 Reset PW</button><button class="delete-btn" id="dbtn_'+i+'" onclick="deleteUser(\''+u.username+'\','+i+')">🗑 Delete</button></td></tr>';}).join('');document.getElementById('tableContainer').innerHTML='<table><thead><tr><th>#</th><th>Username</th><th>Email</th><th>Team</th><th>Status</th><th>Last Login</th><th>Created</th><th>Actions</th></tr></thead><tbody>'+rows+'</tbody></table>';}
-function filterTable(){const q=document.getElementById('searchInput').value.toLowerCase();const f=allUsers.filter(u=>(u.username||'').toLowerCase().includes(q)||(u.email||'').toLowerCase().includes(q)||(u.team||'').toLowerCase().includes(q));renderTable(f);document.getElementById('filterCount').textContent=f.length+' of '+allUsers.length+' agents';}
-async function submitAgent(){const orig=document.getElementById('edit-agent-original-username').value;const name=document.getElementById('ag-name').value.trim(),email=document.getElementById('ag-email').value.trim(),team=document.getElementById('ag-team').value.trim(),username=document.getElementById('ag-username').value.trim(),password=document.getElementById('ag-password').value.trim();if(!name||!email||!team||!username||!password){showFormMsg('ag-msg','⚠ All fields are required.','error');return;}if(password.length<6){showFormMsg('ag-msg','⚠ Password must be ≥ 6 characters.','error');return;}const btn=document.getElementById('ag-submit-btn');btn.disabled=true;showFormMsg('ag-msg','⏳ Saving...','loading');const vesselId=orig?'':'VID-'+Math.random().toString(36).toUpperCase().slice(2,8);const action=orig?'updateAgent':'register';try{const res=await fetch(API_URL+'?'+new URLSearchParams({action,username,email,team,password,vesselId,originalUsername:orig||username}));const data=await res.json();if(data.success){showFormMsg('ag-msg',orig?'✅ Agent updated!':'✅ Agent login created!','success');clearAgentForm();setTimeout(loadUsers,800);}else if(data.error==='USERNAME_EXISTS')showFormMsg('ag-msg','⚠ Username already taken.','error');else showFormMsg('ag-msg','⚠ Failed. Try again.','error');}catch{showFormMsg('ag-msg','⚠ Connection error.','error');}btn.disabled=false;}
-function editAgent(i){const u=allUsers[i];document.getElementById('edit-agent-original-username').value=u.username;document.getElementById('ag-name').value=u.username;document.getElementById('ag-email').value=u.email||'';document.getElementById('ag-team').value=u.team||'';document.getElementById('ag-username').value=u.username;document.getElementById('ag-password').value='';document.getElementById('agentFormTitle').textContent='✏ Edit Agent: '+u.username;document.getElementById('ag-submit-btn').textContent='💾 Update Agent';document.getElementById('ag-cancel-btn').style.display='inline-block';document.getElementById('agentFormTitle').scrollIntoView({behavior:'smooth'});}
+async function loadUsers(){
+  document.getElementById('tableContainer').innerHTML='<div class="loading">⏳ FETCHING AGENT DATA...</div>';
+  try{
+    const res=await fetch(API_URL+'?action=getUsers&t='+Date.now());
+    const data=await res.json();
+    if(data.success){
+      allUsers=data.users||[];
+      updateStats(allUsers);
+      renderTable(allUsers);
+      document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();
+    }else document.getElementById('tableContainer').innerHTML='<div class="error-msg">⚠ Failed to load data.</div>';
+  }catch{document.getElementById('tableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}
+}
+
+function updateStats(users){
+  const today=users.filter(u=>u.lastLogin&&(new Date()-new Date(u.lastLogin))/3600000<24).length;
+  const week=users.filter(u=>{if(!u.lastLogin)return false;const h=(new Date()-new Date(u.lastLogin))/3600000;return h>=24&&h<168;}).length;
+  const never=users.filter(u=>!u.lastLogin).length;
+  document.getElementById('s-total').textContent=users.length;
+  document.getElementById('s-online').textContent=today;
+  document.getElementById('s-recent').textContent=week;
+  document.getElementById('s-inactive').textContent=never;
+}
+
+function renderTable(users){
+  if(!users.length){
+    document.getElementById('tableContainer').innerHTML='<div class="loading" style="color:#3a7aaa;">No agents found.</div>';
+    document.getElementById('filterCount').textContent='';
+    return;
+  }
+  document.getElementById('filterCount').textContent=users.length+' agents';
+  const rows=users.map((u,i)=>{
+    const st=getStatus(u.lastLogin);
+    const defBadge=u.isDefault?'<span style="background:#fff8d8;border:1px solid #e8d040;border-radius:3px;padding:2px 7px;font-size:10px;font-weight:700;color:#705010;margin-left:6px;">TEMP PW</span>':'';
+    // ── Location cell ──
+    const locCell=u.lastLocation&&u.lastLocation!=='Unknown'&&u.lastLocation!==''
+      ?`<span class="loc-badge">📍 ${u.lastLocation}</span>`
+      :'<span style="font-size:11px;color:#aaa;">—</span>';
+    return`<tr>
+      <td style="color:#3a7aaa;font-size:12px;font-weight:600;">${i+1}</td>
+      <td style="font-weight:700;color:#0a3d78;">👤 ${u.username}${defBadge}</td>
+      <td>${u.email||'—'}</td>
+      <td><span style="background:#eef5fc;border:1px solid #a8cce8;border-radius:4px;padding:2px 8px;font-size:11px;color:#1a5a90;">⚓ ${u.team||'—'}</span></td>
+      <td><span class="badge ${st.cls}">${st.label}</span></td>
+      <td>${locCell}</td>
+      <td style="font-size:11px;color:#3a7aaa;font-weight:600;">${formatDate(u.lastLogin)}</td>
+      <td style="font-size:11px;color:#3a7aaa;font-weight:600;">${formatDate(u.registeredAt)}</td>
+      <td>
+        <button class="edit-btn" onclick="editAgent(${i})">✏ Edit</button>
+        <button class="reset-btn" id="rbtn_${i}" onclick="resetPassword('${u.username}',${i})">🔑 Reset PW</button>
+        <button class="delete-btn" id="dbtn_${i}" onclick="deleteUser('${u.username}',${i})">🗑 Delete</button>
+      </td>
+    </tr>`;
+  }).join('');
+  document.getElementById('tableContainer').innerHTML=
+    `<table><thead><tr>
+      <th>#</th><th>Username</th><th>Email</th><th>Team</th>
+      <th>Status</th><th>Last Login Location</th><th>Last Login</th><th>Created</th><th>Actions</th>
+    </tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function filterTable(){
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  const f=allUsers.filter(u=>(u.username||'').toLowerCase().includes(q)||(u.email||'').toLowerCase().includes(q)||(u.team||'').toLowerCase().includes(q));
+  renderTable(f);
+  document.getElementById('filterCount').textContent=f.length+' of '+allUsers.length+' agents';
+}
+
+async function submitAgent(){
+  const orig=document.getElementById('edit-agent-original-username').value;
+  const name=document.getElementById('ag-name').value.trim(),email=document.getElementById('ag-email').value.trim(),team=document.getElementById('ag-team').value.trim(),username=document.getElementById('ag-username').value.trim(),password=document.getElementById('ag-password').value.trim();
+  if(!name||!email||!team||!username||!password){showFormMsg('ag-msg','⚠ All fields are required.','error');return;}
+  if(password.length<6){showFormMsg('ag-msg','⚠ Password must be ≥ 6 characters.','error');return;}
+  const btn=document.getElementById('ag-submit-btn');btn.disabled=true;showFormMsg('ag-msg','⏳ Saving...','loading');
+  const vesselId=orig?'':'VID-'+Math.random().toString(36).toUpperCase().slice(2,8);
+  const action=orig?'updateAgent':'register';
+  try{
+    const res=await fetch(API_URL+'?'+new URLSearchParams({action,username,email,team,password,vesselId,originalUsername:orig||username}));
+    const data=await res.json();
+    if(data.success){showFormMsg('ag-msg',orig?'✅ Agent updated!':'✅ Agent login created!','success');clearAgentForm();setTimeout(loadUsers,800);}
+    else if(data.error==='USERNAME_EXISTS')showFormMsg('ag-msg','⚠ Username already taken.','error');
+    else showFormMsg('ag-msg','⚠ Failed. Try again.','error');
+  }catch{showFormMsg('ag-msg','⚠ Connection error.','error');}
+  btn.disabled=false;
+}
+function editAgent(i){
+  const u=allUsers[i];
+  document.getElementById('edit-agent-original-username').value=u.username;
+  document.getElementById('ag-name').value=u.username;
+  document.getElementById('ag-email').value=u.email||'';
+  document.getElementById('ag-team').value=u.team||'';
+  document.getElementById('ag-username').value=u.username;
+  document.getElementById('ag-password').value='';
+  document.getElementById('agentFormTitle').textContent='✏ Edit Agent: '+u.username;
+  document.getElementById('ag-submit-btn').textContent='💾 Update Agent';
+  document.getElementById('ag-cancel-btn').style.display='inline-block';
+  document.getElementById('agentFormTitle').scrollIntoView({behavior:'smooth'});
+}
 function cancelAgentEdit(){clearAgentForm();}
-function clearAgentForm(){['edit-agent-original-username','ag-name','ag-email','ag-team','ag-username','ag-password'].forEach(id=>document.getElementById(id).value='');document.getElementById('agentFormTitle').textContent='➕ Create New Agent Login';document.getElementById('ag-submit-btn').textContent='💾 Create Agent Login';document.getElementById('ag-cancel-btn').style.display='none';document.getElementById('ag-msg').style.display='none';}
-async function resetPassword(username,idx){if(!confirm('Reset password for "'+username+'" to a temporary password?'))return;const btn=document.getElementById('rbtn_'+idx);btn.textContent='⏳...';btn.disabled=true;try{const res=await fetch(API_URL+'?'+new URLSearchParams({action:'resetPassword',username}));const data=await res.json();if(data.success){btn.textContent='✅ Done';btn.classList.add('done');showToast('✅ Password reset for '+username);setTimeout(loadUsers,2000);}else{btn.textContent='🔑 Reset PW';btn.disabled=false;showToast('⚠ Reset failed.',false);}}catch{btn.textContent='🔑 Reset PW';btn.disabled=false;showToast('⚠ Connection error.',false);}}
-async function deleteUser(username,idx){if(!confirm('⚠ Permanently delete agent "'+username+'"?\n\nThis cannot be undone!'))return;const btn=document.getElementById('dbtn_'+idx);btn.textContent='⏳...';btn.disabled=true;try{const res=await fetch(API_URL+'?'+new URLSearchParams({action:'deleteUser',username}));const data=await res.json();if(data.success){showToast('🗑 Agent "'+username+'" deleted.');setTimeout(loadUsers,800);}else{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Delete failed.',false);}}catch{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Connection error.',false);}}
+function clearAgentForm(){
+  ['edit-agent-original-username','ag-name','ag-email','ag-team','ag-username','ag-password'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('agentFormTitle').textContent='➕ Create New Agent Login';
+  document.getElementById('ag-submit-btn').textContent='💾 Create Agent Login';
+  document.getElementById('ag-cancel-btn').style.display='none';
+  document.getElementById('ag-msg').style.display='none';
+}
+async function resetPassword(username,idx){
+  if(!confirm('Reset password for "'+username+'" to a temporary password?'))return;
+  const btn=document.getElementById('rbtn_'+idx);btn.textContent='⏳...';btn.disabled=true;
+  try{
+    const res=await fetch(API_URL+'?'+new URLSearchParams({action:'resetPassword',username}));
+    const data=await res.json();
+    if(data.success){btn.textContent='✅ Done';btn.classList.add('done');showToast('✅ Password reset for '+username);setTimeout(loadUsers,2000);}
+    else{btn.textContent='🔑 Reset PW';btn.disabled=false;showToast('⚠ Reset failed.',false);}
+  }catch{btn.textContent='🔑 Reset PW';btn.disabled=false;showToast('⚠ Connection error.',false);}
+}
+async function deleteUser(username,idx){
+  if(!confirm('⚠ Permanently delete agent "'+username+'"?\n\nThis cannot be undone!'))return;
+  const btn=document.getElementById('dbtn_'+idx);btn.textContent='⏳...';btn.disabled=true;
+  try{
+    const res=await fetch(API_URL+'?'+new URLSearchParams({action:'deleteUser',username}));
+    const data=await res.json();
+    if(data.success){showToast('🗑 Agent "'+username+'" deleted.');setTimeout(loadUsers,800);}
+    else{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Delete failed.',false);}
+  }catch{btn.textContent='🗑 Delete';btn.disabled=false;showToast('⚠ Connection error.',false);}
+}
 
 // ── CREDENTIALS ──
 async function loadCreds(){document.getElementById('credTableContainer').innerHTML='<div class="loading">⏳ LOADING CREDENTIALS...</div>';try{const res=await fetch(API_URL+'?action=getCredentials&t='+Date.now());const data=await res.json();if(data.success){allCreds=data.credentials||[];renderCredTable(allCreds);document.getElementById('lastRefreshed').textContent='Last refreshed: '+new Date().toLocaleTimeString();}else document.getElementById('credTableContainer').innerHTML='<div class="error-msg">⚠ Failed.</div>';}catch{document.getElementById('credTableContainer').innerHTML='<div class="error-msg">⚠ Connection error.</div>';}}
@@ -569,7 +687,6 @@ const SHIFT_CLS_MAP={D1:'sp-D1',D2:'sp-D2',D3:'sp-D3',D4:'sp-D4',D5:'sp-D5',N:'s
 const DEFAULT_MEMBERS=[{id:'SM1658',name:'Vignesh Maharajan',primary:'Customer Service'},{id:'SM2045',name:'Akash Nagarathinam',primary:'EMS/EDI'},{id:'SM1638',name:'Challa Venkat Suneel',primary:'Operations'},{id:'SM2197',name:'Vinoth Bhoopathy',primary:'Operations'},{id:'SM2335',name:'Vignesh Rajapandi',primary:'Operations'},{id:'SM2145',name:'Rene Claret A',primary:'Customer Service'},{id:'SM2333',name:'Kulasekar Baskar',primary:'Operations'},{id:'SM2332',name:'Seenivasan Lakshmipathy',primary:'Customer Service'},{id:'SM2331',name:'Vinothraj Vijayakumar',primary:'Customer Service'}];
 let plannerData={},plannerMembers=[],plannerViewYear=new Date().getFullYear(),plannerViewMonth=new Date().getMonth();
 let plannerShiftFilter='ALL',plannerDirty=false,pceTarget=null;
-
 function buildYearSelect(){const sel=document.getElementById('planner-year-select');sel.innerHTML='';const cy=new Date().getFullYear();for(let y=cy-1;y<=cy+3;y++){const o=document.createElement('option');o.value=y;o.textContent=y;if(y===plannerViewYear)o.selected=true;sel.appendChild(o);}}
 function plannerJumpYear(y){plannerViewYear=parseInt(y);renderPlanner();}
 function plannerPrevMonth(){plannerViewMonth--;if(plannerViewMonth<0){plannerViewMonth=11;plannerViewYear--;}document.getElementById('planner-year-select').value=plannerViewYear;renderPlanner();}
